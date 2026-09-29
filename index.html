@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#211319">
+<title>Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="loader"><div class="loader-ring"></div><span>Preparing your invitation</span></div>
+
+<section id="envelopeScreen" class="envelope-screen">
+  <div class="ambient"></div>
+  <div class="envelope-wrap">
+    <button id="openInvitation" class="envelope" type="button" aria-label="Open wedding invitation">
+      <div class="env-back"></div>
+      <div class="inside-card" aria-hidden="true">
+        <small>TOGETHER WITH THEIR FAMILIES</small>
+        <strong id="envelopeNames">Wedding Couple</strong>
+        <span id="envelopeDate"></span>
+      </div>
+      <div class="flap"></div>
+      <div class="front"></div>
+      <div class="seal"><span>♥</span></div>
+    </button>
+    <p class="tap-hint">Tap the seal to open</p>
+  </div>
+</section>
+
+<main id="invitation" class="invitation hidden">
+<header id="home" class="hero">
+  <div class="hero-shade"></div>
+  <nav>
+    <a class="logo" id="coupleLogo" href="#home"></a>
+    <div class="navlinks">
+      <a href="#story">Our Day</a><a href="#locations">Locations</a><a href="#gallery">Photos</a><a href="#rsvp">RSVP</a>
+    </div>
+  </nav>
+  <div class="hero-content">
+    <p class="eyebrow">THE BEGINNING OF FOREVER</p>
+    <h1><span></span><em>&</em><span></span></h1>
+    <p class="hero-date" id="heroDate"></p>
+    <div class="scroll-mark"></div>
+    <a href="#story" class="scroll-text">Scroll to explore</a>
+  </div>
+</header>
+
+<section id="story" class="section intro">
+  <div class="ornament">✦</div>
+  <p class="eyebrow">WE ARE GETTING MARRIED</p>
+  <h2>Two hearts, one beautiful journey.</h2>
+  <p class="lead">With joyful hearts and surrounded by the people we love, we invite you to celebrate the beginning of our forever.</p>
+  <div class="names"></div>
+</section>
+
+<section class="section day">
+  <p class="eyebrow">SAVE THE DATE</p>
+  <h2>Our Wedding Day</h2>
+  <div class="date-box"><div><b>25</b><small>DECEMBER</small></div><i></i><div><b>2026</b><small>FRIDAY</small></div></div>
+  <div class="countdown">
+    <div><b id="days">00</b><span>Days</span></div><div><b id="hours">00</b><span>Hours</span></div>
+    <div><b id="minutes">00</b><span>Minutes</span></div><div><b id="seconds">00</b><span>Seconds</span></div>
+  </div>
+</section>
+
+<section id="locations" class="section locations">
+  <p class="eyebrow">JOIN US</p>
+  <h2>Church & Venue</h2>
+  <p class="lead dark">Two beautiful places. One unforgettable day.</p>
+  <div class="location-grid">
+    <article class="location-card">
+      <div class="location-photo church"></div>
+      <div class="location-info">
+        <span>01 · CEREMONY</span>
+        <h3 id="churchName">Holy Family Church</h3>
+        <p id="churchAddress">123 Church Street, Cairo, Egypt</p>
+        <strong id="churchDateTime"></strong>
+        <a id="churchMap" target="_blank" rel="noopener">Open Church in Google Maps ↗</a>
+      </div>
+    </article>
+    <article class="location-card">
+      <div class="location-photo venue"></div>
+      <div class="location-info">
+        <span>02 · RECEPTION</span>
+        <h3 id="venueName">The Grand Garden</h3>
+        <p id="venueAddress">45 Nile Corniche, Cairo, Egypt</p>
+        <strong id="venueDateTime"></strong>
+        <a id="venueMap" target="_blank" rel="noopener">Open Venue in Google Maps ↗</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="gallery" class="section gallery-section">
+  <p class="eyebrow">LOVE, LAUGHTER & LITTLE MOMENTS</p>
+  <h2>Our Story in Photos</h2>
+  <p class="lead dark">A collection of memories, arranged dynamically as your guests explore your story.</p>
+  <div id="galleryGrid" class="gallery"></div>
+  <div class="marquee">OUR FAVORITE MEMORIES ✦ OUR FAVORITE MEMORIES ✦ OUR FAVORITE MEMORIES ✦</div>
+</section>
+
+<section class="section schedule">
+  <p class="eyebrow">THE EVENING</p><h2>Schedule</h2>
+  <div class="timeline">
+    <div><time id="churchTime"></time><span></span><article><b>The Ceremony</b><small id="churchScheduleName"></small></article></div>
+    <div><time id="venueTime"></time><span></span><article><b>Reception</b><small id="venueScheduleName"></small></article></div>
+    <div><time>08:00 PM</time><span></span><article><b>Dinner & Dancing</b><small>Let the celebration begin</small></article></div>
+    <div><time>11:30 PM</time><span></span><article><b>Last Dance</b><small>One more memory together</small></article></div>
+  </div>
+</section>
+
+<section id="rsvp" class="section rsvp">
+  <p class="eyebrow">WE WOULD LOVE TO SEE YOU</p><h2>RSVP</h2>
+  <p class="lead dark">Please let us know if you can join our celebration.</p>
+  <form id="rsvpForm">
+    <div class="row"><label>Full Name<input name="name" required placeholder="Your name"></label><label>Phone / WhatsApp<input name="phone" required placeholder="+20 ..."></label></div>
+    <label>Attendance<select name="attendance" required><option value="">Please select</option><option>Joyfully accepts</option><option>Regretfully declines</option></select></label>
+    <label>Number of Guests<input name="guests" type="number" min="1" max="10" value="1" required></label>
+    <label>Message<textarea name="message" rows="4" placeholder="Leave us a little note..."></textarea></label>
+    <button type="submit">SEND RSVP ♥</button><p id="formMessage"></p>
+  </form>
+</section>
+
+<section class="section closing"><div class="ornament">✦</div><p class="eyebrow">UNTIL THEN</p><h2>We can't wait to celebrate with you.</h2><div class="names" id="closingNames"></div><p id="closingDate"></p></section>
+<footer id="siteFooter"></footer>
+</main>
+
+<audio id="audio" loop></audio>
+<script src="config.js"></script><script src="script.js"></script>
+</body>
+</html>
