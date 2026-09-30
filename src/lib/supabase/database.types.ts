@@ -141,6 +141,7 @@ export type Database = {
     Views: { [_ in never]: never };
     Functions: {
       get_public_invitation: { Args: { p_slug: string }; Returns: Json };
+      create_wedding_from_draft: { Args: { p_draft: Json }; Returns: string };
       can_edit_wedding: { Args: { p_wedding_id: string }; Returns: boolean };
       can_view_wedding: { Args: { p_wedding_id: string }; Returns: boolean };
     };
