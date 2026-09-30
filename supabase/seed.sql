@@ -1,0 +1,3 @@
+-- Local development seed. Intentionally empty: register through the app to
+-- create users and weddings (weddings are created with their owner membership,
+-- settings and theme rows by triggers).
