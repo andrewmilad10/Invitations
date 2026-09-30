@@ -53,6 +53,28 @@ export function CinematicMotion({ model }: { model: InvitationModel }) {
         onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out", stagger: 0.12, overwrite: true }),
       });
 
+      // Hero: the photo drifts slower than the page while the names ease
+      // away. Scale grows exactly as fast as the drift, so no edge shows, and
+      // starts at 1 so the envelope's card → hero hand-off still matches.
+      const hero = root.querySelector<HTMLElement>("[data-section=hero]");
+      const heroMedia = hero?.querySelector("[data-hero-media]");
+      const heroContent = hero?.querySelector("[data-hero-content]");
+      if (hero && heroMedia) {
+        gsap.to(heroMedia, { yPercent: 6, scale: 1.12, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
+      }
+      if (hero && heroContent) {
+        gsap.to(heroContent, { y: -60, autoAlpha: 0, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "70% top", scrub: true } });
+      }
+
+      // Gallery: photos settle in with a soft stagger.
+      const photos = gsap.utils.toArray<HTMLElement>(root.querySelectorAll("#gallery li"));
+      gsap.set(photos, { autoAlpha: 0, y: 24, scale: 0.97 });
+      ScrollTrigger.batch(photos, {
+        start: "top 92%",
+        once: true,
+        onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out", stagger: 0.08, overwrite: true }),
+      });
+
       return () => {
         gsap.ticker.remove(raf);
         lenis.destroy();

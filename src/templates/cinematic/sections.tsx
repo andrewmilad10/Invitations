@@ -178,20 +178,15 @@ export function CinematicHero({ model, content }: SectionProps<"hero">) {
       className="relative isolate flex min-h-svh items-center justify-center overflow-hidden bg-[color-mix(in_oklab,var(--inv-fg)_18%,black)] text-white"
     >
       {media.hero ? (
-        <InvitationImage
-          asset={media.hero}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="-z-20 object-cover"
-        />
+        <div data-hero-media className="absolute inset-0 -z-20 will-change-transform">
+          <InvitationImage asset={media.hero} alt="" fill priority sizes="100vw" className="object-cover" />
+        </div>
       ) : null}
       <div
         aria-hidden
         className="absolute inset-0 -z-10 bg-gradient-to-b from-black/45 via-black/25 to-black/60"
       />
-      <div className="px-6 py-24 text-center text-white">
+      <div data-hero-content className="px-6 py-24 text-center text-white">
         <Eyebrow>
           <span className="text-white/80">{content.eyebrow}</span>
         </Eyebrow>
@@ -393,9 +388,7 @@ function GallerySection({ model, content }: SectionProps<"gallery">) {
             <p className="mt-4 text-inv-muted">{content.caption}</p>
           ) : null}
         </div>
-        <div data-reveal>
-          <Gallery model={model} />
-        </div>
+        <Gallery model={model} />
       </div>
     </section>
   );
