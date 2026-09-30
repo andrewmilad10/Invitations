@@ -1,31 +1,65 @@
 import type { WeddingBundle } from "@/core/wedding/bundle";
+import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
 
 /**
- * Sample wedding for template previews (/templates/{id}/preview) and tests.
- * This is FIXTURE DATA — the only place in the codebase where a couple's
- * details are written down. Components never import it directly; it enters
- * the same buildInvitationModel() pipeline as real data.
- *
- * Images are bundled under /public/samples so previews work offline.
+ * Demo wedding used by template previews, the gallery, the homepage and as
+ * the starting point of the no-account "try" flow. This is FIXTURE DATA — the
+ * only place a couple's details are written down. It enters the normal
+ * buildInvitationModel() pipeline like any real wedding.
  */
-export function sampleBundle(templateId: string, now: Date = new Date()): WeddingBundle {
-  // Always ~5 months ahead so the countdown is meaningful.
-  const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 5, 14));
-  const day = date.toISOString().slice(0, 10);
+export const DEMO = {
+  partnerOne: "Emma",
+  partnerTwo: "James",
+  month: 10,
+  day: 14,
+  ceremony: { venue: "St. Mary's Church", address: "12 Church Lane, Kensington, London", time: "15:00" },
+  reception: { venue: "The Garden Estate", address: "Holland Park, London", time: "18:00" },
+  timezone: "Europe/London",
+} as const;
 
+/** The next 14 October (today counts), so the demo countdown never runs out. */
+export function demoDate(now: Date = new Date()): string {
+  const year = now.getUTCFullYear();
+  const thisYear = Date.UTC(year, DEMO.month - 1, DEMO.day);
+  const today = Date.UTC(year, now.getUTCMonth(), now.getUTCDate());
+  const y = thisYear >= today ? year : year + 1;
+  return `${y}-${String(DEMO.month).padStart(2, "0")}-${String(DEMO.day).padStart(2, "0")}`;
+}
+
+const photo = (id: LibraryPhotoId, purpose: "hero" | "gallery", sort: number, width: number, height: number) => ({
+  id: `demo-${id}`,
+  kind: "image" as const,
+  purpose,
+  storage_path: PHOTO_LIBRARY[id].url,
+  alt_text: PHOTO_LIBRARY[id].alt,
+  width,
+  height,
+  sort_order: sort,
+});
+
+/** London is UTC+1 in mid-October (BST), so 15:00 local = 14:00Z. */
+function londonIso(date: string, time: string) {
+  const [h, m] = time.split(":").map(Number);
+  return new Date(Date.UTC(Number(date.slice(0, 4)), Number(date.slice(5, 7)) - 1, Number(date.slice(8, 10)), h - 1, m)).toISOString();
+}
+
+export const DEMO_WEDDING_ID = "00000000-0000-4000-8000-000000000000";
+
+export function sampleBundle(templateId: string, now: Date = new Date()): WeddingBundle {
+  const day = demoDate(now);
   return {
     wedding: {
-      id: "00000000-0000-4000-8000-000000000000",
-      slug: "sample",
-      partner_one_name: "Layla",
-      partner_two_name: "Omar",
+      id: DEMO_WEDDING_ID,
+      slug: "emma-and-james",
+      partner_one_name: DEMO.partnerOne,
+      partner_two_name: DEMO.partnerTwo,
       wedding_date: day,
       template_id: templateId,
       status: "published",
       published_at: null,
       updated_at: null,
     },
-    settings: { locale: "en", timezone: "Africa/Cairo", visibility: "unlisted", music_enabled: false },
+    settings: { locale: "en", timezone: DEMO.timezone, visibility: "unlisted", music_enabled: false },
     theme: { tokens: {} },
     sections: [
       {
@@ -34,7 +68,7 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
         sort_order: null,
         content: {
           body:
-            "We met on a rainy afternoon in a bookshop, both reaching for the last copy of the same novel.\n\nSix years, two cities and one very patient cat later, we're ready for our next chapter — and we'd love for you to be there.",
+            "We met on a rainy Tuesday in a bookshop on Charing Cross Road, both reaching for the last copy of the same novel. James let Emma have it — on the condition that she tell him how it ended, over coffee.\n\nSeven years, two flats and one very opinionated cat later, we're getting married. We can't imagine the day without you.",
         },
       },
       {
@@ -43,11 +77,18 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
         sort_order: null,
         content: {
           items: [
-            { time: "4:30 PM", title: "Guests arrive", note: "" },
-            { time: "5:00 PM", title: "Ceremony", note: "" },
-            { time: "7:30 PM", title: "Dinner & dancing", note: "" },
+            { time: "2:30 pm", title: "Guests arrive", note: "St. Mary's Church" },
+            { time: "3:00 pm", title: "Ceremony", note: "" },
+            { time: "6:00 pm", title: "Dinner & dancing", note: "The Garden Estate" },
+            { time: "11:30 pm", title: "Carriages", note: "" },
           ],
         },
+      },
+      {
+        type: "rsvp",
+        enabled: true,
+        sort_order: null,
+        content: { deadline: `Kindly reply by 1 September` },
       },
     ],
     events: [
@@ -55,10 +96,10 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
         id: "00000000-0000-4000-8000-00000000e001",
         kind: "ceremony",
         title: "Ceremony",
-        starts_at: `${day}T14:00:00.000Z`,
+        starts_at: londonIso(day, DEMO.ceremony.time),
         ends_at: null,
-        venue_name: "The Garden Chapel",
-        address: "Zamalek, Cairo, Egypt",
+        venue_name: DEMO.ceremony.venue,
+        address: DEMO.ceremony.address,
         latitude: null,
         longitude: null,
         map_url: null,
@@ -69,32 +110,28 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
         id: "00000000-0000-4000-8000-00000000e002",
         kind: "reception",
         title: "Reception",
-        starts_at: `${day}T16:30:00.000Z`,
+        starts_at: londonIso(day, DEMO.reception.time),
         ends_at: null,
-        venue_name: "The Nile Terrace",
-        address: "Corniche El Nil, Cairo, Egypt",
+        venue_name: DEMO.reception.venue,
+        address: DEMO.reception.address,
         latitude: null,
         longitude: null,
         map_url: null,
-        description: null,
+        description: "Dinner, speeches and dancing under the old oak.",
         sort_order: 1,
       },
     ],
     media: [
-      { id: "s-hero", kind: "image", purpose: "hero", storage_path: "/samples/hero.jpg", alt_text: "", width: 1600, height: 1067, sort_order: 0 },
-      ...[1, 2, 3, 4, 5].map((n) => ({
-        id: `s-g${n}`,
-        kind: "image" as const,
-        purpose: "gallery" as const,
-        storage_path: `/samples/gallery-${n}.jpg`,
-        alt_text: "",
-        width: 1200,
-        height: n % 2 ? 1500 : 800,
-        sort_order: n,
-      })),
+      photo("couple", "hero", 0, 2400, 1600),
+      photo("outdoors", "gallery", 1, 1600, 2400),
+      photo("rings", "gallery", 2, 2400, 1600),
+      photo("bouquet", "gallery", 3, 2400, 1600),
+      photo("celebration", "gallery", 4, 1600, 2400),
+      photo("reception", "gallery", 5, 2400, 1600),
+      photo("venue", "gallery", 6, 2400, 1600),
     ],
   };
 }
 
-/** Sample media paths are already public URLs. */
+/** Demo media paths are already public URLs. */
 export const sampleMediaUrl = (path: string) => path;

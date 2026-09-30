@@ -120,6 +120,7 @@ describe("buildInvitationModel", () => {
 
   it("formats event times in the wedding's time zone", () => {
     const b = bundle((x) => {
+      x.settings.timezone = "Africa/Cairo";
       x.wedding.wedding_date = "2027-06-12";
       x.events[0].starts_at = "2027-06-12T14:00:00.000Z"; // 17:00 in Cairo (EEST, UTC+3)
     });
@@ -132,6 +133,7 @@ describe("buildInvitationModel", () => {
 
   it("targets local midnight of the wedding day when there are no timed events", () => {
     const b = bundle((x) => {
+      x.settings.timezone = "Africa/Cairo";
       x.wedding.wedding_date = "2027-01-10";
       x.events = [];
     });
@@ -160,7 +162,7 @@ describe("buildInvitationModel", () => {
 
   it("builds map links from the address when no coordinates are given", () => {
     const m = buildInvitationModel(bundle(), cinematicManifest, opts);
-    expect(m.events.ceremony?.mapUrl).toContain(encodeURIComponent("The Garden Chapel, Zamalek, Cairo, Egypt"));
+    expect(m.events.ceremony?.mapUrl).toContain(encodeURIComponent("St. Mary's Church, 12 Church Lane, Kensington, London"));
     expect(m.events.ceremony?.mapEmbedUrl).toContain("output=embed");
   });
 });

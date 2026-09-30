@@ -7,6 +7,8 @@ export const cinematicManifest: TemplateManifest = {
   description:
     "A sealed envelope opens into a full-screen hero, followed by an elegant, image-led invitation with countdown, venues, gallery and schedule.",
   previewImage: "/templates/cinematic.svg",
+  categories: ["luxury", "romantic", "classic"],
+  stationery: { ornament: "seal" },
   supportedSections: [
     "hero", "couple", "date", "countdown", "story", "ceremony", "reception",
     "venue", "gallery", "schedule", "rsvp", "closing", "footer",

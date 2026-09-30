@@ -6,21 +6,24 @@
    generated from the wedding's theme (src/core/theme).
    ───────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #faf8f5;
-  --foreground: #1f1b18;
-  --card: #ffffff;
-  --muted: #f1ede7;
-  --muted-foreground: #6e655d;
-  --primary: #2a211c;
-  --primary-foreground: #faf8f5;
-  --secondary: #f1ede7;
-  --secondary-foreground: #2a211c;
-  --accent: #a8845a;
-  --border: #e4ddd3;
-  --input: #d9d0c4;
-  --ring: #a8845a;
-  --destructive: #b3261e;
-  --success: #2f6b4f;
+  /* Brand: linen, paper, ink, stone, brass, forest. */
+  --background: #f6f2ec;
+  --foreground: #221d1a;
+  --card: #fbf9f5;
+  --muted: #efe9e1;
+  --muted-foreground: #756a61;
+  --primary: #26332b;
+  --primary-foreground: #fbf9f5;
+  --secondary: #efe9e1;
+  --secondary-foreground: #221d1a;
+  --accent: #9c7a4c;
+  --border: #e4dcd0;
+  --input: #d8cebf;
+  --ring: #9c7a4c;
+  --destructive: #a3322a;
+  --success: #3d6b4f;
+  --forest: #26332b;
+  --forest-foreground: #efe9df;
 }
 
 @theme inline {
@@ -39,6 +42,8 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --color-success: var(--success);
+  --color-forest: var(--forest);
+  --color-forest-foreground: var(--forest-foreground);
 
   /* Invitation tokens (values come from the wedding theme at runtime):
      bg-inv-bg, text-inv-fg, border-inv-border, font-inv-heading, … */
@@ -55,7 +60,7 @@
   --radius-inv: var(--inv-radius);
   --shadow-inv: var(--inv-shadow);
 
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-jost), system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
 }
 
@@ -90,4 +95,19 @@
 [data-template][lang="ar"] .inv-label {
   font-size: 0.95rem;
   font-weight: 400;
+}
+
+/* Marketing: one orchestrated hero entrance. */
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes card-settle {
+  from { opacity: 0; transform: translateY(60px) rotate(var(--tilt, 0deg)) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)) scale(1); }
+}
+.hero-rise { animation: hero-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.card-settle { animation: card-settle 1300ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise, .card-settle { animation: none; }
 }

@@ -6,6 +6,8 @@ const supabaseHost = supabaseUrl ? new URL(supabaseUrl) : null;
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // Curated photo library (src/features/media/library.ts)
+      { protocol: "https", hostname: "images.unsplash.com", pathname: "/photo-**" },
       // Hosted Supabase Storage
       { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
       // Self-hosted / local Supabase (from env)

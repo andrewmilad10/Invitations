@@ -48,6 +48,14 @@ export function EnvelopeOpening({ model }: { model: InvitationModel }) {
     };
   }, [locked]);
 
+  // Focus the seal for keyboard users — but only when the invitation is the
+  // page itself. Inside an iframe (editor preview, homepage demo) focusing
+  // would scroll the host page.
+  const seal = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (phase === "closed" && window.self === window.top) seal.current?.focus({ preventScroll: true });
+  }, [phase]);
+
   // Replay from the editor preview.
   useEffect(() => {
     const replay = () => {
@@ -154,7 +162,7 @@ export function EnvelopeOpening({ model }: { model: InvitationModel }) {
           </div>
           <div className={styles.front} aria-hidden />
           <div className={styles.flap} aria-hidden />
-          <button type="button" className={styles.seal} onClick={(e) => (e.stopPropagation(), open())} aria-label={strings.openInvitation} autoFocus>
+          <button type="button" className={styles.seal} onClick={(e) => (e.stopPropagation(), open())} aria-label={strings.openInvitation} ref={seal}>
             <span aria-hidden>
               {wedding.initials[0]}
               {wedding.initials[1] ? `·${wedding.initials[1]}` : ""}

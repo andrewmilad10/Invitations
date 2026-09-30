@@ -5,7 +5,11 @@ import { editorialManifest } from "@/templates/editorial/manifest";
 import { sampleBundle, sampleMediaUrl } from "@/templates/fixtures/sample-wedding";
 import * as u from "./bundle-updates";
 
-const base = () => sampleBundle("cinematic", new Date("2026-09-30T00:00:00Z"));
+const base = () => {
+  const b = sampleBundle("cinematic", new Date("2026-09-30T00:00:00Z"));
+  b.settings.timezone = "Africa/Cairo";
+  return b;
+};
 const model = (b: ReturnType<typeof base>, t = cinematicManifest) => buildInvitationModel(b, t, { mode: "preview", mediaUrl: sampleMediaUrl });
 
 describe("editor bundle updates", () => {

@@ -1,6 +1,22 @@
 import type { SectionType } from "../sections/registry";
 import type { ThemePalette, ThemeTokens } from "../theme/tokens";
 
+/** Gallery filter categories. A template can belong to several. */
+export const TEMPLATE_CATEGORIES = [
+  "classic",
+  "modern",
+  "romantic",
+  "minimal",
+  "luxury",
+  "botanical",
+  "outdoor",
+  "traditional",
+] as const;
+export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number];
+
+/** Decorative motif used when a template is shown as a stationery card. */
+export type StationeryOrnament = "crest" | "floral" | "hairline" | "leaves" | "gilded" | "seal" | "rule";
+
 /**
  * Template manifest — the data half of a template (no React). Imported by the
  * dashboard, the wizard, the model builder and tests without pulling in any
@@ -14,6 +30,10 @@ export interface TemplateManifest {
   description: string;
   /** Public path of the picker thumbnail. */
   previewImage: string;
+  /** Gallery categories, most characteristic first. */
+  categories: readonly TemplateCategory[];
+  /** How the template is drawn as an invitation card in galleries. */
+  stationery: { ornament: StationeryOrnament };
   /** Section types this template can render. Others are kept in the data but not shown. */
   supportedSections: readonly SectionType[];
   /** Default order of sections (subset of supportedSections). */

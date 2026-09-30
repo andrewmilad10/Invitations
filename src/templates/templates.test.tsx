@@ -23,13 +23,14 @@ describe.each(TEMPLATE_MANIFESTS.map((t) => t.id))("%s template", (id) => {
       b.wedding.wedding_date = "2031-02-03";
       b.events[0].venue_name = "Unique Venue Name 42";
       b.events[0].starts_at = "2031-02-03T14:00:00.000Z";
+      b.sections = []; // demo story text mentions the demo couple; it's data, not a leak
     });
     expect(html).toContain("Zephyrine");
     expect(html).toContain("Quillon");
     expect(html).toContain("2031");
     expect(html).toContain("Unique Venue Name 42");
-    expect(html).not.toContain("Layla"); // fixture names must not leak
-    expect(html).not.toContain("Omar");
+    expect(html).not.toContain("Emma"); // fixture names must not leak
+    expect(html).not.toContain("James");
   });
 
   it("applies theme variables, language and direction on the root", () => {

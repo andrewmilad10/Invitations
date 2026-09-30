@@ -13,6 +13,8 @@ export const editorialManifest: TemplateManifest = {
   description:
     "A clean, type-led layout with generous whitespace. No opening animation — the invitation reads like a beautifully set page.",
   previewImage: "/templates/editorial.svg",
+  categories: ["modern", "minimal"],
+  stationery: { ornament: "rule" },
   supportedSections: [
     "hero", "couple", "date", "story", "ceremony", "reception",
     "gallery", "schedule", "rsvp", "closing", "footer",
