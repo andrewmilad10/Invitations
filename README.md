@@ -29,10 +29,16 @@ No Supabase yet? `/templates/cinematic/preview` shows a template with sample dat
 
 ## Status
 
-Phase 1 (invitation builder) is complete: auth, dashboard, create-wedding
-wizard, template system with two templates (Cinematic with envelope opening,
-Editorial), structured editor with live preview and autosave, Storage uploads,
-publishing to `/w/{slug}` with SEO/OG images, English + Arabic (RTL).
+Explore-first wedding invitation platform:
+
+1. **Discover** — public homepage, no login required
+2. **Explore templates** — `/templates`, 7 templates with style filters
+3. **View demo** — `/templates/{id}`: the real invitation on desktop and phone
+4. **Try it** — `/create/{id}`: customise without an account (draft kept in the browser)
+5. **Create account** — only when saving; the draft moves into the account in one transaction
+6. **Continue editing** — three-column editor (sections · live preview · properties)
+7. **Publish & share** — `/w/{slug}`, with link, WhatsApp and email sharing
+
 See [docs/roadmap.md](docs/roadmap.md) for what comes next.
 
 ## Testing
