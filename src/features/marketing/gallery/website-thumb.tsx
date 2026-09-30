@@ -1,5 +1,5 @@
 import { SmartImage as Image } from "@/components/smart-image";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme, themeToCssVars, type ThemeOverrides } from "@/core/theme/tokens";
 import { PHOTO_LIBRARY } from "@/features/media/library";
@@ -61,7 +61,9 @@ function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { tem
   return (
     <div className="flex h-full flex-col bg-inv-bg font-inv-body text-inv-fg">
       <div className={cn("relative flex shrink-0 items-center justify-center overflow-hidden", phone ? "h-[78%]" : "h-[64%]")}>
-        {cardHero ? (
+        {LAYOUT_HEROES[template.renderer] ? (
+          LAYOUT_HEROES[template.renderer]({ partnerOne, partnerTwo, dateLabel, phone })
+        ) : cardHero ? (
           <>
             <div className="absolute inset-0" style={{ background: "radial-gradient(60% 55% at 50% 45%, color-mix(in oklab, var(--inv-accent) 14%, transparent), transparent)" }} />
             <StationeryCard
@@ -108,3 +110,80 @@ function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { tem
     </div>
   );
 }
+
+// ── Heroes of layouts with their own opening screen ─────────────────────────
+
+interface HeroProps {
+  partnerOne: string;
+  partnerTwo: string;
+  dateLabel: string;
+  phone: boolean;
+}
+
+function HeroPhoto({ className }: { className?: string }) {
+  return (
+    <div className={cn("absolute overflow-hidden bg-inv-surface", className)}>
+      <Image src={HERO_PHOTO.url} alt="" fill sizes="(min-width: 1024px) 12vw, 30vw" className="object-cover" style={{ filter: "var(--inv-photo-filter, none)" }} />
+    </div>
+  );
+}
+
+const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
+  // Magazine cover: tall portrait, towering names across it.
+  maison: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg">
+      <p className={cn("absolute start-[6%] top-[5%] uppercase tracking-[0.3em]", phone ? "text-[3cqw]" : "text-[1.5cqw]")}>N°01</p>
+      <HeroPhoto className={phone ? "end-0 top-[10%] h-[55%] w-[62%]" : "end-[6%] top-[10%] h-[80%] w-[40%]"} />
+      <div className={cn("absolute start-[6%] font-inv-heading uppercase leading-[0.82] tracking-[-0.03em]", phone ? "bottom-[14%] text-[17cqw]" : "bottom-[16%] text-[10cqw]")}>
+        <p>{partnerOne}</p>
+        <p className="font-inv-accent text-[0.5em] normal-case italic leading-none text-inv-accent">&amp;</p>
+        <p>{partnerTwo}</p>
+      </div>
+      <p className={cn("absolute inset-x-[6%] border-t border-current font-inv-accent italic", phone ? "bottom-[3%] pt-[1.5cqw] text-[4cqw]" : "bottom-[4%] pt-[0.8cqw] text-[2cqw]")}>{dateLabel}</p>
+    </div>
+  ),
+  // Exhibition: a framed print and a wall label.
+  galerie: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className={cn("absolute inset-0 flex bg-inv-bg text-inv-fg", phone ? "flex-col items-center justify-center gap-[5cqw] px-[12%]" : "items-center justify-center gap-[6%] px-[10%]")}>
+      <div className={cn("relative shrink-0 border border-inv-fg/70 bg-inv-surface", phone ? "aspect-[4/5] w-[80%] p-[7%]" : "aspect-[4/5] h-[74%] p-[3%]")}>
+        <div className="relative size-full">
+          <HeroPhoto className="inset-0" />
+        </div>
+      </div>
+      <div className={phone ? "w-full" : ""}>
+        <p className={cn("font-inv-heading leading-[0.95]", phone ? "text-[11cqw]" : "text-[6.5cqw]")}>
+          {partnerOne}
+          <br />
+          <span className="italic text-inv-accent">&amp;</span> {partnerTwo}
+        </p>
+        <div className={cn("flex", phone ? "mt-[3cqw] gap-[2cqw]" : "mt-[2cqw] gap-[1cqw]")}>
+          <span className={cn("shrink-0 bg-inv-accent", phone ? "w-[0.8cqw]" : "w-[0.4cqw]")} />
+          <p className={cn("text-inv-muted", phone ? "text-[3.4cqw]" : "text-[1.6cqw]")}>{dateLabel}</p>
+        </div>
+      </div>
+    </div>
+  ),
+  // Travel: airmail edging, a tilted postcard, a stamp.
+  postale: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg">
+      <div
+        className={cn("absolute inset-x-0 top-0", phone ? "h-[2.5cqw]" : "h-[1.3cqw]")}
+        style={{ background: "repeating-linear-gradient(-45deg, var(--inv-fg) 0 2cqw, transparent 2cqw 3cqw, var(--inv-muted) 3cqw 5cqw, transparent 5cqw 6cqw)" }}
+      />
+      <div className={cn("absolute -rotate-3 bg-white shadow-[0_2cqw_4cqw_-2cqw_rgb(0_0_0/0.4)]", phone ? "inset-x-[9%] top-[12%] h-[48%] p-[3%]" : "start-[8%] top-[16%] h-[66%] w-[50%] p-[1.6%]")}>
+        <div className="relative size-full">
+          <HeroPhoto className="inset-0" />
+        </div>
+      </div>
+      <span className={cn("absolute grid rotate-6 place-items-center border-dotted border-inv-muted bg-inv-accent font-inv-heading text-inv-accent-fg", phone ? "end-[7%] top-[7%] size-[15cqw] border-[0.8cqw] text-[6cqw]" : "start-[50%] top-[10%] size-[8cqw] border-[0.4cqw] text-[3cqw]")}>
+        ♡
+      </span>
+      <div className={cn("absolute", phone ? "inset-x-[9%] bottom-[8%]" : "end-[6%] top-1/2 w-[34%] -translate-y-1/2")}>
+        <p className={cn("font-inv-heading leading-[0.95]", phone ? "text-[12cqw]" : "text-[6cqw]")}>
+          {partnerOne} <span className="italic text-inv-muted">&amp;</span> {partnerTwo}
+        </p>
+        <p className={cn("font-inv-accent uppercase tracking-[0.18em] text-inv-muted", phone ? "mt-[2cqw] text-[3cqw]" : "mt-[1.5cqw] text-[1.5cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
+};

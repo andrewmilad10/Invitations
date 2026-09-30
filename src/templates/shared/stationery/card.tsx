@@ -271,6 +271,70 @@ function Layout({ art, text, photos, sizes }: { art: Required<StationeryArt>; te
         </div>
       );
 
+    case "magazine":
+      // Maison: a magazine cover — masthead, tall portrait, names over it.
+      return (
+        <div className="absolute inset-0 bg-inv-bg font-inv-body text-inv-fg">
+          <div className="absolute inset-x-[7%] top-[5%] flex items-baseline justify-between border-b border-current pb-[1.5cqw] text-[2.6cqw] uppercase tracking-[0.3em]">
+            <span>N°01</span>
+            <span className="truncate ps-[2cqw] opacity-70">{text.eyebrow}</span>
+          </div>
+          <Photo photo={photos[0]} sizes={sizes} className="absolute end-[7%] top-[12%] h-[52%] w-[60%]" />
+          <div className="absolute inset-x-[7%] bottom-[12%]">
+            <p className="break-words font-inv-heading text-[16cqw] uppercase leading-[0.84] tracking-[-0.03em]">{text.partnerOne || " "}</p>
+            <p className="font-inv-accent text-[9cqw] italic leading-[0.9] text-inv-accent">&amp;</p>
+            <p className="break-words font-inv-heading text-[16cqw] uppercase leading-[0.84] tracking-[-0.03em]">{text.partnerTwo || " "}</p>
+          </div>
+          <DateLine text={text} className="absolute inset-x-[7%] bottom-[5%] border-t border-current pt-[2cqw] text-[2.8cqw] tracking-[0.28em]" />
+        </div>
+      );
+
+    case "framed":
+      // Galerie: a framed print on a white wall with a wall label.
+      return (
+        <div className="absolute inset-0 flex flex-col bg-inv-bg px-[12%] pt-[11%] font-inv-body text-inv-fg">
+          <div className="border border-inv-fg/70 bg-inv-surface p-[6%]">
+            <Photo photo={photos[0]} sizes={sizes} className={shape === "square" ? "aspect-[4/3] w-full" : "aspect-[4/5] w-full"} />
+          </div>
+          <div className="mt-[6cqw] flex gap-[3cqw]">
+            <span className="w-[0.8cqw] shrink-0 bg-inv-accent" />
+            <div className="min-w-0">
+              <p className="font-inv-heading text-[8.5cqw] leading-[1]">
+                {text.partnerOne || " "} <span className="italic text-inv-accent">&amp;</span> {text.partnerTwo || " "}
+              </p>
+              {text.dateLabel ? <p className="mt-[1.5cqw] text-[2.8cqw] uppercase tracking-[0.2em] text-inv-muted">{text.dateLabel}</p> : null}
+              {text.place ? <p className="text-[2.8cqw] uppercase tracking-[0.2em] text-inv-muted">{text.place}</p> : null}
+            </div>
+          </div>
+        </div>
+      );
+
+    case "postcard":
+      // Postale: a tilted postcard with airmail edging, a stamp and postmark.
+      return (
+        <div className="absolute inset-0 overflow-hidden bg-inv-bg font-inv-body text-inv-fg">
+          <div
+            className="absolute inset-x-0 top-0 h-[3.5%]"
+            style={{ background: "repeating-linear-gradient(-45deg, var(--inv-fg) 0 3cqw, transparent 3cqw 4.5cqw, var(--inv-muted) 4.5cqw 7.5cqw, transparent 7.5cqw 9cqw)" }}
+          />
+          <p className="absolute start-[8%] top-[8%] font-inv-accent text-[2.6cqw] uppercase tracking-[0.2em] text-inv-muted">Par avion</p>
+          <div className={cn("absolute inset-x-[9%] -rotate-3 bg-white p-[3%] shadow-[0_2cqw_5cqw_-2cqw_rgb(0_0_0/0.35)]", shape === "square" ? "top-[16%] h-[50%]" : "top-[15%] h-[44%]")}>
+            <Photo photo={photos[0]} sizes={sizes} className="size-full" />
+          </div>
+          <div className={cn("absolute end-[7%] grid size-[17cqw] rotate-6 place-items-center border-[0.8cqw] border-dotted border-inv-muted bg-inv-accent font-inv-heading text-[6cqw] text-inv-accent-fg", shape === "square" ? "top-[8%]" : "top-[10%]")}>
+            {initial(text.partnerOne)}
+            {initial(text.partnerTwo)}
+          </div>
+          <div className="absolute inset-x-[8%] bottom-[7%]">
+            <p className="font-inv-accent text-[2.8cqw] uppercase tracking-[0.2em] text-inv-muted">{text.eyebrow}</p>
+            <p className="mt-[1.5cqw] font-inv-heading text-[11cqw] leading-[0.95]">
+              {text.partnerOne || " "} <span className="italic text-inv-muted">&amp;</span> {text.partnerTwo || " "}
+            </p>
+            {text.dateLabel ? <p className="mt-[2cqw] font-inv-accent text-[2.8cqw] uppercase tracking-[0.18em]">{text.dateLabel}</p> : null}
+          </div>
+        </div>
+      );
+
     case "classic":
     default:
       return (

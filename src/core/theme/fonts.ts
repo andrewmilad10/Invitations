@@ -15,6 +15,9 @@ export const FONT_KEYS = [
   "greatvibes",
   "marcellus",
   "didone",
+  "dmserif",
+  "instrument",
+  "spacemono",
   "amiri",
   "naskh",
 ] as const;
@@ -44,6 +47,9 @@ export const FONTS: Record<FontKey, FontDefinition> = {
   greatvibes: { label: "Great Vibes", category: "script", cssVar: "--font-greatvibes", fallback: "cursive", script: "latin" },
   marcellus: { label: "Marcellus", category: "display", cssVar: "--font-marcellus", fallback: "Georgia, serif", script: "latin" },
   didone: { label: "Antic Didone", category: "display", cssVar: "--font-didone", fallback: "Didot, 'Bodoni 72', Georgia, serif", script: "latin" },
+  dmserif: { label: "DM Serif Display", category: "serif", cssVar: "--font-dmserif", fallback: "Georgia, serif", script: "latin" },
+  instrument: { label: "Instrument Serif", category: "serif", cssVar: "--font-instrument", fallback: "Georgia, serif", script: "latin" },
+  spacemono: { label: "Space Mono", category: "sans", cssVar: "--font-spacemono", fallback: "ui-monospace, Menlo, monospace", script: "latin" },
   amiri: { label: "Amiri", category: "serif", cssVar: "--font-amiri", fallback: "serif", script: "arabic" },
   naskh: { label: "Noto Naskh Arabic", category: "serif", cssVar: "--font-naskh", fallback: "serif", script: "arabic" },
 };

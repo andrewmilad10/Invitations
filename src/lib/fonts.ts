@@ -136,5 +136,32 @@ const anticDidone = localFont({
   ],
 });
 
+const dmSerif = localFont({
+  variable: "--font-dmserif",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/dm-serif-display/dm-serif-display-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/dm-serif-display/dm-serif-display-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+});
+
+const instrument = localFont({
+  variable: "--font-instrument",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/instrument-serif/instrument-serif-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/instrument-serif/instrument-serif-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+});
+
+const spaceMono = localFont({
+  variable: "--font-spacemono",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../assets/fonts/space-mono/space-mono-latin-400-normal.woff2", weight: "400", style: "normal" }],
+});
+
 /** Class list that defines every font CSS variable; applied to <html>. */
-export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, amiri, naskh].map((font) => font.variable).join(" ");
+export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, dmSerif, instrument, spaceMono, amiri, naskh].map((font) => font.variable).join(" ");
