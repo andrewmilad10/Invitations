@@ -24,7 +24,7 @@ gsap.registerPlugin(ScrollTrigger);
 // A gentle, even settle (expo front-loads the movement and reads as fast).
 const EASE = "power3.out";
 /** One knob for the whole site's pace: every duration, delay and stagger is multiplied by it. */
-const TEMPO = 1.45;
+const TEMPO = 1.2;
 const T = (seconds: number) => seconds * TEMPO;
 const START = 0.82; // reveal when the element's top reaches 82% of the viewport (~18–20% scrolled in)
 const DONE = "motionInit";

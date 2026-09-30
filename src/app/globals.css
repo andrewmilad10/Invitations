@@ -102,7 +102,7 @@
   from { opacity: 0; transform: translateY(60px) rotate(var(--tilt, 0deg)) scale(0.96); }
   to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)) scale(1); }
 }
-.card-settle { animation: card-settle 1800ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.card-settle { animation: card-settle 1550ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 @media (prefers-reduced-motion: reduce) {
   .card-settle { animation: none; }
 }
@@ -142,9 +142,9 @@
    Everything is off with prefers-reduced-motion. */
 :root {
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-exit: 200ms;
-  --motion-enter: 420ms;
-  --motion-move: 650ms;
+  --motion-exit: 170ms;
+  --motion-enter: 340ms;
+  --motion-move: 540ms;
 }
 
 ::view-transition {
@@ -217,10 +217,10 @@ dialog {
   opacity: 0;
   transform: translateY(6px) scale(0.985);
   transition:
-    opacity 300ms ease,
-    transform 380ms var(--ease-out-soft),
-    overlay 380ms allow-discrete,
-    display 380ms allow-discrete;
+    opacity 250ms ease,
+    transform 320ms var(--ease-out-soft),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
 }
 dialog[open] {
   opacity: 1;
@@ -234,9 +234,9 @@ dialog[open] {
 }
 dialog::backdrop {
   transition:
-    background-color 380ms ease,
-    overlay 380ms allow-discrete,
-    display 380ms allow-discrete;
+    background-color 320ms ease,
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
 }
 @starting-style {
   dialog[open]::backdrop {
@@ -335,19 +335,19 @@ html.motion-failed [data-image-reveal] {
   }
 }
 .open-bg {
-  animation: open-settle 2400ms var(--ease-out-soft) both;
+  animation: open-settle 2000ms var(--ease-out-soft) both;
 }
 .open-overlay {
-  animation: open-fade 1300ms ease-out both;
+  animation: open-fade 1100ms ease-out both;
 }
 .open-line {
-  animation: open-line 1400ms var(--ease-out-soft) both;
+  animation: open-line 1200ms var(--ease-out-soft) both;
 }
 .open-rise {
-  animation: open-rise 1300ms var(--ease-out-soft) both;
+  animation: open-rise 1100ms var(--ease-out-soft) both;
 }
 .open-nav {
-  animation: open-drop 1000ms var(--ease-out-soft) 700ms both;
+  animation: open-drop 850ms var(--ease-out-soft) 600ms both;
 }
 @media (prefers-reduced-motion: reduce) {
   .open-bg,
@@ -356,5 +356,23 @@ html.motion-failed [data-image-reveal] {
   .open-rise,
   .open-nav {
     animation: none;
+  }
+}
+
+/* Mobile menu: fades and lifts in. */
+.mobile-menu {
+  transition:
+    opacity 320ms ease,
+    translate 420ms var(--ease-out-soft);
+}
+@starting-style {
+  .mobile-menu {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu {
+    transition: none;
   }
 }

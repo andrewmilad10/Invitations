@@ -31,53 +31,72 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   }, [overlay]);
 
   useEffect(() => {
-    document.documentElement.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    document.documentElement.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
     return () => {
       document.documentElement.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
   const light = overlay && !scrolled && !open;
 
   return (
-    <header
-      style={{ viewTransitionName: "site-header" }}
-      className={cn(
-        "z-50 transition-[background-color,color,border-color] duration-500 ease-out",
-        overlay && "open-nav",
-        overlay ? "fixed inset-x-0 top-0" : "sticky top-0",
-        light ? "bg-transparent text-white" : "border-b border-border/70 bg-background/92 text-foreground backdrop-blur",
-      )}
-    >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:h-20 sm:px-8">
-        <Link href="/" className="font-serif text-[1.75rem] leading-none tracking-wide">
-          {siteConfig.name}
-        </Link>
-
-        <nav aria-label="Main" className="hidden items-center gap-8 text-[0.9rem] lg:flex">
-          {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className={cn("transition-opacity hover:opacity-100", light ? "opacity-85" : "opacity-75")}>
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link href="/login" className={cn("px-3 text-[0.9rem]", light ? "opacity-90 hover:opacity-100" : "opacity-75 hover:opacity-100")}>
-            Log in
+    <>
+      <header
+        style={{ viewTransitionName: "site-header" }}
+        className={cn(
+          "z-50 transition-[background-color,color,border-color] duration-500 ease-out",
+          overlay && "open-nav",
+          overlay ? "fixed inset-x-0 top-0" : "sticky top-0",
+          light ? "bg-transparent text-white" : "border-b border-border/70 bg-background/92 text-foreground backdrop-blur",
+          open && "bg-background",
+        )}
+      >
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-5 sm:h-20 sm:px-8">
+          <Link href="/" className="font-serif text-[1.75rem] leading-none tracking-wide">
+            {siteConfig.name}
           </Link>
-          <Button asChild className={cn("h-10 rounded-full px-5", light && "bg-white text-foreground hover:bg-white/90")}>
-            <Link href="/invitations">Create invitation</Link>
-          </Button>
+
+          <nav aria-label="Main" className="hidden items-center gap-8 text-[0.9rem] lg:flex">
+            {LINKS.map((l) => (
+              <Link key={l.href} href={l.href} className={cn("transition-opacity hover:opacity-100", light ? "opacity-85" : "opacity-75")}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="hidden items-center gap-3 lg:flex">
+            <Link href="/login" className={cn("px-3 text-[0.9rem]", light ? "opacity-90 hover:opacity-100" : "opacity-75 hover:opacity-100")}>
+              Log in
+            </Link>
+            <Button asChild className={cn("h-10 rounded-full px-5", light && "bg-white text-foreground hover:bg-white/90")}>
+              <Link href="/invitations">Create invitation</Link>
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            className="-me-2 p-2 lg:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((o) => !o)}
+          >
+            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
         </div>
-
-        <button type="button" className="-me-2 p-2 lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
-      </div>
-
+      </header>
       {open ? (
-        <div className="fixed inset-x-0 top-16 bottom-0 flex flex-col bg-background px-5 pb-8 pt-4 sm:top-20 lg:hidden">
+        // A sibling of <header>, not a child: the header's backdrop blur would
+        // otherwise make it the containing block and squeeze this panel.
+        <div
+          id="mobile-menu"
+          data-lenis-prevent
+          className="mobile-menu fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col overflow-y-auto overscroll-contain bg-background px-5 pb-8 pt-4 sm:top-20 lg:hidden"
+        >
           <nav aria-label="Main" className="flex flex-col">
             {LINKS.map((l) => (
               <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="border-b border-border py-4 font-serif text-3xl">
@@ -99,6 +118,6 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           </div>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }
