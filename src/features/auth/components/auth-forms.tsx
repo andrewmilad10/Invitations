@@ -5,13 +5,16 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FormMessage } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { SaveDraftAfterAuth } from "@/features/try/save-draft-after-auth";
 import { signIn, signUp, type AuthFormState } from "../actions";
 
-export function LoginForm({ next }: { next?: string }) {
+export function LoginForm({ next, draft = false }: { next?: string; draft?: boolean }) {
   const [state, action, pending] = useActionState<AuthFormState, FormData>(signIn, {});
+  if (state.signedIn) return <SaveDraftAfterAuth />;
   return (
     <form action={action} className="grid gap-5" noValidate>
       {next ? <input type="hidden" name="next" value={next} /> : null}
+      {draft ? <input type="hidden" name="intent" value="draft" /> : null}
       <FormMessage>{state.error}</FormMessage>
       <Field id="email" label="Email" error={state.fieldErrors?.email}>
         <Input
@@ -39,7 +42,7 @@ export function LoginForm({ next }: { next?: string }) {
       </Button>
       <p className="text-center text-sm text-muted-foreground">
         New here?{" "}
-        <Link href="/register" className="font-medium text-foreground underline underline-offset-4">
+        <Link href={draft ? "/register?draft=1" : "/register"} className="font-medium text-foreground underline underline-offset-4">
           Create an account
         </Link>
       </p>
@@ -47,13 +50,15 @@ export function LoginForm({ next }: { next?: string }) {
   );
 }
 
-export function RegisterForm() {
+export function RegisterForm({ draft = false }: { draft?: boolean }) {
   const [state, action, pending] = useActionState<AuthFormState, FormData>(signUp, {});
+  if (state.signedIn) return <SaveDraftAfterAuth />;
   if (state.info) {
     return <FormMessage tone="info">{state.info}</FormMessage>;
   }
   return (
     <form action={action} className="grid gap-5" noValidate>
+      {draft ? <input type="hidden" name="intent" value="draft" /> : null}
       <FormMessage>{state.error}</FormMessage>
       <Field id="fullName" label="Your name" error={state.fieldErrors?.fullName}>
         <Input
@@ -88,11 +93,11 @@ export function RegisterForm() {
         />
       </Field>
       <Button type="submit" size="lg" disabled={pending}>
-        {pending ? "Creating account…" : "Create account"}
+        {pending ? "Creating account…" : draft ? "Create invitation" : "Create account"}
       </Button>
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-foreground underline underline-offset-4">
+        <Link href={draft ? "/login?draft=1" : "/login"} className="font-medium text-foreground underline underline-offset-4">
           Log in
         </Link>
       </p>

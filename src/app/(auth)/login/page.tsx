@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import { LoginForm } from "@/features/auth/components/auth-forms";
+import { DraftAuthLayout } from "@/features/try/draft-auth-layout";
 import { safeRedirectPath } from "@/features/auth/schemas";
 
 export const metadata: Metadata = { title: "Log in" };
 
 export default async function LoginPage(props: PageProps<"/login">) {
-  const { next, error } = await props.searchParams;
+  const { next, error, draft } = await props.searchParams;
   const nextPath = typeof next === "string" ? safeRedirectPath(next) : undefined;
+  if (draft === "1") {
+    return (
+      <DraftAuthLayout title="Welcome back" intro="Log in and we'll save this invitation to your account.">
+        <LoginForm draft />
+      </DraftAuthLayout>
+    );
+  }
   return (
     <>
       <h1 className="mb-2 text-center font-serif text-4xl">Welcome back</h1>

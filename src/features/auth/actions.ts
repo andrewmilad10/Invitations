@@ -11,7 +11,12 @@ export type AuthFormState = {
   info?: string;
   fieldErrors?: Record<string, string[] | undefined>;
   values?: { email?: string; fullName?: string };
+  /** Signed in, and the page should continue client-side (saving a draft). */
+  signedIn?: boolean;
 };
+
+/** Forms on the "save your draft" path continue in the browser instead of redirecting. */
+const isDraftIntent = (formData: FormData) => formData.get("intent") === "draft";
 
 const SERVICE_UNAVAILABLE = "We couldn't reach the sign-in service. Please try again in a moment.";
 
@@ -44,6 +49,7 @@ export async function signIn(_prev: AuthFormState, formData: FormData): Promise<
     return { error: message, values: { email: parsed.data.email } };
   }
 
+  if (isDraftIntent(formData)) return { signedIn: true };
   redirect(safeRedirectPath(parsed.data.next));
 }
 
@@ -77,8 +83,14 @@ export async function signUp(_prev: AuthFormState, formData: FormData): Promise<
 
   // With email confirmation enabled there is no session yet.
   if (!data.session) {
-    return { info: "Almost there — we sent you a confirmation link. Open it to finish creating your account.", values };
+    return {
+      info: isDraftIntent(formData)
+        ? "We sent you a confirmation link. Open it, log in, and your invitation will be saved to your account — it's kept safe in this browser until then."
+        : "Almost there — we sent you a confirmation link. Open it to finish creating your account.",
+      values,
+    };
   }
+  if (isDraftIntent(formData)) return { signedIn: true };
 
   redirect("/dashboard");
 }

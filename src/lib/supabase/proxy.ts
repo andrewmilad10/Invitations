@@ -47,8 +47,10 @@ export async function updateSession(request: NextRequest) {
 
   if (isSignedIn && AUTH_ROUTES.includes(pathname)) {
     const url = request.nextUrl.clone();
+    const savingDraft = request.nextUrl.searchParams.get("draft") === "1";
     url.pathname = "/dashboard";
-    url.search = "";
+    // Already signed in and saving a try-flow draft: the dashboard saves it.
+    url.search = savingDraft ? "?draft=1" : "";
     return redirectWithCookies(url, response);
   }
 

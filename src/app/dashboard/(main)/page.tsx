@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DraftImporter } from "@/features/try/draft-importer";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,11 +12,13 @@ import { resolveTemplateManifest } from "@/templates/registry";
 
 export const metadata: Metadata = { title: "My weddings" };
 
-export default async function DashboardPage() {
+export default async function DashboardPage(props: PageProps<"/dashboard">) {
+  const { draft } = await props.searchParams;
   const weddings = await listMyWeddings();
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
+      <DraftImporter autoSave={draft === "1"} />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-serif text-4xl">My weddings</h1>
