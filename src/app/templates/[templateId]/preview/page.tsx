@@ -21,12 +21,15 @@ export async function generateMetadata(props: PageProps<"/templates/[templateId]
 /** A template rendered with fixture data through the normal pipeline. */
 export default async function TemplatePreviewPage(props: PageProps<"/templates/[templateId]/preview">) {
   const { templateId } = await props.params;
-  const { locale } = await props.searchParams;
+  const { locale, palette } = await props.searchParams;
   const template = getTemplateManifest(templateId);
   if (!template || template.status === "hidden") notFound();
 
   const bundle = sampleBundle(template.id);
   if (locale === "ar") bundle.settings.locale = "ar";
+  // Only the template's own palettes are accepted (no arbitrary colors via URL).
+  const chosen = template.palettes.find((p) => p.id === palette);
+  if (chosen) bundle.theme.tokens = { colors: chosen.colors };
 
   const model = buildInvitationModel(bundle, template, { mode: "sample", mediaUrl: sampleMediaUrl });
   return <InvitationRenderer model={model} />;
