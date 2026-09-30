@@ -61,6 +61,7 @@ export function buildInvitationModel(
   return {
     mode: options.mode,
     templateId: template.id,
+    template: { renderer: template.renderer, opening: template.features.opening, decor: template.stationery.ornament },
     locale,
     dir: LOCALE_META[locale].dir,
     wedding: {

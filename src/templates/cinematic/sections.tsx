@@ -66,16 +66,49 @@ function Heading({
   );
 }
 
+/**
+ * Section divider. The motif follows the template's decor (set as
+ * data-decor on the invitation root), so shared sections look different in
+ * Romantic, Botanical, Luxury or Classic without any extra props.
+ */
 function Ornament() {
+  const line = <span className="h-px w-12 bg-current opacity-50" />;
   return (
-    <div
-      aria-hidden
-      data-reveal
-      className="mx-auto my-8 flex items-center justify-center gap-3 text-inv-accent"
-    >
-      <span className="h-px w-12 bg-current opacity-50" />
-      <span className="size-1.5 rotate-45 bg-current" />
-      <span className="h-px w-12 bg-current opacity-50" />
+    <div aria-hidden data-reveal className="mx-auto my-8 flex items-center justify-center text-inv-accent">
+      {/* default: diamond */}
+      <span className="flex items-center gap-3 group-data-[decor=crest]/inv:hidden group-data-[decor=floral]/inv:hidden group-data-[decor=gilded]/inv:hidden group-data-[decor=leaves]/inv:hidden">
+        {line}
+        <span className="size-1.5 rotate-45 bg-current" />
+        {line}
+      </span>
+      {/* floral: a small blossom between stems */}
+      <svg viewBox="0 0 120 20" className="hidden h-5 w-32 group-data-[decor=floral]/inv:block" fill="none" stroke="currentColor" strokeWidth="0.8">
+        <path d="M0 10 H44 M76 10 H120" opacity="0.5" />
+        <path d="M44 10 C 50 4, 54 4, 56 7 M76 10 C 70 16, 66 16, 64 13" />
+        {[0, 72, 144, 216, 288].map((a) => (
+          <ellipse key={a} cx="60" cy="6.5" rx="2.2" ry="3.5" transform={`rotate(${a} 60 10)`} />
+        ))}
+        <circle cx="60" cy="10" r="1.2" fill="currentColor" />
+      </svg>
+      {/* leaves: a sprig */}
+      <svg viewBox="0 0 120 20" className="hidden h-5 w-32 group-data-[decor=leaves]/inv:block" fill="currentColor">
+        <path d="M20 10 H100" stroke="currentColor" strokeWidth="0.7" opacity="0.6" />
+        {[34, 46, 58, 70, 82].map((x, i) => (
+          <ellipse key={x} cx={x} cy={i % 2 ? 13 : 7} rx="4" ry="1.6" transform={`rotate(${i % 2 ? 25 : -25} ${x} ${i % 2 ? 13 : 7})`} opacity="0.75" />
+        ))}
+      </svg>
+      {/* gilded: double rule with a lozenge */}
+      <svg viewBox="0 0 120 20" className="hidden h-5 w-36 group-data-[decor=gilded]/inv:block" fill="none" stroke="currentColor" strokeWidth="0.7">
+        <path d="M0 8 H50 M0 12 H50 M70 8 H120 M70 12 H120" opacity="0.7" />
+        <path d="M60 2 L68 10 L60 18 L52 10 Z" />
+        <path d="M60 6 L64 10 L60 14 L56 10 Z" fill="currentColor" />
+      </svg>
+      {/* crest: rule with a small ring */}
+      <span className="hidden items-center gap-3 group-data-[decor=crest]/inv:flex">
+        {line}
+        <span className="size-3 rounded-full border border-current" />
+        {line}
+      </span>
     </div>
   );
 }
@@ -140,7 +173,7 @@ export function CinematicHero({ model, content }: SectionProps<"hero">) {
     <header
       id="hero"
       data-section="hero"
-      className="relative isolate flex min-h-svh items-center justify-center overflow-hidden bg-inv-fg text-inv-bg"
+      className="relative isolate flex min-h-svh items-center justify-center overflow-hidden bg-[color-mix(in_oklab,var(--inv-fg)_18%,black)] text-white"
     >
       {media.hero ? (
         <InvitationImage

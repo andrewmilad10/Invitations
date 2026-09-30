@@ -1,5 +1,6 @@
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cinematicManifest } from "./cinematic/manifest";
+import { botanicalManifest, classicManifest, luxuryManifest, modernManifest, romanticManifest } from "./collection/manifests";
 import { editorialManifest } from "./editorial/manifest";
 
 /**
@@ -7,9 +8,18 @@ import { editorialManifest } from "./editorial/manifest";
  * anywhere). Renderers are registered separately in ./renderers.tsx so the
  * dashboard doesn't load animation code.
  *
- * Adding a template = add its folder, then one line here and one in renderers.
+ * Adding a template = add its manifest here. A template with a new layout
+ * also registers its renderer in ./renderers.tsx.
  */
-export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [cinematicManifest, editorialManifest];
+export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [
+  romanticManifest,
+  classicManifest,
+  cinematicManifest,
+  modernManifest,
+  botanicalManifest,
+  luxuryManifest,
+  editorialManifest,
+];
 
 export const DEFAULT_TEMPLATE_ID = cinematicManifest.id;
 

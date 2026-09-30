@@ -98,7 +98,8 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  background: var(--inv-fg);
+  /* Same backdrop as the hero section (always dark, whatever the palette). */
+  background: color-mix(in oklab, var(--inv-fg) 18%, black);
 }
 
 .heroScrim {

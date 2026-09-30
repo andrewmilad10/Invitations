@@ -12,7 +12,7 @@ export const editorialManifest: TemplateManifest = {
   tagline: "Quiet, typographic, magazine-like.",
   description:
     "A clean, type-led layout with generous whitespace. No opening animation — the invitation reads like a beautifully set page.",
-  previewImage: "/templates/editorial.svg",
+  renderer: "editorial",
   categories: ["modern", "minimal"],
   stationery: { ornament: "rule" },
   supportedSections: [

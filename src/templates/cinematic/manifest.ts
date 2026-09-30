@@ -6,7 +6,7 @@ export const cinematicManifest: TemplateManifest = {
   tagline: "Opens like a letter, unfolds like a film.",
   description:
     "A sealed envelope opens into a full-screen hero, followed by an elegant, image-led invitation with countdown, venues, gallery and schedule.",
-  previewImage: "/templates/cinematic.svg",
+  renderer: "cinematic",
   categories: ["luxury", "romantic", "classic"],
   stationery: { ornament: "seal" },
   supportedSections: [

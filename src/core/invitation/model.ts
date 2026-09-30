@@ -2,6 +2,7 @@ import type { SectionContent, SectionType } from "../sections/registry";
 import type { DateParts } from "../i18n/format";
 import type { InvitationDictionary } from "../i18n/dictionaries";
 import type { Locale } from "../i18n/locales";
+import type { StationeryOrnament } from "../template/manifest";
 import type { ThemeTokens } from "../theme/tokens";
 
 /**
@@ -46,6 +47,12 @@ export type RenderedSection = {
 export interface InvitationModel {
   mode: RenderMode;
   templateId: string;
+  /** Layout key and presentation options from the template manifest. */
+  template: {
+    renderer: string;
+    opening: "envelope" | "none";
+    decor: StationeryOrnament;
+  };
   locale: Locale;
   dir: "ltr" | "rtl";
   wedding: {

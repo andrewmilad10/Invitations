@@ -21,9 +21,10 @@ export function InvitationRoot({
       lang={model.locale}
       dir={model.dir}
       data-template={model.templateId}
+      data-decor={model.template.decor}
       data-mode={model.mode}
       style={model.cssVars as CSSProperties}
-      className={cn("min-h-dvh bg-inv-bg font-inv-body text-inv-fg antialiased", className)}
+      className={cn("group/inv min-h-dvh bg-inv-bg font-inv-body text-inv-fg antialiased", className)}
     >
       {children}
     </div>

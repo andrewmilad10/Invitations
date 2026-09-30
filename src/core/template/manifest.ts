@@ -28,8 +28,12 @@ export interface TemplateManifest {
   name: string;
   tagline: string;
   description: string;
-  /** Public path of the picker thumbnail. */
-  previewImage: string;
+  /**
+   * Which layout renders it (a key in src/templates/renderers.tsx). Several
+   * templates can share a layout and differ in theme, type, decoration and
+   * features — or a template can bring its own renderer.
+   */
+  renderer: string;
   /** Gallery categories, most characteristic first. */
   categories: readonly TemplateCategory[];
   /** How the template is drawn as an invitation card in galleries. */

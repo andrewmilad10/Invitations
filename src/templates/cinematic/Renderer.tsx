@@ -16,7 +16,7 @@ export default function CinematicRenderer({ model }: TemplateRendererProps) {
       <main>
         <Sections model={model} components={cinematicSections} />
       </main>
-      {model.mode !== "export" ? <EnvelopeOpening model={model} /> : null}
+      {model.mode !== "export" && model.template.opening === "envelope" ? <EnvelopeOpening model={model} /> : null}
       <CinematicMotion model={model} />
       <MusicToggle model={model} />
     </InvitationRoot>

@@ -19,16 +19,17 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
  */
 export function CinematicMotion({ model }: { model: InvitationModel }) {
   const enabled = model.mode === "live" || model.mode === "sample";
-  // In live/sample mode the envelope is shown first; motion starts once it's open.
-  const [started, setStarted] = useState(false);
+  // With an envelope, motion starts once it's open; otherwise straight away.
+  const [opened, setOpened] = useState(false);
+  const started = enabled && (model.template.opening === "none" || opened);
   const scope = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!enabled) return;
-    const start = () => setStarted(true);
+    if (!enabled || model.template.opening === "none") return;
+    const start = () => setOpened(true);
     window.addEventListener(OPENED_EVENT, start, { once: true });
     return () => window.removeEventListener(OPENED_EVENT, start);
-  }, [enabled]);
+  }, [enabled, model.template.opening]);
 
   useGSAP(
     () => {

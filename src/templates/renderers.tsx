@@ -4,14 +4,14 @@ import EditorialRenderer from "./editorial/Renderer";
 import { DEFAULT_TEMPLATE_ID } from "./registry";
 import type { TemplateRenderer } from "./types";
 
-/** Template id → renderer. Keep in sync with TEMPLATE_MANIFESTS (a test enforces it). */
+/** Layout key (manifest.renderer) → renderer. A test checks every manifest's renderer exists. */
 export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   cinematic: CinematicRenderer,
   editorial: EditorialRenderer,
 };
 
-/** Renders a model with the renderer of the template it was built for. */
+/** Renders a model with the layout of the template it was built for. */
 export function InvitationRenderer({ model }: { model: InvitationModel }) {
-  const Renderer = TEMPLATE_RENDERERS[model.templateId] ?? TEMPLATE_RENDERERS[DEFAULT_TEMPLATE_ID];
+  const Renderer = TEMPLATE_RENDERERS[model.template.renderer] ?? TEMPLATE_RENDERERS[DEFAULT_TEMPLATE_ID];
   return <Renderer model={model} />;
 }

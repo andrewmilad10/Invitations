@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/select";
 import { FONT_KEYS, FONTS, type FontKey } from "@/core/theme/fonts";
 import { resolveTheme, sanitizeOverrides, type ColorToken, type ThemeOverrides } from "@/core/theme/tokens";
-import { TemplatePicker } from "@/features/weddings/components/template-picker";
+import { TemplatePicker, toTemplateOption } from "@/features/weddings/components/template-picker";
 import { cn } from "@/lib/utils";
 import { resolveTemplateManifest, selectableTemplates } from "@/templates/registry";
 import { updateTemplate, updateTheme } from "../actions";
@@ -36,7 +36,7 @@ export function ThemePanel() {
     save("template", () => updateTemplate(weddingId, id), 0);
   }
 
-  const templates = selectableTemplates().map(({ id, name, tagline, previewImage, status }) => ({ id, name, tagline, previewImage, status }));
+  const templates = selectableTemplates().map(toTemplateOption);
   const activePalette = template.palettes.find((p) => JSON.stringify(p.colors) === JSON.stringify(overrides.colors ?? {}));
 
   return (

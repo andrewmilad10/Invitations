@@ -5,12 +5,10 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, FormMessage } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { createWedding } from "../actions";
-import { TemplatePicker } from "./template-picker";
+import { TemplatePicker, type TemplateOption } from "./template-picker";
 
-type TemplateOption = Pick<TemplateManifest, "id" | "name" | "tagline" | "previewImage" | "status">;
 type Errors = Record<string, string[] | undefined>;
 
 const STEPS = ["Couple", "Date", "Template", "Create"] as const;

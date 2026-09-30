@@ -1,10 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import type { TemplateManifest } from "@/core/template/manifest";
+import { Stationery } from "@/features/marketing/stationery";
 import { cn } from "@/lib/utils";
 
-type TemplateOption = Pick<TemplateManifest, "id" | "name" | "tagline" | "previewImage" | "status">;
+export type TemplateOption = Pick<TemplateManifest, "id" | "name" | "tagline" | "status" | "themeDefaults" | "stationery">;
+
+/** Serializable subset of a manifest for client pickers. */
+export function toTemplateOption(t: TemplateManifest): TemplateOption {
+  return { id: t.id, name: t.name, tagline: t.tagline, status: t.status, themeDefaults: t.themeDefaults, stationery: t.stationery };
+}
 
 /** Radio-group of templates. Used by the wizard and (later) the theme panel. */
 export function TemplatePicker({
@@ -19,7 +24,7 @@ export function TemplatePicker({
   name?: string;
 }) {
   return (
-    <div role="radiogroup" aria-label="Template" className="grid gap-4 sm:grid-cols-2">
+    <div role="radiogroup" aria-label="Template" className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {templates.map((t) => {
         const selected = t.id === value;
         return (
@@ -39,8 +44,8 @@ export function TemplatePicker({
               onChange={() => onChange(t.id)}
               className="sr-only"
             />
-            <div className="relative aspect-[4/3] bg-muted">
-              <Image src={t.previewImage} alt="" fill sizes="(min-width: 640px) 300px, 100vw" className="object-cover" />
+            <div className="flex justify-center bg-muted px-10 py-6">
+              <Stationery template={t} partnerOne="Emma" partnerTwo="James" dateLabel="14 October" className="w-32 shadow-[0_10px_24px_-12px_rgb(34_29_26/0.5)]" />
             </div>
             <div className="flex items-start justify-between gap-3 p-4">
               <div>

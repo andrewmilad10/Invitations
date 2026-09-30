@@ -31,7 +31,6 @@ export function Stationery({
 }) {
   const theme = resolveTheme(template.themeDefaults, overrides ?? {});
   const ornament = template.stationery.ornament;
-  const dark = ornament === "gilded";
   const vars = themeToCssVars(theme) as CSSProperties;
 
   return (
@@ -41,8 +40,8 @@ export function Stationery({
       className={cn("relative isolate aspect-[5/7] overflow-hidden [container-type:inline-size]", className)}
       style={{
         ...vars,
-        background: dark ? theme.colors.foreground : theme.colors.surface,
-        color: dark ? theme.colors.surface : theme.colors.foreground,
+        background: theme.colors.surface,
+        color: theme.colors.foreground,
         ...style,
       }}
     >
