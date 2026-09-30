@@ -13,6 +13,7 @@ import { StatusBadge } from "@/features/weddings/components/status-badge";
 import { cn } from "@/lib/utils";
 import { setStatus } from "./bundle-updates";
 import { useEditor, type SaveStatus } from "./editor-context";
+import { PublishDialog } from "./publish-dialog";
 import { DetailsPanel } from "./panels/details-panel";
 import { EventPanel } from "./panels/event-panel";
 import { MusicPanel } from "./panels/media";
@@ -53,6 +54,7 @@ export function EditorShell({ initialPanel }: { initialPanel?: string }) {
   const { bundle, previewUrl } = useEditor();
   const [selection, setSelection] = useState<Selection>(() => parseInitial(initialPanel));
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
+  const [publishOpen, setPublishOpen] = useState(false);
   // Phones: show the list until something is chosen.
   const [mobileDrilled, setMobileDrilled] = useState(Boolean(initialPanel));
 
@@ -64,7 +66,12 @@ export function EditorShell({ initialPanel }: { initialPanel?: string }) {
 
   return (
     <div className="flex h-dvh flex-col">
-      <EditorHeader />
+      <EditorHeader onPublish={() => setPublishOpen(true)} />
+      <PublishDialog
+        open={publishOpen}
+        onClose={() => setPublishOpen(false)}
+        onEditLink={() => select({ kind: "settings" })}
+      />
 
       <div className="flex border-b bg-card lg:hidden" role="tablist" aria-label="Editor view">
         {(["edit", "preview"] as const).map((tab) => (
@@ -205,28 +212,23 @@ function SaveIndicator({ status }: { status: SaveStatus }) {
   );
 }
 
-function EditorHeader() {
-  const { weddingId, bundle, update, flush, status, canEdit, siteUrl } = useEditor();
+function EditorHeader({ onPublish }: { onPublish: () => void }) {
+  const { weddingId, bundle, update, status, canEdit, siteUrl } = useEditor();
   const [pending, startTransition] = useTransition();
   const published = bundle.wedding.status === "published";
   const publicUrl = `${siteUrl}/w/${bundle.wedding.slug}`;
   const coupleName = `${bundle.wedding.partner_one_name || "…"} & ${bundle.wedding.partner_two_name || "…"}`;
 
-  function togglePublish() {
+  function unpublish() {
+    if (!window.confirm("Unpublish? The link will stop working until you publish again.")) return;
     startTransition(async () => {
-      await flush(); // publish exactly what the couple sees
-      const result = await setWeddingPublished(weddingId, !published);
+      const result = await setWeddingPublished(weddingId, false);
       if (!result.ok) {
         toast.error(result.error);
         return;
       }
-      update((b) => setStatus(b, published ? "draft" : "published"));
-      if (published) toast("Unpublished. The link no longer works.");
-      else
-        toast.success("Your invitation is live!", {
-          description: publicUrl,
-          action: { label: "Copy link", onClick: () => void navigator.clipboard?.writeText(publicUrl) },
-        });
+      update((b) => setStatus(b, "draft"));
+      toast("Unpublished. The link no longer works.");
     });
   }
 
@@ -260,7 +262,7 @@ function EditorHeader() {
         </>
       ) : null}
       {canEdit ? (
-        <Button size="sm" variant={published ? "outline" : "default"} disabled={pending} onClick={togglePublish}>
+        <Button size="sm" variant={published ? "outline" : "default"} disabled={pending} onClick={published ? unpublish : onPublish}>
           {pending ? "…" : published ? "Unpublish" : "Publish"}
         </Button>
       ) : null}

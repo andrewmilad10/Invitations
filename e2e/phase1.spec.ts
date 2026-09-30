@@ -88,7 +88,11 @@ test.describe.serial("Phase 1", () => {
     await page.getByRole("button", { name: "Settings & sharing" }).click();
     slug = await page.locator("#slug").inputValue();
 
-    await page.getByRole("button", { name: "Publish" }).click();
+    await page.getByRole("button", { name: "Publish", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Ready to share?" })).toBeVisible();
+    await page.getByRole("button", { name: "Publish invitation" }).click();
+    await expect(page.getByRole("heading", { name: "Your invitation is live" })).toBeVisible();
+    await page.keyboard.press("Escape");
     await expect(page.getByText("Published", { exact: true })).toBeVisible();
   });
 
