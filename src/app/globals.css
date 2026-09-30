@@ -78,3 +78,16 @@
   letter-spacing: 0 !important;
   text-transform: none !important;
 }
+
+/* Small uppercase labels in invitations. Arabic has no capitals and needs a
+   larger size to stay legible (letter-spacing is removed above). */
+.inv-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+}
+[data-template][lang="ar"] .inv-label {
+  font-size: 0.95rem;
+  font-weight: 400;
+}

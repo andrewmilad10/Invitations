@@ -1,12 +1,14 @@
 import { InvitationRoot, Sections } from "../shared/invitation-root";
 import { MusicToggle } from "../shared/music-toggle";
 import type { TemplateRendererProps } from "../types";
+import { CinematicMotion } from "./motion";
+import { EnvelopeOpening } from "./opening/envelope-opening";
 import { cinematicSections } from "./sections";
 
 /**
- * Cinematic template. The envelope opening and scroll motion are added in the
- * cinematic phase as a layer on top; the page underneath is complete and
- * readable without JavaScript.
+ * Cinematic template: the full invitation page renders underneath (readable
+ * without JavaScript); the envelope opening is an overlay on top, and scroll
+ * motion is layered on after it opens.
  */
 export default function CinematicRenderer({ model }: TemplateRendererProps) {
   return (
@@ -14,6 +16,8 @@ export default function CinematicRenderer({ model }: TemplateRendererProps) {
       <main>
         <Sections model={model} components={cinematicSections} />
       </main>
+      {model.mode !== "export" ? <EnvelopeOpening model={model} /> : null}
+      <CinematicMotion model={model} />
       <MusicToggle model={model} />
     </InvitationRoot>
   );

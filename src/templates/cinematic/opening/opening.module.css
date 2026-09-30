@@ -1,0 +1,197 @@
+/* Envelope opening — geometry only. Colors come from --inv-* tokens. */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 40%, color-mix(in oklab, var(--inv-accent) 22%, transparent), transparent 60%),
+    color-mix(in oklab, var(--inv-fg) 18%, black);
+  /* Guard: never let the page show through before JS decides anything. */
+  isolation: isolate;
+}
+
+.center {
+  display: grid;
+  justify-items: center;
+  gap: 2.25rem;
+}
+
+/* The envelope box is NOT transformed and has no `perspective`, so the
+   card can later switch to position: fixed relative to the viewport. */
+.envelope {
+  position: relative;
+  width: min(86vw, 34rem);
+  aspect-ratio: 3 / 2;
+  cursor: pointer;
+}
+
+.back,
+.front,
+.flap,
+.card {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+}
+
+.back {
+  z-index: 1;
+  background: color-mix(in oklab, var(--inv-surface) 82%, var(--inv-accent));
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.6);
+}
+
+/* The card sits between back and front pocket. */
+.card {
+  z-index: 2;
+  inset: 6% 5% 6% 5%;
+  visibility: hidden;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--inv-surface);
+  box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.35);
+  container-type: inline-size;
+}
+
+.cardFace {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.6em;
+  padding: 8%;
+  text-align: center;
+  color: var(--inv-fg);
+  font-family: var(--inv-font-body);
+  font-size: 3.6cqw;
+  border: 1px solid var(--inv-border);
+  outline: 1px solid var(--inv-border);
+  outline-offset: -4.5cqw;
+}
+
+.cardFace .names {
+  font-family: var(--inv-font-heading);
+  font-size: 2.6em;
+  line-height: 1.05;
+  font-weight: 300;
+}
+
+.cardFace .amp {
+  font-family: var(--inv-font-accent);
+  color: var(--inv-accent);
+  font-size: 0.8em;
+  display: block;
+}
+
+.cardFace .small {
+  font-size: 0.72em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--inv-muted);
+}
+
+/* Layer that matches the real hero exactly; faded in during the zoom. */
+.heroLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: var(--inv-fg);
+}
+
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.25), rgb(0 0 0 / 0.6));
+}
+
+/* Pocket: the whole envelope except a V cut at the top. */
+.front {
+  z-index: 3;
+  background: color-mix(in oklab, var(--inv-surface) 92%, var(--inv-accent));
+  clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+}
+
+.front::before,
+.front::after {
+  /* Diagonal fold lines from the bottom corners. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top right, transparent calc(50% - 0.5px), color-mix(in oklab, var(--inv-border) 80%, black 6%) 50%, transparent calc(50% + 0.5px));
+  opacity: 0.8;
+}
+
+.front::after {
+  transform: scaleX(-1);
+}
+
+/* Flap: the top triangle, hinged on the top edge. The 3D perspective lives
+   in its own transform so no ancestor becomes a containing block. */
+.flap {
+  z-index: 4;
+  height: 58%;
+  bottom: auto;
+  background: color-mix(in oklab, var(--inv-surface) 86%, var(--inv-accent));
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: 50% 0;
+  transform: perspective(1400px) rotateX(0deg);
+  backface-visibility: visible;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.12));
+}
+
+.seal {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 58%;
+  width: clamp(3.5rem, 15%, 5.25rem);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--inv-accent) 70%, white), var(--inv-accent) 55%, color-mix(in oklab, var(--inv-accent) 70%, black));
+  color: var(--inv-accent-fg);
+  font-family: var(--inv-font-accent);
+  font-size: clamp(1rem, 4.5vw, 1.6rem);
+  box-shadow:
+    0 6px 14px -4px rgb(0 0 0 / 0.5),
+    inset 0 0 0 3px color-mix(in oklab, var(--inv-accent) 80%, black 15%);
+  transition: scale 200ms ease;
+}
+
+.seal:hover {
+  scale: 1.06;
+}
+
+.seal:focus-visible {
+  outline: 2px solid var(--inv-accent-fg);
+  outline-offset: 4px;
+}
+
+.hint {
+  font-family: var(--inv-font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.7);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint {
+    animation: none;
+  }
+  .seal {
+    transition: none;
+  }
+}
