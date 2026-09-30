@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronDown, Heart, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { startTransition, useEffect, useMemo, useRef, useState, ViewTransition, type ReactNode } from "react";
 import { CARD_SHAPES, TEMPLATE_CATEGORIES, type TemplateCategory, type TemplateManifest } from "@/core/template/manifest";
 import { COLOR_FAMILIES, type ColorFamily } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
@@ -47,8 +47,11 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
 
   function apply(patch: Partial<GalleryFilters>) {
     const next = { ...filters, ...patch };
-    setFilters(next);
-    setLimit(PAGE);
+    // A transition, so the grid cross-fades (and cards glide) instead of jumping.
+    startTransition(() => {
+      setFilters(next);
+      setLimit(PAGE);
+    });
     window.history.replaceState(null, "", `${PRODUCTS[product].path}${filtersToQuery(next)}`);
   }
 
@@ -103,7 +106,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
       </nav>
 
       {/* Filter bar */}
-      <div className="sticky top-0 z-20 -mx-5 mt-8 border-y bg-background/95 px-5 py-3 backdrop-blur sm:mx-0 sm:px-0">
+      <div className="sticky top-16 z-20 sm:top-20 -mx-5 mt-8 border-y bg-background/95 px-5 py-3 backdrop-blur sm:mx-0 sm:px-0">
         <div className="flex flex-wrap items-center gap-2">
           <FilterMenu label="Sort" value={SORTS[filters.sort]} active={filters.sort !== "featured"}>
             {(close) =>
@@ -204,19 +207,20 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
       </div>
 
       {items.length ? (
-        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
-          {shown.map((item, i) => (
-            <DesignCard
-              key={`${item.template.id}:${item.paletteId}`}
-              template={item.template}
-              index={templates.indexOf(item.template)}
-              initialPalette={item.paletteId}
-              onQuickView={(template, paletteId) => setQuick({ template, paletteId })}
-              product={product}
-              className={i < 4 ? undefined : "[content-visibility:auto] [contain-intrinsic-size:auto_520px]"}
-            />
-          ))}
-        </div>
+        <ViewTransition key={filtersToQuery(filters)} enter="grid-swap" exit="grid-swap" default="none">
+          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
+            {shown.map((item) => (
+              <DesignCard
+                key={`${item.template.id}:${item.paletteId}`}
+                template={item.template}
+                index={templates.indexOf(item.template)}
+                initialPalette={item.paletteId}
+                onQuickView={(template, paletteId) => setQuick({ template, paletteId })}
+                product={product}
+              />
+            ))}
+          </div>
+        </ViewTransition>
       ) : (
         <div className="mt-16 text-center">
           <p className="font-serif text-3xl font-light">{filters.saved && !favorites.length ? "No saved designs yet" : "No designs match"}</p>

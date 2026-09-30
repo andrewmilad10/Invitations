@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SmartImage as Image } from "@/components/smart-image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PHOTO_LIBRARY } from "@/features/media/library";

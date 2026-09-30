@@ -2,11 +2,11 @@
 
 import { Globe, Mail, Monitor, Printer, Smartphone } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, ViewTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
-import { FavoriteButton, paletteOverrides, SwatchRow } from "../gallery/design-card";
+import { FavoriteButton, morphName, paletteOverrides, SwatchRow } from "../gallery/design-card";
 import { websiteFeatures } from "../products";
 import { Stationery } from "../stationery";
 import { BrowserFrame, FittedPhone, MobileTryBar } from "./template-preview-stage";
@@ -115,7 +115,11 @@ export function DesignDetail({
         <div className="min-w-0 flex-1">
           {view === "card" ? (
             <div className="grid min-h-[min(80vh,44rem)] place-items-center rounded-md bg-muted p-[8%]">
-              {card(cn("shadow-[0_30px_60px_-30px_rgb(34_29_26/0.55)]", template.stationery.shape === "square" ? "w-[min(100%,30rem)]" : "w-[min(100%,26rem)]"), "(min-width: 1024px) 26rem, 80vw")}
+              <ViewTransition name={morphName(template.id)} share="morph" default="none">
+                <div className={template.stationery.shape === "square" ? "w-[min(100%,30rem)]" : "w-[min(100%,26rem)]"}>
+                  {card("w-full shadow-[0_30px_60px_-30px_rgb(34_29_26/0.55)]", "(min-width: 1024px) 26rem, 80vw")}
+                </div>
+              </ViewTransition>
             </div>
           ) : view === "phone" ? (
             <div className="flex justify-center rounded-md bg-muted py-8">

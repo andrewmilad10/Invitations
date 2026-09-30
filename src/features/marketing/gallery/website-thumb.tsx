@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SmartImage as Image } from "@/components/smart-image";
 import type { CSSProperties } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme, themeToCssVars, type ThemeOverrides } from "@/core/theme/tokens";

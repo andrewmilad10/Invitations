@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { preconnect } from "react-dom";
 import { Toaster } from "sonner";
 import { publicEnv } from "@/config/env";
 import { siteConfig } from "@/config/site";
@@ -16,6 +17,8 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // Library photos come straight from Unsplash's CDN: open the connection early.
+  preconnect("https://images.unsplash.com");
   // Invitation pages set their own lang/dir on the invitation root; the
   // document default is English/LTR for the app UI.
   return (

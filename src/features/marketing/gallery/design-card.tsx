@@ -2,7 +2,7 @@
 
 import { Heart } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, ViewTransition } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,9 @@ import { Stationery } from "../stationery";
 import { websiteFeatures, type Product } from "../products";
 import { favoritesStore, useFavorites } from "./favorites";
 import { WebsiteThumb } from "./website-thumb";
+
+/** Shared-element name: a gallery card and the card on its design page. */
+export const morphName = (id: string) => `design-card-${id}`;
 
 /** A design's page, opened on the card or the website view. */
 export function designHref(id: string, paletteId: string | null, product: Product = "cards") {
@@ -144,17 +147,18 @@ export function DesignCard({
             className="pointer-events-none absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
           />
         ) : (
-          <Stationery
-            template={template}
-            overrides={paletteOverrides(template, paletteId)}
-            partnerOne={a}
-            partnerTwo={b}
-            dateLabel={date}
-            className={cn(
-              "pointer-events-none shadow-[0_12px_30px_-14px_rgb(34_29_26/0.45)] transition-transform duration-700 ease-out group-hover:scale-[1.03]",
-              shape === "square" ? "w-[74%]" : "w-[64%]",
-            )}
-          />
+          <ViewTransition name={morphName(template.id)} share="morph" default="none">
+            <div className={cn("pointer-events-none", shape === "square" ? "w-[74%]" : "w-[64%]")}>
+              <Stationery
+                template={template}
+                overrides={paletteOverrides(template, paletteId)}
+                partnerOne={a}
+                partnerTwo={b}
+                dateLabel={date}
+                className="shadow-[0_12px_30px_-14px_rgb(34_29_26/0.45)] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            </div>
+          </ViewTransition>
         )}
         {template.isNew ? (
           <span className="absolute start-3 top-3 rounded-full bg-background px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.14em]">New</span>

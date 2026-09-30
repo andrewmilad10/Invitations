@@ -140,3 +140,124 @@
 [lang="ar"] [data-shape] * {
   letter-spacing: 0 !important;
 }
+
+/* ── Motion ────────────────────────────────────────────────────────────────
+   One quiet vocabulary: pages fade and rise a few pixels, a design card
+   morphs into its own page, dialogs settle in. Short, eased, never bouncy.
+   Everything is off with prefers-reduced-motion. */
+:root {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-exit: 140ms;
+  --motion-enter: 260ms;
+  --motion-move: 420ms;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
+/* The header is the fixed reference point: it never animates. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Page to page: the old page leaves quickly, the new one rises gently. */
+::view-transition-old(.page-exit) {
+  animation: var(--motion-exit) ease-in both vt-fade reverse;
+}
+::view-transition-new(.page-enter) {
+  animation:
+    var(--motion-enter) var(--ease-out-soft) var(--motion-exit) both vt-fade,
+    var(--motion-move) var(--ease-out-soft) both vt-rise;
+}
+
+/* A design card becomes the design on its own page. */
+::view-transition-group(.morph) {
+  animation-duration: var(--motion-move);
+  animation-timing-function: var(--ease-out-soft);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-soften;
+}
+
+/* Filtering the gallery: same place, different content. */
+::view-transition-old(.grid-swap) {
+  animation: var(--motion-exit) ease-in both vt-fade reverse;
+}
+::view-transition-new(.grid-swap) {
+  animation: var(--motion-enter) var(--ease-out-soft) both vt-fade;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes vt-rise {
+  from {
+    translate: 0 10px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@keyframes vt-soften {
+  35% {
+    filter: blur(2px);
+  }
+}
+
+/* Dialogs settle in and out; the backdrop fades. */
+dialog {
+  opacity: 0;
+  transform: translateY(6px) scale(0.985);
+  transition:
+    opacity 200ms ease,
+    transform 260ms var(--ease-out-soft),
+    overlay 260ms allow-discrete,
+    display 260ms allow-discrete;
+}
+dialog[open] {
+  opacity: 1;
+  transform: none;
+}
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+}
+dialog::backdrop {
+  transition:
+    background-color 260ms ease,
+    overlay 260ms allow-discrete,
+    display 260ms allow-discrete;
+}
+@starting-style {
+  dialog[open]::backdrop {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+  dialog,
+  dialog::backdrop {
+    transition: none;
+  }
+}

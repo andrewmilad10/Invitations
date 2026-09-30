@@ -1,3 +1,4 @@
+import { PageTransition } from "@/components/page-transition";
 import { Features } from "@/features/marketing/home/features";
 import { Hero } from "@/features/marketing/home/hero";
 import { HowItWorks } from "@/features/marketing/home/how-it-works";
@@ -17,17 +18,19 @@ export default function HomePage() {
   return (
     <>
       <SiteHeader overlay />
-      <main>
-        <Hero />
-        <Features />
-        <TemplateShowcase />
-        <LiveDemo />
-        <HowItWorks />
-        <PersonalizeDemo templates={demoTemplates} />
-        <WhyUs />
-        <MobileShowcase />
-        <FinalCta />
-      </main>
+      <PageTransition>
+        <main>
+          <Hero />
+          <Features />
+          <TemplateShowcase />
+          <LiveDemo />
+          <HowItWorks />
+          <PersonalizeDemo templates={demoTemplates} />
+          <WhyUs />
+          <MobileShowcase />
+          <FinalCta />
+        </main>
+      </PageTransition>
       <SiteFooter />
     </>
   );

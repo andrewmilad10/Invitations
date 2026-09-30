@@ -13,8 +13,8 @@ test("filters, colours and saved designs in the gallery", async ({ page }) => {
   // Style tile narrows the list and lands in the URL.
   await page.getByRole("button", { name: "Floral", exact: true }).click();
   await expect(page).toHaveURL(/style=floral/);
-  const floral = Number((await count.textContent())!.match(/of (\d+)/)![1]);
-  expect(floral).toBeLessThan(total);
+  // Filtering is a (cross-faded) transition, so wait for the new count.
+  await expect.poll(async () => Number((await count.textContent())!.match(/of (\d+)/)![1])).toBeLessThan(total);
 
   // Colour filter.
   await page.getByRole("button", { name: /^Colour/ }).click();

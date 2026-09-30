@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SmartImage as Image } from "@/components/smart-image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { formatDateOnly } from "@/core/i18n/format";
@@ -14,7 +14,7 @@ export function Hero() {
 
   return (
     <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-forest text-white">
-      <Image src={PHOTO_LIBRARY.couple.url} alt={PHOTO_LIBRARY.couple.alt} fill priority sizes="100vw" className="-z-20 object-cover object-[65%_center]" />
+      <Image src={PHOTO_LIBRARY.couple.url} alt={PHOTO_LIBRARY.couple.alt} fill preload sizes="100vw" className="-z-20 object-cover object-[65%_center]" />
       <div aria-hidden className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(20_16_12/0.82)_0%,rgb(20_16_12/0.55)_45%,rgb(20_16_12/0.1)_80%),linear-gradient(0deg,rgb(20_16_12/0.55),transparent_45%)]" />
 
       <div className="mx-auto grid w-full max-w-7xl gap-12 px-5 pb-16 pt-32 sm:px-8 sm:pb-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">

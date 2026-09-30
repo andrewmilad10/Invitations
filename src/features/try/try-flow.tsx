@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- thumbnails of the visitor's own local photos (blob: URLs) */
 
 import { Check, ImagePlus, Trash2, X } from "lucide-react";
-import Image from "next/image";
+import { SmartImage as Image } from "@/components/smart-image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";

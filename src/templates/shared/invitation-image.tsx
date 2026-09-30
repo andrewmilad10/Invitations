@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SmartImage as Image } from "@/components/smart-image";
 import type { MediaAsset } from "@/core/invitation/model";
 
 /**
@@ -28,7 +28,7 @@ export function InvitationImage({
         alt={alt ?? asset.alt}
         fill
         sizes={sizes}
-        priority={priority}
+        preload={priority}
         unoptimized={unoptimized}
         className={className}
       />
@@ -41,7 +41,7 @@ export function InvitationImage({
       width={asset.width ?? 1200}
       height={asset.height ?? 800}
       sizes={sizes}
-      priority={priority}
+      preload={priority}
       unoptimized={unoptimized}
       className={className}
     />

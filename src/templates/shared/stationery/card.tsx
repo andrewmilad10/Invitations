@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SmartImage as Image } from "@/components/smart-image";
 import type { CSSProperties, ReactNode } from "react";
 import { stationeryArt, type CardShape, type StationeryArt } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
