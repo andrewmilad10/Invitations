@@ -26,12 +26,14 @@ function Section({
       id={id}
       data-section={id}
       className={cn(
-        "px-6 py-24 sm:py-32",
+        "px-6 py-24 text-inv-fg sm:py-32",
+        "group-data-[spacing=compact]/sec:py-14 sm:group-data-[spacing=compact]/sec:py-20",
+        "group-data-[spacing=airy]/sec:py-32 sm:group-data-[spacing=airy]/sec:py-48",
         tone === "surface" ? "bg-inv-surface" : "bg-inv-bg",
         className,
       )}
     >
-      <div className="mx-auto max-w-3xl text-center">{children}</div>
+      <div className="mx-auto max-w-3xl text-center group-data-[align=start]/sec:text-start">{children}</div>
     </section>
   );
 }
@@ -155,7 +157,7 @@ function EventCard({
             href={event.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-8 inline-block border border-inv-fg/30 px-6 py-3 text-xs uppercase tracking-[0.25em] transition hover:border-inv-accent hover:text-inv-accent"
+            className="mt-8 inline-block rounded-inv border border-inv-fg/30 px-6 py-3 text-xs uppercase tracking-[0.25em] transition hover:border-inv-accent hover:text-inv-accent"
           >
             {directions}
           </a>

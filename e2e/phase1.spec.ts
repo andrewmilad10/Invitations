@@ -65,7 +65,7 @@ test.describe.serial("Phase 1", () => {
     await page.goto(editorUrl);
 
     // Hero photo
-    await page.getByRole("button", { name: "Hero & photo" }).click();
+    await page.getByRole("button", { name: "Hero", exact: true }).click();
     await page.locator('input[type="file"]').first().setInputFiles(image);
     await expect(page.getByAltText("gallery-1")).toBeVisible({ timeout: 20_000 });
 

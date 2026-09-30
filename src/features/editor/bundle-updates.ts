@@ -39,7 +39,7 @@ export function setTheme(b: WeddingBundle, overrides: ThemeOverrides): WeddingBu
 export function setSection(
   b: WeddingBundle,
   type: SectionType,
-  patch: { enabled?: boolean; content?: Record<string, unknown> },
+  patch: { enabled?: boolean; content?: Record<string, unknown>; style?: Record<string, unknown> },
 ): WeddingBundle {
   const exists = b.sections.some((s) => s.type === type);
   const sections = exists

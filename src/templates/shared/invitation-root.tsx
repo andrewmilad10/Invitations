@@ -40,7 +40,21 @@ export function Sections({ model, components }: { model: InvitationModel; compon
           | React.ComponentType<{ model: InvitationModel; content: typeof section.content }>
           | undefined;
         if (!Component) return null;
-        return <Component key={section.type} model={model} content={section.content} />;
+        // Style hints travel on a layout-neutral wrapper: tone re-maps the
+        // theme variables; spacing/align are read by the template's own
+        // section components (group-data-*/sec) and shared CSS.
+        return (
+          <div
+            key={section.type}
+            className="group/sec contents"
+            data-tone={section.style.tone}
+            data-spacing={section.style.spacing}
+            data-align={section.style.align}
+            style={section.toneVars as React.CSSProperties}
+          >
+            <Component model={model} content={section.content} />
+          </div>
+        );
       })}
     </>
   );

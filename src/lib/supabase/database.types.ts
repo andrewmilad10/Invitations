@@ -47,6 +47,7 @@ type SectionRow = {
   enabled: boolean;
   sort_order: number | null;
   content: Json;
+  style: Json;
 } & Timestamps;
 
 type EventRow = {
@@ -118,7 +119,7 @@ export type Database = {
       wedding_themes: Table<ThemeRow, { wedding_id: string }, { tokens?: Json }>;
       wedding_sections: Table<
         SectionRow,
-        { wedding_id: string; type: string; enabled?: boolean; sort_order?: number | null; content?: Json }
+        { wedding_id: string; type: string; enabled?: boolean; sort_order?: number | null; content?: Json; style?: Json }
       >;
       events: Table<
         EventRow,

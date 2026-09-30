@@ -111,3 +111,26 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-rise, .card-settle { animation: none; }
 }
+
+/* Section style hint: start alignment keeps each section's column centred
+   but left-aligns (right-aligns in RTL) the narrow blocks inside it. */
+[data-align="start"] [data-section] > div .mx-auto {
+  margin-inline-start: 0;
+}
+[data-align="start"] [data-section] .justify-center {
+  justify-content: flex-start;
+}
+
+/* Editor preview only: hover and selection affordances for sections. */
+[data-template][data-mode="preview"] [data-section] {
+  cursor: pointer;
+  transition: outline-color 150ms;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+[data-template][data-mode="preview"] [data-section]:hover {
+  outline-color: color-mix(in oklab, var(--inv-accent) 45%, transparent);
+}
+[data-template][data-mode="preview"] [data-section][data-selected] {
+  outline-color: var(--inv-accent);
+}

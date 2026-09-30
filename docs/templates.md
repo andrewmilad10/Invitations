@@ -134,3 +134,21 @@ page, never in document flow:
 
 `prefers-reduced-motion` replaces the sequence with a short cross-fade.
 Preview mode skips the opening unless "Replay opening" is pressed.
+
+## Section style hints
+
+Each section row may carry `style` (`wedding_sections.style`, separate from
+content): `tone` (`default` · `light` · `dark` · `accent`), `spacing`
+(`compact` · `normal` · `airy`) and `align` (`center` · `start`). They are
+resolved in `src/core/sections/style.ts` and reach templates on every
+`RenderedSection`:
+
+* **Tone** re-maps the theme's own `--inv-*` variables around the section
+  (`sectionToneVars`), so a dark or accent section needs no template code and
+  can never introduce a colour outside the couple's theme.
+* **Spacing / alignment** are exposed as `data-spacing` / `data-align` on a
+  `display: contents` wrapper (`group/sec`). A template's section component
+  honours them with `group-data-[spacing=…]/sec:` utilities; alignment also
+  has a shared rule in `globals.css`.
+
+A template that doesn't want a hint simply ignores it — the data stays valid.

@@ -189,6 +189,9 @@ select tests.eq(
   (select s -> 'content' from jsonb_array_elements(public.get_public_invitation('alice-and-sam') -> 'sections') s where s ->> 'type' = 'closing'),
   '{}'::jsonb, 'disabled section content is withheld');
 select tests.eq(
+  (select s -> 'style' from jsonb_array_elements(public.get_public_invitation('alice-and-sam') -> 'sections') s where s ->> 'type' = 'story'),
+  '{}'::jsonb, 'section style hints are part of the public bundle');
+select tests.eq(
   (select (s ->> 'enabled')::boolean from jsonb_array_elements(public.get_public_invitation('alice-and-sam') -> 'sections') s where s ->> 'type' = 'closing'),
   false, 'disabled flag is still returned so templates do not re-enable it');
 select tests.eq(

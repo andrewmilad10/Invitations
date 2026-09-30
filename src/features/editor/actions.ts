@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
+import { sectionStyleSchema } from "@/core/sections/style";
 import { isSectionType, SECTION_DEFINITIONS, validateSectionContent, type SectionType } from "@/core/sections/registry";
 import { themeOverridesSchema } from "@/core/theme/tokens";
 import { slugSchema } from "@/core/wedding/slug";
@@ -146,13 +147,13 @@ export async function updateTheme(weddingId: string, overrides: unknown): Promis
 export async function saveSection(
   weddingId: string,
   type: string,
-  patch: { enabled?: boolean; content?: unknown },
+  patch: { enabled?: boolean; content?: unknown; style?: unknown },
 ): Promise<ActionResult> {
   const ctx = await context(weddingId);
   if (!ctx) return NO_ACCESS;
   if (!isSectionType(type)) return { ok: false, error: "Unknown section." };
 
-  const row: { wedding_id: string; type: SectionType; enabled?: boolean; content?: Json } = { wedding_id: weddingId, type };
+  const row: { wedding_id: string; type: SectionType; enabled?: boolean; content?: Json; style?: Json } = { wedding_id: weddingId, type };
   if (patch.enabled !== undefined) {
     if (!patch.enabled && !SECTION_DEFINITIONS[type].canDisable) return { ok: false, error: "This section can't be turned off." };
     row.enabled = Boolean(patch.enabled);
@@ -161,6 +162,11 @@ export async function saveSection(
     const parsed = validateSectionContent(type, patch.content);
     if (!parsed.success) return invalid(parsed.error);
     row.content = parsed.data as Json;
+  }
+  if (patch.style !== undefined) {
+    const parsed = sectionStyleSchema.safeParse(patch.style);
+    if (!parsed.success) return { ok: false, error: "Invalid section style." };
+    row.style = parsed.data as Json;
   }
 
   // Upsert only the provided columns; sort_order stays NULL (template order)

@@ -32,7 +32,7 @@ export const loadEditorData = cache(async (weddingId: string): Promise<EditorDat
   const [settings, theme, sections, events, media, member] = await Promise.all([
     supabase.from("wedding_settings").select("locale, timezone, visibility, music_enabled").eq("wedding_id", weddingId).single(),
     supabase.from("wedding_themes").select("tokens").eq("wedding_id", weddingId).single(),
-    supabase.from("wedding_sections").select("type, enabled, sort_order, content").eq("wedding_id", weddingId),
+    supabase.from("wedding_sections").select("type, enabled, sort_order, content, style").eq("wedding_id", weddingId),
     supabase
       .from("events")
       .select("id, kind, title, starts_at, ends_at, venue_name, address, latitude, longitude, map_url, description, sort_order")
@@ -57,7 +57,7 @@ export const loadEditorData = cache(async (weddingId: string): Promise<EditorDat
       wedding,
       settings: settings.data!,
       theme: { tokens: (theme.data!.tokens ?? {}) as Record<string, unknown> },
-      sections: (sections.data ?? []).map((s) => ({ ...s, content: (s.content ?? {}) as Record<string, unknown> })),
+      sections: (sections.data ?? []).map((s) => ({ ...s, content: (s.content ?? {}) as Record<string, unknown>, style: (s.style ?? {}) as Record<string, unknown> })),
       events: events.data ?? [],
       media: media.data ?? [],
     },

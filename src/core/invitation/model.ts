@@ -1,4 +1,5 @@
 import type { SectionContent, SectionType } from "../sections/registry";
+import type { SectionStyle } from "../sections/style";
 import type { DateParts } from "../i18n/format";
 import type { InvitationDictionary } from "../i18n/dictionaries";
 import type { Locale } from "../i18n/locales";
@@ -41,7 +42,7 @@ export interface EventModel {
 }
 
 export type RenderedSection = {
-  [T in SectionType]: { type: T; content: SectionContent<T> };
+  [T in SectionType]: { type: T; content: SectionContent<T>; style: SectionStyle; toneVars: Record<string, string> };
 }[SectionType];
 
 export interface InvitationModel {

@@ -30,14 +30,37 @@ export function PreviewClient({ initialBundle, initialModel }: { initialBundle: 
       if (event.data.type === "vellum:replay-opening") {
         window.dispatchEvent(new CustomEvent("invitation:replay-opening"));
       }
+      if (event.data.type === "vellum:focus-section") {
+        focusSection(event.data.section);
+      }
+    };
+    // Clicking a section tells the editor which one to edit.
+    const onClick = (event: MouseEvent) => {
+      if (window.parent === window) return;
+      const el = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-section]");
+      if (!el?.dataset.section) return;
+      window.parent.postMessage({ type: "vellum:section-clicked", section: el.dataset.section } satisfies PreviewMessage, window.location.origin);
     };
     window.addEventListener("message", onMessage);
+    document.addEventListener("click", onClick);
     if (window.parent !== window) {
       window.parent.postMessage({ type: "vellum:preview-ready" } satisfies PreviewMessage, window.location.origin);
     }
-    return () => window.removeEventListener("message", onMessage);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      document.removeEventListener("click", onClick);
+    };
   }, [initialBundle.wedding.id]);
 
   return <InvitationRenderer model={model} />;
+}
+
+function focusSection(section: string | null) {
+  document.querySelectorAll("[data-section][data-selected]").forEach((el) => el.removeAttribute("data-selected"));
+  if (!section) return;
+  const el = document.querySelector<HTMLElement>(`[data-section="${CSS.escape(section)}"]`);
+  if (!el) return;
+  el.setAttribute("data-selected", "");
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 

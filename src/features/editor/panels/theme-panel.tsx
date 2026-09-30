@@ -12,6 +12,7 @@ import { updateTemplate, updateTheme } from "../actions";
 import { setTemplate, setTheme } from "../bundle-updates";
 import { useEditor } from "../editor-context";
 import { PanelHeader } from "./panel-header";
+import { Control, Segmented } from "./section-style";
 
 const EDITABLE_COLORS: { token: ColorToken; label: string }[] = [
   { token: "background", label: "Background" },
@@ -119,6 +120,32 @@ export function ThemePanel() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="grid gap-5">
+        <h3 className="text-sm font-medium">Shape & depth</h3>
+        <Control label="Corners (cards and buttons)">
+          <Segmented
+            value={String(theme.radius <= 1 ? 0 : theme.radius <= 6 ? 4 : 14)}
+            onChange={(v) => saveOverrides({ ...overrides, radius: Number(v) })}
+            options={[
+              { value: "0", label: "Sharp" },
+              { value: "4", label: "Soft" },
+              { value: "14", label: "Round" },
+            ]}
+          />
+        </Control>
+        <Control label="Shadow">
+          <Segmented
+            value={theme.shadow}
+            onChange={(shadow) => saveOverrides({ ...overrides, shadow })}
+            options={[
+              { value: "none", label: "None" },
+              { value: "soft", label: "Soft" },
+              { value: "deep", label: "Deep" },
+            ]}
+          />
+        </Control>
       </section>
 
       <div>

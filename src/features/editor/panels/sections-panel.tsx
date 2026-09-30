@@ -1,23 +1,35 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { ArrowDown, ArrowUp, Eye, EyeOff } from "lucide-react";
 import { sectionDisplayOrder } from "@/core/invitation/build-model";
 import { SECTION_DEFINITIONS, type SectionType } from "@/core/sections/registry";
+import { cn } from "@/lib/utils";
 import { resolveTemplateManifest } from "@/templates/registry";
 import { saveSection, saveSectionOrder } from "../actions";
 import { setSection, setSectionOrder } from "../bundle-updates";
 import { useEditor } from "../editor-context";
-import { PanelHeader } from "./panel-header";
 import { GalleryManager, HeroImageField } from "./media";
-import { SectionEnabledSwitch, SectionFields, useSectionState } from "./section-fields";
+import { SectionFields, useSectionState } from "./section-fields";
+
+/** Content of one section: its photo (hero), generated fields and gallery. */
+export function SectionContent({ type }: { type: SectionType }) {
+  const def = SECTION_DEFINITIONS[type];
+  const { enabled } = useSectionState(type);
+  return (
+    <div className="grid gap-8">
+      {!enabled ? <p className="rounded-md bg-secondary px-3 py-2 text-sm">This section is hidden on your invitation.</p> : null}
+      {def.manages?.media === "hero" ? <HeroImageField /> : null}
+      <SectionFields type={type} />
+      {def.manages?.media === "gallery" ? <GalleryManager /> : null}
+    </div>
+  );
+}
 
 /**
- * The template's sections in their current order, with show/hide and move
- * controls. Order shown here = order on the invitation.
+ * Compact section list for the editor's left column: order = order on the
+ * invitation; select, show/hide and move up/down.
  */
-export function SectionsPanel({ onEdit }: { onEdit: (type: SectionType) => void }) {
+export function SectionList({ selected, onSelect }: { selected: SectionType | null; onSelect: (type: SectionType) => void }) {
   const { weddingId, bundle, update, save, canEdit } = useEditor();
   const template = resolveTemplateManifest(bundle.wedding.template_id);
   const order = sectionDisplayOrder(bundle.sections, template);
@@ -30,81 +42,69 @@ export function SectionsPanel({ onEdit }: { onEdit: (type: SectionType) => void 
     save("section-order", () => saveSectionOrder(weddingId, next), 300);
   }
 
-  function reset() {
-    update((b) => setSectionOrder(b, null));
-    save("section-order", () => saveSectionOrder(weddingId, null), 0);
-  }
-
   return (
-    <div className="grid gap-6">
-      <PanelHeader
-        title="Sections"
-        description={`Show, hide and reorder the sections of the ${template.name} template.`}
-        actions={
-          customised ? (
-            <Button type="button" size="sm" variant="ghost" disabled={!canEdit} onClick={reset}>
-              Reset order
-            </Button>
-          ) : null
-        }
-      />
-      <ol className="divide-y rounded-lg border bg-card">
+    <div>
+      <div className="flex items-center justify-between px-3 pb-2">
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Sections</p>
+        {customised && canEdit ? (
+          <button
+            type="button"
+            className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+            onClick={() => {
+              update((b) => setSectionOrder(b, null));
+              save("section-order", () => saveSectionOrder(weddingId, null), 0);
+            }}
+          >
+            Reset order
+          </button>
+        ) : null}
+      </div>
+      <ol className="grid gap-0.5">
         {order.map((type, index) => {
           const def = SECTION_DEFINITIONS[type];
           const row = bundle.sections.find((s) => s.type === type);
           const enabled = row?.enabled ?? !(template.defaultDisabled ?? []).includes(type);
           const fixed = type === "hero" || type === "footer";
+          const active = selected === type;
           return (
-            <li key={type} className="flex items-center gap-3 px-4 py-3">
-              <div className="flex flex-col">
-                <button type="button" className="text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} up`} disabled={!canEdit || fixed || index <= 1} onClick={() => move(index, -1)}>
-                  <ArrowUp className="size-4" />
-                </button>
-                <button type="button" className="text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} down`} disabled={!canEdit || fixed || index >= order.length - 2} onClick={() => move(index, 1)}>
-                  <ArrowDown className="size-4" />
-                </button>
-              </div>
-              <button type="button" className="flex min-w-0 flex-1 items-center justify-between gap-3 text-start" onClick={() => onEdit(type)}>
-                <span className="min-w-0">
-                  <span className={enabled ? "font-medium" : "font-medium text-muted-foreground line-through"}>{def.label}</span>
-                  <span className="block truncate text-xs text-muted-foreground">{def.description}</span>
-                </span>
-                <ChevronRight className="size-4 shrink-0 text-muted-foreground rtl:rotate-180" />
+            <li key={type} className={cn("group flex items-center gap-1 rounded-md pe-1", active ? "bg-secondary" : "hover:bg-secondary/60")}>
+              <button
+                type="button"
+                onClick={() => onSelect(type)}
+                aria-current={active ? "true" : undefined}
+                className={cn("min-w-0 flex-1 truncate px-3 py-2 text-start text-sm", active && "font-medium", !enabled && "text-muted-foreground line-through")}
+              >
+                {def.label}
               </button>
+              {!fixed && canEdit ? (
+                <span className="hidden items-center group-focus-within:flex group-hover:flex">
+                  <button type="button" className="rounded p-1 text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} up`} disabled={index <= 1} onClick={() => move(index, -1)}>
+                    <ArrowUp className="size-3.5" />
+                  </button>
+                  <button type="button" className="rounded p-1 text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} down`} disabled={index >= order.length - 2} onClick={() => move(index, 1)}>
+                    <ArrowDown className="size-3.5" />
+                  </button>
+                </span>
+              ) : null}
               {def.canDisable ? (
-                <Switch
-                  aria-label={`Show ${def.label}`}
-                  checked={enabled}
+                <button
+                  type="button"
                   disabled={!canEdit}
-                  onCheckedChange={(checked) => {
-                    update((b) => setSection(b, type, { enabled: checked }));
-                    save(`section-enabled:${type}`, () => saveSection(weddingId, type, { enabled: checked }), 0);
+                  aria-label={enabled ? `Hide ${def.label}` : `Show ${def.label}`}
+                  aria-pressed={enabled}
+                  className="rounded p-1 text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    update((b) => setSection(b, type, { enabled: !enabled }));
+                    save(`section-enabled:${type}`, () => saveSection(weddingId, type, { enabled: !enabled }), 0);
                   }}
-                />
+                >
+                  {enabled ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+                </button>
               ) : null}
             </li>
           );
         })}
       </ol>
-      <p className="text-xs text-muted-foreground">Hero and footer always stay first and last. Sections with nothing to show (for example a gallery without photos) are hidden automatically.</p>
-    </div>
-  );
-}
-
-/** Editor for one section: generated fields plus any data it manages. */
-export function SectionPanel({ type, onBack }: { type: SectionType; onBack: () => void }) {
-  const def = SECTION_DEFINITIONS[type];
-  const { enabled } = useSectionState(type);
-  return (
-    <div className="grid gap-8">
-      <button type="button" onClick={onBack} className="justify-self-start text-sm text-muted-foreground hover:text-foreground">
-        ← All sections
-      </button>
-      <PanelHeader title={def.label} description={def.description} actions={<SectionEnabledSwitch type={type} />} />
-      {!enabled ? <p className="rounded-md bg-secondary px-3 py-2 text-sm">This section is hidden on your invitation.</p> : null}
-      {def.manages?.media === "hero" ? <HeroImageField /> : null}
-      <SectionFields type={type} />
-      {def.manages?.media === "gallery" ? <GalleryManager /> : null}
     </div>
   );
 }

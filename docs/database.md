@@ -85,6 +85,16 @@ couple changed. Created empty by trigger.
 `storage_path` (unique), `alt_text`, `width`, `height`, `sort_order`,
 `created_by`. Binaries live in Storage; this table stores metadata only.
 
+## Later additions
+
+* **`media.storage_path` may be `library:<id>`** (migration 0005): a photo from
+  the curated library instead of an upload, so visitors can choose photos before
+  they have an account. Upload paths stay unique; library references don't.
+* **`create_wedding_from_draft(jsonb)`** (0006): saves a no-account draft as a
+  wedding in one transaction, `SECURITY INVOKER` so RLS still applies.
+* **`wedding_sections.style`** (0007): per-section presentation hints, kept
+  apart from content (see docs/templates.md).
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

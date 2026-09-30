@@ -7,9 +7,17 @@ import type { SectionComponents, SectionProps, TemplateRendererProps } from "../
 
 function Block({ id, label, children }: { id: string; label?: string; children: ReactNode }) {
   return (
-    <section id={id} data-section={id} className="mx-auto grid max-w-5xl gap-6 border-t border-inv-border px-6 py-16 sm:grid-cols-[12rem_1fr] sm:gap-12 sm:py-24">
-      <p className="text-[0.7rem] font-medium uppercase tracking-[0.3em] text-inv-accent">{label}</p>
-      <div>{children}</div>
+    <section id={id} data-section={id} className="bg-inv-bg text-inv-fg">
+      <div
+        className={
+          "mx-auto grid max-w-5xl gap-6 border-t border-inv-border px-6 py-16 sm:grid-cols-[12rem_1fr] sm:gap-12 sm:py-24 " +
+          "group-data-[spacing=compact]/sec:py-10 sm:group-data-[spacing=compact]/sec:py-14 " +
+          "group-data-[spacing=airy]/sec:py-24 sm:group-data-[spacing=airy]/sec:py-36"
+        }
+      >
+        <p className="inv-label text-inv-accent">{label}</p>
+        <div>{children}</div>
+      </div>
     </section>
   );
 }

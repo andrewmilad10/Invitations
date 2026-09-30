@@ -39,6 +39,8 @@ describe("editor action guards", () => {
     expect((await actions.saveSection(W, "hero", { enabled: false })).ok).toBe(false);
     expect((await actions.saveSection(W, "story", { content: { body: 123 } })).ok).toBe(false);
     expect((await actions.saveSection(W, "story", { content: { body: "x".repeat(5000) } })).ok).toBe(false);
+    expect((await actions.saveSection(W, "story", { style: { tone: "neon" } })).ok).toBe(false);
+    expect((await actions.saveSection(W, "story", { style: { tone: "dark", css: "x" } })).ok).toBe(false);
   });
 
   it("reject invalid theme overrides (including CSS injection)", async () => {

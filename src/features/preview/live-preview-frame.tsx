@@ -17,18 +17,29 @@ export function LivePreviewFrame({
   bundle,
   label = "Live preview",
   toolbarExtra,
+  focusSection,
+  onSectionClick,
   className,
 }: {
   src: string;
   bundle: WeddingBundle;
   label?: string;
   toolbarExtra?: ReactNode;
+  /** Section to highlight and scroll to in the preview. */
+  focusSection?: string | null;
+  /** Called when the visitor clicks a section inside the preview. */
+  onSectionClick?: (section: string) => void;
   className?: string;
 }) {
   const frame = useRef<HTMLIFrameElement>(null);
   // Incremented on every "ready" from the iframe (initial load and any reload).
   const [readyCount, setReadyCount] = useState(0);
   const [device, setDevice] = useState<"desktop" | "phone">("desktop");
+
+  const clickRef = useRef(onSectionClick);
+  useEffect(() => {
+    clickRef.current = onSectionClick;
+  }, [onSectionClick]);
 
   const post = useCallback((message: PreviewMessage) => {
     frame.current?.contentWindow?.postMessage(message, window.location.origin);
@@ -37,7 +48,9 @@ export function LivePreviewFrame({
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow) return;
-      if (isPreviewMessage(event.data) && event.data.type === "vellum:preview-ready") setReadyCount((n) => n + 1);
+      if (!isPreviewMessage(event.data)) return;
+      if (event.data.type === "vellum:preview-ready") setReadyCount((n) => n + 1);
+      if (event.data.type === "vellum:section-clicked") clickRef.current?.(event.data.section);
     };
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
@@ -46,6 +59,10 @@ export function LivePreviewFrame({
   useEffect(() => {
     if (readyCount > 0) post({ type: "vellum:bundle", bundle });
   }, [readyCount, bundle, post]);
+
+  useEffect(() => {
+    if (readyCount > 0 && focusSection !== undefined) post({ type: "vellum:focus-section", section: focusSection });
+  }, [readyCount, focusSection, post]);
 
   const hasOpening = resolveTemplateManifest(bundle.wedding.template_id).features.opening !== "none";
 

@@ -1,9 +1,10 @@
 import { dictionaries } from "../i18n/dictionaries";
 import { dateInZone, formatDateOnly, formatTime, zonedTimeToIso } from "../i18n/format";
 import { LOCALE_META, toLocale, type Locale } from "../i18n/locales";
+import { resolveSectionStyle, sectionToneVars } from "../sections/style";
 import { isSectionType, resolveSectionContent, SECTION_DEFINITIONS, type SectionType } from "../sections/registry";
 import type { TemplateManifest } from "../template/manifest";
-import { resolveTheme, sanitizeOverrides, themeToCssVars } from "../theme/tokens";
+import { resolveTheme, sanitizeOverrides, themeToCssVars, type ThemeTokens } from "../theme/tokens";
 import type { BundleEvent, BundleMedia, WeddingBundle } from "../wedding/bundle";
 import type { EventModel, InvitationModel, MediaAsset, RenderedSection, RenderMode } from "./model";
 
@@ -77,7 +78,7 @@ export function buildInvitationModel(
     },
     theme,
     cssVars: themeToCssVars(theme, locale),
-    sections: resolveSections(bundle, template, locale, facts),
+    sections: resolveSections(bundle, template, locale, facts, theme),
     events: { all: events, ceremony, reception },
     media,
     music: {
@@ -113,6 +114,7 @@ function resolveSections(
   template: TemplateManifest,
   locale: Locale,
   facts: SectionFacts,
+  theme: ThemeTokens,
 ): RenderedSection[] {
   const rows = new Map(bundle.sections.filter((s) => isSectionType(s.type)).map((s) => [s.type as SectionType, s]));
   const supported = new Set(template.supportedSections);
@@ -132,13 +134,14 @@ function resolveSections(
         enabled: row ? row.enabled : !disabledByDefault.has(type),
         order: row?.sort_order ?? null,
         content: resolveSectionContent(type, row?.content, locale),
+        style: resolveSectionStyle(row?.style),
       };
     });
 
   return orderSections(resolved)
     // Sections that can't be disabled (hero, footer) always render.
     .filter((s) => s.enabled || !SECTION_DEFINITIONS[s.type].canDisable)
-    .map(({ type, content }) => ({ type, content }) as RenderedSection)
+    .map(({ type, content, style }) => ({ type, content, style, toneVars: sectionToneVars(theme, style.tone) }) as RenderedSection)
     .filter((section) => hasSomethingToShow(section, facts));
 }
 

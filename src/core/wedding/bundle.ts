@@ -41,6 +41,8 @@ export const bundleSectionSchema = z.object({
   /** null = template default position */
   sort_order: z.number().nullable(),
   content: z.record(z.string(), z.unknown()),
+  /** Presentation hints (tone, spacing, align); see core/sections/style.ts. */
+  style: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const bundleEventSchema = z.object({
