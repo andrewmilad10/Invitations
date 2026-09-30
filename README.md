@@ -32,13 +32,15 @@ No Supabase yet? `/templates/cinematic/preview` shows a template with sample dat
 Explore-first wedding invitation platform:
 
 1. **Discover** — public homepage, no login required
-2. **Explore designs** — `/templates`, 42 original designs (all drawn in code, no
-   third-party artwork) with style tiles, colour / shape / photo filters,
-   sorting, saved designs and quick view
+2. **Two products, one catalogue** — `/invitations` (invitation cards) and
+   `/websites` (wedding websites): 42 original designs (all drawn in code, no
+   third-party artwork), each sold as a card *and* a website, with style
+   tiles, filters, sorting, saved designs and quick view
 3. **View a design** — `/templates/{id}`: as a card, on a phone and as a website;
    shape variants, named colour themes, Customize
 4. **Try it** — `/create/{id}`: customise without an account (draft kept in the
-   browser; an earlier draft is offered back)
+   browser; an earlier draft is offered back); download the personalised card
+   as an image to send on WhatsApp
 5. **Create account** — only when saving; the draft moves into the account in one transaction
 6. **Continue editing** — three-column editor (sections · live preview · properties)
 7. **Publish & share** — `/w/{slug}`, with link, WhatsApp and email sharing

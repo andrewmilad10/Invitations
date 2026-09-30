@@ -6,6 +6,7 @@ import { useState, useTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { isSectionType, SECTION_DEFINITIONS, type SectionType } from "@/core/sections/registry";
+import { DownloadCardButton } from "@/features/cards/download-card";
 import { LivePreviewFrame } from "@/features/preview/live-preview-frame";
 import { setWeddingPublished } from "@/features/weddings/actions";
 import { ShareMenu } from "@/features/weddings/components/share-menu";
@@ -244,6 +245,7 @@ function EditorHeader({ onPublish }: { onPublish: () => void }) {
         <StatusBadge status={bundle.wedding.status} />
         <SaveIndicator status={status} />
       </div>
+      <DownloadCardButton bundle={bundle} className="hidden md:inline-flex" />
       <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
         <a href={`/preview/${weddingId}`} target="_blank" rel="noopener noreferrer">
           <Eye /> Preview

@@ -8,10 +8,10 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { href: "/templates", label: "Templates" },
+  { href: "/invitations", label: "Invitation cards" },
+  { href: "/websites", label: "Wedding websites" },
   { href: "/#features", label: "Features" },
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/#inspiration", label: "Inspiration" },
 ];
 
 /**
@@ -65,7 +65,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             Log in
           </Link>
           <Button asChild className={cn("h-10 rounded-full px-5", light && "bg-white text-foreground hover:bg-white/90")}>
-            <Link href="/templates">Create invitation</Link>
+            <Link href="/invitations">Create invitation</Link>
           </Button>
         </div>
 
@@ -85,7 +85,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           </nav>
           <div className="mt-auto grid gap-3">
             <Button asChild size="lg" className="rounded-full">
-              <Link href="/templates" onClick={() => setOpen(false)}>
+              <Link href="/invitations" onClick={() => setOpen(false)}>
                 Create invitation
               </Link>
             </Button>

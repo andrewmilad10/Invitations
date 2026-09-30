@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { emptyAnswers, hasProgress, MAX_DRAFT_GALLERY, previewBundle, withTemplate, type EventAnswers, type PhotoRef, type TryAnswers } from "./answers";
 import { draftFiles, draftStore, useHydrated, useStoredDraft } from "./draft-store";
 import { ExistingDraftDialog } from "./existing-draft-dialog";
+import { DownloadCardButton } from "@/features/cards/download-card";
 
 type TemplateOption = TemplateManifest;
 
@@ -125,6 +126,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
           <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
             <Link href={`/templates/${template.id}`}>Exit</Link>
           </Button>
+          <DownloadCardButton bundle={bundle} className="hidden sm:inline-flex" />
           <SaveButton canSave={canSave} onMissingNames={() => setStep(0)} />
         </div>
       </header>
@@ -176,6 +178,11 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
             {current.id === "photos" && <PhotosStep answers={answers} update={update} urls={urls} />}
           </div>
 
+          {last ? (
+            <div className="border-t bg-card px-6 pt-3 sm:hidden">
+              <DownloadCardButton bundle={bundle} className="w-full" label="Download my card" />
+            </div>
+          ) : null}
           <div className="flex items-center justify-between gap-3 border-t bg-card px-6 py-4">
             <Button type="button" variant="ghost" disabled={step === 0} onClick={() => setStep((s) => s - 1)}>
               Back

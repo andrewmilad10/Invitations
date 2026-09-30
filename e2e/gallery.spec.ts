@@ -3,7 +3,8 @@ import { expect, test } from "@playwright/test";
 /** The design gallery and design pages (no database needed). */
 
 test("filters, colours and saved designs in the gallery", async ({ page }) => {
-  await page.goto("/templates");
+  await page.goto("/templates"); // old address → invitation cards
+  await expect(page).toHaveURL(/\/invitations/);
   const count = page.getByText(/^Showing /);
   await expect(count).toBeVisible();
   const total = Number((await count.textContent())!.match(/of (\d+)/)![1]);
@@ -49,4 +50,12 @@ test("an earlier draft is offered back", async ({ context }) => {
   await expect(second.getByText("Nour & Karim · Delft Garland")).toBeVisible();
   await second.getByRole("button", { name: "Edit draft" }).click();
   await expect(second).toHaveURL(/\/create\/delft-garland/);
+});
+
+test("wedding websites gallery and a design opened as a website", async ({ page }) => {
+  await page.goto("/websites");
+  await expect(page.getByRole("heading", { name: "Wedding websites", level: 1 })).toBeVisible();
+  await page.getByRole("link", { name: "Cinematic", exact: true }).click();
+  await expect(page).toHaveURL(/\/templates\/cinematic\?view=website/);
+  await expect(page.frameLocator("iframe").first().locator("[data-section=hero]")).toBeAttached();
 });

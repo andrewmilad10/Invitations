@@ -15,7 +15,7 @@ export function DraftAuthLayout({ title, intro, children }: { title: string; int
         {children}
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Changed your mind?{" "}
-          <Link href="/templates" className="underline underline-offset-4">
+          <Link href="/invitations" className="underline underline-offset-4">
             Keep exploring
           </Link>{" "}
           — your draft stays in this browser.

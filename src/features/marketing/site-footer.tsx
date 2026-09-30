@@ -11,13 +11,14 @@ export function SiteFooter() {
         </div>
         <nav aria-label="Product" className="grid content-start gap-2.5 text-sm">
           <p className="mb-1 font-medium">Product</p>
-          <Link href="/templates" className="text-muted-foreground hover:text-foreground">Templates</Link>
+          <Link href="/invitations" className="text-muted-foreground hover:text-foreground">Invitation cards</Link>
+          <Link href="/websites" className="text-muted-foreground hover:text-foreground">Wedding websites</Link>
           <Link href="/#features" className="text-muted-foreground hover:text-foreground">Features</Link>
           <Link href="/#how-it-works" className="text-muted-foreground hover:text-foreground">How it works</Link>
         </nav>
         <nav aria-label="Account" className="grid content-start gap-2.5 text-sm">
           <p className="mb-1 font-medium">Your invitation</p>
-          <Link href="/templates" className="text-muted-foreground hover:text-foreground">Start creating</Link>
+          <Link href="/invitations" className="text-muted-foreground hover:text-foreground">Start creating</Link>
           <Link href="/login" className="text-muted-foreground hover:text-foreground">Log in</Link>
           <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">My weddings</Link>
         </nav>

@@ -27,7 +27,7 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
           </p>
         </div>
         <Button asChild className="rounded-full px-5">
-          <Link href="/templates">
+          <Link href="/invitations">
             <Plus /> Create new wedding
           </Link>
         </Button>
@@ -39,7 +39,7 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">Pick a template you love, add your names and date, and watch it come together.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="rounded-full px-7">
-              <Link href="/templates">Choose a template</Link>
+              <Link href="/invitations">Choose a template</Link>
             </Button>
             <Button asChild size="lg" variant="ghost" className="rounded-full">
               <Link href="/dashboard/new">Quick start</Link>
@@ -55,7 +55,7 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
           </ul>
           <p className="mt-8 text-sm text-muted-foreground">
             Planning more than one celebration?{" "}
-            <Link href="/templates" className="underline underline-offset-4">
+            <Link href="/invitations" className="underline underline-offset-4">
               Start another from a template
             </Link>{" "}
             or use the{" "}

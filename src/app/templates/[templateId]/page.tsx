@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { SECTION_DEFINITIONS } from "@/core/sections/registry";
 import { FONTS } from "@/core/theme/fonts";
 import { DesignDetail } from "@/features/marketing/preview/design-detail";
+import { PRODUCTS, type Product } from "@/features/marketing/products";
 import { SiteFooter } from "@/features/marketing/site-footer";
 import { SiteHeader } from "@/features/marketing/site-header";
 import { TemplateCard } from "@/features/marketing/template-card";
@@ -31,7 +32,8 @@ export default async function TemplatePage(props: PageProps<"/templates/[templat
   const { templateId } = await props.params;
   const template = getTemplateManifest(templateId);
   if (!template || template.status === "hidden") notFound();
-  const { palette } = await props.searchParams;
+  const { palette, view } = await props.searchParams;
+  const product: Product = view === "website" || view === "phone" ? "websites" : "cards";
   const initialPalette = template.palettes.find((p) => p.id === palette)?.id ?? template.palettes[0].id;
 
   const all = selectableTemplates();
@@ -47,13 +49,13 @@ export default async function TemplatePage(props: PageProps<"/templates/[templat
       <SiteHeader />
       <main className="pb-24 md:pb-0">
         <nav aria-label="Breadcrumb" className="mx-auto max-w-7xl px-5 pb-6 pt-8 text-sm text-muted-foreground sm:px-8">
-          <Link href="/templates" className="hover:text-foreground">
-            Invitations
+          <Link href={PRODUCTS[product].path} className="hover:text-foreground">
+            {PRODUCTS[product].label}
           </Link>
           <span className="mx-2" aria-hidden>
             /
           </span>
-          <Link href={`/templates?style=${template.categories[0]}`} className="capitalize hover:text-foreground">
+          <Link href={`${PRODUCTS[product].path}?style=${template.categories[0]}`} className="capitalize hover:text-foreground">
             {template.categories[0]}
           </Link>
           <span className="mx-2" aria-hidden>
@@ -62,7 +64,7 @@ export default async function TemplatePage(props: PageProps<"/templates/[templat
           <span aria-current="page">{template.name}</span>
         </nav>
 
-        <DesignDetail template={template} variants={variants} initialPalette={initialPalette} />
+        <DesignDetail template={template} variants={variants} initialPalette={initialPalette} initialView={view === "phone" ? "phone" : product === "websites" ? "website" : "card"} />
 
         <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 md:grid-cols-3 md:py-28">
           <div>
@@ -108,13 +110,13 @@ export default async function TemplatePage(props: PageProps<"/templates/[templat
           <div className="mx-auto max-w-7xl">
             <div className="flex items-end justify-between gap-4">
               <h2 className="font-serif text-4xl font-light">You might also like</h2>
-              <Link href="/templates" className="text-sm underline underline-offset-4">
+              <Link href={PRODUCTS[product].path} className="text-sm underline underline-offset-4">
                 See all
               </Link>
             </div>
             <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
               {others.map((t) => (
-                <TemplateCard key={t.id} template={t} index={all.indexOf(t)} />
+                <TemplateCard key={t.id} template={t} index={all.indexOf(t)} product={product} />
               ))}
             </div>
           </div>

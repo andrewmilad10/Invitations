@@ -23,14 +23,14 @@ export function Hero() {
             Your love story, beautifully invited.
           </h1>
           <p className="hero-rise mt-7 max-w-lg text-lg leading-relaxed text-white/85 [animation-delay:120ms]">
-            Design a wedding invitation and website your guests will remember. Pick a template, add your details and watch it come to life.
+            Invitation cards to send and wedding websites to share — in dozens of original designs. Pick one, add your details and watch it come to life.
           </p>
           <div className="hero-rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:220ms]">
             <Button asChild size="lg" className="h-13 rounded-full bg-white px-8 text-base text-foreground hover:bg-white/90">
-              <Link href="/templates">Explore templates</Link>
+              <Link href="/invitations">Invitation cards</Link>
             </Button>
-            <Button asChild size="lg" variant="ghost" className="h-13 rounded-full px-6 text-base text-white hover:bg-white/10 hover:text-white">
-              <Link href="#how-it-works">See how it works</Link>
+            <Button asChild size="lg" variant="outline" className="h-13 rounded-full border-white/60 bg-transparent px-8 text-base text-white hover:bg-white/10 hover:text-white">
+              <Link href="/websites">Wedding websites</Link>
             </Button>
           </div>
           <p className="hero-rise mt-8 text-sm text-white/65 [animation-delay:320ms]">Free to explore. You only create an account when you&apos;re ready to save.</p>

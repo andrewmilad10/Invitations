@@ -58,7 +58,7 @@ export function FinalCta() {
         <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-7xl">Ready to create your wedding invitation?</h2>
         <p className="mx-auto mt-6 max-w-lg text-lg text-white/80">Start with a template you love. It takes a few minutes, and it&apos;s free to try.</p>
         <Button asChild size="lg" className="mt-10 h-13 rounded-full bg-white px-8 text-base text-foreground hover:bg-white/90">
-          <Link href="/templates">Create your wedding invitation</Link>
+          <Link href="/invitations">Create your wedding invitation</Link>
         </Button>
         <ul className="mx-auto mt-14 grid max-w-2xl grid-cols-2 gap-6 text-sm text-white/75 sm:grid-cols-4">
           <li>Free to explore</li>

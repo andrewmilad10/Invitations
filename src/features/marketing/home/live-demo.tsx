@@ -48,7 +48,7 @@ export function LiveDemo() {
               <Link href="/templates/cinematic">Preview the template</Link>
             </Button>
             <Button asChild size="lg" variant="ghost" className="rounded-full px-6 text-forest-foreground hover:bg-white/10 hover:text-forest-foreground">
-              <Link href="/templates">See all templates</Link>
+              <Link href="/websites">See all wedding websites</Link>
             </Button>
           </div>
         </div>

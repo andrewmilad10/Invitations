@@ -7,7 +7,18 @@ import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
 import { Stationery } from "../stationery";
+import { websiteFeatures, type Product } from "../products";
 import { favoritesStore, useFavorites } from "./favorites";
+import { WebsiteThumb } from "./website-thumb";
+
+/** A design's page, opened on the card or the website view. */
+export function designHref(id: string, paletteId: string | null, product: Product = "cards") {
+  const q = new URLSearchParams();
+  if (paletteId) q.set("palette", paletteId);
+  if (product === "websites") q.set("view", "website");
+  const s = q.toString();
+  return `/templates/${id}${s ? `?${s}` : ""}`;
+}
 
 /** Couples used only to make gallery cards feel varied; not real weddings. */
 const CARD_COUPLES: [string, string, string][] = [
@@ -100,18 +111,22 @@ export function DesignCard({
   index,
   initialPalette,
   onQuickView,
+  product = "cards",
   className,
 }: {
   template: TemplateManifest;
   index: number;
   initialPalette?: string;
   onQuickView?: (template: TemplateManifest, paletteId: string) => void;
+  /** Show the design as a card or as a website. */
+  product?: Product;
   className?: string;
 }) {
   const [paletteId, setPaletteId] = useState(initialPalette ?? template.palettes[0].id);
   const [a, b, date] = cardCouple(index);
   const isDefault = paletteId === template.palettes[0].id;
-  const detailHref = `/templates/${template.id}${isDefault ? "" : `?palette=${paletteId}`}`;
+  const website = product === "websites";
+  const detailHref = designHref(template.id, isDefault ? null : paletteId, product);
   const customizeHref = `/create/${template.id}${isDefault ? "" : `?palette=${paletteId}`}`;
   const shape = template.stationery.shape ?? "portrait";
 
@@ -119,17 +134,28 @@ export function DesignCard({
     <article className={cn("group relative", className)}>
       <div className="relative grid aspect-[5/6] place-items-center overflow-hidden bg-muted transition-shadow duration-500 group-hover:shadow-[0_30px_60px_-30px_rgb(34_29_26/0.45)]">
         <Link href={detailHref} aria-label={`The ${template.name}`} className="absolute inset-0 z-0" />
-        <Stationery
-          template={template}
-          overrides={paletteOverrides(template, paletteId)}
-          partnerOne={a}
-          partnerTwo={b}
-          dateLabel={date}
-          className={cn(
-            "pointer-events-none shadow-[0_12px_30px_-14px_rgb(34_29_26/0.45)] transition-transform duration-700 ease-out group-hover:scale-[1.03]",
-            shape === "square" ? "w-[74%]" : "w-[64%]",
-          )}
-        />
+        {website ? (
+          <WebsiteThumb
+            template={template}
+            overrides={paletteOverrides(template, paletteId)}
+            partnerOne={a}
+            partnerTwo={b}
+            dateLabel={date}
+            className="pointer-events-none absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+          />
+        ) : (
+          <Stationery
+            template={template}
+            overrides={paletteOverrides(template, paletteId)}
+            partnerOne={a}
+            partnerTwo={b}
+            dateLabel={date}
+            className={cn(
+              "pointer-events-none shadow-[0_12px_30px_-14px_rgb(34_29_26/0.45)] transition-transform duration-700 ease-out group-hover:scale-[1.03]",
+              shape === "square" ? "w-[74%]" : "w-[64%]",
+            )}
+          />
+        )}
         {template.isNew ? (
           <span className="absolute start-3 top-3 rounded-full bg-background px-2.5 py-1 text-[0.65rem] font-medium uppercase tracking-[0.14em]">New</span>
         ) : null}
@@ -158,6 +184,7 @@ export function DesignCard({
         </Link>
       </h3>
       <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">{template.tagline}</p>
+      {website ? <p className="mt-1.5 text-xs text-muted-foreground">{websiteFeatures(template).slice(0, 3).join(" · ")}</p> : null}
     </article>
   );
 }

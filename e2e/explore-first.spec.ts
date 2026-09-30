@@ -11,10 +11,10 @@ const photo = path.join(__dirname, "../public/samples/gallery-2.jpg");
 test("a visitor builds an invitation before creating an account, and nothing is lost", async ({ page }) => {
   // Explore — no login anywhere.
   await page.goto("/");
-  await page.getByRole("link", { name: /explore templates/i }).first().click();
-  await expect(page).toHaveURL(/\/templates/);
+  await page.getByRole("link", { name: "Wedding websites" }).first().click();
+  await expect(page).toHaveURL(/\/websites/);
   await page.goto("/templates/romantic");
-  await page.getByRole("tab", { name: "Website" }).click();
+  await page.getByRole("tab", { name: "Site · desktop" }).click();
   await expect(page.frameLocator("iframe").first().locator("[data-section=hero] h1")).toContainText("Emma");
 
   // Try it.

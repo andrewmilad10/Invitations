@@ -1,12 +1,13 @@
 "use client";
 
-import { Monitor, Printer, Smartphone } from "lucide-react";
+import { Globe, Mail, Monitor, Printer, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { FavoriteButton, paletteOverrides, SwatchRow } from "../gallery/design-card";
+import { websiteFeatures } from "../products";
 import { Stationery } from "../stationery";
 import { BrowserFrame, FittedPhone, MobileTryBar } from "./template-preview-stage";
 
@@ -32,13 +33,15 @@ export function DesignDetail({
   template,
   variants,
   initialPalette,
+  initialView = "card",
 }: {
   template: TemplateManifest;
   /** Designs in the same family, including this one. */
   variants: TemplateManifest[];
   initialPalette: string;
+  initialView?: View;
 }) {
-  const [view, setView] = useState<View>("card");
+  const [view, setView] = useState<View>(initialView);
   const [paletteId, setPaletteId] = useState(initialPalette);
   const palette = template.palettes.find((p) => p.id === paletteId) ?? template.palettes[0];
   const isDefault = palette.id === template.palettes[0].id;
@@ -59,16 +62,28 @@ export function DesignDetail({
     />
   );
 
+  function syncUrl(nextPalette: string, nextView: View) {
+    const q = new URLSearchParams();
+    if (nextPalette !== template.palettes[0].id) q.set("palette", nextPalette);
+    if (nextView !== "card") q.set("view", nextView);
+    const str = q.toString();
+    window.history.replaceState(null, "", `/templates/${template.id}${str ? `?${str}` : ""}`);
+  }
+
   function choosePalette(id: string) {
     setPaletteId(id);
-    const q = id === template.palettes[0].id ? "" : `?palette=${id}`;
-    window.history.replaceState(null, "", `/templates/${template.id}${q}`);
+    syncUrl(id, view);
+  }
+
+  function chooseView(v: View) {
+    setView(v);
+    syncUrl(palette.id, v);
   }
 
   const thumbs: { id: View; label: string; content: React.ReactNode }[] = [
     { id: "card", label: "Card", content: <span aria-hidden className="contents">{card("w-[70%] shadow-sm", "80px")}</span> },
-    { id: "phone", label: "Phone", content: <Smartphone className="size-6 text-muted-foreground" /> },
-    { id: "website", label: "Website", content: <Monitor className="size-6 text-muted-foreground" /> },
+    { id: "phone", label: "Site · phone", content: <Smartphone className="size-6 text-muted-foreground" /> },
+    { id: "website", label: "Site · desktop", content: <Monitor className="size-6 text-muted-foreground" /> },
   ];
 
   return (
@@ -82,7 +97,7 @@ export function DesignDetail({
               type="button"
               role="tab"
               aria-selected={view === t.id}
-              onClick={() => setView(t.id)}
+              onClick={() => chooseView(t.id)}
               className="group flex flex-col items-center gap-1.5"
             >
               <span
@@ -165,6 +180,34 @@ export function DesignDetail({
             <SwatchRow template={template} value={palette.id} onChange={choosePalette} size="lg" />
           </div>
           <p className="mt-2 text-xs text-muted-foreground">You can fine-tune every colour and font in the editor.</p>
+        </div>
+
+        <div className="mt-8">
+          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Included with this design</p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {(
+              [
+                ["card", Mail, "Invitation card", "Personalised with your details. Download it to send on WhatsApp or by email."],
+                ["website", Globe, "Wedding website", `Your own link with ${[...websiteFeatures(template), "story", "schedule", "photos"].join(", ")}.`],
+              ] as const
+            ).map(([target, Icon, title, text]) => {
+              const active = target === "card" ? view === "card" : view !== "card";
+              return (
+                <button
+                  key={target}
+                  type="button"
+                  onClick={() => chooseView(target === "card" ? "card" : view === "phone" ? "phone" : "website")}
+                  aria-pressed={active}
+                  className={cn("rounded-md border p-4 text-start transition-colors", active ? "border-foreground" : "hover:border-foreground/40")}
+                >
+                  <span className="flex items-center gap-2 text-sm font-medium">
+                    <Icon className="size-4" /> {title}
+                  </span>
+                  <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">{text}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="mt-8 flex flex-col gap-2 sm:flex-row sm:items-center">

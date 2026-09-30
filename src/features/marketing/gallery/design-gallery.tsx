@@ -7,6 +7,7 @@ import { COLOR_FAMILIES, type ColorFamily } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
 import { Stationery } from "../stationery";
 import { DesignCard } from "./design-card";
+import { PRODUCTS, type Product } from "../products";
 import { useFavorites } from "./favorites";
 import { activeFilterCount, filtersToQuery, filterTemplates, NO_FILTERS, SORTS, type GalleryFilters, type Sort } from "./filters";
 import { QuickView } from "./quick-view";
@@ -16,8 +17,17 @@ const STYLE_TILES = TEMPLATE_CATEGORIES.slice(0, 9);
 
 /** Representative colour for each family's filter dot (UI only). */
 const FAMILY_DOT: Record<ColorFamily, string> = {
-  white: "#ffffff", neutral: "#cfc6b8", black: "#1b1b1b", gold: "#c3a26b", pink: "#e3a9b2", red: "#8d2a37",
-  orange: "#d27a55", yellow: "#e6c65a", green: "#6f8a5e", blue: "#4d6a9a", purple: "#8a74b0",
+  white: "#ffffff",
+  neutral: "#cfc6b8",
+  black: "#1b1b1b",
+  gold: "#c3a26b",
+  pink: "#e3a9b2",
+  red: "#8d2a37",
+  orange: "#d27a55",
+  yellow: "#e6c65a",
+  green: "#6f8a5e",
+  blue: "#4d6a9a",
+  purple: "#8a74b0",
 };
 
 const label = (s: string) => s[0].toUpperCase() + s.slice(1);
@@ -27,7 +37,8 @@ const label = (s: string) => s[0].toUpperCase() + s.slice(1);
  * saved), sorting and the grid. Filters live in the URL, so a filtered view
  * can be shared and survives a reload.
  */
-export function DesignGallery({ templates, initialFilters }: { templates: TemplateManifest[]; initialFilters: GalleryFilters }) {
+export function DesignGallery({ templates, initialFilters, product = "cards" }: { templates: TemplateManifest[]; initialFilters: GalleryFilters; product?: Product }) {
+  const website = product === "websites";
   const [filters, setFilters] = useState(initialFilters);
   const [limit, setLimit] = useState(PAGE);
   const [quick, setQuick] = useState<{ template: TemplateManifest; paletteId: string } | null>(null);
@@ -38,7 +49,7 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
     const next = { ...filters, ...patch };
     setFilters(next);
     setLimit(PAGE);
-    window.history.replaceState(null, "", `/templates${filtersToQuery(next)}`);
+    window.history.replaceState(null, "", `${PRODUCTS[product].path}${filtersToQuery(next)}`);
   }
 
   const tileExample = (c: TemplateCategory) => templates.find((t) => t.categories[0] === c) ?? templates.find((t) => t.categories.includes(c));
@@ -55,7 +66,12 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
             const active = filters.style === c;
             return (
               <li key={c}>
-                <button type="button" onClick={() => apply({ style: active ? null : c })} aria-pressed={active} className="group flex w-24 flex-col items-center gap-2 sm:w-28">
+                <button
+                  type="button"
+                  onClick={() => apply({ style: active ? null : c })}
+                  aria-pressed={active}
+                  className="group flex w-24 flex-col items-center gap-2 sm:w-28"
+                >
                   <span
                     aria-hidden
                     className={cn(
@@ -71,7 +87,10 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
                         dateLabel={null}
                         eyebrow=""
                         sizes="112px"
-                        className={cn("w-[58%] shadow-[0_6px_14px_-8px_rgb(34_29_26/0.5)] transition-transform duration-500 group-hover:-translate-y-0.5", example.stationery.shape === "square" && "w-[68%]")}
+                        className={cn(
+                          "w-[58%] shadow-[0_6px_14px_-8px_rgb(34_29_26/0.5)] transition-transform duration-500 group-hover:-translate-y-0.5",
+                          example.stationery.shape === "square" && "w-[68%]",
+                        )}
                       />
                     ) : null}
                   </span>
@@ -124,36 +143,40 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
               </>
             )}
           </FilterMenu>
-          <FilterMenu label="Shape" value={filters.shape ? label(filters.shape) : null} active={Boolean(filters.shape)}>
-            {(close) => (
-              <>
-                <MenuOption selected={!filters.shape} onSelect={() => (apply({ shape: null }), close())}>
-                  All shapes
-                </MenuOption>
-                {CARD_SHAPES.map((s) => (
-                  <MenuOption key={s} selected={filters.shape === s} onSelect={() => (apply({ shape: s }), close())}>
-                    <ShapeIcon shape={s} />
-                    {label(s)}
-                  </MenuOption>
-                ))}
-              </>
-            )}
-          </FilterMenu>
-          <FilterMenu label="Photo" value={filters.photo === "with" ? "With photo" : filters.photo === "without" ? "No photo" : null} active={Boolean(filters.photo)}>
-            {(close) => (
-              <>
-                <MenuOption selected={!filters.photo} onSelect={() => (apply({ photo: null }), close())}>
-                  Any
-                </MenuOption>
-                <MenuOption selected={filters.photo === "with"} onSelect={() => (apply({ photo: "with" }), close())}>
-                  With a photo
-                </MenuOption>
-                <MenuOption selected={filters.photo === "without"} onSelect={() => (apply({ photo: "without" }), close())}>
-                  Without a photo
-                </MenuOption>
-              </>
-            )}
-          </FilterMenu>
+          {website ? null : (
+            <>
+              <FilterMenu label="Shape" value={filters.shape ? label(filters.shape) : null} active={Boolean(filters.shape)}>
+                {(close) => (
+                  <>
+                    <MenuOption selected={!filters.shape} onSelect={() => (apply({ shape: null }), close())}>
+                      All shapes
+                    </MenuOption>
+                    {CARD_SHAPES.map((s) => (
+                      <MenuOption key={s} selected={filters.shape === s} onSelect={() => (apply({ shape: s }), close())}>
+                        <ShapeIcon shape={s} />
+                        {label(s)}
+                      </MenuOption>
+                    ))}
+                  </>
+                )}
+              </FilterMenu>
+              <FilterMenu label="Photo" value={filters.photo === "with" ? "With photo" : filters.photo === "without" ? "No photo" : null} active={Boolean(filters.photo)}>
+                {(close) => (
+                  <>
+                    <MenuOption selected={!filters.photo} onSelect={() => (apply({ photo: null }), close())}>
+                      Any
+                    </MenuOption>
+                    <MenuOption selected={filters.photo === "with"} onSelect={() => (apply({ photo: "with" }), close())}>
+                      With a photo
+                    </MenuOption>
+                    <MenuOption selected={filters.photo === "without"} onSelect={() => (apply({ photo: "without" }), close())}>
+                      Without a photo
+                    </MenuOption>
+                  </>
+                )}
+              </FilterMenu>
+            </>
+          )}
           <button
             type="button"
             onClick={() => apply({ saved: !filters.saved })}
@@ -166,7 +189,11 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
             <Heart className={cn("size-3.5", filters.saved && "fill-current")} /> Saved{favorites.length ? ` (${favorites.length})` : ""}
           </button>
           {count ? (
-            <button type="button" onClick={() => apply({ ...NO_FILTERS, sort: filters.sort })} className="inline-flex h-9 items-center gap-1 px-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+            <button
+              type="button"
+              onClick={() => apply({ ...NO_FILTERS, sort: filters.sort })}
+              className="inline-flex h-9 items-center gap-1 px-2 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
               <X className="size-3.5" /> Clear all
             </button>
           ) : null}
@@ -185,6 +212,7 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
               index={templates.indexOf(item.template)}
               initialPalette={item.paletteId}
               onQuickView={(template, paletteId) => setQuick({ template, paletteId })}
+              product={product}
               className={i < 4 ? undefined : "[content-visibility:auto] [contain-intrinsic-size:auto_520px]"}
             />
           ))}
@@ -192,9 +220,7 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
       ) : (
         <div className="mt-16 text-center">
           <p className="font-serif text-3xl font-light">{filters.saved && !favorites.length ? "No saved designs yet" : "No designs match"}</p>
-          <p className="mt-2 text-muted-foreground">
-            {filters.saved && !favorites.length ? "Tap the heart on any design to keep it here." : "Try removing a filter."}
-          </p>
+          <p className="mt-2 text-muted-foreground">{filters.saved && !favorites.length ? "Tap the heart on any design to keep it here." : "Try removing a filter."}</p>
           <button type="button" onClick={() => apply(NO_FILTERS)} className="mt-6 text-sm underline underline-offset-4">
             Show all designs
           </button>
@@ -209,7 +235,13 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
         </div>
       ) : null}
 
-      <QuickView key={quick ? `${quick.template.id}:${quick.paletteId}` : "closed"} template={quick?.template ?? null} paletteId={quick?.paletteId ?? ""} onClose={() => setQuick(null)} />
+      <QuickView
+        key={quick ? `${quick.template.id}:${quick.paletteId}` : "closed"}
+        template={quick?.template ?? null}
+        paletteId={quick?.paletteId ?? ""}
+        product={product}
+        onClose={() => setQuick(null)}
+      />
     </>
   );
 }
@@ -268,7 +300,13 @@ function FilterMenu({ label, value, active, children }: { label: string; value: 
 
 function MenuOption({ selected, onSelect, children }: { selected: boolean; onSelect: () => void; children: ReactNode }) {
   return (
-    <button type="button" role="option" aria-selected={selected} onClick={onSelect} className="flex w-full items-center gap-2.5 rounded px-3 py-2 text-start text-sm hover:bg-secondary">
+    <button
+      type="button"
+      role="option"
+      aria-selected={selected}
+      onClick={onSelect}
+      className="flex w-full items-center gap-2.5 rounded px-3 py-2 text-start text-sm hover:bg-secondary"
+    >
       {children}
       {selected ? <Check className="ms-auto size-3.5" /> : null}
     </button>
