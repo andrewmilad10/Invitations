@@ -62,10 +62,23 @@ describe("buildInvitationModel", () => {
     expect(m.theme).toEqual(cinematicManifest.themeDefaults);
   });
 
-  it("orders sections by template default, overridden by stored sort_order", () => {
+  it("orders sections by template default, overridden by a saved custom order", () => {
     expect(types(bundle()).slice(0, 3)).toEqual(["hero", "couple", "date"]);
-    const moved = bundle((x) => x.sections.push({ type: "gallery", enabled: true, sort_order: 5, content: {} }));
-    expect(types(moved).slice(0, 2)).toEqual(["hero", "gallery"]);
+    const custom = ["hero", "gallery", ...cinematicManifest.defaultSectionOrder.filter((t) => t !== "hero" && t !== "gallery")];
+    const moved = bundle((x) => {
+      x.sections = custom.map((type, i) => ({ type, enabled: true, sort_order: (i + 1) * 10, content: x.sections.find((s) => s.type === type)?.content ?? {} }));
+    });
+    expect(types(moved).slice(0, 3)).toEqual(["hero", "gallery", "couple"]);
+  });
+
+  it("places a section with no saved position after its default predecessor", () => {
+    // Simulates a section type released after the couple saved a custom order.
+    const custom = cinematicManifest.defaultSectionOrder.filter((t) => t !== "countdown").slice().reverse();
+    const b = bundle((x) => {
+      x.sections = custom.map((type, i) => ({ type, enabled: true, sort_order: (i + 1) * 10, content: x.sections.find((s) => s.type === type)?.content ?? {} }));
+    });
+    const t = types(b);
+    expect(t.indexOf("countdown")).toBe(t.indexOf("date") + 1);
   });
 
   it("editing a section's content (no sort_order) never moves it", () => {

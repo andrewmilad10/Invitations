@@ -61,6 +61,11 @@ export default async function DashboardPage() {
                   <Button asChild size="sm" variant="secondary">
                     <Link href={`/dashboard/weddings/${w.id}`}>Edit</Link>
                   </Button>
+                  <Button asChild size="sm" variant="ghost">
+                    <a href={`/preview/${w.id}`} target="_blank" rel="noopener noreferrer">
+                      Preview
+                    </a>
+                  </Button>
                   <PublishToggle weddingId={w.id} published={w.status === "published"} publicUrl={publicUrl} />
                 </div>
               </li>

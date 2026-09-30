@@ -29,6 +29,7 @@ values ('a0000000-0000-4000-8000-000000000001', 'alice-and-sam', 'Alice', 'Sam',
 select tests.eq((select status::text from public.weddings where slug = 'alice-and-sam'), 'draft', 'new wedding starts as draft');
 select tests.eq((select role::text from public.wedding_members where wedding_id = tests.wid('alice-and-sam')), 'owner', 'owner membership created by trigger');
 select tests.ok(exists (select 1 from public.wedding_settings where wedding_id = tests.wid('alice-and-sam')), 'settings row created by trigger');
+select tests.eq((select visibility::text from public.wedding_settings where wedding_id = tests.wid('alice-and-sam')), 'unlisted', 'new weddings are unlisted (not indexed) by default');
 select tests.ok(exists (select 1 from public.wedding_themes where wedding_id = tests.wid('alice-and-sam')), 'theme row created by trigger');
 
 select tests.throws(

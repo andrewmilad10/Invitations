@@ -121,7 +121,7 @@ create table public.wedding_settings (
   wedding_id     uuid primary key references public.weddings (id) on delete cascade,
   locale         text not null default 'en' check (locale in ('en', 'ar')),
   timezone       text not null default 'Africa/Cairo' check (char_length(timezone) between 1 and 64),
-  visibility     public.wedding_visibility not null default 'public',
+  visibility     public.wedding_visibility not null default 'unlisted',
   music_enabled  boolean not null default false,
   created_at     timestamptz not null default now(),
   updated_at     timestamptz not null default now()

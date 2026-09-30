@@ -122,23 +122,53 @@ function resolveSections(
     ...template.supportedSections.filter((t) => !template.defaultSectionOrder.includes(t)),
   ];
 
-  return candidates
+  const resolved = candidates
     .filter((type) => supported.has(type))
-    .map((type, index) => {
+    .map((type) => {
       const row = rows.get(type);
       return {
         type,
         enabled: row ? row.enabled : !disabledByDefault.has(type),
-        order: row?.sort_order ?? index * 10,
-        index,
+        order: row?.sort_order ?? null,
         content: resolveSectionContent(type, row?.content, locale),
       };
-    })
+    });
+
+  return orderSections(resolved)
     // Sections that can't be disabled (hero, footer) always render.
     .filter((s) => s.enabled || !SECTION_DEFINITIONS[s.type].canDisable)
-    .sort((a, b) => a.order - b.order || a.index - b.index)
     .map(({ type, content }) => ({ type, content }) as RenderedSection)
     .filter((section) => hasSomethingToShow(section, facts));
+}
+
+/**
+ * Sections with an explicit order (the couple reordered) come in that order.
+ * A section without one (e.g. a section type released later) is placed right
+ * after its predecessor in the template's default order, so it never lands
+ * in a random spot. Input must be in template default order.
+ */
+function orderSections<T extends { type: SectionType; order: number | null }>(inDefaultOrder: T[]): T[] {
+  const explicit = inDefaultOrder
+    .map((s, index) => ({ s, index }))
+    .filter(({ s }) => s.order !== null)
+    .sort((a, b) => a.s.order! - b.s.order! || a.index - b.index)
+    .map(({ s }) => s);
+  if (explicit.length === 0) return inDefaultOrder;
+
+  const result = [...explicit];
+  inDefaultOrder.forEach((section, index) => {
+    if (section.order !== null) return;
+    let insertAt = 0;
+    for (let i = index - 1; i >= 0; i--) {
+      const at = result.indexOf(inDefaultOrder[i]);
+      if (at !== -1) {
+        insertAt = at + 1;
+        break;
+      }
+    }
+    result.splice(insertAt, 0, section);
+  });
+  return result;
 }
 
 function hasSomethingToShow(section: RenderedSection, facts: SectionFacts): boolean {
@@ -162,6 +192,23 @@ function hasSomethingToShow(section: RenderedSection, facts: SectionFacts): bool
     default:
       return true;
   }
+}
+
+/**
+ * Every section type the template supports, in display order (ignoring
+ * enabled/empty). Used by the editor's section list so it always matches the
+ * rendered invitation.
+ */
+export function sectionDisplayOrder(
+  sections: { type: string; sort_order: number | null }[],
+  template: Pick<TemplateManifest, "defaultSectionOrder" | "supportedSections">,
+): SectionType[] {
+  const rows = new Map(sections.map((s) => [s.type, s.sort_order]));
+  const all = [
+    ...template.defaultSectionOrder,
+    ...template.supportedSections.filter((t) => !template.defaultSectionOrder.includes(t)),
+  ];
+  return orderSections(all.map((type) => ({ type, order: rows.get(type) ?? null }))).map((s) => s.type);
 }
 
 // ── Events ──────────────────────────────────────────────────────────────────

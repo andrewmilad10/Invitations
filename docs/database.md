@@ -58,7 +58,7 @@ protected from being removed or downgraded.
 
 ### `wedding_settings` (1:1)
 `locale` (`en`/`ar`), `timezone` (IANA, default `Africa/Cairo`),
-`visibility` (`public` / `unlisted`), `music_enabled`.
+`visibility` (`unlisted` by default — not indexed by search engines — or `public`), `music_enabled`.
 
 ### `wedding_themes` (1:1)
 `tokens jsonb` — a **partial** `ThemeTokens` object holding only what the
