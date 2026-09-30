@@ -5,20 +5,22 @@ import { selectableTemplates } from "@/templates/registry";
 import { TemplateCard } from "../template-card";
 
 export function TemplateShowcase() {
-  const templates = selectableTemplates().slice(0, 4);
+  const all = selectableTemplates();
+  const templates = all.slice(0, 8);
+  const count = all.length;
   return (
     <section id="templates" className="scroll-mt-20 px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">Invitations designed like fine stationery</h2>
-          <p className="mt-5 text-lg text-muted-foreground">Every template works with your details. Preview any of them, then try one — no account needed.</p>
+          <p className="mt-5 text-lg text-muted-foreground">Dozens of original designs, each in several colours. Preview any of them, then try one — no account needed.</p>
         </div>
 
         <nav aria-label="Template styles" className="mt-10 flex flex-wrap justify-center gap-2">
           <Link href="/templates" className="rounded-full bg-primary px-4 py-1.5 text-sm text-primary-foreground">
             All
           </Link>
-          {TEMPLATE_CATEGORIES.map((c) => (
+          {TEMPLATE_CATEGORIES.slice(0, 10).map((c) => (
             <Link key={c} href={`/templates?style=${c}`} className="rounded-full border border-border px-4 py-1.5 text-sm capitalize text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground">
               {c}
             </Link>
@@ -33,7 +35,7 @@ export function TemplateShowcase() {
 
         <div className="mt-14 text-center">
           <Button asChild size="lg" variant="outline" className="rounded-full px-8">
-            <Link href="/templates">Browse all templates</Link>
+            <Link href="/templates">Browse all {count} designs</Link>
           </Button>
         </div>
       </div>
