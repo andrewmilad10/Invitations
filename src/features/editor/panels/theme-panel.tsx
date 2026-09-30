@@ -47,7 +47,7 @@ export function ThemePanel() {
       <section className="grid gap-4">
         <h3 className="text-sm font-medium">Template</h3>
         <fieldset disabled={!canEdit}>
-          <TemplatePicker templates={templates} value={template.id} onChange={chooseTemplate} />
+          <TemplatePicker templates={templates} value={template.id} onChange={chooseTemplate} compact initialCount={9} />
         </fieldset>
       </section>
 

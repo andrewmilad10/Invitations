@@ -32,9 +32,13 @@ No Supabase yet? `/templates/cinematic/preview` shows a template with sample dat
 Explore-first wedding invitation platform:
 
 1. **Discover** — public homepage, no login required
-2. **Explore templates** — `/templates`, 7 templates with style filters
-3. **View demo** — `/templates/{id}`: the real invitation on desktop and phone
-4. **Try it** — `/create/{id}`: customise without an account (draft kept in the browser)
+2. **Explore designs** — `/templates`, 42 original designs (all drawn in code, no
+   third-party artwork) with style tiles, colour / shape / photo filters,
+   sorting, saved designs and quick view
+3. **View a design** — `/templates/{id}`: as a card, on a phone and as a website;
+   shape variants, named colour themes, Customize
+4. **Try it** — `/create/{id}`: customise without an account (draft kept in the
+   browser; an earlier draft is offered back)
 5. **Create account** — only when saving; the draft moves into the account in one transaction
 6. **Continue editing** — three-column editor (sections · live preview · properties)
 7. **Publish & share** — `/w/{slug}`, with link, WhatsApp and email sharing
@@ -53,7 +57,7 @@ npm run test:e2e   # full flow against `supabase start`
 | --- | --- |
 | [docs/architecture.md](docs/architecture.md) | System design, folder structure, security model, extension points |
 | [docs/database.md](docs/database.md) | Schema, RLS, storage, decisions |
-| [docs/templates.md](docs/templates.md) | Template contract, adding templates and sections, the envelope opening |
+| [docs/templates.md](docs/templates.md) | Template contract, the design collection, adding designs and sections, the envelope opening |
 | [docs/roadmap.md](docs/roadmap.md) | Phases 2–7, offline/PWA/export plan, admin |
 | [docs/development.md](docs/development.md) | Local setup, scripts, conventions |
 | [docs/deployment.md](docs/deployment.md) | Supabase + Vercel, environment variables |

@@ -137,7 +137,7 @@ export function CreateWeddingWizard({ templates, defaultTemplateId }: { template
               <h2 className="font-serif text-4xl">Choose a template</h2>
               <p className="mt-2 text-muted-foreground">You can switch templates at any time — your content stays the same.</p>
             </header>
-            <TemplatePicker templates={templates} value={templateId} onChange={setTemplateId} />
+            <TemplatePicker templates={templates} value={templateId} onChange={setTemplateId} initialCount={9} />
             {errors.templateId ? <p className="text-sm text-destructive">{errors.templateId[0]}</p> : null}
           </section>
         )}

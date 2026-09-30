@@ -32,12 +32,17 @@ interface TemplateManifest {
   description: string;
   tagline: string;
   previewImage: string;          // /public path for the picker card
+  renderer: string;              // layout key in src/templates/renderers.tsx
+  categories: TemplateCategory[];// gallery styles, main one first
+  stationery: { ornament; layout?; shape? }; // the design's card
+  family?: string;               // variants of one design (portrait / square / arch)
+  isNew?: boolean;               // "New" badge, first under "Newest"
   supportedSections: SectionType[];
   defaultSectionOrder: SectionType[];
   defaultDisabled?: SectionType[];
   themeDefaults: ThemeTokens;    // complete token set
-  palettes: ThemePalette[];      // one-click color presets for the editor
-  features: { opening?: 'envelope' | 'none'; music?: boolean };
+  palettes: ThemePalette[];      // named colour themes, each with a colour `family`
+  features: { opening: 'envelope' | 'none'; music: boolean; hero?: 'photo' | 'card' };
   status: 'available' | 'beta' | 'hidden';
 }
 
@@ -152,3 +157,54 @@ resolved in `src/core/sections/style.ts` and reach templates on every
   has a shared rule in `globals.css`.
 
 A template that doesn't want a hint simply ignores it — the data stays valid.
+
+## The design collection
+
+Most templates are **designs**: an entry in
+`src/templates/collection/designs.ts` that reuses a layout and describes its
+card. No images are involved — every motif is original line art drawn in
+code, in the theme's own colours:
+
+```
+src/templates/shared/stationery/
+  ornaments.tsx   27 motifs (garland, wreath, deco fans, olive, tiles, citrus,
+                  roses, confetti, stars, watercolour washes, …), procedural
+                  SVG with a seeded RNG so server and client match
+  card.tsx        StationeryCard: shape (portrait · square · arch) +
+                  layout (classic · script · typographic · monogram ·
+                  photo-top · photo-full · photo-grid · polaroid) + motif
+src/templates/shared/card-hero.tsx
+                  the "card" hero: the invitation opens with the design's card,
+                  filled in with the couple's names, date, venue and photos
+src/templates/collection/palettes.ts
+                  26 named colour themes shared by designs
+```
+
+`StationeryCard` reads only `--inv-*` variables, so the same component draws
+gallery thumbnails (the marketing `Stationery` wrapper sets the variables from
+a palette) and the live invitation (the invitation root sets them from the
+couple's theme).
+
+Adding a design:
+
+```ts
+design({
+  id: "my-design", name: "My Design", tagline: "…", description: "…",
+  categories: ["floral", "elegant"],
+  art: { ornament: "garland", layout: "script", shape: "arch" },
+  fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
+  palettes: ["blush", "sage", "delft"],   // first = default look
+  family: "my-design",                    // optional: groups shape variants
+  isNew: true,
+})
+```
+
+`npm test` checks every design: known categories, motif, layout and shape;
+unique palette ids with a colour family; a family has at least two members;
+and WCAG contrast (text ≥ 4.5:1 on background and card, button text ≥ 3:1)
+in **every** palette.
+
+The gallery (`src/features/marketing/gallery`) filters by style, colour
+family (showing each design in its matching palette), shape and photo, sorts
+by featured / newest / A–Z, and keeps filters in the URL. Saved designs are
+stored in the browser only (`localStorage`, no account needed).
