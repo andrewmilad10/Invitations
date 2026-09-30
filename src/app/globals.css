@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────────────
+   App UI tokens (landing, auth, dashboard, editor).
+   Invitation templates do NOT use these — they use --inv-* variables
+   generated from the wedding's theme (src/core/theme).
+   ───────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f5;
+  --foreground: #1f1b18;
+  --card: #ffffff;
+  --muted: #f1ede7;
+  --muted-foreground: #6e655d;
+  --primary: #2a211c;
+  --primary-foreground: #faf8f5;
+  --secondary: #f1ede7;
+  --secondary-foreground: #2a211c;
+  --accent: #a8845a;
+  --border: #e4ddd3;
+  --input: #d9d0c4;
+  --ring: #a8845a;
+  --destructive: #b3261e;
+  --success: #2f6b4f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--border);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 }
