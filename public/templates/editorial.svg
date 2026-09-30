@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#ffffff"/>
+  <rect x="24" y="24" width="352" height="252" fill="none" stroke="#e6e4df"/>
+  <text x="200" y="70" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="9" letter-spacing="3" fill="#8c2f39">THE WEDDING OF</text>
+  <text x="200" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#111">Name</text>
+  <text x="200" y="152" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="22" fill="#8c2f39">&amp;</text>
+  <text x="200" y="190" text-anchor="middle" font-family="Georgia, serif" font-size="38" fill="#111">Name</text>
+  <line x1="170" y1="214" x2="230" y2="214" stroke="#111"/>
+  <rect x="120" y="230" width="160" height="6" fill="#ecebe7"/>
+  <rect x="150" y="244" width="100" height="6" fill="#ecebe7"/>
+</svg>
