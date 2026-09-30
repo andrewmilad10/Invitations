@@ -24,13 +24,18 @@ page-to-page view transition. The homepage hero opening is **pure CSS**
 
 ## Timing
 
-| | duration | ease |
-| --- | --- | --- |
-| hover / micro | 200–400 ms | ease-out |
-| cards, stagger items | 800 ms, 80–150 ms apart | expo.out |
-| section elements, heading lines | 900–1050 ms | expo.out |
-| large photos | 1200–1400 ms | expo.out |
-| hero opening | ~1.5 s total | cubic-bezier(.22,1,.36,1) |
+One knob sets the pace: `TEMPO` in `motion-engine.tsx` multiplies every
+duration, delay and stagger (currently 1.45 — calm and unhurried). Easing is
+`power3.out`: an even settle with no bounce.
+
+| | at TEMPO 1.45 |
+| --- | --- |
+| cards, grid items | ~1.15 s, ~145 ms apart |
+| section elements | ~1.3 s |
+| heading lines | ~1.5 s, ~130 ms apart |
+| large photos | 1.7–2 s |
+| hero opening (CSS) | ~2.4 s for the photo, text done by ~2.3 s |
+| page to page | 200 ms out, 420 ms in |
 
 Reveals start when an element's top reaches 82% of the viewport (~20% in).
 

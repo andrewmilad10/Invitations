@@ -102,7 +102,7 @@
   from { opacity: 0; transform: translateY(60px) rotate(var(--tilt, 0deg)) scale(0.96); }
   to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)) scale(1); }
 }
-.card-settle { animation: card-settle 1300ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.card-settle { animation: card-settle 1800ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 @media (prefers-reduced-motion: reduce) {
   .card-settle { animation: none; }
 }
@@ -142,9 +142,9 @@
    Everything is off with prefers-reduced-motion. */
 :root {
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-exit: 140ms;
-  --motion-enter: 260ms;
-  --motion-move: 420ms;
+  --motion-exit: 200ms;
+  --motion-enter: 420ms;
+  --motion-move: 650ms;
 }
 
 ::view-transition {
@@ -217,10 +217,10 @@ dialog {
   opacity: 0;
   transform: translateY(6px) scale(0.985);
   transition:
-    opacity 200ms ease,
-    transform 260ms var(--ease-out-soft),
-    overlay 260ms allow-discrete,
-    display 260ms allow-discrete;
+    opacity 300ms ease,
+    transform 380ms var(--ease-out-soft),
+    overlay 380ms allow-discrete,
+    display 380ms allow-discrete;
 }
 dialog[open] {
   opacity: 1;
@@ -234,9 +234,9 @@ dialog[open] {
 }
 dialog::backdrop {
   transition:
-    background-color 260ms ease,
-    overlay 260ms allow-discrete,
-    display 260ms allow-discrete;
+    background-color 380ms ease,
+    overlay 380ms allow-discrete,
+    display 380ms allow-discrete;
 }
 @starting-style {
   dialog[open]::backdrop {
@@ -335,19 +335,19 @@ html.motion-failed [data-image-reveal] {
   }
 }
 .open-bg {
-  animation: open-settle 1600ms var(--ease-out-soft) both;
+  animation: open-settle 2400ms var(--ease-out-soft) both;
 }
 .open-overlay {
-  animation: open-fade 900ms ease-out both;
+  animation: open-fade 1300ms ease-out both;
 }
 .open-line {
-  animation: open-line 1000ms var(--ease-out-soft) both;
+  animation: open-line 1400ms var(--ease-out-soft) both;
 }
 .open-rise {
-  animation: open-rise 900ms var(--ease-out-soft) both;
+  animation: open-rise 1300ms var(--ease-out-soft) both;
 }
 .open-nav {
-  animation: open-drop 700ms var(--ease-out-soft) 500ms both;
+  animation: open-drop 1000ms var(--ease-out-soft) 700ms both;
 }
 @media (prefers-reduced-motion: reduce) {
   .open-bg,

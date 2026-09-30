@@ -21,7 +21,11 @@ gsap.registerPlugin(ScrollTrigger);
  * - Phones: shorter distances, no parallax, native scrolling.
  */
 
-const EASE = "expo.out"; // long, soft settle — premium without bounce
+// A gentle, even settle (expo front-loads the movement and reads as fast).
+const EASE = "power3.out";
+/** One knob for the whole site's pace: every duration, delay and stagger is multiplied by it. */
+const TEMPO = 1.45;
+const T = (seconds: number) => seconds * TEMPO;
 const START = 0.82; // reveal when the element's top reaches 82% of the viewport (~18–20% scrolled in)
 const DONE = "motionInit";
 
@@ -88,8 +92,8 @@ export function MotionEngine() {
         for (const el of all(scope, "[data-motion]")) {
           const from = fromVars(el.dataset.motion);
           gsap.set(el, from);
-          const duration = Number(el.dataset.duration ?? 900) / 1000;
-          const delay = Number(el.dataset.delay ?? 0) / 1000;
+          const duration = T(Number(el.dataset.duration ?? 900) / 1000);
+          const delay = T(Number(el.dataset.delay ?? 0) / 1000);
           whenVisible(el, (instant) => settle(el, { duration, delay }, instant));
         }
 
@@ -98,13 +102,13 @@ export function MotionEngine() {
           const items = Array.from(el.children) as HTMLElement[];
           if (!items.length) continue;
           gsap.set(items, { y: 30 * dist });
-          const step = Number(el.dataset.stagger || 110) / 1000;
-          whenVisible(el, (instant) => settle(items, { duration: 0.85, stagger: step }, instant));
+          const step = T(Number(el.dataset.stagger || 110) / 1000);
+          whenVisible(el, (instant) => settle(items, { duration: T(0.85), stagger: step }, instant));
         }
 
         // Long grids: each child when it arrives
         for (const el of all(scope, "[data-reveal-group]")) {
-          const step = Number(el.dataset.motionGroup || 100) / 1000;
+          const step = T(Number(el.dataset.revealGroup || 100) / 1000);
           const items = Array.from(el.children) as HTMLElement[];
           if (!items.length) continue;
           gsap.set(items, { y: 36 * dist });
@@ -114,7 +118,7 @@ export function MotionEngine() {
             batch.push(item);
             if (batch.length === 1)
               requestAnimationFrame(() => {
-                settle(batch, { duration: 0.8, stagger: step }, false);
+                settle(batch, { duration: T(0.8), stagger: step }, false);
                 batch = [];
               });
           };
@@ -131,7 +135,7 @@ export function MotionEngine() {
                 onEnter: () => queue(item),
               });
           }
-          settle(waiting, { duration: 0.8, stagger: step }, false);
+          settle(waiting, { duration: T(0.8), stagger: step }, false);
         }
 
         // Masked lines (large headings)
@@ -141,7 +145,7 @@ export function MotionEngine() {
           whenVisible(el, (instant) =>
             // Keep the final inline transform: the hidden state is in CSS.
             // (GSAP reads the CSS translateY(110%) as px, so y goes to 0.)
-            instant ? gsap.set(lines, { y: 0, yPercent: 0 }) : gsap.to(lines, { y: 0, yPercent: 0, duration: 1.05, ease: EASE, stagger: 0.09 }),
+            instant ? gsap.set(lines, { y: 0, yPercent: 0 }) : gsap.to(lines, { y: 0, yPercent: 0, duration: T(1.05), ease: EASE, stagger: T(0.09) }),
           );
         }
 
@@ -158,8 +162,8 @@ export function MotionEngine() {
                 gsap.set(media, { scale: 1, y: 0, clearProps: "transform" });
                 return;
               }
-              gsap.to(el, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: EASE });
-              gsap.to(media, { scale: 1, y: 0, duration: 1.4, ease: EASE, clearProps: "transform" });
+              gsap.to(el, { clipPath: "inset(0% 0% 0% 0%)", duration: T(1.2), ease: EASE });
+              gsap.to(media, { scale: 1, y: 0, duration: T(1.4), ease: EASE, clearProps: "transform" });
             },
             0.88,
           );
@@ -168,7 +172,7 @@ export function MotionEngine() {
         // Connecting lines drawn once
         for (const el of all(scope, "[data-draw]")) {
           gsap.set(el, { scaleX: 0, transformOrigin: "left center" });
-          whenVisible(el, (instant) => (instant ? gsap.set(el, { scaleX: 1 }) : gsap.to(el, { scaleX: 1, duration: 1.6, ease: "power2.inOut" })));
+          whenVisible(el, (instant) => (instant ? gsap.set(el, { scaleX: 1 }) : gsap.to(el, { scaleX: 1, duration: T(1.6), ease: "power2.inOut" })));
         }
 
         // Parallax: desktop only, gentle
@@ -220,7 +224,7 @@ export function MotionEngine() {
     const lateChild = (el: HTMLElement) =>
       ctx.add(() => {
         gsap.set(el, { y: 30 * dist });
-        whenVisible(el, (instant) => settle(el, { duration: 0.8 }, instant), 0.92);
+        whenVisible(el, (instant) => settle(el, { duration: T(0.8) }, instant), 0.92);
       });
     const observer = new MutationObserver((records) => {
       for (const record of records)

@@ -32,16 +32,16 @@ export function Hero() {
           <h1 className="font-serif text-[3.4rem] font-light leading-[0.95] sm:text-7xl lg:text-[6.2rem]">
             {["Your love story,", "beautifully invited."].map((line, i) => (
               <span key={line} className="block overflow-hidden pb-[0.08em]">
-                <span className="open-line block" style={{ animationDelay: `${150 + i * 120}ms` }}>
+                <span className="open-line block" style={{ animationDelay: `${200 + i * 180}ms` }}>
                   {line}
                 </span>
               </span>
             ))}
           </h1>
-          <p className="open-rise mt-7 max-w-lg text-lg leading-relaxed text-white/85 [animation-delay:480ms]">
+          <p className="open-rise mt-7 max-w-lg text-lg leading-relaxed text-white/85 [animation-delay:700ms]">
             Invitation cards to send and wedding websites to share — in dozens of original designs. Pick one, add your details and watch it come to life.
           </p>
-          <div className="open-rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:600ms]">
+          <div className="open-rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:880ms]">
             <Button asChild size="lg" className="h-13 rounded-full bg-white px-8 text-base text-foreground hover:bg-white/90">
               <Link href="/invitations">Invitation cards</Link>
             </Button>
@@ -54,7 +54,7 @@ export function Hero() {
               <Link href="/websites">Wedding websites</Link>
             </Button>
           </div>
-          <p className="open-rise mt-8 text-sm text-white/65 [animation-delay:720ms]">Free to explore. You only create an account when you&apos;re ready to save.</p>
+          <p className="open-rise mt-8 text-sm text-white/65 [animation-delay:1050ms]">Free to explore. You only create an account when you&apos;re ready to save.</p>
         </div>
 
         {/* The product, in the first second: a real invitation rendered from a template. */}
@@ -64,14 +64,14 @@ export function Hero() {
             partnerOne="Olivia"
             partnerTwo="Daniel"
             dateLabel="20 June"
-            className="card-settle absolute right-40 top-10 w-60 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.6)] [--tilt:-7deg] [animation-delay:450ms]"
+            className="card-settle absolute right-40 top-10 w-60 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.6)] [--tilt:-7deg] [animation-delay:650ms]"
           />
           <Stationery
             template={front}
             partnerOne={DEMO.partnerOne}
             partnerTwo={DEMO.partnerTwo}
             dateLabel={`${date.day} ${date.month} ${date.year}`}
-            className="card-settle absolute right-4 top-0 w-72 shadow-[0_40px_80px_-24px_rgb(0_0_0/0.7)] [--tilt:4deg] [animation-delay:620ms]"
+            className="card-settle absolute right-4 top-0 w-72 shadow-[0_40px_80px_-24px_rgb(0_0_0/0.7)] [--tilt:4deg] [animation-delay:900ms]"
           />
         </div>
       </div>
