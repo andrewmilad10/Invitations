@@ -129,7 +129,7 @@ function resolveSections(
       return {
         type,
         enabled: row ? row.enabled : !disabledByDefault.has(type),
-        order: row ? row.sort_order : index * 10,
+        order: row?.sort_order ?? index * 10,
         index,
         content: resolveSectionContent(type, row?.content, locale),
       };

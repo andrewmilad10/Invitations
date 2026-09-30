@@ -38,7 +38,8 @@ export const bundleSettingsSchema = z.object({
 export const bundleSectionSchema = z.object({
   type: z.string(),
   enabled: z.boolean(),
-  sort_order: z.number(),
+  /** null = template default position */
+  sort_order: z.number().nullable(),
   content: z.record(z.string(), z.unknown()),
 });
 

@@ -71,7 +71,7 @@ couple changed. Created empty by trigger.
 | `wedding_id` | uuid    | |
 | `type`       | text    | section type key, e.g. `hero`, `story` |
 | `enabled`    | bool    | |
-| `sort_order` | int     | |
+| `sort_order` | int, nullable | `NULL` = template's default position; set only when the couple reorders |
 | `content`    | jsonb   | validated by that section's Zod schema in the app |
 | UNIQUE       | `(wedding_id, type)` | one instance per type in Phase 1 |
 

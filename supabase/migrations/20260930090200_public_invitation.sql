@@ -46,7 +46,7 @@ as $$
         'enabled',    ws.enabled,
         'sort_order', ws.sort_order,
         'content',    case when ws.enabled then ws.content else '{}'::jsonb end
-      ) order by ws.sort_order)
+      ) order by ws.sort_order nulls last, ws.type)
       from public.wedding_sections ws where ws.wedding_id = w.id
     ), '[]'::jsonb),
     'events', coalesce((

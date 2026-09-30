@@ -68,6 +68,12 @@ describe("buildInvitationModel", () => {
     expect(types(moved).slice(0, 2)).toEqual(["hero", "gallery"]);
   });
 
+  it("editing a section's content (no sort_order) never moves it", () => {
+    const before = types(bundle());
+    const edited = bundle((x) => x.sections.push({ type: "closing", enabled: true, sort_order: null, content: { heading: "Edited" } }));
+    expect(types(edited)).toEqual(before);
+  });
+
   it("hides disabled sections but never the hero or footer", () => {
     const b = bundle((x) => {
       x.sections.push({ type: "couple", enabled: false, sort_order: 10, content: {} });

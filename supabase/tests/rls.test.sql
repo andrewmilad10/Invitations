@@ -206,6 +206,13 @@ select tests.eq((select count(*) from public.wedding_members)::int, 0, 'members 
 select tests.eq((select count(*) from public.wedding_sections)::int, 0, 'sections cascade-deleted with the wedding');
 select tests.eq((select count(*) from public.media)::int, 0, 'media rows cascade-deleted with the wedding');
 
+-- ── Section rows default to the template's order ───────────────────────────
+reset role;
+insert into public.weddings (owner_id, slug, partner_one_name, partner_two_name)
+values ('a0000000-0000-4000-8000-000000000001', 'order-check', 'A', 'B');
+insert into public.wedding_sections (wedding_id, type, content) values (tests.wid('order-check'), 'story', '{"body":"x"}');
+select tests.ok((select sort_order is null from public.wedding_sections where wedding_id = tests.wid('order-check')), 'new section rows keep the template default order (sort_order null)');
+
 -- ── Multiple weddings per user, slug uniqueness ─────────────────────────────
 set local role authenticated;
 select set_config('request.jwt.claim.sub', 'b0000000-0000-4000-8000-000000000002', true);

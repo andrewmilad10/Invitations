@@ -23,6 +23,14 @@ const FONTS = {
   "noto-naskh-arabic": [["arabic", 400, "normal"], ["arabic", 600, "normal"]],
 };
 
+// Open Graph images are rendered by Satori, which reads WOFF but not WOFF2.
+const OG_FONTS = [
+  ["cormorant-garamond", "cormorant-garamond-latin-400-normal.woff"],
+  ["cormorant-garamond", "cormorant-garamond-latin-400-italic.woff"],
+  ["jost", "jost-latin-400-normal.woff"],
+  ["amiri", "amiri-arabic-400-normal.woff"],
+];
+
 await rm(out, { recursive: true, force: true });
 for (const [pkg, files] of Object.entries(FONTS)) {
   const src = path.join(root, "node_modules/@fontsource", pkg);
@@ -35,3 +43,10 @@ for (const [pkg, files] of Object.entries(FONTS)) {
   await copyFile(path.join(src, "LICENSE"), path.join(dest, "LICENSE"));
   console.log(`vendored ${pkg} (${files.length} files)`);
 }
+
+const ogOut = path.join(out, "og");
+await mkdir(ogOut, { recursive: true });
+for (const [pkg, file] of OG_FONTS) {
+  await copyFile(path.join(root, "node_modules/@fontsource", pkg, "files", file), path.join(ogOut, file));
+}
+console.log(`vendored ${OG_FONTS.length} OG fonts`);

@@ -40,6 +40,21 @@
   --color-destructive: var(--destructive);
   --color-success: var(--success);
 
+  /* Invitation tokens (values come from the wedding theme at runtime):
+     bg-inv-bg, text-inv-fg, border-inv-border, font-inv-heading, … */
+  --color-inv-bg: var(--inv-bg);
+  --color-inv-surface: var(--inv-surface);
+  --color-inv-fg: var(--inv-fg);
+  --color-inv-muted: var(--inv-muted);
+  --color-inv-accent: var(--inv-accent);
+  --color-inv-accent-fg: var(--inv-accent-fg);
+  --color-inv-border: var(--inv-border);
+  --font-inv-heading: var(--inv-font-heading);
+  --font-inv-body: var(--inv-font-body);
+  --font-inv-accent: var(--inv-font-accent);
+  --radius-inv: var(--inv-radius);
+  --shadow-inv: var(--inv-shadow);
+
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
 }
@@ -54,4 +69,12 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+}
+
+/* Arabic script is cursive: letter-spacing breaks letter joining and
+   uppercase has no meaning. Neutralise both inside Arabic invitations. */
+[data-template][lang="ar"],
+[data-template][lang="ar"] * {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }

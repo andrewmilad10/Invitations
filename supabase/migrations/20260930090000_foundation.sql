@@ -149,7 +149,9 @@ create table public.wedding_sections (
   wedding_id  uuid not null references public.weddings (id) on delete cascade,
   type        text not null check (type ~ '^[a-z][a-z0-9_]{1,39}$'),
   enabled     boolean not null default true,
-  sort_order  integer not null default 0,
+  -- NULL = follow the template's default order. Set only when the couple
+  -- reorders sections, so editing a section's text never moves it.
+  sort_order  integer,
   content     jsonb not null default '{}'::jsonb check (jsonb_typeof(content) = 'object'),
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now(),

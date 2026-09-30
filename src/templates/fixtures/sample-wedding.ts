@@ -31,7 +31,7 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
       {
         type: "story",
         enabled: true,
-        sort_order: 40,
+        sort_order: null,
         content: {
           body:
             "We met on a rainy afternoon in a bookshop, both reaching for the last copy of the same novel.\n\nSix years, two cities and one very patient cat later, we're ready for our next chapter — and we'd love for you to be there.",
@@ -40,7 +40,7 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
       {
         type: "schedule",
         enabled: true,
-        sort_order: 90,
+        sort_order: null,
         content: {
           items: [
             { time: "4:30 PM", title: "Guests arrive", note: "" },

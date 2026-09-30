@@ -25,6 +25,9 @@ export default function LandingPage() {
           <Button asChild size="lg">
             <Link href="/register">Create your invitation</Link>
           </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/templates">Browse templates</Link>
+          </Button>
         </div>
       </main>
     </div>
