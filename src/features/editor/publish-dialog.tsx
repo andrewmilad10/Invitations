@@ -4,7 +4,6 @@ import { Check, Copy, ExternalLink, Mail, MessageCircle, X } from "lucide-react"
 import { useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import type { WeddingBundle } from "@/core/wedding/bundle";
 import { setWeddingPublished } from "@/features/weddings/actions";
 import { cn } from "@/lib/utils";
 import { updateSettings } from "./actions";
