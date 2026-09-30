@@ -21,8 +21,8 @@ export default function HomePage() {
       <PageTransition>
         <main>
           <Hero />
-          <Features />
           <TemplateShowcase />
+          <Features />
           <LiveDemo />
           <HowItWorks />
           <PersonalizeDemo templates={demoTemplates} />
