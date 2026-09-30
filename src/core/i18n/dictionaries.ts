@@ -25,6 +25,8 @@ export interface InvitationDictionary {
     close: string;
     previous: string;
     next: string;
+    location: string;
+    time: string;
   };
   defaults: {
     hero: { eyebrow: string; tagline: string };
@@ -64,6 +66,8 @@ const en: InvitationDictionary = {
     close: "Close",
     previous: "Previous",
     next: "Next",
+    location: "Location",
+    time: "Time",
   },
   defaults: {
     hero: { eyebrow: "We're getting married", tagline: "" },
@@ -118,6 +122,8 @@ const ar: InvitationDictionary = {
     close: "إغلاق",
     previous: "السابق",
     next: "التالي",
+    location: "المكان",
+    time: "الموعد",
   },
   defaults: {
     hero: { eyebrow: "سنتزوّج", tagline: "" },

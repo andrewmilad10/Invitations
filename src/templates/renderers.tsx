@@ -1,4 +1,5 @@
 import type { InvitationModel } from "@/core/invitation/model";
+import AtelierRenderer from "./atelier/Renderer";
 import CinematicRenderer from "./cinematic/Renderer";
 import EditorialRenderer from "./editorial/Renderer";
 import { DEFAULT_TEMPLATE_ID } from "./registry";
@@ -8,6 +9,7 @@ import type { TemplateRenderer } from "./types";
 export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   cinematic: CinematicRenderer,
   editorial: EditorialRenderer,
+  atelier: AtelierRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */

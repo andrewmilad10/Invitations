@@ -1,4 +1,5 @@
 import type { TemplateManifest } from "@/core/template/manifest";
+import { ATELIER_MANIFESTS } from "./atelier/manifests";
 import { cinematicManifest } from "./cinematic/manifest";
 import { botanicalManifest, classicManifest, luxuryManifest, modernManifest, romanticManifest } from "./collection/manifests";
 import { DESIGN_MANIFESTS } from "./collection/designs";
@@ -21,14 +22,15 @@ const ALL: TemplateManifest[] = [
   luxuryManifest,
   editorialManifest,
   ...DESIGN_MANIFESTS,
+  ...ATELIER_MANIFESTS,
 ];
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
-  "cinematic", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
-  "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",
-  "big-day", "satin-bow", "limoncello", "botanical", "amalfi-tile", "rose-corners",
-  "luxury", "morning-wash", "heritage", "golden-hour", "eucalyptus", "flourish",
+  "cinematic", "meadow", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
+  "monochrome", "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",
+  "riviera", "big-day", "satin-bow", "limoncello", "botanical", "amalfi-tile", "rose-corners",
+  "nocturne", "terracotta", "rosewater", "luxury", "morning-wash", "heritage", "golden-hour", "eucalyptus", "flourish",
 ];
 
 const rank = (id: string) => {

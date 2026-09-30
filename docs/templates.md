@@ -208,3 +208,24 @@ The gallery (`src/features/marketing/gallery`) filters by style, colour
 family (showing each design in its matching palette), shape and photo, sorts
 by featured / newest / A–Z, and keeps filters in the URL. Saved designs are
 stored in the browser only (`localStorage`, no account needed).
+
+## The Atelier family (`src/templates/atelier`)
+
+An editorial, calligraphic layout for invitation websites: a colour-washed
+photo opening, flourished script titles, tall display capitals and italic
+serif prose on grained paper (`.inv-paper`), a sealed envelope for replies,
+questions & answers, and a story with an oval portrait and an instant print.
+
+Font roles: **accent** = calligraphy (names, section titles), **heading** =
+display capitals, **body** = serif (italic for prose). Colour roles:
+background/surface = paper, foreground = ink, **accent = the "room" colour**
+(the photo wash and the dark sections), accent-foreground = paper on it.
+
+Templates: Meadow (olive), Monochrome (black & white photos), Riviera,
+Terracotta, Nocturne (dark paper), Rosewater — each with 2–4 palettes, all in
+`atelier/manifests.ts`. Couples can further change colours, fonts, corners,
+shadow and **photos: colour / black & white** in the Design panel.
+
+Sections added for this family and available to every layout: **faq**
+(questions & answers), a **quote** on the story, and an optional https-only
+**reply link** on RSVP.

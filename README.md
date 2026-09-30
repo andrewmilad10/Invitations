@@ -33,7 +33,7 @@ Explore-first wedding invitation platform:
 
 1. **Discover** — public homepage, no login required
 2. **Two products, one catalogue** — `/invitations` (invitation cards) and
-   `/websites` (wedding websites): 42 original designs (all drawn in code, no
+   `/websites` (wedding websites): 48 original designs (all drawn in code, no
    third-party artwork), each sold as a card *and* a website, with style
    tiles, filters, sorting, saved designs and quick view
 3. **View a design** — `/templates/{id}`: as a card, on a phone and as a website;

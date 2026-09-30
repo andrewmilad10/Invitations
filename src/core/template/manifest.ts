@@ -44,7 +44,7 @@ export type StationeryOrnament = (typeof STATIONERY_ORNAMENTS)[number];
 
 /** How the words (and photos) are arranged on the card. */
 export const STATIONERY_LAYOUTS = [
-  "classic", "script", "typographic", "monogram", "photo-top", "photo-full", "photo-grid", "polaroid",
+  "classic", "script", "typographic", "monogram", "photo-top", "photo-full", "photo-grid", "polaroid", "photo-script",
 ] as const;
 export type StationeryLayout = (typeof STATIONERY_LAYOUTS)[number];
 
@@ -58,7 +58,7 @@ export interface StationeryArt {
   shape?: CardShape;
 }
 
-export const PHOTO_LAYOUTS: readonly StationeryLayout[] = ["photo-top", "photo-full", "photo-grid", "polaroid"];
+export const PHOTO_LAYOUTS: readonly StationeryLayout[] = ["photo-top", "photo-full", "photo-grid", "polaroid", "photo-script"];
 
 /** Resolved art with defaults filled in. */
 export function stationeryArt(art: StationeryArt): Required<StationeryArt> {

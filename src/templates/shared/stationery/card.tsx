@@ -50,7 +50,7 @@ export function StationeryCard({
 }) {
   const art = stationeryArt(rawArt);
   const h = HEIGHT[art.shape];
-  const photoFull = art.layout === "photo-full";
+  const photoFull = art.layout === "photo-full" || art.layout === "photo-script";
 
   return (
     <div
@@ -218,6 +218,23 @@ function Layout({ art, text, photos, sizes }: { art: Required<StationeryArt>; te
             <p className="font-inv-accent text-[7cqw] leading-none opacity-90">&amp;</p>
             <p className="font-inv-heading text-[12cqw] leading-[1]">{text.partnerTwo || " "}</p>
             <DateLine text={text} className="mt-[4cqw] opacity-90" />
+          </div>
+        </div>
+      );
+
+    case "photo-script":
+      // A colour-washed photo with calligraphy names (the Atelier look).
+      return (
+        <div className="absolute inset-0 font-inv-body">
+          <Photo photo={photos[0]} sizes={sizes} className="absolute inset-0" />
+          <div className="absolute inset-0 bg-inv-accent opacity-60 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-[8%] text-center text-white">
+            <Eyebrow className="tracking-[0.4em] opacity-85">{text.eyebrow}</Eyebrow>
+            <p className="mt-[5cqw] font-inv-accent text-[13cqw] leading-[1.05]">{text.partnerOne || " "}</p>
+            <p className="font-inv-accent text-[8cqw] leading-none opacity-85">&amp;</p>
+            <p className="font-inv-accent text-[13cqw] leading-[1.05]">{text.partnerTwo || " "}</p>
+            <DateLine text={text} className="mt-[6cqw] tracking-[0.35em] opacity-90" />
           </div>
         </div>
       );

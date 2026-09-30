@@ -56,6 +56,7 @@ export function WebsiteThumb({
 
 function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { template: TemplateManifest; partnerOne: string; partnerTwo: string; dateLabel: string; device: "desktop" | "phone" }) {
   const cardHero = (template.features.hero ?? "photo") === "card";
+  const atelier = template.renderer === "atelier";
   const phone = device === "phone";
   return (
     <div className="flex h-full flex-col bg-inv-bg font-inv-body text-inv-fg">
@@ -73,10 +74,11 @@ function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { tem
           </>
         ) : (
           <>
-            <Image src={HERO_PHOTO.url} alt="" fill sizes="(min-width: 1024px) 20vw, 40vw" className="object-cover" />
+            <Image src={HERO_PHOTO.url} alt="" fill sizes="(min-width: 1024px) 20vw, 40vw" className="object-cover" style={{ filter: "var(--inv-photo-filter, none)" }} />
+            {atelier ? <div className="absolute inset-0 bg-inv-accent opacity-60 mix-blend-multiply" /> : null}
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/55" />
             <div className="relative text-center text-white">
-              <p className={cn("font-inv-heading font-light leading-[0.95]", phone ? "text-[13cqw]" : "text-[8cqw]")}>
+              <p className={cn(atelier ? "font-inv-accent leading-[1.05]" : "font-inv-heading font-light leading-[0.95]", phone ? "text-[13cqw]" : "text-[8cqw]")}>
                 {partnerOne}
                 <span className={cn("block font-inv-accent opacity-85", phone ? "text-[8cqw]" : "text-[4.5cqw]")}>&amp;</span>
                 {partnerTwo}
