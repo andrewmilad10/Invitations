@@ -20,6 +20,10 @@ const LEAF = "color-mix(in oklab, var(--inv-accent) 55%, var(--inv-muted))";
 export function framePath(inset: number, h: number, shape: CardShape): string {
   const r = 50 - inset;
   if (shape === "arch") return `M${inset} ${h - inset} V50 A${r} ${r} 0 0 1 ${100 - inset} 50 V${h - inset} Z`;
+  if (shape === "corner") {
+    const c = 60 - inset;
+    return `M${inset} ${inset} H${100 - inset - c} A${c} ${c} 0 0 1 ${100 - inset} ${inset + c} V${h - inset} H${inset} Z`;
+  }
   return `M${inset} ${inset} H${100 - inset} V${h - inset} H${inset} Z`;
 }
 
@@ -53,6 +57,7 @@ function corners(h: number, shape: CardShape, inset: number): [number, number, n
     [inset, h - inset, 270],
   ];
   if (shape === "arch") return bottom;
+  if (shape === "corner") return [[inset, inset, 0], ...bottom];
   return [[inset, inset, 0], [100 - inset, inset, 90], ...bottom];
 }
 
@@ -434,7 +439,7 @@ function Tile({ h, shape }: { h: number; shape: CardShape }) {
 function Ribbon() {
   // A satin bow, drawn inline above the names.
   return (
-    <svg aria-hidden viewBox="0 0 60 30" className="mx-auto h-[12cqw] w-auto">
+    <svg aria-hidden viewBox="0 0 60 30" className="mx-auto h-[12cqmin] w-auto">
       <g fill={`color-mix(in oklab, ${ACCENT} 20%, transparent)`} stroke={ACCENT} strokeWidth="0.6" strokeLinejoin="round">
         <path d="M30 13 C 22 3, 8 2, 7 9 C 6 16, 20 17, 30 14 Z" />
         <path d="M30 13 C 38 3, 52 2, 53 9 C 54 16, 40 17, 30 14 Z" />
@@ -476,7 +481,7 @@ function Citrus({ h }: { h: number }) {
 
 function FlourishLine({ flip = false }: { flip?: boolean }) {
   return (
-    <svg aria-hidden viewBox="0 0 80 12" className="mx-auto h-[5cqw] w-auto" style={flip ? { transform: "scaleY(-1)" } : undefined}>
+    <svg aria-hidden viewBox="0 0 80 12" className="mx-auto h-[5cqmin] w-auto" style={flip ? { transform: "scaleY(-1)" } : undefined}>
       <path
         d="M4 8 C 14 2, 24 2, 30 6 C 34 9, 38 9, 40 6 C 42 3, 38 1, 36 4 M76 8 C 66 2, 56 2, 50 6 C 46 9, 42 9, 40 6 C 38 3, 42 1, 44 4"
         fill="none"
@@ -589,6 +594,215 @@ function Watercolor() {
   );
 }
 
+// ── Fine line florals (drawn with a pen, no fills) ──────────────────────────
+
+const LINE = { fill: "none", stroke: ACCENT, strokeWidth: 0.28, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+
+/** A layered peony in outline: rings of ruffled petals around a small heart. */
+function LinePeony({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; rotate?: number }) {
+  const rings: ReactNode[] = [];
+  [0.34, 0.62, 0.92].forEach((k, ring) => {
+    const n = 5 + ring * 2;
+    for (let i = 0; i < n; i++) {
+      const a0 = ((i / n) * 360 + ring * 17) * (Math.PI / 180);
+      const a1 = (((i + 1) / n) * 360 + ring * 17) * (Math.PI / 180);
+      const rr = r * k;
+      const [x0, y0] = [Math.cos(a0) * rr * 0.55, Math.sin(a0) * rr * 0.55];
+      const [x1, y1] = [Math.cos(a1) * rr * 0.55, Math.sin(a1) * rr * 0.55];
+      const am = (a0 + a1) / 2;
+      const [cx, cy] = [Math.cos(am) * rr * 1.25, Math.sin(am) * rr * 1.25];
+      // A petal with a small notch at its tip, for a ruffled edge.
+      const [nx, ny] = [Math.cos(am) * rr * 0.98, Math.sin(am) * rr * 0.98];
+      rings.push(
+        <path
+          key={`${ring}-${i}`}
+          d={`M${round(x0)} ${round(y0)} Q ${round((x0 + cx) / 2 + Math.cos(a0) * rr * 0.2)} ${round((y0 + cy) / 2 + Math.sin(a0) * rr * 0.2)} ${round(nx)} ${round(ny)} Q ${round((x1 + cx) / 2 + Math.cos(a1) * rr * 0.2)} ${round((y1 + cy) / 2 + Math.sin(a1) * rr * 0.2)} ${round(x1)} ${round(y1)}`}
+        />,
+      );
+    }
+  });
+  return (
+    <g transform={`translate(${round(x)} ${round(y)}) rotate(${rotate})`} {...LINE}>
+      {rings}
+      {[0, 72, 144, 216, 288].map((a) => (
+        <line key={a} x1="0" y1="0" x2={round(Math.cos((a * Math.PI) / 180) * r * 0.16)} y2={round(Math.sin((a * Math.PI) / 180) * r * 0.16)} />
+      ))}
+    </g>
+  );
+}
+
+/** A leaf in outline with its midrib. */
+function LineLeaf({ x, y, angle, len, width }: { x: number; y: number; angle: number; len: number; width: number }) {
+  return (
+    <g transform={`translate(${round(x)} ${round(y)}) rotate(${round(angle)})`} {...LINE}>
+      <path d={`M0 0 C ${round(width)} ${round(-len * 0.3)}, ${round(width * 0.6)} ${round(-len * 0.8)}, 0 ${round(-len)} C ${round(-width * 0.6)} ${round(-len * 0.8)}, ${round(-width)} ${round(-len * 0.3)}, 0 0 Z`} />
+      <path d={`M0 0 L0 ${round(-len * 0.85)}`} opacity="0.7" />
+    </g>
+  );
+}
+
+/** A simple five-petal flower in outline. */
+function LineBloom({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; rotate?: number }) {
+  return (
+    <g transform={`translate(${round(x)} ${round(y)}) rotate(${round(rotate)})`} {...LINE}>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <path key={i} d={`M0 0 C ${round(r * 0.5)} ${round(-r * 0.3)}, ${round(r * 0.45)} ${round(-r)}, 0 ${round(-r)} C ${round(-r * 0.45)} ${round(-r)}, ${round(-r * 0.5)} ${round(-r * 0.3)}, 0 0`} transform={`rotate(${i * 72})`} />
+      ))}
+      <circle r={round(r * 0.18)} />
+    </g>
+  );
+}
+
+/** A corner cluster of peonies, buds and leaves in fine line. */
+function PeonyCluster(props: { transform: string }) {
+  return (
+    <g {...props}>
+      <LineLeaf x={20} y={20} angle={-20} len={16} width={4} />
+      <LineLeaf x={20} y={20} angle={100} len={14} width={3.6} />
+      <LineLeaf x={10} y={6} angle={60} len={11} width={3} />
+      <path d="M-2 34 C 8 26, 12 22, 20 20 C 28 18, 34 10, 40 -2" {...LINE} />
+      <LinePeony x={18} y={16} r={11} />
+      <LinePeony x={4} y={30} r={6.5} rotate={40} />
+      <LinePeony x={34} y={4} r={5.5} rotate={80} />
+      <LineBloom x={30} y={24} r={2.6} rotate={20} />
+      <circle cx="40" cy="14" r="0.7" fill={ACCENT} opacity="0.7" />
+      <circle cx="12" cy="36" r="0.6" fill={ACCENT} opacity="0.6" />
+    </g>
+  );
+}
+
+function PeonyCorners({ h }: { h: number }) {
+  return (
+    <Svg h={h}>
+      <PeonyCluster transform="translate(104 -6) scale(-1.05 1.05)" />
+      <PeonyCluster transform={`translate(-4 ${h + 6}) scale(1.05 -1.05)`} />
+    </Svg>
+  );
+}
+
+/** A band of line roses, blooms and leaves along a straight run (0…len). */
+function LineBand({ len, seed, depth = 12 }: { len: number; seed: number; depth?: number }) {
+  const rand = seeded(seed);
+  const out: ReactNode[] = [];
+  let x = 2;
+  let i = 0;
+  while (x < len - 2) {
+    const y = depth * (0.35 + rand() * 0.3);
+    const kind = i % 3;
+    if (kind === 0) out.push(<LinePeony key={i} x={x} y={y} r={3.6 + rand() * 1.4} rotate={rand() * 90} />);
+    if (kind === 1) {
+      out.push(<LineLeaf key={`${i}a`} x={x} y={y + 2} angle={-50 + rand() * 30} len={6} width={1.8} />);
+      out.push(<LineLeaf key={`${i}b`} x={x} y={y + 2} angle={40 + rand() * 30} len={5} width={1.6} />);
+    }
+    if (kind === 2) out.push(<LineBloom key={i} x={x} y={y} r={2.2 + rand()} rotate={rand() * 72} />);
+    if (rand() > 0.5) out.push(<circle key={`d${i}`} cx={round(x + 3)} cy={round(y - 3)} r="0.45" fill={ACCENT} opacity="0.7" />);
+    x += 5.2 + rand() * 1.6;
+    i++;
+  }
+  return <>{out}</>;
+}
+
+/** An all-over border of line florals (every side). */
+function LineFloralFrame({ h }: { h: number }) {
+  return (
+    <Svg h={h}>
+      <LineBand len={100} seed={3} />
+      <g transform={`translate(100 ${h}) rotate(180)`}>
+        <LineBand len={100} seed={5} />
+      </g>
+      <g transform={`translate(0 ${h}) rotate(-90)`}>
+        <LineBand len={h} seed={11} />
+      </g>
+      <g transform="translate(100 0) rotate(90)">
+        <LineBand len={h} seed={13} />
+      </g>
+    </Svg>
+  );
+}
+
+/** Line florals across the top and bottom only (for foil). */
+function LineFloralBands({ h }: { h: number }) {
+  return (
+    <Svg h={h}>
+      <LineBand len={100} seed={17} depth={Math.min(22, h * 0.16)} />
+      <LineBand len={100} seed={19} depth={Math.min(12, h * 0.1)} />
+      <g transform={`translate(100 ${h}) rotate(180)`}>
+        <LineBand len={100} seed={23} depth={Math.min(22, h * 0.16)} />
+        <LineBand len={100} seed={29} depth={Math.min(12, h * 0.1)} />
+      </g>
+    </Svg>
+  );
+}
+
+/** Leafy branches with small buds curling in from two opposite corners. */
+function Vines({ h }: { h: number }) {
+  const bud = `color-mix(in oklab, ${MUTED} 55%, transparent)`;
+  const corner = (key: string, transform: string) => (
+    <g key={key} transform={transform}>
+      <LeafyStem p0={[-2, 3]} p1={[22, -2]} p2={[50, 9]} count={11} len={5.4} width={1.7} />
+      <LeafyStem p0={[3, -2]} p1={[-2, 20]} p2={[8, 42]} count={8} len={5} width={1.6} />
+      <LeafyStem p0={[8, 6]} p1={[20, 12]} p2={[30, 22]} count={5} len={4} width={1.3} />
+      {[
+        [50, 9, 1.5],
+        [44, 4, 1.1],
+        [8, 42, 1.4],
+        [30, 22, 1.2],
+        [26, 4, 1],
+        [3, 30, 1],
+      ].map(([x, y, r], i) => (
+        <g key={i}>
+          <circle cx={x} cy={y} r={r} fill={bud} />
+          <circle cx={x + r * 0.9} cy={y - r * 0.6} r={r * 0.6} fill={bud} />
+        </g>
+      ))}
+    </g>
+  );
+  return (
+    <Svg h={h}>
+      {corner("a", "translate(0 0)")}
+      {corner("b", `translate(100 ${h}) rotate(180)`)}
+    </Svg>
+  );
+}
+
+/** Wildflowers climbing both side edges. */
+function MeadowBorder({ h }: { h: number }) {
+  const side = (seed: number, flip: boolean) => {
+    const rand = seeded(seed);
+    const out: ReactNode[] = [];
+    const n = Math.max(6, Math.round(h / 9));
+    for (let i = 0; i < n; i++) {
+      const y = 4 + (i * (h - 8)) / (n - 1) + (rand() - 0.5) * 3;
+      const x = 3 + rand() * 6;
+      const tilt = -20 + rand() * 40;
+      const kind = i % 4;
+      out.push(
+        <g key={i}>
+          <path d={`M${round(x - 3)} ${round(y + 4)} Q ${round(x + 1)} ${round(y + 1)} ${round(x + 4)} ${round(y - 2)}`} fill="none" stroke={LEAF} strokeWidth="0.3" />
+          <Leaf x={x} y={y + 2} angle={60 + tilt} len={4.4} width={1.4} />
+          {kind === 0 ? <Blossom x={x + 4} y={y - 2} r={2.2} rotate={i * 31} fill={`color-mix(in oklab, ${ACCENT} 35%, transparent)`} width={0.22} /> : null}
+          {kind === 1 ? <Blossom x={x + 4} y={y - 2} r={1.8} rotate={i * 19} fill={`color-mix(in oklab, ${MUTED} 40%, transparent)`} stroke={MUTED} width={0.2} /> : null}
+          {kind === 2 ? <circle cx={round(x + 4)} cy={round(y - 2)} r="0.9" fill={ACCENT} opacity="0.7" /> : null}
+          {kind === 3 ? (
+            <g>
+              {[0, 1, 2].map((k) => (
+                <ellipse key={k} cx={round(x + 3.4 + k * 0.7)} cy={round(y - 1 - k * 1.3)} rx="0.55" ry="0.9" fill={MUTED} opacity={0.5 + k * 0.15} />
+              ))}
+            </g>
+          ) : null}
+        </g>,
+      );
+    }
+    return <g transform={flip ? `translate(100 0) scale(-1 1)` : undefined}>{out}</g>;
+  };
+  return (
+    <Svg h={h}>
+      {side(31, false)}
+      {side(37, true)}
+    </Svg>
+  );
+}
+
 /**
  * The card-wide motif. Motifs that sit *in* the text column (bow, flourish,
  * wreath) are exported separately and placed by the layout.
@@ -696,6 +910,16 @@ export function Ornament({ kind, h, shape }: { kind: StationeryOrnament; h: numb
       return <Ornate h={h} shape={shape} />;
     case "petals":
       return <Petals h={h} />;
+    case "vines":
+      return <Vines h={h} />;
+    case "meadow-border":
+      return <MeadowBorder h={h} />;
+    case "line-florals":
+      return <LineFloralFrame h={h} />;
+    case "florals-band":
+      return <LineFloralBands h={h} />;
+    case "peonies":
+      return <PeonyCorners h={h} />;
   }
 }
 

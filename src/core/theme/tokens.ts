@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { cardOptionsSchema, sanitizeCardOptions, type CardOptionOverrides } from "../card/options";
 import { fontStack, FONT_KEYS, type FontKey } from "./fonts";
 
 /**
@@ -32,6 +33,8 @@ export type ThemeOverrides = {
   radius?: number;
   shadow?: ShadowToken;
   photoTone?: PhotoTone;
+  /** Card finishing options (orientation, silhouette, foil, paper). */
+  card?: CardOptionOverrides;
 };
 
 /** Colour families used by the gallery's colour filter. */
@@ -58,6 +61,7 @@ export const themeOverridesSchema = z.object({
   radius: z.number().int().min(0).max(32).optional(),
   shadow: z.enum(SHADOWS).optional(),
   photoTone: z.enum(PHOTO_TONES).optional(),
+  card: cardOptionsSchema.optional(),
 });
 
 /**
@@ -91,6 +95,8 @@ export function sanitizeOverrides(raw: unknown): ThemeOverrides {
   if (shadow.success && shadow.data !== undefined) out.shadow = shadow.data;
   const photoTone = themeOverridesSchema.shape.photoTone.safeParse(input.photoTone);
   if (photoTone.success && photoTone.data !== undefined) out.photoTone = photoTone.data;
+  const card = sanitizeCardOptions(input.card);
+  if (Object.keys(card).length) out.card = card;
   return out;
 }
 

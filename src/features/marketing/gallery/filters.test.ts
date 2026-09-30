@@ -5,7 +5,7 @@ import { filtersToQuery, filterTemplates, NO_FILTERS, parseFilters } from "./fil
 describe("gallery filters", () => {
   it("parses the URL and ignores unknown values", () => {
     expect(parseFilters({ style: "floral", color: "green", shape: "arch", photo: "with", sort: "az", saved: "1" })).toEqual({
-      style: "floral", color: "green", shape: "arch", photo: "with", sort: "az", saved: true,
+      ...NO_FILTERS, style: "floral", color: "green", shape: "arch", photo: "with", sort: "az", saved: true,
     });
     expect(parseFilters({ style: "<script>", color: "plaid", shape: "hexagon", photo: "maybe", sort: "random" })).toEqual(NO_FILTERS);
   });
@@ -38,5 +38,26 @@ describe("gallery filters", () => {
     expect(az).toEqual([...az].sort((a, b) => a.localeCompare(b)));
     const newest = filterTemplates(TEMPLATE_MANIFESTS, { ...NO_FILTERS, sort: "newest" });
     expect(newest[0].template.isNew).toBe(true);
+  });
+});
+
+describe("gallery filters — finishes and orientation", () => {
+  it("previews every card in the chosen foil, foil designs first", () => {
+    const items = filterTemplates(TEMPLATE_MANIFESTS, { ...NO_FILTERS, foil: "gold" });
+    expect(items.every((i) => i.options?.foil === "gold")).toBe(true);
+    expect(items[0].template.stationery.finish?.foil).toBeDefined();
+  });
+
+  it("shows rectangular designs turned to landscape, and never arches", () => {
+    const items = filterTemplates(TEMPLATE_MANIFESTS, { ...NO_FILTERS, orientation: "landscape" });
+    expect(items.length).toBeGreaterThan(10);
+    expect(items.some((i) => i.template.stationery.shape === "arch")).toBe(false);
+    expect(items.every((i) => i.options?.orientation === "landscape")).toBe(true);
+  });
+
+  it("filters letterpress designs", () => {
+    const items = filterTemplates(TEMPLATE_MANIFESTS, { ...NO_FILTERS, letterpress: true });
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every((i) => i.template.stationery.letterpress)).toBe(true);
   });
 });

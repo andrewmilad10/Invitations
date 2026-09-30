@@ -3,6 +3,7 @@ import type { SectionStyle } from "../sections/style";
 import type { DateParts } from "../i18n/format";
 import type { InvitationDictionary } from "../i18n/dictionaries";
 import type { Locale } from "../i18n/locales";
+import type { CardOptions } from "../card/options";
 import type { DecorFamily, StationeryArt } from "../template/manifest";
 import type { ThemeTokens } from "../theme/tokens";
 
@@ -56,6 +57,8 @@ export interface InvitationModel {
     decor: DecorFamily;
     /** The design's card (for the "card" hero). */
     art: Required<StationeryArt>;
+    /** The card's finishing options: the design's defaults and the couple's choices. */
+    card: CardOptions;
     hero: "photo" | "card";
   };
   locale: Locale;

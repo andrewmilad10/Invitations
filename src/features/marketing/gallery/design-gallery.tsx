@@ -2,14 +2,15 @@
 
 import { Check, ChevronDown, Heart, X } from "lucide-react";
 import { startTransition, useEffect, useMemo, useRef, useState, ViewTransition, type ReactNode } from "react";
-import { CARD_SHAPES, TEMPLATE_CATEGORIES, type TemplateCategory, type TemplateManifest } from "@/core/template/manifest";
+import { CARD_SHAPES, TEMPLATE_CATEGORIES, type CardShape, type TemplateCategory, type TemplateManifest } from "@/core/template/manifest";
 import { COLOR_FAMILIES, type ColorFamily } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
 import { Stationery } from "../stationery";
 import { DesignCard } from "./design-card";
 import { PRODUCTS, type Product } from "../products";
 import { useFavorites } from "./favorites";
-import { activeFilterCount, filtersToQuery, filterTemplates, NO_FILTERS, SORTS, type GalleryFilters, type Sort } from "./filters";
+import { CARD_OPTION_INFO, FOIL_TONES } from "@/core/card/options";
+import { activeFilterCount, filtersToQuery, filterTemplates, NO_FILTERS, ORIENTATION_FILTERS, SORTS, type GalleryFilters, type Sort } from "./filters";
 import { QuickView } from "./quick-view";
 
 const PAGE = 48;
@@ -31,6 +32,15 @@ const FAMILY_DOT: Record<ColorFamily, string> = {
 };
 
 const label = (s: string) => s[0].toUpperCase() + s.slice(1);
+
+export const SHAPE_LABELS: Record<CardShape, string> = { portrait: "Rectangle", landscape: "Landscape", square: "Square", arch: "Arch", corner: "Soft corner" };
+
+/** A filter pill: soft filled, dark when active. */
+const pill = (active: boolean) =>
+  cn(
+    "inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-sm transition-colors sm:h-11 sm:px-5 sm:text-[0.95rem]",
+    active ? "bg-foreground text-background" : "bg-secondary text-foreground hover:bg-secondary/70",
+  );
 
 /**
  * The design gallery: style tiles, filters (style, colour, shape, photo,
@@ -61,9 +71,9 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
 
   return (
     <>
-      {/* Style tiles */}
-      <nav aria-label="Browse by style" className="-mx-5 mt-10 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0">
-        <ul data-stagger="60" className="flex w-max gap-3 sm:gap-4 lg:w-full lg:justify-between">
+      {/* Style tiles (cards) */}
+      <nav aria-label="Browse by style" className={cn("-mx-5 mt-10 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0", website && "hidden")}>
+        <ul data-stagger="60" className="flex w-max gap-3 sm:gap-5 lg:w-full lg:justify-center">
           {STYLE_TILES.map((c, i) => {
             const example = tileExample(c);
             const active = filters.style === c;
@@ -106,7 +116,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
       </nav>
 
       {/* Filter bar */}
-      <div className="sticky top-16 z-20 sm:top-20 -mx-5 mt-8 border-y bg-background/95 px-5 py-3 backdrop-blur sm:mx-0 sm:px-0">
+      <div className="sticky top-16 z-20 -mx-5 mt-8 bg-background/95 px-5 py-3 backdrop-blur sm:top-20 sm:mx-0 sm:px-0">
         <div className="flex flex-wrap items-center gap-2">
           <FilterMenu label="Sort" value={SORTS[filters.sort]} active={filters.sort !== "featured"}>
             {(close) =>
@@ -148,7 +158,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
           </FilterMenu>
           {website ? null : (
             <>
-              <FilterMenu label="Shape" value={filters.shape ? label(filters.shape) : null} active={Boolean(filters.shape)}>
+              <FilterMenu label="Shape" value={filters.shape ? SHAPE_LABELS[filters.shape] : null} active={Boolean(filters.shape)}>
                 {(close) => (
                   <>
                     <MenuOption selected={!filters.shape} onSelect={() => (apply({ shape: null }), close())}>
@@ -157,12 +167,45 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
                     {CARD_SHAPES.map((s) => (
                       <MenuOption key={s} selected={filters.shape === s} onSelect={() => (apply({ shape: s }), close())}>
                         <ShapeIcon shape={s} />
-                        {label(s)}
+                        {SHAPE_LABELS[s]}
                       </MenuOption>
                     ))}
                   </>
                 )}
               </FilterMenu>
+              <FilterMenu label="Orientation" value={filters.orientation ? label(filters.orientation) : null} active={Boolean(filters.orientation)}>
+                {(close) => (
+                  <>
+                    <MenuOption selected={!filters.orientation} onSelect={() => (apply({ orientation: null }), close())}>
+                      Any
+                    </MenuOption>
+                    {ORIENTATION_FILTERS.map((o) => (
+                      <MenuOption key={o} selected={filters.orientation === o} onSelect={() => (apply({ orientation: o }), close())}>
+                        <ShapeIcon shape={o} />
+                        {label(o)}
+                      </MenuOption>
+                    ))}
+                  </>
+                )}
+              </FilterMenu>
+              <FilterMenu label="Foil" value={filters.foil ? CARD_OPTION_INFO.foil[filters.foil] : null} active={Boolean(filters.foil)}>
+                {(close) => (
+                  <>
+                    <MenuOption selected={!filters.foil} onSelect={() => (apply({ foil: null }), close())}>
+                      No foil
+                    </MenuOption>
+                    {(["gold", "rose-gold", "silver"] as const).map((f) => (
+                      <MenuOption key={f} selected={filters.foil === f} onSelect={() => (apply({ foil: f }), close())}>
+                        <span className="size-3.5 rounded-full" style={{ background: `linear-gradient(135deg, ${FOIL_TONES[f].dark}, ${FOIL_TONES[f].light} 50%, ${FOIL_TONES[f].base})` }} />
+                        {CARD_OPTION_INFO.foil[f]} foil
+                      </MenuOption>
+                    ))}
+                  </>
+                )}
+              </FilterMenu>
+              <button type="button" onClick={() => apply({ letterpress: !filters.letterpress })} aria-pressed={filters.letterpress} className={pill(filters.letterpress)}>
+                Letterpress
+              </button>
               <FilterMenu label="Photo" value={filters.photo === "with" ? "With photo" : filters.photo === "without" ? "No photo" : null} active={Boolean(filters.photo)}>
                 {(close) => (
                   <>
@@ -180,15 +223,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
               </FilterMenu>
             </>
           )}
-          <button
-            type="button"
-            onClick={() => apply({ saved: !filters.saved })}
-            aria-pressed={filters.saved}
-            className={cn(
-              "inline-flex h-9 items-center gap-1.5 rounded-full border px-4 text-sm transition-colors",
-              filters.saved ? "border-foreground bg-foreground text-background" : "hover:border-foreground/40",
-            )}
-          >
+          <button type="button" onClick={() => apply({ saved: !filters.saved })} aria-pressed={filters.saved} className={pill(filters.saved)}>
             <Heart className={cn("size-3.5", filters.saved && "fill-current")} /> Saved{favorites.length ? ` (${favorites.length})` : ""}
           </button>
           {count ? (
@@ -200,21 +235,22 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
               <X className="size-3.5" /> Clear all
             </button>
           ) : null}
-          <p className="ms-auto text-sm text-muted-foreground" aria-live="polite">
-            Showing {shown.length ? `1–${shown.length}` : "0"} of {items.length} {items.length === 1 ? "design" : "designs"}
-          </p>
-        </div>
+                  </div>
       </div>
+      <p className="mt-5 text-sm text-muted-foreground" aria-live="polite">
+        Showing {shown.length ? `1–${shown.length}` : "0"} of {items.length} {items.length === 1 ? "result" : "results"}
+      </p>
 
       {items.length ? (
         <ViewTransition key={filtersToQuery(filters)} enter="grid-swap" exit="grid-swap" default="none">
-          <div data-reveal-group="90" className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
+          <div data-reveal-group="90" className="mt-6 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
             {shown.map((item) => (
               <DesignCard
                 key={`${item.template.id}:${item.paletteId}`}
                 template={item.template}
                 index={templates.indexOf(item.template)}
                 initialPalette={item.paletteId}
+                cardOptions={item.options}
                 onQuickView={(template, paletteId) => setQuick({ template, paletteId })}
                 product={product}
               />
@@ -254,7 +290,12 @@ function ShapeIcon({ shape }: { shape: string }) {
   return (
     <span
       aria-hidden
-      className={cn("inline-block border border-current opacity-70", shape === "square" ? "size-3.5" : "h-4 w-3", shape === "arch" && "rounded-t-full")}
+      className={cn(
+        "inline-block border border-current opacity-70",
+        shape === "square" ? "size-3.5" : shape === "landscape" ? "h-3 w-4" : "h-4 w-3",
+        shape === "arch" && "rounded-t-full",
+        shape === "corner" && "rounded-tr-[0.6rem]",
+      )}
     />
   );
 }
@@ -282,10 +323,7 @@ function FilterMenu({ label, value, active, children }: { label: string; value: 
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className={cn(
-          "inline-flex h-9 items-center gap-1.5 rounded-full border px-4 text-sm transition-colors",
-          active ? "border-foreground" : "hover:border-foreground/40",
-        )}
+        className={pill(active)}
       >
         <span>
           {label}

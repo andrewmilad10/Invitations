@@ -3,7 +3,8 @@ import { dateInZone, formatDateOnly, formatTime, zonedTimeToIso } from "../i18n/
 import { LOCALE_META, toLocale, type Locale } from "../i18n/locales";
 import { resolveSectionStyle, sectionToneVars } from "../sections/style";
 import { isSectionType, resolveSectionContent, SECTION_DEFINITIONS, type SectionType } from "../sections/registry";
-import { decorFamily, stationeryArt, type TemplateManifest } from "../template/manifest";
+import { decorFamily, designCardDefaults, stationeryArt, type TemplateManifest } from "../template/manifest";
+import { resolveCardOptions } from "../card/options";
 import { resolveTheme, sanitizeOverrides, themeToCssVars, type ThemeTokens } from "../theme/tokens";
 import type { BundleEvent, BundleMedia, WeddingBundle } from "../wedding/bundle";
 import type { EventModel, InvitationModel, MediaAsset, RenderedSection, RenderMode } from "./model";
@@ -30,7 +31,8 @@ export function buildInvitationModel(
   const timezone = bundle.settings.timezone;
   const { wedding } = bundle;
 
-  const theme = resolveTheme(template.themeDefaults, sanitizeOverrides(bundle.theme.tokens));
+  const overrides = sanitizeOverrides(bundle.theme.tokens);
+  const theme = resolveTheme(template.themeDefaults, overrides);
 
   const media = buildMedia(bundle.media, options.mediaUrl);
   const events = bundle.events
@@ -67,6 +69,7 @@ export function buildInvitationModel(
       opening: template.features.opening,
       decor: decorFamily(template.stationery.ornament),
       art: stationeryArt(template.stationery),
+      card: resolveCardOptions(designCardDefaults(template.stationery), overrides.card),
       hero: template.features.hero ?? "photo",
     },
     locale,

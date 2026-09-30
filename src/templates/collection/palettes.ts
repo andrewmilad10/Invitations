@@ -39,12 +39,21 @@ export const PALETTES = {
   paper: p("Paper & ink", "white", ["#ffffff", "#ffffff", "#141414", "#686868", "#141414", "#ffffff", "#e4e2dd"]),
   claret: p("Paper & claret", "white", ["#ffffff", "#fbfaf8", "#151515", "#6a6a6a", "#8c2f39", "#ffffff", "#e6e4df"]),
   stone: p("Stone", "neutral", ["#eeebe5", "#faf8f4", "#23211e", "#6c675f", "#5d574d", "#faf8f4", "#ddd8cf"]),
+  snow: p("Snow", "white", ["#f4f4f2", "#ffffff", "#161616", "#6b6b6b", "#2a2a2a", "#ffffff", "#e2e2df"]),
+  almond: p("Almond", "neutral", ["#f3ede3", "#fbf8f2", "#2d2620", "#7a6d61", "#8b6f4e", "#ffffff", "#e5dccd"]),
+  blushSage: p("Sage & blush", "green", ["#f1f0ea", "#fdfcf8", "#2c3129", "#a86a70", "#667656", "#ffffff", "#e1e0d6"]),
+  meadow: p("Meadow", "white", ["#f5f1e8", "#fffdf7", "#2f3a3a", "#946684", "#5f7fa1", "#ffffff", "#e6e0d2"]),
+  mist: p("Mist blue", "blue", ["#eef1f4", "#fbfcfd", "#22303f", "#677586", "#5f7896", "#ffffff", "#dde3ea"]),
+  pearl: p("Pearl grey", "white", ["#f3f3f1", "#ffffff", "#2c2c2c", "#7d7d78", "#7d7d78", "#ffffff", "#e4e4e0"]),
   kraft: p("Kraft", "neutral", ["#e3d6c1", "#d6c2a0", "#33281c", "#5c4c38", "#6b3f23", "#f6efe3", "#bfa77f"]),
   // dark
   midnight: p("Midnight & gold", "black", ["#14161c", "#1d2029", "#efe8dc", "#a39c90", "#c9a96e", "#14161c", "#2e323d"]),
   noir: p("Noir", "black", ["#111111", "#1a1a1a", "#f1efea", "#9b9891", "#d8d4cc", "#111111", "#2e2e2e"]),
   emerald: p("Emerald", "green", ["#0f1f19", "#152a22", "#eee8da", "#a2a898", "#cfae6b", "#0f1f19", "#27403a"]),
   navy: p("Navy & gold", "blue", ["#131b2d", "#1a2337", "#eef0f4", "#9ea6b6", "#c8b48a", "#131b2d", "#2b3550"]),
+  deepEmerald: p("Dark emerald", "green", ["#0f2a25", "#12332d", "#e9efe9", "#9fb5ad", "#b9cfc5", "#0f2a25", "#24463f"]),
+  slate: p("Slate", "black", ["#2f3436", "#3a4043", "#f1efe9", "#b8b6ae", "#c9ab6a", "#1f2224", "#4a5154"]),
+  oxblood: p("Oxblood", "red", ["#2a1215", "#3a181c", "#f4e8e4", "#c4a3a3", "#e0b8a8", "#2a1215", "#4d2328"]),
   wine: p("Wine", "red", ["#231116", "#2e161d", "#f3e9e6", "#b39a9c", "#d6a88a", "#231116", "#48262f"]),
 } satisfies Record<string, NamedPalette>;
 

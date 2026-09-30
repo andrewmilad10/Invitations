@@ -95,7 +95,7 @@ export function QuickView({
                 <Link href={`/create/${template.id}${query}`}>Customize</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-full px-6">
-                <Link href={designHref(template.id, isDefault ? null : paletteId, product)}>{product === "websites" ? "See live demo" : "See details"}</Link>
+                <Link href={designHref(template.id, isDefault ? null : paletteId)}>{product === "websites" ? "See live demo" : "See details"}</Link>
               </Button>
               <FavoriteButton id={template.id} name={template.name} className="ms-auto border bg-background" />
             </div>

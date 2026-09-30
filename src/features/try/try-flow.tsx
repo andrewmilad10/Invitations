@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/select";
 import { LOCALE_META, LOCALES } from "@/core/i18n/locales";
 import type { TemplateManifest } from "@/core/template/manifest";
+import type { CardOptionOverrides } from "@/core/card/options";
 import { resolveTheme } from "@/core/theme/tokens";
 import type { WeddingBundle } from "@/core/wedding/bundle";
 import { Stationery } from "@/features/marketing/stationery";
@@ -53,6 +54,7 @@ export interface Prefill {
   partnerTwo: string;
   date: string | null;
   palette: string | null;
+  card?: CardOptionOverrides;
 }
 
 export function TryFlow({ templateId, templates, prefill }: { templateId: string; templates: TemplateOption[]; prefill?: Prefill }) {
@@ -83,6 +85,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
       partnerTwo: prefill.partnerTwo || base.partnerTwo,
       date: prefill.date ?? base.date,
       palette: prefill.palette ?? (base.templateId === templateId ? base.palette : null),
+      card: prefill.card && Object.keys(prefill.card).length ? prefill.card : base.card,
     });
     router.replace(`/create/${templateId}`, { scroll: false });
   }, [prefill, hydrated, answers, templateId, router]);

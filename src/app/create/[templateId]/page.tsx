@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cardOptionsFromQuery } from "@/core/card/options";
+import { productOf, templatesFor } from "@/features/marketing/products";
 import { TryFlow } from "@/features/try/try-flow";
 import { getTemplateManifest, selectableTemplates } from "@/templates/registry";
 
@@ -28,8 +30,10 @@ export default async function CreatePage(props: PageProps<"/create/[templateId]"
     partnerTwo: str(q.two, 80),
     date: /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null,
     palette: template.palettes.some((p) => p.id === palette) ? palette : null,
+    card: cardOptionsFromQuery(q),
   };
-  const hasPrefill = Boolean(prefill.partnerOne || prefill.partnerTwo || prefill.date || prefill.palette);
+  const hasPrefill = Boolean(prefill.partnerOne || prefill.partnerTwo || prefill.date || prefill.palette || Object.keys(prefill.card).length);
 
-  return <TryFlow templateId={template.id} templates={selectableTemplates()} prefill={hasPrefill ? prefill : undefined} />;
+  // Offer only designs from the same collection (cards or websites).
+  return <TryFlow templateId={template.id} templates={templatesFor(productOf(template), selectableTemplates())} prefill={hasPrefill ? prefill : undefined} />;
 }

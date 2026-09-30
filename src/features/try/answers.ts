@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
 import { LOCALES, type Locale } from "@/core/i18n/locales";
 import type { TemplateManifest } from "@/core/template/manifest";
+import { cardOptionsSchema, sanitizeCardOptions } from "@/core/card/options";
 import type { ThemeOverrides } from "@/core/theme/tokens";
 import type { BundleEvent, BundleMedia, WeddingBundle } from "@/core/wedding/bundle";
 import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
@@ -56,6 +57,8 @@ export const answersSchema = z.object({
   locale: z.enum(LOCALES),
   /** A palette id of the chosen template (reset when the template changes). */
   palette: z.string().max(40).nullable(),
+  /** Card finishing options chosen on the card's page (orientation, foil…). */
+  card: cardOptionsSchema.optional(),
   photos: z.object({
     hero: photoRefSchema.nullable(),
     gallery: z.array(photoRefSchema).max(12),
@@ -105,7 +108,10 @@ export function withTemplate(a: TryAnswers, templateId: string): TryAnswers {
 
 export function themeOverrides(a: TryAnswers, template: TemplateManifest): ThemeOverrides {
   const palette = template.palettes.find((p) => p.id === a.palette);
-  return palette && Object.keys(palette.colors).length ? { colors: palette.colors } : {};
+  const out: ThemeOverrides = palette && Object.keys(palette.colors).length ? { colors: palette.colors } : {};
+  const card = sanitizeCardOptions(a.card);
+  if (Object.keys(card).length) out.card = card;
+  return out;
 }
 
 /** Media path used for a photo ref: library references are permanent, local files are resolved to blob: URLs by the browser. */

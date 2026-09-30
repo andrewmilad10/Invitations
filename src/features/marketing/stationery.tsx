@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import type { CardOptionOverrides } from "@/core/card/options";
 import { usesPhoto, type TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme, themeToCssVars, type ThemeOverrides } from "@/core/theme/tokens";
 import { PHOTO_LIBRARY } from "@/features/media/library";
@@ -23,6 +24,8 @@ export function Stationery({
   eyebrow = "Together with their families",
   photos,
   sizes,
+  options,
+  side,
   className,
   style,
 }: {
@@ -36,6 +39,9 @@ export function Stationery({
   /** Photos for photo designs; sample photos are used when omitted. */
   photos?: StationeryPhoto[];
   sizes?: string;
+  /** Finishing options (orientation, silhouette, foil, paper) to preview. */
+  options?: CardOptionOverrides;
+  side?: "front" | "back";
   className?: string;
   style?: CSSProperties;
 }) {
@@ -47,6 +53,8 @@ export function Stationery({
       text={{ partnerOne, partnerTwo, dateLabel, place, eyebrow }}
       photos={usesPhoto(template.stationery) ? (photos?.length ? photos : SAMPLE_PHOTOS) : []}
       sizes={sizes}
+      options={options}
+      side={side}
       className={className}
       style={{ ...vars, ...style }}
     />

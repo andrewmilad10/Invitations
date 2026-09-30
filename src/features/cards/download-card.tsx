@@ -72,6 +72,7 @@ export function DownloadCardButton({ bundle, className, label = "Download card" 
             }}
             photos={[model.media.hero, ...model.media.gallery].filter((m) => m !== null).map((m) => ({ url: m.url, alt: m.alt }))}
             sizes={`${EXPORT_WIDTH * 2}px`}
+            options={model.template.card}
             style={model.cssVars as CSSProperties}
           />
         </div>

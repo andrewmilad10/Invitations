@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FadeIn, FadeUp, RevealGroup, RevealLines, Stagger } from "@/features/motion/motion";
 import { selectableTemplates } from "@/templates/registry";
-import { PRODUCTS, websiteOrder, type Product } from "../products";
+import { PRODUCTS, templatesFor, websiteOrder, type Product } from "../products";
 import { TemplateCard } from "../template-card";
 import { CollectionCarousel } from "./collection-carousel";
 
@@ -14,13 +14,13 @@ export function TemplateShowcase() {
       product: "cards",
       heading: "Invitation cards",
       text: "Designed like fine stationery. Personalise one and send it on WhatsApp or by email — printed cards are coming soon.",
-      items: all.filter((t) => t.features.hero === "card").slice(0, 9),
+      items: templatesFor("cards", all).slice(0, 9),
     },
     {
       product: "websites",
       heading: "Wedding websites",
       text: "A small website with its own link: your story, schedule, venues with maps, countdown, photos and RSVP.",
-      items: websiteOrder(all).slice(0, 4),
+      items: websiteOrder(templatesFor("websites", all)).slice(0, 4),
     },
   ];
 
@@ -41,7 +41,7 @@ export function TemplateShowcase() {
       <div className="mx-auto max-w-2xl text-center">
         <RevealLines className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl" lines={["Cards to send.", "Websites to share."]} />
         <FadeUp as="p" delay={180} className="mt-5 text-lg text-muted-foreground">
-          {all.length} original designs — every one comes as an invitation card and as a wedding website, in several colours.
+          {templatesFor("cards", all).length} invitation card designs and {templatesFor("websites", all).length} wedding website designs — all original, each in several colours.
         </FadeUp>
       </div>
 

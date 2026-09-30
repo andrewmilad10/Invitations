@@ -26,13 +26,19 @@ test("filters, colours and saved designs in the gallery", async ({ page }) => {
   await page.getByRole("button", { name: /^Save Moonlit$/ }).click();
   await page.getByRole("button", { name: /^Saved/ }).click();
   await expect(page.getByRole("heading", { name: "Moonlit" })).toBeVisible();
-  await expect(count).toHaveText(/of 1 design$/);
+  await expect(count).toHaveText(/of 1 result$/);
 });
 
-test("design page: colour carries into Customize", async ({ page }) => {
-  await page.goto("/templates/laurel-crest");
+test("card page: colour and finish carry into Customize", async ({ page }) => {
+  await page.goto("/templates/laurel-crest"); // old address → the card's own page
+  await expect(page).toHaveURL(/\/invitations\/laurel-crest/);
   await page.getByRole("radiogroup", { name: "Colour" }).first().getByRole("radio", { name: "Navy & gold" }).click();
   await expect(page).toHaveURL(/palette=navy/);
+  await page.getByRole("radiogroup", { name: "Foil colour" }).getByRole("radio", { name: "Gold", exact: true }).click();
+  await page.getByRole("radiogroup", { name: "Silhouette" }).getByRole("radio", { name: "Scalloped" }).click();
+  await expect(page).toHaveURL(/foil=gold/);
+  await expect(page).toHaveURL(/silhouette=scalloped/);
+  for (const view of ["Back", "Envelope", "Suite", "Close-up"]) await page.getByRole("tab", { name: view }).click();
   await page.getByRole("link", { name: "Customize", exact: true }).first().click();
   await expect(page).toHaveURL(/\/create\/laurel-crest/);
 });
@@ -55,7 +61,9 @@ test("an earlier draft is offered back", async ({ context }) => {
 test("wedding websites gallery and a design opened as a website", async ({ page }) => {
   await page.goto("/websites");
   await expect(page.getByRole("heading", { name: "Wedding websites", level: 1 })).toBeVisible();
+  // Only websites here — card designs live in their own collection.
+  await expect(page.getByRole("link", { name: "Marlowe", exact: true })).toHaveCount(0);
   await page.getByRole("link", { name: "Cinematic", exact: true }).click();
-  await expect(page).toHaveURL(/\/templates\/cinematic\?view=website/);
+  await expect(page).toHaveURL(/\/websites\/cinematic/);
   await expect(page.frameLocator("iframe").first().locator("[data-section=hero]")).toBeAttached();
 });

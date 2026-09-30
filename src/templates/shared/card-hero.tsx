@@ -1,4 +1,5 @@
 import type { SectionProps } from "../types";
+import { orientedShape } from "@/core/template/manifest";
 import { StationeryCard } from "./stationery/card";
 
 /**
@@ -10,7 +11,7 @@ export function CardHero({ model, content }: SectionProps<"hero">) {
   const { wedding, media, template } = model;
   const photos = [media.hero, ...media.gallery].filter((m) => m !== null).map((m) => ({ url: m.url, alt: m.alt }));
   const venue = model.events.ceremony?.venueName ?? model.events.reception?.venueName ?? null;
-  const wide = template.art.shape === "square";
+  const shape = orientedShape(template.art.shape, template.card.orientation);
 
   return (
     <header
@@ -23,13 +24,24 @@ export function CardHero({ model, content }: SectionProps<"hero">) {
         className="absolute inset-0 -z-10"
         style={{ background: "radial-gradient(60% 50% at 50% 45%, color-mix(in oklab, var(--inv-accent) 12%, transparent), transparent)" }}
       />
-      <div data-hero-content className={wide ? "w-[min(88vw,34rem,calc(100svh-10rem))]" : "w-[min(86vw,28rem,calc((100svh-10rem)*0.714))]"}>
+      <div
+        data-hero-content
+        className={
+          "[filter:drop-shadow(0_30px_30px_rgb(0_0_0/0.25))] " +
+          (shape === "landscape"
+            ? "w-[min(92vw,44rem,calc((100svh-10rem)*1.4))]"
+            : shape === "square"
+              ? "w-[min(88vw,34rem,calc(100svh-10rem))]"
+              : "w-[min(86vw,28rem,calc((100svh-10rem)*0.714))]")
+        }
+      >
         <StationeryCard
           art={template.art}
           text={{ partnerOne: wedding.partnerOne, partnerTwo: wedding.partnerTwo, eyebrow: content.eyebrow, dateLabel: wedding.date?.long ?? null, place: venue }}
           photos={photos}
-          sizes="(min-width: 640px) 28rem, 86vw"
-          className="shadow-[0_40px_80px_-40px_rgb(0_0_0/0.5)]"
+          sizes="(min-width: 640px) 44rem, 92vw"
+          options={template.card}
+
         />
       </div>
       {content.tagline ? <p className="max-w-md text-center text-inv-muted">{content.tagline}</p> : null}

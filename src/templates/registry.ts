@@ -2,6 +2,7 @@ import type { TemplateManifest } from "@/core/template/manifest";
 import { ATELIER_MANIFESTS } from "./atelier/manifests";
 import { cinematicManifest } from "./cinematic/manifest";
 import { botanicalManifest, classicManifest, luxuryManifest, modernManifest, romanticManifest } from "./collection/manifests";
+import { BOUTIQUE_MANIFESTS } from "./collection/boutique";
 import { DESIGN_MANIFESTS } from "./collection/designs";
 import { editorialManifest } from "./editorial/manifest";
 import { GALERIE_MANIFESTS } from "./galerie/manifests";
@@ -25,6 +26,7 @@ const ALL: TemplateManifest[] = [
   luxuryManifest,
   editorialManifest,
   ...DESIGN_MANIFESTS,
+  ...BOUTIQUE_MANIFESTS,
   ...ATELIER_MANIFESTS,
   ...MAISON_MANIFESTS,
   ...GALERIE_MANIFESTS,
@@ -33,6 +35,7 @@ const ALL: TemplateManifest[] = [
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
+  "marlowe", "garden-toile", "verdant", "horizon", "gilded-garden", "serena", "peony-press", "wildwood", "cypress", "aurelia",
   "maison", "cinematic", "postale", "galerie", "meadow", "couture", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
   "monochrome", "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",
   "riviera", "big-day", "satin-bow", "limoncello", "botanical", "amalfi-tile", "rose-corners",

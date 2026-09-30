@@ -3,7 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/select";
+import { CARD_OPTION_INFO, FOILS, ORIENTATIONS, PAPERS, resolveCardOptions, SILHOUETTES, type CardOptionOverrides, type CardOptions } from "@/core/card/options";
+import { canRotate, designCardDefaults } from "@/core/template/manifest";
 import { FONT_KEYS, FONTS, type FontKey } from "@/core/theme/fonts";
+import { productOf } from "@/features/marketing/products";
 import { resolveTheme, sanitizeOverrides, type ColorToken, type ThemeOverrides } from "@/core/theme/tokens";
 import { TemplatePicker, toTemplateOption } from "@/features/weddings/components/template-picker";
 import { cn } from "@/lib/utils";
@@ -26,6 +29,11 @@ export function ThemePanel() {
   const template = resolveTemplateManifest(bundle.wedding.template_id);
   const overrides = sanitizeOverrides(bundle.theme.tokens);
   const theme = resolveTheme(template.themeDefaults, overrides);
+
+  const card = resolveCardOptions(designCardDefaults(template.stationery), overrides.card);
+  function saveCard(patch: CardOptionOverrides) {
+    saveOverrides({ ...overrides, card: { ...overrides.card, ...patch } });
+  }
 
   function saveOverrides(next: ThemeOverrides) {
     update((b) => setTheme(b, next));
@@ -157,6 +165,44 @@ export function ThemePanel() {
           />
         </Control>
       </section>
+
+      {productOf(template) === "cards" ? (
+        <section className="grid gap-5">
+          <h3 className="text-sm font-medium">Card finish</h3>
+          {canRotate(template.stationery.shape ?? "portrait") ? (
+            <Control label="Orientation">
+              <Segmented
+                value={card.orientation}
+                onChange={(v) => saveCard({ orientation: v as CardOptions["orientation"] })}
+                options={ORIENTATIONS.map((o) => ({ value: o, label: CARD_OPTION_INFO.orientation[o] }))}
+              />
+            </Control>
+          ) : null}
+          <Control label="Silhouette">
+            <Segmented
+              value={card.silhouette}
+              onChange={(v) => saveCard({ silhouette: v as CardOptions["silhouette"] })}
+              options={SILHOUETTES.map((o) => ({ value: o, label: CARD_OPTION_INFO.silhouette[o] }))}
+            />
+          </Control>
+          <Control label="Foil">
+            <Segmented
+              value={card.foil}
+              onChange={(v) => saveCard({ foil: v as CardOptions["foil"] })}
+              options={FOILS.map((o) => ({ value: o, label: o === "none" ? "None" : CARD_OPTION_INFO.foil[o] }))}
+            />
+          </Control>
+          <Control label="Paper">
+            <NativeSelect value={card.paper} disabled={!canEdit} onChange={(e) => saveCard({ paper: e.target.value as CardOptions["paper"] })}>
+              {PAPERS.map((p) => (
+                <option key={p} value={p}>
+                  {CARD_OPTION_INFO.paper[p][0]}
+                </option>
+              ))}
+            </NativeSelect>
+          </Control>
+        </section>
+      ) : null}
 
       <div>
         <Button type="button" variant="outline" disabled={!canEdit || Object.keys(overrides).length === 0} onClick={() => saveOverrides({})}>

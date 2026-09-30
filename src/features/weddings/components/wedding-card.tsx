@@ -17,13 +17,15 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
   const published = w.status === "published";
   const coupleName = `${w.partner_one_name} & ${w.partner_two_name}`;
   const editHref = `/dashboard/weddings/${w.id}`;
+  const overrides = sanitizeOverrides(w.themeTokens);
 
   return (
     <li className="grid grid-cols-[6.5rem_1fr] gap-5 border bg-card p-5 sm:grid-cols-[8.5rem_1fr] sm:gap-7 sm:p-6">
       <Link href={editHref} aria-label={`Edit ${coupleName}`} className="self-start">
         <Stationery
           template={template}
-          overrides={sanitizeOverrides(w.themeTokens)}
+          overrides={overrides}
+          options={overrides.card}
           partnerOne={w.partner_one_name}
           partnerTwo={w.partner_two_name}
           dateLabel={w.wedding_date ? formatDateOnly(w.wedding_date, "en").long : null}
