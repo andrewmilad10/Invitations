@@ -14,6 +14,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { FadeUp, RevealGroup, RevealLines } from "@/features/motion/motion";
+
 type Feature = { icon: LucideIcon; title: string; body: string; soon?: boolean };
 
 const FEATURES: Feature[] = [
@@ -36,13 +38,13 @@ export function Features() {
     <section id="features" className="scroll-mt-20 bg-card px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
-          <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">Everything your invitation needs, and room to grow</h2>
-          <p className="max-w-md text-lg leading-relaxed text-muted-foreground lg:justify-self-end">
+          <RevealLines className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl" lines={["Everything your invitation", "needs, and room to grow"]} />
+          <FadeUp as="p" delay={150} className="max-w-md text-lg leading-relaxed text-muted-foreground lg:justify-self-end">
             Start with an invitation. It grows into a complete wedding website — and soon, a place to manage replies and guests.
-          </p>
+          </FadeUp>
         </div>
 
-        <ul className="mt-12 grid grid-cols-2 gap-x-5 sm:mt-16 sm:gap-x-10 lg:grid-cols-4">
+        <RevealGroup as="ul" step={90} className="mt-12 grid grid-cols-2 gap-x-5 sm:mt-16 sm:gap-x-10 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, body, soon }) => (
             <li key={title} className="border-t border-border py-6 sm:py-7">
               <div className="flex items-center justify-between">
@@ -53,7 +55,7 @@ export function Features() {
               <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">{body}</p>
             </li>
           ))}
-        </ul>
+        </RevealGroup>
       </div>
     </section>
   );

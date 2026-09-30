@@ -139,8 +139,8 @@ export function DesignDetail({
         </div>
       </div>
 
-      {/* Options */}
-      <div>
+      {/* Options — arrive in sequence; the design itself is already in place (it morphs in from the gallery). */}
+      <div data-stagger="80">
         <p className="text-xs uppercase tracking-[0.25em] text-accent">{template.categories.slice(0, 3).join(" · ")}</p>
         <div className="mt-3 flex items-start justify-between gap-4">
           <h1 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">{template.name}</h1>
@@ -230,7 +230,7 @@ export function DesignDetail({
           <p className="mt-2 text-sm text-muted-foreground">Order this design printed and posted, on your choice of paper. For now, share it as a website and a link.</p>
           <ul className="mt-4 grid grid-cols-2 gap-2" aria-label="Paper types (coming soon)">
             {PAPERS.map(([name, hint]) => (
-              <li key={name} aria-disabled className="rounded-md border bg-background/60 p-3 opacity-60">
+              <li key={name} className="rounded-md border bg-background/60 p-3 opacity-60">
                 <p className="text-sm">{name}</p>
                 <p className="text-xs text-muted-foreground">{hint}</p>
               </li>

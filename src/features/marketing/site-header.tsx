@@ -43,7 +43,8 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     <header
       style={{ viewTransitionName: "site-header" }}
       className={cn(
-        "z-50 transition-colors duration-300",
+        "z-50 transition-[background-color,color,border-color] duration-500 ease-out",
+        overlay && "open-nav",
         overlay ? "fixed inset-x-0 top-0" : "sticky top-0",
         light ? "bg-transparent text-white" : "border-b border-border/70 bg-background/92 text-foreground backdrop-blur",
       )}

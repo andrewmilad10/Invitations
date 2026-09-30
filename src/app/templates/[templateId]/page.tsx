@@ -75,7 +75,7 @@ export default async function TemplatePage(props: PageProps<"/templates/[templat
             initialView={view === "phone" ? "phone" : product === "websites" ? "website" : "card"}
           />
 
-          <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 md:grid-cols-3 md:py-28">
+          <section data-stagger="140" className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 md:grid-cols-3 md:py-28">
             <div>
               <h2 className="font-serif text-3xl font-light">What&apos;s included</h2>
               <p className="mt-3 text-muted-foreground">Every section can be edited, hidden or reordered.</p>
@@ -123,7 +123,7 @@ export default async function TemplatePage(props: PageProps<"/templates/[templat
                   See all
                 </Link>
               </div>
-              <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
+              <div data-reveal-group="100" className="mt-10 grid grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
                 {others.map((t) => (
                   <TemplateCard key={t.id} template={t} index={all.indexOf(t)} product={product} />
                 ))}

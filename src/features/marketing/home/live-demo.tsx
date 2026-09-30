@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { FadeIn, Reveal } from "@/features/motion/motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -35,9 +36,11 @@ export function PhoneFrame({ src, title, scale = 0.72, className, children }: { 
 
 export function LiveDemo() {
   return (
-    <section id="inspiration" className="scroll-mt-20 overflow-hidden bg-forest px-5 py-24 text-forest-foreground sm:px-8 sm:py-32">
+    <section id="inspiration" className="relative isolate scroll-mt-20 overflow-hidden px-5 py-24 text-forest-foreground sm:px-8 sm:py-32">
+      {/* The room dims to forest green, then the product is revealed. */}
+      <FadeIn duration={1400} className="absolute inset-0 -z-10 bg-forest" />
       <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1fr_auto]">
-        <div className="max-w-xl">
+        <Reveal variant="left" delay={250} duration={1000} className="max-w-xl">
           <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">See it come to life</h2>
           <p className="mt-6 text-lg leading-relaxed text-forest-foreground/75">
             This is the Cinematic template, running for real. Tap the wax seal: the envelope opens, the card rises and becomes the first page of the wedding website.
@@ -51,10 +54,10 @@ export function LiveDemo() {
               <Link href="/websites">See all wedding websites</Link>
             </Button>
           </div>
-        </div>
-        <div className="flex justify-center">
+        </Reveal>
+        <Reveal variant="scale" delay={500} duration={1200} className="flex justify-center">
           <PhoneFrame src="/templates/cinematic/preview" title="Cinematic template demo" scale={0.78} />
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -63,7 +63,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
     <>
       {/* Style tiles */}
       <nav aria-label="Browse by style" className="-mx-5 mt-10 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0">
-        <ul className="flex w-max gap-3 sm:gap-4 lg:w-full lg:justify-between">
+        <ul data-stagger="60" className="flex w-max gap-3 sm:gap-4 lg:w-full lg:justify-between">
           {STYLE_TILES.map((c, i) => {
             const example = tileExample(c);
             const active = filters.style === c;
@@ -208,7 +208,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
 
       {items.length ? (
         <ViewTransition key={filtersToQuery(filters)} enter="grid-swap" exit="grid-swap" default="none">
-          <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
+          <div data-reveal-group="90" className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
             {shown.map((item) => (
               <DesignCard
                 key={`${item.template.id}:${item.paletteId}`}

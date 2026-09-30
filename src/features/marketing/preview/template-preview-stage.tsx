@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PhoneFrame } from "../home/live-demo";
 
@@ -10,18 +10,6 @@ const DEVICES = {
   desktop: { width: 1440, height: 900 },
   phone: { width: 390, height: 844 },
 } as const;
-
-function useMediaQuery(query: string): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mql = window.matchMedia(query);
-      mql.addEventListener("change", onChange);
-      return () => mql.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia(query).matches,
-    () => false,
-  );
-}
 
 /** Scales a fixed-size iframe to the width of its container. */
 function useFitScale(targetWidth: number) {

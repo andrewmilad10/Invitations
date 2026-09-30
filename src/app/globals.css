@@ -98,18 +98,13 @@
 }
 
 /* Marketing: one orchestrated hero entrance. */
-@keyframes hero-rise {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: none; }
-}
 @keyframes card-settle {
   from { opacity: 0; transform: translateY(60px) rotate(var(--tilt, 0deg)) scale(0.96); }
   to { opacity: 1; transform: translateY(0) rotate(var(--tilt, 0deg)) scale(1); }
 }
-.hero-rise { animation: hero-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .card-settle { animation: card-settle 1300ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 @media (prefers-reduced-motion: reduce) {
-  .hero-rise, .card-settle { animation: none; }
+  .card-settle { animation: none; }
 }
 
 /* Section style hint: start alignment keeps each section's column centred
@@ -259,5 +254,107 @@ dialog::backdrop {
   dialog,
   dialog::backdrop {
     transition: none;
+  }
+}
+
+/* ── Scroll reveals (src/features/motion) ─────────────────────────────────
+   Hidden states apply only while <html class="motion">: set before first
+   paint unless reduced motion is preferred, and cancelled by the failsafe
+   (motion-failed) if the engine never starts. */
+html.motion [data-motion],
+html.motion [data-stagger] > *,
+html.motion [data-reveal-group] > * {
+  opacity: 0;
+}
+html.motion [data-lines] [data-line] {
+  transform: translateY(110%);
+}
+html.motion [data-image-reveal] {
+  clip-path: inset(9% 0% 0% 0%);
+}
+html.motion [data-draw] {
+  transform: scaleX(0);
+}
+html.motion-failed [data-motion],
+html.motion-failed [data-stagger] > *,
+html.motion-failed [data-reveal-group] > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
+html.motion-failed [data-lines] [data-line],
+html.motion-failed [data-draw] {
+  transform: none !important;
+}
+html.motion-failed [data-image-reveal] {
+  clip-path: none !important;
+}
+
+/* ── Homepage opening (pure CSS: plays on first paint, before JavaScript) ── */
+@keyframes open-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes open-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes open-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes open-line {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes open-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.open-bg {
+  animation: open-settle 1600ms var(--ease-out-soft) both;
+}
+.open-overlay {
+  animation: open-fade 900ms ease-out both;
+}
+.open-line {
+  animation: open-line 1000ms var(--ease-out-soft) both;
+}
+.open-rise {
+  animation: open-rise 900ms var(--ease-out-soft) both;
+}
+.open-nav {
+  animation: open-drop 700ms var(--ease-out-soft) 500ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .open-bg,
+  .open-overlay,
+  .open-line,
+  .open-rise,
+  .open-nav {
+    animation: none;
   }
 }

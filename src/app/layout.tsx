@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { preconnect } from "react-dom";
 import { Toaster } from "sonner";
 import { publicEnv } from "@/config/env";
@@ -12,6 +13,8 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
+const MOTION_BOOT = `(function(){try{if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;var d=document.documentElement;d.classList.add("motion");setTimeout(function(){if(!d.classList.contains("motion-ready"))d.classList.add("motion-failed")},4000)}catch(e){}})()`;
+
 export const viewport: Viewport = {
   themeColor: "#f6f2ec",
 };
@@ -24,6 +27,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={fontVariables} suppressHydrationWarning>
       <body className="min-h-dvh">
+        {/* Before first paint: opt in to scroll reveals (see src/features/motion). */}
+        <Script id="motion-boot" strategy="beforeInteractive">
+          {MOTION_BOOT}
+        </Script>
         {children}
         <Toaster position="bottom-center" richColors />
       </body>

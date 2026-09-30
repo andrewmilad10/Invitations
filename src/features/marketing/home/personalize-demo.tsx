@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme } from "@/core/theme/tokens";
+import { FadeUp, Reveal, RevealLines } from "@/features/motion/motion";
 import { cn } from "@/lib/utils";
 import { Stationery } from "../stationery";
 
@@ -42,10 +43,12 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
     <section className="px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
-          <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">Make it yours, right now</h2>
-          <p className="mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">Type your names. This is how the editor feels — every change shows up instantly.</p>
+          <RevealLines className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl" lines={["Make it yours,", "right now"]} />
+          <FadeUp as="p" delay={150} className="mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
+            Type your names. This is how the editor feels — every change shows up instantly.
+          </FadeUp>
 
-          <div className="mt-10 grid max-w-md gap-5">
+          <FadeUp delay={250} className="mt-10 grid max-w-md gap-5">
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-1.5">
                 <Label htmlFor={`${id}-one`}>Your name</Label>
@@ -72,7 +75,10 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
                       setTemplateId(t.id);
                       setPaletteId(undefined);
                     }}
-                    className={cn("rounded-full border px-4 py-1.5 text-sm transition-colors", t.id === template.id ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-foreground/40")}
+                    className={cn(
+                      "rounded-full border px-4 py-1.5 text-sm transition-colors",
+                      t.id === template.id ? "border-primary bg-primary text-primary-foreground" : "border-border hover:border-foreground/40",
+                    )}
                   >
                     {t.name}
                   </button>
@@ -101,10 +107,10 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
             <Button asChild size="lg" className="mt-2 justify-self-start rounded-full px-7">
               <Link href={href}>Continue with these details</Link>
             </Button>
-          </div>
+          </FadeUp>
         </div>
 
-        <div className="relative flex justify-center bg-muted px-6 py-14 sm:py-20">
+        <Reveal variant="scale" delay={200} duration={1100} className="relative flex justify-center bg-muted px-6 py-14 sm:py-20">
           <Stationery
             template={template}
             overrides={{ colors: palette?.colors }}
@@ -113,7 +119,7 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
             dateLabel={dateLabel}
             className="w-full max-w-sm shadow-[0_30px_70px_-30px_rgb(34_29_26/0.55)]"
           />
-        </div>
+        </Reveal>
       </div>
     </section>
   );

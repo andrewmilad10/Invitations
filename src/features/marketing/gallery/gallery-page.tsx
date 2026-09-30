@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PageTransition } from "@/components/page-transition";
+import { Stagger } from "@/features/motion/motion";
 import { cn } from "@/lib/utils";
 import { selectableTemplates } from "@/templates/registry";
 import { PRODUCTS, websiteOrder, type Product } from "../products";
@@ -36,12 +37,12 @@ export function GalleryPage({ product, searchParams }: { product: Product; searc
                 </Link>
               ))}
             </nav>
-            <div className="mt-8 max-w-2xl">
+            <Stagger step={110} className="mt-8 max-w-2xl">
               <h1 className="font-serif text-5xl font-light leading-[1.02] sm:text-7xl">{info.title}</h1>
               <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
                 {templates.length} designs. {info.intro}
               </p>
-            </div>
+            </Stagger>
             <DesignGallery templates={templates} initialFilters={filters} product={product} />
           </div>
         </main>

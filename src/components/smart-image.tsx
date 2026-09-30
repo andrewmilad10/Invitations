@@ -32,11 +32,12 @@ function tinyPreview(src: string) {
  * preview (a 24 px version of the photo) painted behind while the real one
  * loads — so photo areas never flash empty.
  */
-export function SmartImage({ style, ...props }: ImageProps) {
+export function SmartImage({ style, alt, ...props }: ImageProps) {
   const src = typeof props.src === "string" ? props.src : null;
-  if (!src?.startsWith(UNSPLASH)) return <Image style={style} {...props} />;
+  if (!src?.startsWith(UNSPLASH)) return <Image alt={alt} style={style} {...props} />;
   return (
     <Image
+      alt={alt}
       {...props}
       loader={unsplashLoader}
       style={{ backgroundImage: `url(${tinyPreview(src)})`, backgroundSize: "cover", backgroundPosition: "center", ...style }}
