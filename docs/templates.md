@@ -10,10 +10,11 @@ a venue, a color or an image.
 Template ──► Layout (Renderer) ──► Sections ──► InvitationModel ──► HTML
 ```
 
-* **Section definition** (`src/core/sections/`) — template-agnostic: the
+* **Section definition** (`src/core/sections/registry.ts`) — template-agnostic: the
   section's type, its Zod content schema, localized default content and the
   editor field descriptors. Defined once, shared by every template.
-* **Template manifest** (`src/templates/<id>/manifest.ts`) — metadata, which
+* **Template manifest** (`src/templates/<id>/manifest.ts`, type in
+  `src/core/template/manifest.ts`) — metadata, which
   sections it supports and in what default order, its theme defaults and
   palette presets.
 * **Renderer** (`src/templates/<id>/Renderer.tsx`) — the layout: page chrome,
@@ -21,8 +22,10 @@ Template ──► Layout (Renderer) ──► Sections ──► InvitationMode
 
 ## The contract
 
+The contract is split in two so the dashboard never loads animation code:
+
 ```ts
-// src/templates/types.ts (abridged)
+// src/core/template/manifest.ts — data only, importable anywhere
 interface TemplateManifest {
   id: string;                    // stored in weddings.template_id — never rename
   name: string;
@@ -38,9 +41,9 @@ interface TemplateManifest {
   status: 'available' | 'beta' | 'hidden';
 }
 
-interface WeddingTemplate extends TemplateManifest {
-  Renderer: ComponentType<TemplateRendererProps>;   // { model: InvitationModel }
-}
+// src/templates/types.ts — the presentation half
+interface TemplateRendererProps { model: InvitationModel }
+// src/templates/renderers.tsx maps template id → Renderer component
 ```
 
 `InvitationModel` (see `src/core/invitation/model.ts`) gives a template
@@ -68,7 +71,8 @@ only exceptions are neutral overlays (e.g. `rgb(0 0 0 / .4)` for image scrims).
 
 1. Create `src/templates/<id>/` with `manifest.ts`, `Renderer.tsx` and a
    component for each section type you support.
-2. Add it to `src/templates/registry.ts`.
+2. Add the manifest to `src/templates/registry.ts` and the renderer to
+   `src/templates/renderers.tsx`.
 3. Add a preview image at `public/templates/<id>.jpg` (or reuse the generated
    sample preview).
 4. Visit `/templates/<id>/preview` to see it with sample data, and run
@@ -80,16 +84,17 @@ registry.
 
 ## Adding a section type
 
-1. Create `src/core/sections/definitions/<type>.ts`: Zod schema, default
-   content per locale and `fields` for the editor.
-2. Register it in `src/core/sections/registry.ts` and add the type to
-   `SECTION_TYPES`.
+1. In `src/core/sections/registry.ts`: add the type to `SECTION_TYPES`, its
+   Zod schema to `sectionSchemas`, and a definition (label, default content
+   per locale, editor `fields`) to `SECTION_DEFINITIONS`. Add default copy to
+   `src/core/i18n/dictionaries.ts` for each locale.
 3. Add a component to each template that should support it and list it in
    that template's `supportedSections`/`defaultSectionOrder`.
 
 The editor renders a form for the section automatically from its field
-descriptors (text, textarea, toggle, select, list). Sections that need bespoke
-editing (gallery uploads, events) declare `editor: 'custom'`.
+descriptors (`text`, `textarea`, `list`). Sections that also manage other
+data declare it in `manages` (an event kind, or a media purpose) and the
+editor adds the matching controls.
 
 Because section rows are sparse overrides (see `docs/database.md`), every
 existing wedding immediately gets the new section with its default content.

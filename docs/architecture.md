@@ -77,7 +77,8 @@ src/
 │
 ├── core/                         Framework-free domain logic (no React, no Supabase)
 │   ├── wedding/                  Types, Zod schemas, slug rules, WeddingBundle
-│   ├── sections/                 Section library: one definition per section type
+│   ├── sections/                 Section library: schema + defaults + editor fields per type
+│   ├── template/                 TemplateManifest type (data half of the template contract)
 │   ├── theme/                    Token types, merge, → CSS variables, font registry
 │   ├── invitation/               InvitationModel + buildInvitationModel()
 │   ├── i18n/                     Locales, dictionaries, date formatting, RTL
