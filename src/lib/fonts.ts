@@ -88,5 +88,44 @@ const naskh = localFont({
   ],
 });
 
+const cinzel = localFont({
+  variable: "--font-cinzel",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/cinzel/cinzel-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/cinzel/cinzel-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
+});
+
+const bodoni = localFont({
+  variable: "--font-bodoni",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/bodoni-moda/bodoni-moda-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/bodoni-moda/bodoni-moda-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../assets/fonts/bodoni-moda/bodoni-moda-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+});
+
+const greatVibes = localFont({
+  variable: "--font-greatvibes",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/great-vibes/great-vibes-latin-400-normal.woff2", weight: "400", style: "normal" },
+  ],
+});
+
+const marcellus = localFont({
+  variable: "--font-marcellus",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/marcellus/marcellus-latin-400-normal.woff2", weight: "400", style: "normal" },
+  ],
+});
+
 /** Class list that defines every font CSS variable; applied to <html>. */
-export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, amiri, naskh].map((font) => font.variable).join(" ");
+export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, amiri, naskh].map((font) => font.variable).join(" ");

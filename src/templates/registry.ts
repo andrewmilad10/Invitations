@@ -1,6 +1,7 @@
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cinematicManifest } from "./cinematic/manifest";
 import { botanicalManifest, classicManifest, luxuryManifest, modernManifest, romanticManifest } from "./collection/manifests";
+import { DESIGN_MANIFESTS } from "./collection/designs";
 import { editorialManifest } from "./editorial/manifest";
 
 /**
@@ -11,7 +12,7 @@ import { editorialManifest } from "./editorial/manifest";
  * Adding a template = add its manifest here. A template with a new layout
  * also registers its renderer in ./renderers.tsx.
  */
-export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [
+const ALL: TemplateManifest[] = [
   romanticManifest,
   classicManifest,
   cinematicManifest,
@@ -19,7 +20,23 @@ export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [
   botanicalManifest,
   luxuryManifest,
   editorialManifest,
+  ...DESIGN_MANIFESTS,
 ];
+
+/** Gallery "Featured" order; anything not listed follows in registry order. */
+const FEATURED = [
+  "cinematic", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
+  "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",
+  "big-day", "satin-bow", "limoncello", "botanical", "amalfi-tile", "rose-corners",
+  "luxury", "morning-wash", "heritage", "golden-hour", "eucalyptus", "flourish",
+];
+
+const rank = (id: string) => {
+  const i = FEATURED.indexOf(id);
+  return i === -1 ? FEATURED.length + ALL.findIndex((t) => t.id === id) : i;
+};
+
+export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [...ALL].sort((a, b) => rank(a.id) - rank(b.id));
 
 export const DEFAULT_TEMPLATE_ID = cinematicManifest.id;
 

@@ -7,7 +7,7 @@ export const cinematicManifest: TemplateManifest = {
   description:
     "A sealed envelope opens into a full-screen hero, followed by an elegant, image-led invitation with countdown, venues, gallery and schedule.",
   renderer: "cinematic",
-  categories: ["luxury", "romantic", "classic"],
+  categories: ["photo", "elegant", "luxury", "romantic"],
   stationery: { ornament: "seal" },
   supportedSections: [
     "hero", "couple", "date", "countdown", "story", "ceremony", "reception",
@@ -32,10 +32,11 @@ export const cinematicManifest: TemplateManifest = {
     shadow: "deep",
   },
   palettes: [
-    { id: "ivory", label: "Ivory & gold", colors: {} },
+    { id: "ivory", label: "Ivory & gold", family: "gold", colors: {} },
     {
       id: "midnight",
       label: "Midnight",
+      family: "black",
       colors: {
         background: "#14161c", surface: "#1d2029", foreground: "#efe8dc", muted: "#a39c90",
         accent: "#c9a96e", accentForeground: "#14161c", border: "#2e323d",
@@ -44,6 +45,7 @@ export const cinematicManifest: TemplateManifest = {
     {
       id: "sage",
       label: "Sage",
+      family: "green",
       colors: {
         background: "#eef0e8", surface: "#fbfcf8", foreground: "#26302a", muted: "#6b766d",
         accent: "#7d8f6a", accentForeground: "#fbfcf8", border: "#d6dccd",
@@ -52,6 +54,7 @@ export const cinematicManifest: TemplateManifest = {
     {
       id: "rose",
       label: "Dusty rose",
+      family: "pink",
       colors: {
         background: "#f7eeec", surface: "#fffafa", foreground: "#3a2528", muted: "#8a6b6f",
         accent: "#b0707a", accentForeground: "#fffafa", border: "#ead6d6",

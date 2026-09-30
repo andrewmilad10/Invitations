@@ -3,7 +3,7 @@ import type { SectionStyle } from "../sections/style";
 import type { DateParts } from "../i18n/format";
 import type { InvitationDictionary } from "../i18n/dictionaries";
 import type { Locale } from "../i18n/locales";
-import type { StationeryOrnament } from "../template/manifest";
+import type { DecorFamily, StationeryArt } from "../template/manifest";
 import type { ThemeTokens } from "../theme/tokens";
 
 /**
@@ -52,7 +52,11 @@ export interface InvitationModel {
   template: {
     renderer: string;
     opening: "envelope" | "none";
-    decor: StationeryOrnament;
+    /** Divider motif family (data-decor on the root). */
+    decor: DecorFamily;
+    /** The design's card (for the "card" hero). */
+    art: Required<StationeryArt>;
+    hero: "photo" | "card";
   };
   locale: Locale;
   dir: "ltr" | "rtl";

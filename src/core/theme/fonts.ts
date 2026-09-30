@@ -10,6 +10,10 @@ export const FONT_KEYS = [
   "inter",
   "jost",
   "pinyon",
+  "cinzel",
+  "bodoni",
+  "greatvibes",
+  "marcellus",
   "amiri",
   "naskh",
 ] as const;
@@ -34,6 +38,10 @@ export const FONTS: Record<FontKey, FontDefinition> = {
   inter: { label: "Inter", category: "sans", cssVar: "--font-inter", fallback: "system-ui, -apple-system, 'Segoe UI', sans-serif", script: "latin" },
   jost: { label: "Jost", category: "sans", cssVar: "--font-jost", fallback: "system-ui, sans-serif", script: "latin" },
   pinyon: { label: "Pinyon Script", category: "script", cssVar: "--font-pinyon", fallback: "cursive", script: "latin" },
+  cinzel: { label: "Cinzel", category: "display", cssVar: "--font-cinzel", fallback: "Georgia, serif", script: "latin" },
+  bodoni: { label: "Bodoni Moda", category: "serif", cssVar: "--font-bodoni", fallback: "Didot, Georgia, serif", script: "latin" },
+  greatvibes: { label: "Great Vibes", category: "script", cssVar: "--font-greatvibes", fallback: "cursive", script: "latin" },
+  marcellus: { label: "Marcellus", category: "display", cssVar: "--font-marcellus", fallback: "Georgia, serif", script: "latin" },
   amiri: { label: "Amiri", category: "serif", cssVar: "--font-amiri", fallback: "serif", script: "arabic" },
   naskh: { label: "Noto Naskh Arabic", category: "serif", cssVar: "--font-naskh", fallback: "serif", script: "arabic" },
 };

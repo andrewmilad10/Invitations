@@ -134,3 +134,9 @@
 [data-template][data-mode="preview"] [data-section][data-selected] {
   outline-color: var(--inv-accent);
 }
+
+/* Stationery cards: letter-spacing breaks Arabic joining. */
+[lang="ar"] [data-shape],
+[lang="ar"] [data-shape] * {
+  letter-spacing: 0 !important;
+}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CardHero } from "../shared/card-hero";
 import { Gallery } from "../shared/gallery";
 import { InvitationImage } from "../shared/invitation-image";
 import { InvitationRoot, Paragraphs, Sections } from "../shared/invitation-root";
@@ -40,7 +41,10 @@ function EventBlock({ id, heading, note, event, directions }: { id: string; head
 }
 
 const sections: SectionComponents = {
-  hero: ({ model, content }: SectionProps<"hero">) => (
+  hero: ({ model, content }: SectionProps<"hero">) =>
+    model.template.hero === "card" ? (
+      <CardHero model={model} content={content} />
+    ) : (
     <header data-section="hero" className="mx-auto flex min-h-svh max-w-5xl flex-col justify-center px-6 py-20">
       <p className="text-[0.7rem] font-medium uppercase tracking-[0.35em] text-inv-accent">{content.eyebrow}</p>
       <h1 className="mt-8 font-inv-heading text-6xl leading-[0.95] sm:text-8xl lg:text-9xl">
@@ -57,7 +61,7 @@ const sections: SectionComponents = {
         </div>
       ) : null}
     </header>
-  ),
+    ),
   couple: ({ content }: SectionProps<"couple">) => (
     <Block id="couple" label={content.eyebrow}>
       <h2 className="font-inv-heading text-4xl sm:text-5xl">{content.heading}</h2>

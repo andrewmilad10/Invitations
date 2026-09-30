@@ -27,10 +27,18 @@ export type ThemeOverrides = {
   shadow?: ShadowToken;
 };
 
+/** Colour families used by the gallery's colour filter. */
+export const COLOR_FAMILIES = [
+  "white", "neutral", "black", "gold", "pink", "red", "orange", "yellow", "green", "blue", "purple",
+] as const;
+export type ColorFamily = (typeof COLOR_FAMILIES)[number];
+
 export interface ThemePalette {
   id: string;
   label: string;
   colors: Partial<ThemeTokens["colors"]>;
+  /** For the gallery colour filter. */
+  family?: ColorFamily;
 }
 
 export const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a 6-digit hex color like #1a2b3c.");

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CardHero } from "../shared/card-hero";
 import { Countdown } from "../shared/countdown";
 import { Gallery } from "../shared/gallery";
 import { InvitationImage } from "../shared/invitation-image";
@@ -78,7 +79,7 @@ function Ornament() {
   return (
     <div aria-hidden data-reveal className="mx-auto my-8 flex items-center justify-center text-inv-accent">
       {/* default: diamond */}
-      <span className="flex items-center gap-3 group-data-[decor=crest]/inv:hidden group-data-[decor=floral]/inv:hidden group-data-[decor=gilded]/inv:hidden group-data-[decor=leaves]/inv:hidden">
+      <span className="hidden items-center gap-3 group-data-[decor=plain]/inv:flex">
         {line}
         <span className="size-1.5 rotate-45 bg-current" />
         {line}
@@ -170,6 +171,7 @@ function EventCard({
 // ── Sections ────────────────────────────────────────────────────────────────
 
 export function CinematicHero({ model, content }: SectionProps<"hero">) {
+  if (model.template.hero === "card") return <CardHero model={model} content={content} />;
   const { wedding, media } = model;
   return (
     <header

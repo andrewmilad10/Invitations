@@ -19,6 +19,10 @@ const FONTS = {
   inter: [["latin", 300, "normal"], ["latin", 400, "normal"], ["latin", 500, "normal"], ["latin", 600, "normal"]],
   jost: [["latin", 300, "normal"], ["latin", 400, "normal"], ["latin", 500, "normal"]],
   "pinyon-script": [["latin", 400, "normal"]],
+  cinzel: [["latin", 400, "normal"], ["latin", 600, "normal"]],
+  "bodoni-moda": [["latin", 400, "normal"], ["latin", 600, "normal"], ["latin", 400, "italic"]],
+  "great-vibes": [["latin", 400, "normal"]],
+  marcellus: [["latin", 400, "normal"]],
   amiri: [["arabic", 400, "normal"], ["arabic", 700, "normal"]],
   "noto-naskh-arabic": [["arabic", 400, "normal"], ["arabic", 600, "normal"]],
 };

@@ -3,7 +3,7 @@ import { dateInZone, formatDateOnly, formatTime, zonedTimeToIso } from "../i18n/
 import { LOCALE_META, toLocale, type Locale } from "../i18n/locales";
 import { resolveSectionStyle, sectionToneVars } from "../sections/style";
 import { isSectionType, resolveSectionContent, SECTION_DEFINITIONS, type SectionType } from "../sections/registry";
-import type { TemplateManifest } from "../template/manifest";
+import { decorFamily, stationeryArt, type TemplateManifest } from "../template/manifest";
 import { resolveTheme, sanitizeOverrides, themeToCssVars, type ThemeTokens } from "../theme/tokens";
 import type { BundleEvent, BundleMedia, WeddingBundle } from "../wedding/bundle";
 import type { EventModel, InvitationModel, MediaAsset, RenderedSection, RenderMode } from "./model";
@@ -62,7 +62,13 @@ export function buildInvitationModel(
   return {
     mode: options.mode,
     templateId: template.id,
-    template: { renderer: template.renderer, opening: template.features.opening, decor: template.stationery.ornament },
+    template: {
+      renderer: template.renderer,
+      opening: template.features.opening,
+      decor: decorFamily(template.stationery.ornament),
+      art: stationeryArt(template.stationery),
+      hero: template.features.hero ?? "photo",
+    },
     locale,
     dir: LOCALE_META[locale].dir,
     wedding: {
