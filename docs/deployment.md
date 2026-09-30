@@ -3,6 +3,26 @@
 The app is a standard Next.js 16 project and deploys to Vercel with no custom
 server. Supabase hosts auth, database and storage.
 
+## Quick test deploy (share with friends)
+
+1. **Vercel** → Add New → Project → import `andrewmilad10/Invitations`.
+   Framework: Next.js, no overrides. Deploy.
+2. **Settings → Environments → Production → Branch tracking**: set the branch
+   to `platform` (the app lives there), then **Deployments → Redeploy**.
+   Use the production URL (`https://<project>.vercel.app`) — preview URLs are
+   behind Vercel login by default, so friends can't open them.
+3. At this point the gallery, design pages, previews and the no-account
+   "try it" flow all work. Saving, accounts and publishing need step 4.
+4. **Supabase** → New project → **SQL Editor** → paste the combined schema
+   (all files in `supabase/migrations/` in order — or `npx supabase db push`)
+   → Run. Then in **Authentication → URL configuration** set Site URL to the
+   Vercel URL and add `https://<project>.vercel.app/auth/confirm` as a
+   redirect URL. For a friends-only test you can switch off
+   **Authentication → Sign In / Providers → Email → Confirm email**.
+5. Back in Vercel → Settings → Environment Variables, add the three variables
+   from the table below (URL and publishable key from Supabase → Project
+   Settings → API; `NEXT_PUBLIC_SITE_URL` = the Vercel URL) → Redeploy.
+
 ## 1. Supabase project
 
 1. Create a project at supabase.com (choose a region close to your guests,
