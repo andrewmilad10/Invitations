@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vellum — wedding invitation platform
 
-## Getting Started
+Couples create a wedding, pick a template, customise it in a live editor and
+publish a cinematic online invitation at `/w/{slug}`.
 
-First, run the development server:
+This is **Phase 1** of a larger wedding platform. The core idea:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+Wedding DATA  +  Template PRESENTATION  +  Theme TOKENS  =  Invitation
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Nothing about any couple is hard-coded. Every name, date, venue, color and
+image comes from the database, so one wedding can be rendered by any template
+and any template can render any wedding.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · GSAP · Lenis ·
+Supabase (Auth, Postgres + RLS, Storage) · Zod · Vitest · Playwright
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Quick start
+```bash
+npm install
+npx supabase start
+cp .env.example .env.local   # fill in values printed by `supabase start`
+npm run dev
+```
+Open http://localhost:3000, register, create a wedding.
+No Supabase yet? `/templates/cinematic/preview` shows a template with sample data.
 
-## Learn More
+## Documentation
+| Doc | Contents |
+| --- | --- |
+| [docs/architecture.md](docs/architecture.md) | System design, folder structure, security model, extension points |
+| [docs/database.md](docs/database.md) | Schema, RLS, storage, decisions |
+| [docs/templates.md](docs/templates.md) | Template contract, adding templates and sections, the envelope opening |
+| [docs/roadmap.md](docs/roadmap.md) | Phases 2–7, offline/PWA/export plan, admin |
+| [docs/development.md](docs/development.md) | Local setup, scripts, conventions |
+| [docs/deployment.md](docs/deployment.md) | Supabase + Vercel, environment variables |
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Repository layout
+```
+src/app        routes          src/core       domain logic (framework-free)
+src/templates  presentation    src/features   server actions + feature UI
+src/lib        supabase clients supabase/     migrations, RLS tests
+docs/          documentation   legacy/        original static prototype (reference)
+```
