@@ -146,6 +146,16 @@ export function ThemePanel() {
             ]}
           />
         </Control>
+        <Control label="Photos">
+          <Segmented
+            value={theme.photoTone ?? "natural"}
+            onChange={(photoTone) => saveOverrides({ ...overrides, photoTone: photoTone as "natural" | "mono" })}
+            options={[
+              { value: "natural", label: "Colour" },
+              { value: "mono", label: "Black & white" },
+            ]}
+          />
+        </Control>
       </section>
 
       <div>

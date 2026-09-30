@@ -59,7 +59,7 @@ describe("buildInvitationModel", () => {
   it("ignores invalid theme values instead of failing", () => {
     const b = bundle((x) => (x.theme.tokens = { colors: { accent: "red; background:url(evil)" }, fonts: { heading: "comic-sans" }, radius: 999 }));
     const m = buildInvitationModel(b, cinematicManifest, opts);
-    expect(m.theme).toEqual(cinematicManifest.themeDefaults);
+    expect(m.theme).toEqual({ ...cinematicManifest.themeDefaults, photoTone: "natural" });
   });
 
   it("orders sections by template default, overridden by a saved custom order", () => {
@@ -105,7 +105,7 @@ describe("buildInvitationModel", () => {
       x.sections = [];
     });
     const t = types(b);
-    for (const empty of ["ceremony", "reception", "venue", "gallery", "date", "countdown", "story", "schedule"]) {
+    for (const empty of ["ceremony", "reception", "venue", "gallery", "date", "countdown", "story", "schedule", "faq"]) {
       expect(t).not.toContain(empty);
     }
     expect(t).toEqual(["hero", "couple", "rsvp", "closing", "footer"]);

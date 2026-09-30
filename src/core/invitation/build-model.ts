@@ -196,7 +196,9 @@ function hasSomethingToShow(section: RenderedSection, facts: SectionFacts): bool
     case "gallery":
       return facts.hasGallery;
     case "story":
-      return section.content.body.trim().length > 0;
+      return section.content.body.trim().length > 0 || section.content.quote.trim().length > 0;
+    case "faq":
+      return section.content.items.some((i) => i.question.trim());
     case "schedule":
       return section.content.items.length > 0 || facts.hasTimedEvents;
     default:

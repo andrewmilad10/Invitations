@@ -17,11 +17,11 @@ export const editorialManifest: TemplateManifest = {
   stationery: { ornament: "rule" },
   supportedSections: [
     "hero", "couple", "date", "story", "ceremony", "reception",
-    "gallery", "schedule", "rsvp", "closing", "footer",
+    "gallery", "schedule", "rsvp", "faq", "closing", "footer",
   ],
   defaultSectionOrder: [
     "hero", "couple", "date", "ceremony", "reception", "schedule",
-    "story", "gallery", "rsvp", "closing", "footer",
+    "story", "gallery", "rsvp", "faq", "closing", "footer",
   ],
   themeDefaults: {
     colors: {

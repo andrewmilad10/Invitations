@@ -22,6 +22,7 @@ export const SECTION_TYPES = [
   "gallery",
   "schedule",
   "rsvp",
+  "faq",
   "closing",
   "footer",
 ] as const;
@@ -49,19 +50,23 @@ const text = (max: number) => z.string().max(max);
 
 // ── Content schemas ─────────────────────────────────────────────────────────
 const scheduleItem = z.object({ time: text(40), title: text(120), note: text(300) });
+const faqItem = z.object({ question: text(160), answer: text(600) });
+/** An optional external link: https only, so it can never run script. */
+const httpsUrl = z.union([z.literal(""), z.string().max(2048).regex(/^https:\/\/[^\s<>"']+$/, "Use a full https:// link.")]);
 
 export const sectionSchemas = {
   hero: z.object({ eyebrow: text(80), tagline: text(160) }),
   couple: z.object({ eyebrow: text(80), heading: text(120), message: text(600) }),
   date: z.object({ heading: text(80), note: text(200) }),
   countdown: z.object({ heading: text(80) }),
-  story: z.object({ heading: text(80), body: text(4000) }),
+  story: z.object({ heading: text(80), body: text(4000), quote: text(400), quoteSource: text(120) }),
   ceremony: z.object({ heading: text(80), note: text(400) }),
   reception: z.object({ heading: text(80), note: text(400) }),
   venue: z.object({ heading: text(80), note: text(600) }),
   gallery: z.object({ heading: text(80), caption: text(200) }),
   schedule: z.object({ heading: text(80), items: z.array(scheduleItem).max(20) }),
-  rsvp: z.object({ heading: text(80), message: text(400), deadline: text(80) }),
+  rsvp: z.object({ heading: text(80), message: text(400), deadline: text(80), linkUrl: httpsUrl, linkLabel: text(60) }),
+  faq: z.object({ heading: text(80), items: z.array(faqItem).max(12) }),
   closing: z.object({ heading: text(120), message: text(600), signature: text(120) }),
   footer: z.object({ note: text(200) }),
 } satisfies Record<SectionType, z.ZodObject>;
@@ -133,7 +138,12 @@ export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } =
     label: "Our story",
     description: "How you met. Separate paragraphs with a blank line.",
     canDisable: true,
-    fields: [heading(), { name: "body", label: "Story", kind: "textarea", maxLength: 4000, rows: 8 }],
+    fields: [
+      heading(),
+      { name: "body", label: "Story", kind: "textarea", maxLength: 4000, rows: 8 },
+      { name: "quote", label: "A quote, verse or line you love", kind: "textarea", maxLength: 400, rows: 3, placeholder: "Optional" },
+      { name: "quoteSource", label: "Quote from", kind: "text", maxLength: 120, placeholder: "Optional, e.g. a poet or a verse" },
+    ],
     defaults: (l) => ({ ...d(l).story }),
   },
   ceremony: {
@@ -202,8 +212,31 @@ export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } =
       heading(),
       { name: "message", label: "Message", kind: "textarea", maxLength: 400, rows: 3 },
       { name: "deadline", label: "Reply by", kind: "text", maxLength: 80, placeholder: "e.g. 1 May 2027" },
+      { name: "linkUrl", label: "Reply link", kind: "text", maxLength: 2048, placeholder: "Optional — https:// link to a form you already use" },
+      { name: "linkLabel", label: "Link button text", kind: "text", maxLength: 60, placeholder: "e.g. Reply online" },
     ],
     defaults: (l) => ({ ...d(l).rsvp }),
+  },
+  faq: {
+    type: "faq",
+    label: "Questions & answers",
+    description: "Dress code, children, parking, gifts — the questions guests always ask.",
+    canDisable: true,
+    fields: [
+      heading(),
+      {
+        name: "items",
+        label: "Questions",
+        kind: "list",
+        maxItems: 12,
+        itemLabel: "question",
+        itemFields: [
+          { name: "question", label: "Question", maxLength: 160, placeholder: "Is there a dress code?" },
+          { name: "answer", label: "Answer", maxLength: 600, placeholder: "Formal evening attire." },
+        ],
+      },
+    ],
+    defaults: (l) => ({ heading: d(l).faq.heading, items: [] }),
   },
   closing: {
     type: "closing",

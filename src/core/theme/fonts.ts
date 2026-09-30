@@ -14,6 +14,7 @@ export const FONT_KEYS = [
   "bodoni",
   "greatvibes",
   "marcellus",
+  "didone",
   "amiri",
   "naskh",
 ] as const;
@@ -42,6 +43,7 @@ export const FONTS: Record<FontKey, FontDefinition> = {
   bodoni: { label: "Bodoni Moda", category: "serif", cssVar: "--font-bodoni", fallback: "Didot, Georgia, serif", script: "latin" },
   greatvibes: { label: "Great Vibes", category: "script", cssVar: "--font-greatvibes", fallback: "cursive", script: "latin" },
   marcellus: { label: "Marcellus", category: "display", cssVar: "--font-marcellus", fallback: "Georgia, serif", script: "latin" },
+  didone: { label: "Antic Didone", category: "display", cssVar: "--font-didone", fallback: "Didot, 'Bodoni 72', Georgia, serif", script: "latin" },
   amiri: { label: "Amiri", category: "serif", cssVar: "--font-amiri", fallback: "serif", script: "arabic" },
   naskh: { label: "Noto Naskh Arabic", category: "serif", cssVar: "--font-naskh", fallback: "serif", script: "arabic" },
 };

@@ -8,7 +8,7 @@ import type { TemplateManifest } from "@/core/template/manifest";
 
 const ALL_SECTIONS = [
   "hero", "couple", "date", "countdown", "story", "ceremony", "reception",
-  "venue", "gallery", "schedule", "rsvp", "closing", "footer",
+  "venue", "gallery", "schedule", "rsvp", "faq", "closing", "footer",
 ] as const;
 
 export const romanticManifest: TemplateManifest = {
@@ -131,8 +131,8 @@ export const modernManifest: TemplateManifest = {
   renderer: "editorial",
   categories: ["modern", "minimalist"],
   stationery: { ornament: "hairline" },
-  supportedSections: ["hero", "couple", "date", "story", "ceremony", "reception", "gallery", "schedule", "rsvp", "closing", "footer"],
-  defaultSectionOrder: ["hero", "couple", "date", "ceremony", "reception", "schedule", "story", "gallery", "rsvp", "closing", "footer"],
+  supportedSections: ["hero", "couple", "date", "story", "ceremony", "reception", "gallery", "schedule", "rsvp", "faq", "closing", "footer"],
+  defaultSectionOrder: ["hero", "couple", "date", "ceremony", "reception", "schedule", "story", "gallery", "rsvp", "faq", "closing", "footer"],
   themeDefaults: {
     colors: {
       background: "#f4f4f1", surface: "#ffffff", foreground: "#151515", muted: "#6d6d68",

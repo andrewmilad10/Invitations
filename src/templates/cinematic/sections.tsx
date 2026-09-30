@@ -301,6 +301,12 @@ function Story({ content }: SectionProps<"story">) {
       >
         <Paragraphs text={content.body} />
       </div>
+      {content.quote ? (
+        <figure data-reveal className="mx-auto mt-12 max-w-lg">
+          <blockquote className="font-inv-heading text-2xl italic leading-snug">“{content.quote}”</blockquote>
+          {content.quoteSource ? <figcaption className="mt-4 font-inv-accent text-2xl text-inv-accent">{content.quoteSource}</figcaption> : null}
+        </figure>
+      ) : null}
     </Section>
   );
 }
@@ -450,6 +456,35 @@ function Rsvp({ content }: SectionProps<"rsvp">) {
           {content.deadline}
         </p>
       ) : null}
+      {content.linkUrl ? (
+        <a
+          href={content.linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-block rounded-inv bg-inv-accent px-8 py-3 text-xs uppercase tracking-[0.25em] text-inv-accent-fg transition hover:opacity-90"
+        >
+          {content.linkLabel || content.heading}
+        </a>
+      ) : null}
+    </Section>
+  );
+}
+
+function Faq({ content }: SectionProps<"faq">) {
+  const items = content.items.filter((i) => i.question.trim());
+  if (!items.length) return null;
+  return (
+    <Section id="faq">
+      <Heading>{content.heading}</Heading>
+      <Ornament />
+      <dl className="mx-auto grid max-w-xl gap-10 text-start group-data-[align=center]/sec:text-center">
+        {items.map((item, i) => (
+          <div key={i} data-reveal>
+            <dt className="font-inv-heading text-2xl">{item.question}</dt>
+            <dd className="mt-2 whitespace-pre-line leading-relaxed text-inv-muted">{item.answer}</dd>
+          </div>
+        ))}
+      </dl>
     </Section>
   );
 }
@@ -505,6 +540,7 @@ export const cinematicSections: SectionComponents = {
   gallery: GallerySection,
   schedule: Schedule,
   rsvp: Rsvp,
+  faq: Faq,
   closing: Closing,
   footer: Footer,
 };

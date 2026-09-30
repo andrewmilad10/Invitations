@@ -70,6 +70,8 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
         content: {
           body:
             "We met on a rainy Tuesday in a bookshop on Charing Cross Road, both reaching for the last copy of the same novel. James let Emma have it — on the condition that she tell him how it ended, over coffee.\n\nSeven years, two flats and one very opinionated cat later, we're getting married. We can't imagine the day without you.",
+          quote: "Love is patient, love is kind. It always protects, always trusts, always hopes, always perseveres.",
+          quoteSource: "1 Corinthians 13",
         },
       },
       {
@@ -82,6 +84,18 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
             { time: "3:00 pm", title: "Ceremony", note: "" },
             { time: "6:00 pm", title: "Dinner & dancing", note: "The Garden Estate" },
             { time: "11:30 pm", title: "Carriages", note: "" },
+          ],
+        },
+      },
+      {
+        type: "faq",
+        enabled: true,
+        sort_order: null,
+        content: {
+          items: [
+            { question: "Is there a dress code?", answer: "Black tie optional. Think evening dresses and dark suits — and comfortable shoes for the garden." },
+            { question: "Are children invited?", answer: "We love your little ones, but the evening is for adults. Babes in arms are very welcome." },
+            { question: "Is there parking?", answer: "Yes, free parking at The Garden Estate. Taxis can wait at the main gate from 11 pm." },
           ],
         },
       },

@@ -12,12 +12,18 @@ export type ColorToken = (typeof COLOR_TOKENS)[number];
 export const SHADOWS = ["none", "soft", "deep"] as const;
 export type ShadowToken = (typeof SHADOWS)[number];
 
+/** How photos are shown: in colour, or black and white. */
+export const PHOTO_TONES = ["natural", "mono"] as const;
+export type PhotoTone = (typeof PHOTO_TONES)[number];
+
 export interface ThemeTokens {
   colors: Record<ColorToken, string>;
   fonts: { heading: FontKey; body: FontKey; accent: FontKey };
   /** Corner radius in px. */
   radius: number;
   shadow: ShadowToken;
+  /** Optional in template defaults (natural when absent). */
+  photoTone?: PhotoTone;
 }
 
 export type ThemeOverrides = {
@@ -25,6 +31,7 @@ export type ThemeOverrides = {
   fonts?: Partial<ThemeTokens["fonts"]>;
   radius?: number;
   shadow?: ShadowToken;
+  photoTone?: PhotoTone;
 };
 
 /** Colour families used by the gallery's colour filter. */
@@ -50,6 +57,7 @@ export const themeOverridesSchema = z.object({
   fonts: z.object({ heading: fontKey.optional(), body: fontKey.optional(), accent: fontKey.optional() }).optional(),
   radius: z.number().int().min(0).max(32).optional(),
   shadow: z.enum(SHADOWS).optional(),
+  photoTone: z.enum(PHOTO_TONES).optional(),
 });
 
 /**
@@ -81,6 +89,8 @@ export function sanitizeOverrides(raw: unknown): ThemeOverrides {
   if (radius.success && radius.data !== undefined) out.radius = radius.data;
   const shadow = themeOverridesSchema.shape.shadow.safeParse(input.shadow);
   if (shadow.success && shadow.data !== undefined) out.shadow = shadow.data;
+  const photoTone = themeOverridesSchema.shape.photoTone.safeParse(input.photoTone);
+  if (photoTone.success && photoTone.data !== undefined) out.photoTone = photoTone.data;
   return out;
 }
 
@@ -90,6 +100,7 @@ export function resolveTheme(defaults: ThemeTokens, overrides: ThemeOverrides): 
     fonts: { ...defaults.fonts, ...overrides.fonts },
     radius: overrides.radius ?? defaults.radius,
     shadow: overrides.shadow ?? defaults.shadow,
+    photoTone: overrides.photoTone ?? defaults.photoTone ?? "natural",
   };
 }
 
@@ -114,5 +125,6 @@ export function themeToCssVars(theme: ThemeTokens, locale: string = "en"): Recor
     "--inv-font-accent": fontStack(theme.fonts.accent, locale),
     "--inv-radius": `${theme.radius}px`,
     "--inv-shadow": SHADOW_VALUES[theme.shadow],
+    "--inv-photo-filter": theme.photoTone === "mono" ? "grayscale(1) contrast(1.06)" : "none",
   };
 }

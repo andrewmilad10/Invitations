@@ -31,13 +31,14 @@ export interface InvitationDictionary {
     couple: { eyebrow: string; heading: string; message: string };
     date: { heading: string; note: string };
     countdown: { heading: string };
-    story: { heading: string; body: string };
+    story: { heading: string; body: string; quote: string; quoteSource: string };
     ceremony: { heading: string; note: string };
     reception: { heading: string; note: string };
     venue: { heading: string; note: string };
     gallery: { heading: string; caption: string };
     schedule: { heading: string };
-    rsvp: { heading: string; message: string; deadline: string };
+    rsvp: { heading: string; message: string; deadline: string; linkUrl: string; linkLabel: string };
+    faq: { heading: string };
     closing: { heading: string; message: string; signature: string };
     footer: { note: string };
   };
@@ -74,7 +75,7 @@ const en: InvitationDictionary = {
     },
     date: { heading: "Save the date", note: "" },
     countdown: { heading: "Counting down to forever" },
-    story: { heading: "Our story", body: "" },
+    story: { heading: "Our story", body: "", quote: "", quoteSource: "" },
     ceremony: { heading: "The ceremony", note: "" },
     reception: { heading: "The celebration", note: "" },
     venue: { heading: "Finding your way", note: "" },
@@ -84,7 +85,10 @@ const en: InvitationDictionary = {
       heading: "Kindly reply",
       message: "Online replies will open soon. We can't wait to celebrate with you.",
       deadline: "",
+      linkUrl: "",
+      linkLabel: "Reply online",
     },
+    faq: { heading: "Questions & answers" },
     closing: {
       heading: "We hope to see you there",
       message: "Your presence is the greatest gift we could ask for.",
@@ -124,13 +128,14 @@ const ar: InvitationDictionary = {
     },
     date: { heading: "احفظوا الموعد", note: "" },
     countdown: { heading: "العدّ التنازلي" },
-    story: { heading: "قصتنا", body: "" },
+    story: { heading: "قصتنا", body: "", quote: "", quoteSource: "" },
     ceremony: { heading: "مراسم الزفاف", note: "" },
     reception: { heading: "الحفل", note: "" },
     venue: { heading: "كيف تصلون إلينا", note: "" },
     gallery: { heading: "لحظات", caption: "" },
     schedule: { heading: "برنامج اليوم" },
-    rsvp: { heading: "تأكيد الحضور", message: "سيتاح تأكيد الحضور عبر الإنترنت قريبًا.", deadline: "" },
+    rsvp: { heading: "تأكيد الحضور", message: "سيتاح تأكيد الحضور عبر الإنترنت قريبًا.", deadline: "", linkUrl: "", linkLabel: "أكّد حضورك" },
+    faq: { heading: "أسئلة شائعة" },
     closing: { heading: "نتطلع لرؤيتكم", message: "حضوركم هو أجمل هدية لنا.", signature: "" },
     footer: { note: "" },
   },

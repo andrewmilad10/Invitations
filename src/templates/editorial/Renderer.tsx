@@ -80,6 +80,12 @@ const sections: SectionComponents = {
       <div className="grid max-w-prose gap-5 text-lg leading-relaxed first-letter:float-start first-letter:me-2 first-letter:font-inv-heading first-letter:text-6xl first-letter:leading-none">
         <Paragraphs text={content.body} />
       </div>
+      {content.quote ? (
+        <figure className="mt-10 max-w-prose border-s-2 border-inv-accent ps-6">
+          <blockquote className="font-inv-heading text-2xl leading-snug">“{content.quote}”</blockquote>
+          {content.quoteSource ? <figcaption className="mt-3 text-sm uppercase tracking-[0.2em] text-inv-muted">{content.quoteSource}</figcaption> : null}
+        </figure>
+      ) : null}
     </Block>
   ),
   ceremony: ({ model, content }: SectionProps<"ceremony">) =>
@@ -116,8 +122,29 @@ const sections: SectionComponents = {
     <Block id="rsvp" label={content.heading}>
       <p className="max-w-prose text-lg">{content.message}</p>
       {content.deadline ? <p className="mt-4 text-inv-accent">{content.deadline}</p> : null}
+      {content.linkUrl ? (
+        <a href={content.linkUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block border border-inv-fg px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-inv-fg hover:text-inv-bg">
+          {content.linkLabel || content.heading}
+        </a>
+      ) : null}
     </Block>
   ),
+  faq: ({ content }: SectionProps<"faq">) => {
+    const items = content.items.filter((i) => i.question.trim());
+    if (!items.length) return null;
+    return (
+      <Block id="faq" label={content.heading}>
+        <dl className="grid max-w-prose gap-8">
+          {items.map((item, i) => (
+            <div key={i}>
+              <dt className="font-inv-heading text-2xl">{item.question}</dt>
+              <dd className="mt-2 whitespace-pre-line text-lg leading-relaxed text-inv-muted">{item.answer}</dd>
+            </div>
+          ))}
+        </dl>
+      </Block>
+    );
+  },
   closing: ({ content }: SectionProps<"closing">) => (
     <section data-section="closing" className="mx-auto max-w-5xl border-t border-inv-border px-6 py-24 text-center">
       <h2 className="font-inv-heading text-4xl sm:text-6xl">{content.heading}</h2>

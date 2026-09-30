@@ -1,6 +1,9 @@
 import { SmartImage as Image } from "@/components/smart-image";
 import type { MediaAsset } from "@/core/invitation/model";
 
+/** Colour or black & white, from the theme (--inv-photo-filter). */
+const PHOTO_TONE = { filter: "var(--inv-photo-filter, none)" } as const;
+
 /**
  * Image for invitation templates. Uses next/image for Supabase media; sample
  * and export renders use the file as-is.
@@ -31,6 +34,7 @@ export function InvitationImage({
         preload={priority}
         unoptimized={unoptimized}
         className={className}
+        style={PHOTO_TONE}
       />
     );
   }
@@ -44,6 +48,7 @@ export function InvitationImage({
       preload={priority}
       unoptimized={unoptimized}
       className={className}
+      style={PHOTO_TONE}
     />
   );
 }

@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@fontsource/amiri": "^5.3.0",
+    "@fontsource/antic-didone": "^5.3.0",
     "@fontsource/bodoni-moda": "^5.3.0",
     "@fontsource/cinzel": "^5.3.0",
     "@fontsource/cormorant-garamond": "^5.3.0",

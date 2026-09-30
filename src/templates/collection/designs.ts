@@ -14,11 +14,11 @@ import { PALETTES, type PaletteId } from "./palettes";
 
 const ALL_SECTIONS = [
   "hero", "couple", "date", "countdown", "story", "ceremony", "reception",
-  "venue", "gallery", "schedule", "rsvp", "closing", "footer",
+  "venue", "gallery", "schedule", "rsvp", "faq", "closing", "footer",
 ] as const;
 
-const EDITORIAL_SECTIONS = ["hero", "couple", "date", "story", "ceremony", "reception", "gallery", "schedule", "rsvp", "closing", "footer"] as const;
-const EDITORIAL_ORDER = ["hero", "couple", "date", "ceremony", "reception", "schedule", "story", "gallery", "rsvp", "closing", "footer"] as const;
+const EDITORIAL_SECTIONS = ["hero", "couple", "date", "story", "ceremony", "reception", "gallery", "schedule", "rsvp", "faq", "closing", "footer"] as const;
+const EDITORIAL_ORDER = ["hero", "couple", "date", "ceremony", "reception", "schedule", "story", "gallery", "rsvp", "faq", "closing", "footer"] as const;
 
 interface DesignSpec {
   id: string;

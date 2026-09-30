@@ -84,6 +84,7 @@ function Photo({ photo, sizes, className }: { photo: StationeryPhoto | undefined
           sizes={sizes}
           unoptimized={/^(\/|blob:|data:)/.test(photo.url)}
           className="object-cover"
+          style={{ filter: "var(--inv-photo-filter, none)" }}
         />
       ) : null}
     </div>

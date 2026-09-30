@@ -127,5 +127,14 @@ const marcellus = localFont({
   ],
 });
 
+const anticDidone = localFont({
+  variable: "--font-didone",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/antic-didone/antic-didone-latin-400-normal.woff2", weight: "400", style: "normal" },
+  ],
+});
+
 /** Class list that defines every font CSS variable; applied to <html>. */
-export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, amiri, naskh].map((font) => font.variable).join(" ");
+export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, amiri, naskh].map((font) => font.variable).join(" ");

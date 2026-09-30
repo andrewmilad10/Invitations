@@ -23,6 +23,7 @@ const FONTS = {
   "bodoni-moda": [["latin", 400, "normal"], ["latin", 600, "normal"], ["latin", 400, "italic"]],
   "great-vibes": [["latin", 400, "normal"]],
   marcellus: [["latin", 400, "normal"]],
+  "antic-didone": [["latin", 400, "normal"]],
   amiri: [["arabic", 400, "normal"], ["arabic", 700, "normal"]],
   "noto-naskh-arabic": [["arabic", 400, "normal"], ["arabic", 600, "normal"]],
 };

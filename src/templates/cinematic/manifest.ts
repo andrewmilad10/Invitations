@@ -11,11 +11,11 @@ export const cinematicManifest: TemplateManifest = {
   stationery: { ornament: "seal" },
   supportedSections: [
     "hero", "couple", "date", "countdown", "story", "ceremony", "reception",
-    "venue", "gallery", "schedule", "rsvp", "closing", "footer",
+    "venue", "gallery", "schedule", "rsvp", "faq", "closing", "footer",
   ],
   defaultSectionOrder: [
     "hero", "couple", "date", "countdown", "story", "ceremony", "reception",
-    "venue", "gallery", "schedule", "rsvp", "closing", "footer",
+    "venue", "gallery", "schedule", "rsvp", "faq", "closing", "footer",
   ],
   themeDefaults: {
     colors: {
