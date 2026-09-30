@@ -27,6 +27,21 @@ npm run dev
 Open http://localhost:3000, register, create a wedding.
 No Supabase yet? `/templates/cinematic/preview` shows a template with sample data.
 
+## Status
+
+Phase 1 (invitation builder) is complete: auth, dashboard, create-wedding
+wizard, template system with two templates (Cinematic with envelope opening,
+Editorial), structured editor with live preview and autosave, Storage uploads,
+publishing to `/w/{slug}` with SEO/OG images, English + Arabic (RTL).
+See [docs/roadmap.md](docs/roadmap.md) for what comes next.
+
+## Testing
+```bash
+npm run check      # typecheck + lint + unit tests
+npm run test:db    # schema + RLS against any Postgres 15+
+npm run test:e2e   # full flow against `supabase start`
+```
+
 ## Documentation
 | Doc | Contents |
 | --- | --- |
