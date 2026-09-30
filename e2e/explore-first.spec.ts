@@ -14,10 +14,11 @@ test("a visitor builds an invitation before creating an account, and nothing is 
   await page.getByRole("link", { name: /explore templates/i }).first().click();
   await expect(page).toHaveURL(/\/templates/);
   await page.goto("/templates/romantic");
+  await page.getByRole("tab", { name: "Website" }).click();
   await expect(page.frameLocator("iframe").first().locator("[data-section=hero] h1")).toContainText("Emma");
 
   // Try it.
-  await page.getByRole("link", { name: "Try this template" }).first().click();
+  await page.getByRole("link", { name: "Customize", exact: true }).first().click();
   await expect(page).toHaveURL(/\/create\/romantic/);
   await page.getByLabel("First name").fill("Mariam");
   await page.getByLabel("Second name").fill("Andrew");

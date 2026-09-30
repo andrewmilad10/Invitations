@@ -22,6 +22,7 @@ import { LivePreviewFrame } from "@/features/preview/live-preview-frame";
 import { cn } from "@/lib/utils";
 import { emptyAnswers, hasProgress, MAX_DRAFT_GALLERY, previewBundle, withTemplate, type EventAnswers, type PhotoRef, type TryAnswers } from "./answers";
 import { draftFiles, draftStore, useHydrated, useStoredDraft } from "./draft-store";
+import { ExistingDraftDialog } from "./existing-draft-dialog";
 
 type TemplateOption = TemplateManifest;
 
@@ -105,6 +106,12 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
 
   return (
     <div className="flex h-dvh flex-col bg-background">
+      <ExistingDraftDialog
+        templateId={templateId}
+        templates={templates}
+        skip={Boolean(prefill)}
+        onEditDraft={(draft) => draft.templateId !== templateId && router.replace(`/create/${draft.templateId}`, { scroll: false })}
+      />
       <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b bg-card px-4">
         <div className="flex min-w-0 items-center gap-4">
           <Link href="/" className="font-serif text-2xl">
@@ -330,29 +337,15 @@ function LocationStep({ answers, update }: StepProps) {
 
 function StyleStep({ answers, update, templates, onTemplate }: StepProps & { templates: TemplateOption[]; onTemplate: (id: string) => void }) {
   const current = templates.find((t) => t.id === answers.templateId) ?? templates[0];
+  const [showAll, setShowAll] = useState(false);
+  // The chosen design and its variants first, then the rest in featured order.
+  const first = [current, ...templates.filter((t) => t !== current && current.family && t.family === current.family)];
+  const ordered = [...first, ...templates.filter((t) => !first.includes(t))];
+  const visible = showAll ? ordered : ordered.slice(0, 9);
   return (
     <>
       <StepHeader title="Choose your style">Switch freely — your details stay exactly as they are.</StepHeader>
-      <div role="radiogroup" aria-label="Template" className="grid grid-cols-3 gap-3">
-        {templates.map((t) => {
-          const active = t.id === current.id;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              role="radio"
-              aria-checked={active}
-              onClick={() => onTemplate(t.id)}
-              className={cn("group rounded-md border p-2 text-start transition-colors", active ? "border-primary ring-1 ring-primary" : "border-border hover:border-foreground/40")}
-            >
-              <Stationery template={t} partnerOne={answers.partnerOne || "Emma"} partnerTwo={answers.partnerTwo || "James"} className="text-[0.55rem]" />
-              <span className="mt-2 block truncate text-xs font-medium">{t.name}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      <h2 className="mb-3 mt-10 text-sm font-medium">Colors</h2>
+      <h2 className="mb-3 text-sm font-medium">Colours</h2>
       <div role="radiogroup" aria-label="Palette" className="grid gap-2">
         {current.palettes.map((p, i) => {
           const c = resolveTheme(current.themeDefaults, { colors: p.colors }).colors;
@@ -379,6 +372,32 @@ function StyleStep({ answers, update, templates, onTemplate }: StepProps & { tem
           );
         })}
       </div>
+
+      <h2 className="mb-3 mt-10 text-sm font-medium">Design</h2>
+      <div role="radiogroup" aria-label="Template" className="grid grid-cols-3 gap-3">
+        {visible.map((t) => {
+          const active = t.id === current.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              onClick={() => onTemplate(t.id)}
+              className={cn("group rounded-md border p-2 text-start transition-colors", active ? "border-primary ring-1 ring-primary" : "border-border hover:border-foreground/40")}
+            >
+              <Stationery template={t} partnerOne={answers.partnerOne || "Emma"} partnerTwo={answers.partnerTwo || "James"} className="text-[0.55rem]" />
+              <span className="mt-2 block truncate text-xs font-medium">{t.name}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {!showAll && templates.length > visible.length ? (
+        <button type="button" onClick={() => setShowAll(true)} className="mt-4 w-full rounded-md border py-2.5 text-sm text-muted-foreground hover:border-foreground/40 hover:text-foreground">
+          Show all {templates.length} designs
+        </button>
+      ) : null}
     </>
   );
 }

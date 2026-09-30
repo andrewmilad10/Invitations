@@ -57,6 +57,7 @@ export function DesignGallery({ templates, initialFilters }: { templates: Templa
               <li key={c}>
                 <button type="button" onClick={() => apply({ style: active ? null : c })} aria-pressed={active} className="group flex w-24 flex-col items-center gap-2 sm:w-28">
                   <span
+                    aria-hidden
                     className={cn(
                       "grid size-24 place-items-center overflow-hidden rounded-md bg-muted transition sm:size-28",
                       active ? "ring-2 ring-foreground ring-offset-2 ring-offset-background" : "group-hover:bg-secondary",
