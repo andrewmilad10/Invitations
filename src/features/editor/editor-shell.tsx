@@ -34,8 +34,8 @@ const NAV: { key: PanelKey; label: string }[] = [
   { key: "settings", label: "Settings & sharing" },
 ];
 
-export function EditorShell() {
-  const [panel, setPanel] = useState<PanelKey>("details");
+export function EditorShell({ initialPanel }: { initialPanel?: string }) {
+  const [panel, setPanel] = useState<PanelKey>(() => (NAV.some((n) => n.key === initialPanel) ? (initialPanel as PanelKey) : "details"));
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
 
   return (

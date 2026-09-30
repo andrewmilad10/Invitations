@@ -13,12 +13,13 @@ export async function generateMetadata(props: PageProps<"/dashboard/weddings/[we
 
 export default async function EditWeddingPage(props: PageProps<"/dashboard/weddings/[weddingId]">) {
   const { weddingId } = await props.params;
+  const { panel } = await props.searchParams;
   const data = await loadEditorData(weddingId);
   if (!data) notFound();
 
   return (
     <EditorProvider weddingId={weddingId} role={data.role} siteUrl={publicEnv.siteUrl} initialBundle={data.bundle}>
-      <EditorShell />
+      <EditorShell initialPanel={typeof panel === "string" ? panel : undefined} />
     </EditorProvider>
   );
 }

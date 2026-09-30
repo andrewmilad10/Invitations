@@ -1,80 +1,70 @@
 import type { Metadata } from "next";
-import { DraftImporter } from "@/features/try/draft-importer";
-import Link from "next/link";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { publicEnv } from "@/config/env";
-import { formatDateOnly } from "@/core/i18n/format";
-import { PublishToggle } from "@/features/weddings/components/publish-toggle";
-import { StatusBadge } from "@/features/weddings/components/status-badge";
-import { listMyWeddings } from "@/features/weddings/queries";
-import { resolveTemplateManifest } from "@/templates/registry";
+import { DraftImporter } from "@/features/try/draft-importer";
+import { WeddingCard } from "@/features/weddings/components/wedding-card";
+import { listMyWeddingCards } from "@/features/weddings/queries";
 
 export const metadata: Metadata = { title: "My weddings" };
 
 export default async function DashboardPage(props: PageProps<"/dashboard">) {
   const { draft } = await props.searchParams;
-  const weddings = await listMyWeddings();
+  const weddings = await listMyWeddingCards();
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
       <DraftImporter autoSave={draft === "1"} />
+
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-serif text-4xl">My weddings</h1>
-          <p className="mt-1 text-muted-foreground">Create, edit and publish your invitations.</p>
+          <h1 className="font-serif text-5xl font-light">My weddings</h1>
+          <p className="mt-2 text-muted-foreground">
+            {weddings.length === 0
+              ? "Your invitations will appear here."
+              : `${weddings.length} ${weddings.length === 1 ? "invitation" : "invitations"} · ${weddings.filter((w) => w.status === "published").length} published`}
+          </p>
         </div>
-        <Button asChild>
-          <Link href="/dashboard/new">
-            <Plus /> Create wedding
+        <Button asChild className="rounded-full px-5">
+          <Link href="/templates">
+            <Plus /> Create new wedding
           </Link>
         </Button>
       </div>
 
       {weddings.length === 0 ? (
-        <div className="mt-10 rounded-xl border border-dashed bg-card px-6 py-16 text-center">
-          <h2 className="font-serif text-3xl">Let&apos;s create your first invitation</h2>
-          <p className="mx-auto mt-2 max-w-md text-muted-foreground">
-            It takes a minute: your names, your date and a template. You can change everything later.
-          </p>
-          <Button asChild size="lg" className="mt-6">
-            <Link href="/dashboard/new">Create wedding</Link>
-          </Button>
+        <div className="mt-10 border border-dashed bg-card px-6 py-16 text-center">
+          <h2 className="font-serif text-4xl font-light">Let&apos;s create your first invitation</h2>
+          <p className="mx-auto mt-3 max-w-md text-muted-foreground">Pick a template you love, add your names and date, and watch it come together.</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg" className="rounded-full px-7">
+              <Link href="/templates">Choose a template</Link>
+            </Button>
+            <Button asChild size="lg" variant="ghost" className="rounded-full">
+              <Link href="/dashboard/new">Quick start</Link>
+            </Button>
+          </div>
         </div>
       ) : (
-        <ul className="mt-8 grid gap-4 md:grid-cols-2">
-          {weddings.map((w) => {
-            const publicUrl = `${publicEnv.siteUrl}/w/${w.slug}`;
-            return (
-              <li key={w.id} className="flex flex-col gap-4 rounded-xl border bg-card p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h2 className="truncate font-serif text-3xl">
-                      {w.partner_one_name} &amp; {w.partner_two_name}
-                    </h2>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {w.wedding_date ? formatDateOnly(w.wedding_date, "en").long : "Date to be decided"} ·{" "}
-                      {resolveTemplateManifest(w.template_id).name}
-                    </p>
-                  </div>
-                  <StatusBadge status={w.status} />
-                </div>
-                <p className="truncate text-sm text-muted-foreground">/w/{w.slug}</p>
-                <div className="mt-auto flex flex-wrap gap-2">
-                  <Button asChild size="sm" variant="secondary">
-                    <Link href={`/dashboard/weddings/${w.id}`}>Edit</Link>
-                  </Button>
-                  <Button asChild size="sm" variant="ghost">
-                    <a href={`/preview/${w.id}`} target="_blank" rel="noopener noreferrer">
-                      Preview
-                    </a>
-                  </Button>
-                  <PublishToggle weddingId={w.id} published={w.status === "published"} publicUrl={publicUrl} />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          <ul className="mt-10 grid gap-5 lg:grid-cols-2">
+            {weddings.map((w) => (
+              <WeddingCard key={w.id} wedding={w} siteUrl={publicEnv.siteUrl} />
+            ))}
+          </ul>
+          <p className="mt-8 text-sm text-muted-foreground">
+            Planning more than one celebration?{" "}
+            <Link href="/templates" className="underline underline-offset-4">
+              Start another from a template
+            </Link>{" "}
+            or use the{" "}
+            <Link href="/dashboard/new" className="underline underline-offset-4">
+              quick start
+            </Link>
+            .
+          </p>
+        </>
       )}
     </main>
   );

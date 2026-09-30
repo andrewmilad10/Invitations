@@ -33,3 +33,22 @@ export async function getWedding(weddingId: string): Promise<WeddingSummary | nu
 export function isUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
+
+export type WeddingCard = WeddingSummary & { themeTokens: Record<string, unknown> };
+
+/** Dashboard cards: summaries plus each wedding's theme overrides (for its thumbnail). */
+export async function listMyWeddingCards(): Promise<WeddingCard[]> {
+  const weddings = await listMyWeddings();
+  if (weddings.length === 0) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("wedding_themes")
+    .select("wedding_id, tokens")
+    .in(
+      "wedding_id",
+      weddings.map((w) => w.id),
+    );
+  if (error) throw new Error(`Could not load themes: ${error.message}`);
+  const tokens = new Map((data ?? []).map((t) => [t.wedding_id, (t.tokens ?? {}) as Record<string, unknown>]));
+  return weddings.map((w) => ({ ...w, themeTokens: tokens.get(w.id) ?? {} }));
+}
