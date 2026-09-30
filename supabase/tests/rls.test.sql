@@ -75,6 +75,17 @@ select tests.throws(
          tests.wid('alice-and-sam')),
   '23514', 'media path must be inside the wedding folder');
 
+-- library photos (no upload needed)
+insert into public.media (wedding_id, kind, purpose, storage_path)
+values (tests.wid('alice-and-sam'), 'image', 'gallery', 'library:rings');
+select tests.ok(exists (select 1 from public.media where storage_path = 'library:rings'), 'a wedding can use a library photo');
+select tests.throws(
+  format($$insert into public.media (wedding_id, kind, purpose, storage_path) values (%L, 'audio', 'music', 'library:rings')$$, tests.wid('alice-and-sam')),
+  '23514', 'library references are images only');
+select tests.throws(
+  format($$insert into public.media (wedding_id, kind, purpose, storage_path) values (%L, 'image', 'gallery', 'https://evil.example/x.jpg')$$, tests.wid('alice-and-sam')),
+  '23514', 'arbitrary external URLs are rejected');
+
 -- storage
 select tests.eq(tests.affected(format(
   $$insert into storage.objects (bucket_id, name) values ('wedding-media', 'weddings/%s/hero/a.jpg')$$,
@@ -221,6 +232,10 @@ insert into public.weddings (owner_id, slug, partner_one_name, partner_two_name)
 values ('b0000000-0000-4000-8000-000000000002', 'bob-one', 'Bob', 'Kim'),
        ('b0000000-0000-4000-8000-000000000002', 'bob-two', 'Bob', 'Lee');
 select tests.eq((select count(*) from public.weddings)::int, 2, 'a user can own multiple weddings');
+insert into public.media (wedding_id, kind, purpose, storage_path) values
+  (tests.wid('bob-one'), 'image', 'hero', 'library:couple'),
+  (tests.wid('bob-two'), 'image', 'hero', 'library:couple');
+select tests.eq((select count(*) from public.media where storage_path = 'library:couple')::int, 2, 'several weddings can use the same library photo');
 select tests.throws(
   $$insert into public.weddings (owner_id, slug, partner_one_name, partner_two_name)
     values ('b0000000-0000-4000-8000-000000000002', 'bob-one', 'Dup', 'Dup')$$,

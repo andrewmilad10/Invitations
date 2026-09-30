@@ -1,5 +1,6 @@
 import type { WeddingBundle } from "@/core/wedding/bundle";
 import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
+import { libraryPath, publicMediaUrl } from "@/features/media/urls";
 
 /**
  * Demo wedding used by template previews, the gallery, the homepage and as
@@ -30,7 +31,7 @@ const photo = (id: LibraryPhotoId, purpose: "hero" | "gallery", sort: number, wi
   id: `demo-${id}`,
   kind: "image" as const,
   purpose,
-  storage_path: PHOTO_LIBRARY[id].url,
+  storage_path: libraryPath(id),
   alt_text: PHOTO_LIBRARY[id].alt,
   width,
   height,
@@ -133,5 +134,5 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
   };
 }
 
-/** Demo media paths are already public URLs. */
-export const sampleMediaUrl = (path: string) => path;
+/** Demo media are library references; resolved like any media path. */
+export const sampleMediaUrl = publicMediaUrl;

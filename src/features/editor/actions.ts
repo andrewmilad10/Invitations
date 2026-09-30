@@ -7,7 +7,7 @@ import { isSectionType, SECTION_DEFINITIONS, validateSectionContent, type Sectio
 import { themeOverridesSchema } from "@/core/theme/tokens";
 import { slugSchema } from "@/core/wedding/slug";
 import { getCurrentUser } from "@/features/auth/session";
-import { MEDIA_BUCKET } from "@/features/media/urls";
+import { isStoragePath, MEDIA_BUCKET } from "@/features/media/urls";
 import type { ActionResult } from "@/features/weddings/schemas";
 import { isUuid } from "@/features/weddings/queries";
 import type { Json } from "@/lib/supabase/database.types";
@@ -317,7 +317,8 @@ export async function registerMedia(
 
   if (replaced.length) {
     await ctx.supabase.from("media").delete().in("id", replaced.map((r) => r.id));
-    await ctx.supabase.storage.from(MEDIA_BUCKET).remove(replaced.map((r) => r.storage_path));
+    const files = replaced.map((r) => r.storage_path).filter(isStoragePath);
+    if (files.length) await ctx.supabase.storage.from(MEDIA_BUCKET).remove(files);
   }
   await touch(ctx.supabase, weddingId);
   return { ok: true, data: { id: data.id } };
@@ -337,7 +338,7 @@ export async function deleteMedia(weddingId: string, mediaId: string): Promise<A
   if (!data) return NO_ACCESS;
   // Row first, then file: a failed file removal leaves an orphan (cleaned up
   // later), never a row pointing at a missing file.
-  await ctx.supabase.storage.from(MEDIA_BUCKET).remove([data.storage_path]);
+  if (isStoragePath(data.storage_path)) await ctx.supabase.storage.from(MEDIA_BUCKET).remove([data.storage_path]);
   await touch(ctx.supabase, weddingId);
   return { ok: true };
 }

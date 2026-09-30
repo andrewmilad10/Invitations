@@ -258,7 +258,11 @@ function compareInstants(a: string | null, b: string | null) {
 // ── Media ───────────────────────────────────────────────────────────────────
 
 function buildMedia(rows: BundleMedia[], mediaUrl: BuildOptions["mediaUrl"]): InvitationModel["media"] {
-  const sorted = rows.slice().sort((a, b) => a.sort_order - b.sort_order);
+  // Media without a resolvable URL (e.g. a draft photo no longer in the browser) is skipped.
+  const sorted = rows
+    .slice()
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .filter((m) => mediaUrl(m.storage_path) !== "");
   const toAsset = (m: BundleMedia): MediaAsset => ({
     id: m.id,
     url: mediaUrl(m.storage_path),

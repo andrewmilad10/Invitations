@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/features/auth/session";
 import { loadEditorData } from "@/features/editor/load";
-import { PreviewClient } from "@/features/editor/preview-client";
-import { buildPreviewModel } from "@/features/editor/preview-model";
+import { PreviewClient } from "@/features/preview/preview-client";
+import { buildPreviewModel } from "@/features/preview/preview-model";
 
 export const metadata: Metadata = { title: "Preview", robots: { index: false, follow: false } };
 
