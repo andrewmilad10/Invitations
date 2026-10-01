@@ -41,6 +41,8 @@ const italiana = localFont({
 const inter = localFont({
   variable: "--font-inter",
   display: "swap",
+  // A template font only (the app UI is set in Jost and Cormorant).
+  preload: false,
   src: [
     { path: "../assets/fonts/inter/inter-latin-300-normal.woff2", weight: "300", style: "normal" },
     { path: "../assets/fonts/inter/inter-latin-400-normal.woff2", weight: "400", style: "normal" },

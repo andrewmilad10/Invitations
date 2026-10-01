@@ -5,6 +5,9 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
+
+/** What the carousel needs of a design (the page sends only this). */
+export type CarouselDesign = Pick<TemplateManifest, "id" | "name" | "categories" | "palettes" | "stationery" | "themeDefaults" | "features">;
 import { cn } from "@/lib/utils";
 import { cardCouple, designHref } from "../gallery/design-card";
 import { listWords } from "@/lib/words";
@@ -59,7 +62,7 @@ const CurveCard = memo(function CurveCard({
   setRef,
   onPick,
 }: {
-  template: TemplateManifest;
+  template: CarouselDesign;
   index: number;
   centre: boolean;
   drawn: boolean;
@@ -71,7 +74,7 @@ const CurveCard = memo(function CurveCard({
   return (
     <Link
       ref={(el) => setRef(index, el)}
-      href={designHref(template.id, null)}
+      href={designHref(template, null)}
       draggable={false}
       tabIndex={centre ? 0 : -1}
       aria-hidden={!centre}
@@ -99,7 +102,7 @@ const CurveCard = memo(function CurveCard({
   );
 });
 
-export function CollectionCarousel({ designs }: { designs: TemplateManifest[] }) {
+export function CollectionCarousel({ designs }: { designs: CarouselDesign[] }) {
   const n = designs.length;
   const stage = useRef<HTMLDivElement>(null);
   const block = useRef<HTMLDivElement>(null);
@@ -372,7 +375,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
           See all {n} designs
         </Link>
         <div className="order-first col-span-2 text-center sm:order-none sm:col-span-1" aria-live="polite">
-          <Link key={current.id} href={designHref(current.id, null)} className="carousel-caption inline-block font-serif text-3xl font-light hover:underline hover:underline-offset-4 sm:text-4xl">
+          <Link key={current.id} href={designHref(current, null)} className="carousel-caption inline-block font-serif text-3xl font-light hover:underline hover:underline-offset-4 sm:text-4xl">
             {current.name}
           </Link>
           <p className="mt-1 text-sm text-muted-foreground">

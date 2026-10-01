@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   BLESSINGS,
   CARD_OPTION_INFO,
+  cardOptionsFromQuery,
   cardOptionsToQuery,
   FOIL_TONES,
   FOILS,
@@ -19,6 +20,7 @@ import {
 } from "@/core/card/options";
 import { canRotate, cardShape, designCardDefaults, type TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
+import { queryRecord, useUrlQuery } from "@/lib/use-url-query";
 import { designBadges, FavoriteButton, morphName, paletteOverrides, SwatchRow } from "../gallery/design-card";
 import { SHAPE_LABELS } from "../gallery/design-gallery";
 import { MobileTryBar } from "../preview/template-preview-stage";
@@ -49,6 +51,15 @@ export function CardDetail({
   const defaults = resolveCardOptions(designCardDefaults(template.stationery));
   const [paletteId, setPaletteId] = useState(initialPalette);
   const [choice, setChoice] = useState<CardOptionOverrides>(initialOptions);
+  // The page is static: a shared link's colour and finish are applied once hydrated.
+  const urlQuery = useUrlQuery();
+  const [fromUrl, setFromUrl] = useState(false);
+  if (urlQuery && !fromUrl) {
+    setFromUrl(true);
+    const p = urlQuery.get("palette");
+    if (p && template.palettes.some((x) => x.id === p)) setPaletteId(p);
+    setChoice(cardOptionsFromQuery(queryRecord(urlQuery)));
+  }
   const [view, setView] = useState<CardView>("front");
   const [playing, setPlaying] = useState(false);
   const [paperHelp, setPaperHelp] = useState(false);
@@ -64,8 +75,8 @@ export function CardDetail({
 
   // Keep the URL in step, so a chosen finish can be shared or reloaded.
   useEffect(() => {
-    window.history.replaceState(null, "", productHref("cards", template.id, q));
-  }, [q, template.id]);
+    if (fromUrl) window.history.replaceState(null, "", productHref("cards", template.id, q));
+  }, [fromUrl, q, template.id]);
 
   // "Play": step through the staged views like a short film.
   useEffect(() => {

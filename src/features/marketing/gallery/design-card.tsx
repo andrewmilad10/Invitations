@@ -5,53 +5,18 @@ import Link from "next/link";
 import { useState, ViewTransition } from "react";
 import { cardOptionsToQuery, type CardOptionOverrides } from "@/core/card/options";
 import { cardShape, designCardDefaults, type TemplateManifest } from "@/core/template/manifest";
-import { resolveTheme } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
 import { Stationery } from "../stationery";
-import { getTemplateManifest } from "@/templates/registry";
 import { productHref, productOf, websiteFeatures, type Product } from "../products";
 import { favoritesStore, useFavorites } from "./favorites";
 import { listWords } from "@/lib/words";
-import { WebsiteThumb } from "./website-thumb";
+import dynamic from "next/dynamic";
+import { cardCouple, morphName, paletteOverrides, paletteSwatch } from "./design-helpers";
 
-/** Shared-element name: a gallery card and the card on its design page. */
-export const morphName = (id: string) => `design-card-${id}`;
+export { cardCouple, designHref, morphName, paletteOverrides, paletteSwatch } from "./design-helpers";
 
-/** A design's product page (in the collection it belongs to). */
-export function designHref(id: string, paletteId: string | null) {
-  const template = getTemplateManifest(id);
-  const q = new URLSearchParams();
-  if (paletteId) q.set("palette", paletteId);
-  return productHref(template ? productOf(template) : "cards", id, q);
-}
-
-/** Couples used only to make gallery cards feel varied; not real weddings. */
-const CARD_COUPLES: [string, string, string][] = [
-  ["Layla", "Omar", "14 October"],
-  ["Olivia", "Daniel", "20 June"],
-  ["Nour", "Karim", "12 April"],
-  ["Salma", "Youssef", "8 September"],
-  ["Mariam", "Andrew", "21 March"],
-  ["Hana", "Adam", "2 May"],
-  ["Grace", "Henry", "30 August"],
-  ["Farida", "Ziad", "17 November"],
-];
-
-export function cardCouple(index: number) {
-  return CARD_COUPLES[index % CARD_COUPLES.length];
-}
-
-/** Two-tone dot for a palette: its paper colour and its accent. */
-export function paletteSwatch(template: TemplateManifest, paletteId: string) {
-  const palette = template.palettes.find((p) => p.id === paletteId) ?? template.palettes[0];
-  const c = resolveTheme(template.themeDefaults, { colors: palette.colors }).colors;
-  return { label: palette.label, background: `linear-gradient(135deg, ${c.surface} 0 50%, ${c.accent} 50% 100%)` };
-}
-
-export function paletteOverrides(template: TemplateManifest, paletteId: string | null) {
-  const palette = template.palettes.find((p) => p.id === paletteId);
-  return palette && Object.keys(palette.colors).length ? { colors: palette.colors } : undefined;
-}
+// Website thumbnails carry large drawings; the cards gallery never loads them.
+const WebsiteThumb = dynamic(() => import("./website-thumb").then((m) => m.WebsiteThumb));
 
 export function SwatchRow({
   template,
@@ -184,7 +149,7 @@ export function DesignCard({
           website ? "aspect-[5/6]" : "aspect-square",
         )}
       >
-        <Link href={detailHref} aria-label={`The ${template.name}`} className="absolute inset-0 z-0" />
+        <Link href={detailHref} aria-label={`Open ${template.name}`} className="absolute inset-0 z-0" />
         {website ? (
           <WebsiteThumb
             template={template}

@@ -33,11 +33,14 @@ export default async function TemplatePage(props: PageProps<"/websites/[template
   const { templateId } = await props.params;
   const template = getTemplateManifest(templateId);
   if (!template || template.status === "hidden") notFound();
-  const { palette, view } = await props.searchParams;
-  // Card designs have their own product page.
-  if (productOf(template) !== "websites") redirect(productHref("cards", template.id, typeof palette === "string" ? `palette=${palette}` : ""));
+  // Card designs have their own product page (keeping a chosen colour).
+  if (productOf(template) !== "websites") {
+    const { palette } = await props.searchParams;
+    redirect(productHref("cards", template.id, typeof palette === "string" ? `palette=${palette}` : ""));
+  }
   const product: Product = "websites";
-  const initialPalette = template.palettes.find((p) => p.id === palette)?.id ?? template.palettes[0].id;
+  // Static page: the colour and view in a shared link are applied in the browser.
+  const initialPalette = template.palettes[0].id;
 
   const all = templatesFor("websites", selectableTemplates());
   const variants = [template];
@@ -73,7 +76,7 @@ export default async function TemplatePage(props: PageProps<"/websites/[template
           <DesignDetail
             template={template}
             initialPalette={initialPalette}
-            initialView={view === "phone" ? "phone" : "website"}
+            initialView="website"
           />
 
           <section data-stagger="140" className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 md:grid-cols-3 md:py-28">

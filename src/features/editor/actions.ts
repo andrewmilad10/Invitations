@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
 import { sectionStyleSchema } from "@/core/sections/style";
@@ -23,8 +22,6 @@ import { detailsSchema, eventSchema, registerMediaSchema, settingsSchema, type E
  * permission".
  */
 
-type Supabase = Awaited<ReturnType<typeof createClient>>;
-
 type Failure = { ok: false; error: string; fieldErrors?: Record<string, string[]> };
 const NO_ACCESS: Failure = { ok: false, error: "You don't have permission to edit this wedding." };
 const FAILED = (what: string): Failure => ({ ok: false, error: `We couldn't save ${what}. Please try again.` });
@@ -38,13 +35,6 @@ async function context(weddingId: string) {
 
 function invalid(error: z.ZodError): Failure {
   return { ok: false, error: "Please check the highlighted fields.", fieldErrors: z.flattenError(error).fieldErrors as Record<string, string[]> };
-}
-
-async function touch(supabase: Supabase, weddingId: string) {
-  // The public page renders per request, so this is future-proofing for when
-  // it is cached (see docs/roadmap.md).
-  const { data } = await supabase.from("weddings").select("slug").eq("id", weddingId).maybeSingle();
-  if (data) revalidatePath(`/w/${data.slug}`);
 }
 
 // ── Wedding details ─────────────────────────────────────────────────────────
@@ -67,8 +57,6 @@ export async function updateDetails(weddingId: string, input: z.input<typeof det
     .maybeSingle();
   if (error) return FAILED("your details");
   if (!data) return NO_ACCESS;
-  revalidatePath(`/w/${data.slug}`);
-  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -79,8 +67,6 @@ export async function updateTemplate(weddingId: string, templateId: string): Pro
   const { data, error } = await ctx.supabase.from("weddings").update({ template_id: templateId }).eq("id", weddingId).select("slug").maybeSingle();
   if (error) return FAILED("the template");
   if (!data) return NO_ACCESS;
-  revalidatePath(`/w/${data.slug}`);
-  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -90,14 +76,10 @@ export async function updateSlug(weddingId: string, rawSlug: string): Promise<Ac
   const parsed = slugSchema.safeParse(rawSlug);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid address.", fieldErrors: { slug: parsed.error.issues.map((i) => i.message) } };
 
-  const { data: before } = await ctx.supabase.from("weddings").select("slug").eq("id", weddingId).maybeSingle();
   const { data, error } = await ctx.supabase.from("weddings").update({ slug: parsed.data }).eq("id", weddingId).select("slug").maybeSingle();
   if (error?.code === "23505") return { ok: false, error: "That address is already taken.", fieldErrors: { slug: ["That address is already taken."] } };
   if (error) return FAILED("the address");
   if (!data) return NO_ACCESS;
-  if (before) revalidatePath(`/w/${before.slug}`);
-  revalidatePath(`/w/${data.slug}`);
-  revalidatePath("/dashboard");
   return { ok: true, data: { slug: data.slug } };
 }
 
@@ -121,7 +103,6 @@ export async function updateSettings(weddingId: string, input: z.input<typeof se
     .maybeSingle();
   if (error) return FAILED("your settings");
   if (!data) return NO_ACCESS;
-  await touch(ctx.supabase, weddingId);
   return { ok: true };
 }
 
@@ -138,7 +119,6 @@ export async function updateTheme(weddingId: string, overrides: unknown): Promis
     .maybeSingle();
   if (error) return FAILED("the theme");
   if (!data) return NO_ACCESS;
-  await touch(ctx.supabase, weddingId);
   return { ok: true };
 }
 
@@ -179,7 +159,6 @@ export async function saveSection(
   if (error?.code === "42501") return NO_ACCESS;
   if (error) return FAILED("this section");
   if (!data) return NO_ACCESS;
-  await touch(ctx.supabase, weddingId);
   return { ok: true };
 }
 
@@ -191,7 +170,6 @@ export async function saveSectionOrder(weddingId: string, order: string[] | null
   if (order === null) {
     const { error } = await ctx.supabase.from("wedding_sections").update({ sort_order: null }).eq("wedding_id", weddingId);
     if (error) return FAILED("the order");
-    await touch(ctx.supabase, weddingId);
     return { ok: true };
   }
 
@@ -203,7 +181,6 @@ export async function saveSectionOrder(weddingId: string, order: string[] | null
   if (error?.code === "42501") return NO_ACCESS;
   if (error) return FAILED("the order");
   if (!data?.length) return NO_ACCESS;
-  await touch(ctx.supabase, weddingId);
   return { ok: true };
 }
 
@@ -243,7 +220,6 @@ export async function saveEvent(weddingId: string, input: EventInput): Promise<A
     // Clearing every field removes the event (and hides its section).
     const { error } = await ctx.supabase.from("events").delete().eq("id", existing.id);
     if (error) return FAILED("the event");
-    await touch(ctx.supabase, weddingId);
     return { ok: true, data: { id: null } };
   }
   if (!existing && isEmpty) return { ok: true, data: { id: null } };
@@ -259,7 +235,6 @@ export async function saveEvent(weddingId: string, input: EventInput): Promise<A
   if (result.error?.code === "42501") return NO_ACCESS;
   if (result.error) return FAILED("the event");
   if (!result.data) return NO_ACCESS;
-  await touch(ctx.supabase, weddingId);
   return { ok: true, data: { id: result.data.id } };
 }
 
@@ -326,7 +301,6 @@ export async function registerMedia(
     const files = replaced.map((r) => r.storage_path).filter(isStoragePath);
     if (files.length) await ctx.supabase.storage.from(MEDIA_BUCKET).remove(files);
   }
-  await touch(ctx.supabase, weddingId);
   return { ok: true, data: { id: data.id } };
 }
 
@@ -345,7 +319,6 @@ export async function deleteMedia(weddingId: string, mediaId: string): Promise<A
   // Row first, then file: a failed file removal leaves an orphan (cleaned up
   // later), never a row pointing at a missing file.
   if (isStoragePath(data.storage_path)) await ctx.supabase.storage.from(MEDIA_BUCKET).remove([data.storage_path]);
-  await touch(ctx.supabase, weddingId);
   return { ok: true };
 }
 
@@ -369,6 +342,5 @@ export async function reorderGallery(weddingId: string, mediaIds: string[]): Pro
     ),
   );
   if (results.some((r) => r.error)) return FAILED("the order");
-  await touch(ctx.supabase, weddingId);
   return { ok: true };
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { resolveTemplateManifest } from "@/templates/registry";
 import { ArrowLeft, Check, ChevronRight, CloudOff, ExternalLink, Eye, Loader2, Music2, Palette, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { useState, useTransition, type ReactNode } from "react";
@@ -125,6 +126,7 @@ export function EditorShell({ initialPanel }: { initialPanel?: string }) {
         <LivePreviewFrame
           src={previewUrl}
           bundle={bundle}
+          hasOpening={resolveTemplateManifest(bundle.wedding.template_id).features.opening !== "none"}
           focusSection={selectedSection}
           onSectionClick={(section) => isSectionType(section) && select({ kind: "section", type: section })}
           label="Live preview · click a section to edit it"

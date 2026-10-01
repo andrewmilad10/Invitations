@@ -5,15 +5,18 @@ import { startTransition, useEffect, useMemo, useRef, useState, ViewTransition, 
 import { CARD_SHAPES, TEMPLATE_CATEGORIES, type CardShape, type TemplateCategory, type TemplateManifest } from "@/core/template/manifest";
 import { COLOR_FAMILIES, type ColorFamily } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
+import { queryRecord, useUrlQuery } from "@/lib/use-url-query";
 import { Stationery } from "../stationery";
 import { DesignCard } from "./design-card";
 import { PRODUCTS, type Product } from "../products";
 import { useFavorites } from "./favorites";
 import { CARD_OPTION_INFO, FOIL_TONES } from "@/core/card/options";
-import { activeFilterCount, filtersToQuery, filterTemplates, NO_FILTERS, ORIENTATION_FILTERS, SORTS, type GalleryFilters, type Sort } from "./filters";
+import { activeFilterCount, filtersToQuery, filterTemplates, NO_FILTERS, parseFilters, ORIENTATION_FILTERS, SORTS, type GalleryFilters, type Sort } from "./filters";
 import { QuickView } from "./quick-view";
 
 const PAGE = 48;
+/** Cards in the first HTML; the rest of the first page is added right after hydration, keeping the HTML light. */
+const FIRST = 16;
 const STYLE_TILES = TEMPLATE_CATEGORIES.slice(0, 9);
 
 /** Representative colour for each family's filter dot (UI only). */
@@ -50,7 +53,22 @@ const pill = (active: boolean) =>
 export function DesignGallery({ templates, initialFilters, product = "cards" }: { templates: TemplateManifest[]; initialFilters: GalleryFilters; product?: Product }) {
   const website = product === "websites";
   const [filters, setFilters] = useState(initialFilters);
-  const [limit, setLimit] = useState(PAGE);
+  const [limit, setLimit] = useState(FIRST);
+  // Right after hydration, before anyone can scroll to the end, so nothing below jumps.
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setLimit((l) => Math.max(l, PAGE)));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  // The page is static: filters (and how many cards were showing) come from
+  // the URL once hydrated, so shared links and the back button keep them.
+  const urlQuery = useUrlQuery();
+  const [fromUrl, setFromUrl] = useState(false);
+  if (urlQuery && !fromUrl) {
+    setFromUrl(true);
+    setFilters(parseFilters(queryRecord(urlQuery)));
+    const n = Number(urlQuery.get("n"));
+    if (Number.isInteger(n) && n > PAGE) setLimit(Math.min(n, 2000));
+  }
   const [quick, setQuick] = useState<{ template: TemplateManifest; paletteId: string } | null>(null);
   const favorites = useFavorites();
   const items = useMemo(() => filterTemplates(templates, filters, favorites), [templates, filters, favorites]);
@@ -62,7 +80,20 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
       setFilters(next);
       setLimit(PAGE);
     });
-    window.history.replaceState(null, "", `${PRODUCTS[product].path}${filtersToQuery(next)}`);
+    window.history.replaceState(null, "", galleryUrl(next, PAGE));
+  }
+
+  function galleryUrl(f: GalleryFilters, n: number) {
+    const q = new URLSearchParams(filtersToQuery(f));
+    if (n > PAGE) q.set("n", String(n));
+    const str = q.toString();
+    return `${PRODUCTS[product].path}${str ? `?${str}` : ""}`;
+  }
+
+  function showMore() {
+    const next = limit + PAGE;
+    setLimit(next);
+    window.history.replaceState(null, "", galleryUrl(filters, next));
   }
 
   const tileExample = (c: TemplateCategory) => templates.find((t) => t.categories[0] === c) ?? templates.find((t) => t.categories.includes(c));
@@ -71,8 +102,9 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
 
   return (
     <>
-      {/* Style tiles (cards) */}
-      <nav aria-label="Browse by style" className={cn("-mx-5 mt-10 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0", website && "hidden")}>
+      {/* Style tiles (cards only) */}
+      {website ? null : (
+      <nav aria-label="Browse by style" className="-mx-5 mt-10 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0">
         <ul data-stagger="60" className="flex w-max gap-3 sm:gap-5 lg:w-full lg:justify-center">
           {STYLE_TILES.map((c, i) => {
             const example = tileExample(c);
@@ -114,6 +146,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
           })}
         </ul>
       </nav>
+      )}
 
       {/* Filter bar */}
       <div className="sticky top-16 z-20 -mx-5 mt-8 bg-background/95 px-5 py-3 backdrop-blur sm:top-20 sm:mx-0 sm:px-0">
@@ -267,9 +300,9 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
         </div>
       )}
 
-      {items.length > limit ? (
+      {items.length > Math.max(limit, PAGE) ? (
         <div className="mt-14 text-center">
-          <button type="button" onClick={() => setLimit((l) => l + PAGE)} className="rounded-full border px-8 py-3 text-sm hover:border-foreground/40">
+          <button type="button" onClick={showMore} className="rounded-full border px-8 py-3 text-sm hover:border-foreground/40">
             Show more designs
           </button>
         </div>

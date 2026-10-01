@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { parseWeddingBundle, type WeddingBundle } from "@/core/wedding/bundle";
-import { InvitationRenderer } from "@/templates/renderers";
+import { ClientInvitationRenderer } from "@/templates/renderers.client";
 import { buildPreviewModel } from "./preview-model";
 import { isPreviewMessage, type PreviewMessage } from "./preview-protocol";
 
@@ -52,7 +52,7 @@ export function PreviewClient({ initialBundle, initialModel }: { initialBundle: 
     };
   }, [initialBundle.wedding.id]);
 
-  return <InvitationRenderer model={model} />;
+  return <ClientInvitationRenderer model={model} />;
 }
 
 function focusSection(section: string | null) {

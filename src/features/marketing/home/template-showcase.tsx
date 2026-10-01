@@ -50,7 +50,7 @@ export function TemplateShowcase() {
           {row.product === "cards" ? (
             // Full-bleed: the curve runs to the edges of the screen.
             <div className="-mx-5 mt-6 sm:-mx-8">
-              <CollectionCarousel designs={row.items} />
+              <CollectionCarousel designs={row.items.map(({ id, name, categories, palettes, stationery, themeDefaults, features }) => ({ id, name, categories, palettes, stationery, themeDefaults, features }))} />
             </div>
           ) : (
             <div className="mx-auto mt-10 grid max-w-7xl grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { PageTransition } from "@/components/page-transition";
-import { cardOptionsFromQuery } from "@/core/card/options";
 import { FONTS } from "@/core/theme/fonts";
 import { CardDetail } from "@/features/marketing/cards/card-detail";
 import { productHref, productOf, templatesFor } from "@/features/marketing/products";
@@ -31,11 +30,13 @@ export default async function InvitationCardPage(props: PageProps<"/invitations/
   const { templateId } = await props.params;
   const template = getTemplateManifest(templateId);
   if (!template || template.status === "hidden") notFound();
-  const q = await props.searchParams;
-  const palette = typeof q.palette === "string" ? q.palette : null;
-  // Website layouts have their own page.
-  if (productOf(template) !== "cards") redirect(productHref("websites", template.id, palette ? `palette=${palette}` : ""));
-  const initialPalette = template.palettes.find((p) => p.id === palette)?.id ?? template.palettes[0].id;
+  // Website layouts have their own page (keeping a chosen colour).
+  if (productOf(template) !== "cards") {
+    const { palette } = await props.searchParams;
+    redirect(productHref("websites", template.id, typeof palette === "string" ? `palette=${palette}` : ""));
+  }
+  // Static page: the colour and finish in a shared link are applied in the browser.
+  const initialPalette = template.palettes[0].id;
 
   const cards = templatesFor("cards", selectableTemplates());
   const variants = template.family ? cards.filter((t) => t.family === template.family) : [template];
@@ -50,7 +51,7 @@ export default async function InvitationCardPage(props: PageProps<"/invitations/
       <SiteHeader />
       <PageTransition>
         <main className="pb-24 pt-6 md:pb-0 sm:pt-10">
-          <CardDetail template={template} variants={variants} initialPalette={initialPalette} initialOptions={cardOptionsFromQuery(q)} />
+          <CardDetail template={template} variants={variants} initialPalette={initialPalette} initialOptions={{}} />
 
           <section data-stagger="140" className="mx-auto grid max-w-[88rem] gap-12 border-t px-5 py-20 sm:px-8 md:grid-cols-3">
             <div>

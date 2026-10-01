@@ -7,6 +7,6 @@ export const metadata: Metadata = {
     "Original wedding invitation card designs — floral, elegant, minimalist, monogram, rustic, photo and more — in dozens of colours. Personalise one free and send it on WhatsApp or by email.",
 };
 
-export default async function InvitationsPage(props: PageProps<"/invitations">) {
-  return <GalleryPage product="cards" searchParams={await props.searchParams} />;
+export default function InvitationsPage() {
+  return <GalleryPage product="cards" />;
 }

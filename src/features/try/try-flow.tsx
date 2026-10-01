@@ -17,6 +17,7 @@ import type { TemplateManifest } from "@/core/template/manifest";
 import type { CardOptionOverrides } from "@/core/card/options";
 import { resolveTheme } from "@/core/theme/tokens";
 import type { WeddingBundle } from "@/core/wedding/bundle";
+import { productHref, productOf } from "@/features/marketing/products";
 import { Stationery } from "@/features/marketing/stationery";
 import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
 import { LivePreviewFrame } from "@/features/preview/live-preview-frame";
@@ -127,7 +128,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href={`/templates/${template.id}`}>Exit</Link>
+            <Link href={productHref(productOf(template), template.id)}>Exit</Link>
           </Button>
           <DownloadCardButton bundle={bundle} className="hidden sm:inline-flex" />
           <SaveButton canSave={canSave} onMissingNames={() => setStep(0)} />
@@ -206,6 +207,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
         <LivePreviewFrame
           src={`/create/${template.id}/frame`}
           bundle={bundle}
+          hasOpening={template.features.opening !== "none"}
           label={hasProgress(answers) ? "Your invitation" : "Showing sample details until you add yours"}
           className={cn("min-w-0 flex-1", tab === "edit" && "hidden lg:flex")}
         />

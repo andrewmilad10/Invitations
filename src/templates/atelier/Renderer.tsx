@@ -227,7 +227,7 @@ function Venue({ model, content }: SectionProps<"venue">) {
     <Section id="venue" tone="paper">
       <Script>{content.heading}</Script>
       {content.note ? <Prose className="mt-8 text-inv-muted">{content.note}</Prose> : null}
-      <div data-reveal className={cn("mt-12 grid gap-8", mapped.length > 1 && "md:-mx-24 md:grid-cols-2")}>
+      <div data-reveal className={cn("mt-12 grid gap-8", mapped.length > 1 && "md:grid-cols-2 xl:-mx-24")}>
         {mapped.map((event) => (
           <figure key={event.id} className="overflow-hidden rounded-inv bg-inv-surface shadow-inv">
             {model.mode !== "export" ? <MapEmbed event={event} className="aspect-[4/3] grayscale-[0.4]" /> : null}

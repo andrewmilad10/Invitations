@@ -284,8 +284,8 @@ function EventSpread({ id, model, content, event, flip }: { id: "ceremony" | "re
       <div className={cn("grid gap-10 sm:grid-cols-2", flip && "sm:[&>*:first-child]:order-2")}>
         <div data-reveal>
           <p className="font-inv-heading leading-[0.85] tracking-[-0.04em]">
-            <span className="whitespace-nowrap text-7xl sm:text-9xl">{splitTime(event.timeLabel ?? "—")[0]}</span>
-            <span className="ms-2 font-inv-accent text-3xl italic tracking-normal text-inv-accent sm:text-5xl">{splitTime(event.timeLabel ?? "—")[1]}</span>
+            <span className="whitespace-nowrap text-7xl md:text-8xl xl:text-9xl">{splitTime(event.timeLabel ?? "—")[0]}</span>
+            <span className="ms-2 font-inv-accent text-3xl italic tracking-normal text-inv-accent sm:text-4xl xl:text-5xl">{splitTime(event.timeLabel ?? "—")[1]}</span>
           </p>
           {event.dateLabel ? <Label className="mt-4 opacity-70">{event.dateLabel}</Label> : null}
         </div>

@@ -9,14 +9,14 @@ export function generateStaticParams() {
   return [];
 }
 
-export async function generateMetadata(props: PageProps<"/templates/[templateId]/preview">): Promise<Metadata> {
+export async function generateMetadata(props: PageProps<"/templates/[templateId]/preview/[palette]">): Promise<Metadata> {
   const { templateId } = await props.params;
   const template = getTemplateManifest(templateId);
   return { title: template ? `${template.name} template preview` : "Template not found", robots: { index: false } };
 }
 
-/** A template with the sample wedding, in its first palette. */
-export default async function TemplatePreviewPage(props: PageProps<"/templates/[templateId]/preview">) {
-  const { templateId } = await props.params;
-  return <SamplePage templateId={templateId} />;
+/** A template with the sample wedding, in one of its own palettes. */
+export default async function TemplatePalettePreviewPage(props: PageProps<"/templates/[templateId]/preview/[palette]">) {
+  const { templateId, palette } = await props.params;
+  return <SamplePage templateId={templateId} paletteId={palette} />;
 }

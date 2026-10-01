@@ -6,11 +6,14 @@ import { PRODUCTS, templatesFor, websiteOrder, type Product } from "../products"
 import { SiteFooter } from "../site-footer";
 import { SiteHeader } from "../site-header";
 import { DesignGallery } from "./design-gallery";
-import { parseFilters } from "./filters";
+import { NO_FILTERS } from "./filters";
 
 /** A product's gallery page: /invitations (cards) or /websites. */
-export function GalleryPage({ product, searchParams }: { product: Product; searchParams: Record<string, string | string[] | undefined> }) {
-  const filters = parseFilters(searchParams);
+/**
+ * Rendered statically with no filters; the gallery applies the URL's filters
+ * in the browser (see DesignGallery), so the page can be cached and prefetched.
+ */
+export function GalleryPage({ product }: { product: Product }) {
   const own = templatesFor(product, selectableTemplates());
   const templates = product === "websites" ? websiteOrder(own) : own;
   const info = PRODUCTS[product];
@@ -44,7 +47,7 @@ export function GalleryPage({ product, searchParams }: { product: Product; searc
               <h1 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">{info.title}</h1>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{info.intro}</p>
             </Stagger>
-            <DesignGallery templates={templates} initialFilters={filters} product={product} />
+            <DesignGallery templates={templates} initialFilters={NO_FILTERS} product={product} />
           </div>
         </main>
       </PageTransition>

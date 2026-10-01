@@ -1,23 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { TemplateManifest } from "@/core/template/manifest";
 import { Stationery } from "@/features/marketing/stationery";
 import { cn } from "@/lib/utils";
+import type { TemplateOption } from "./template-option";
 
-export type TemplateOption = Pick<TemplateManifest, "id" | "name" | "tagline" | "status" | "themeDefaults" | "stationery">;
-
-/** Serializable subset of a manifest for client pickers. */
-export function toTemplateOption(t: TemplateManifest): TemplateOption {
-  return {
-    id: t.id,
-    name: t.name,
-    tagline: t.tagline,
-    status: t.status,
-    themeDefaults: t.themeDefaults,
-    stationery: t.stationery,
-  };
-}
+export { toTemplateOption, type TemplateOption } from "./template-option";
 
 /** Radio-group of templates. Used by the wizard and (later) the theme panel. */
 export function TemplatePicker({

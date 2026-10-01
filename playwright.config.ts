@@ -18,7 +18,7 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "phone", use: { ...devices["Pixel 7"] }, testMatch: /mobile\.spec\.ts/ },
+    { name: "phone", use: { ...devices["Pixel 7"] }, testMatch: /(mobile|flows)\.spec\.ts/ },
   ],
   webServer: process.env.E2E_BASE_URL
     ? undefined

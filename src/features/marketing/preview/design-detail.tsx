@@ -3,6 +3,7 @@
 import { Globe, Monitor, Smartphone } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useUrlQuery } from "@/lib/use-url-query";
 import { Button } from "@/components/ui/button";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
@@ -30,10 +31,20 @@ export function DesignDetail({
 }) {
   const [view, setView] = useState<View>(initialView);
   const [paletteId, setPaletteId] = useState(initialPalette);
+  // The page is static: a shared link's colour and view are applied once hydrated.
+  const urlQuery = useUrlQuery();
+  const [fromUrl, setFromUrl] = useState(false);
+  if (urlQuery && !fromUrl) {
+    setFromUrl(true);
+    const p = urlQuery.get("palette");
+    if (p && template.palettes.some((x) => x.id === p)) setPaletteId(p);
+    if (urlQuery.get("view") === "phone") setView("phone");
+  }
   const palette = template.palettes.find((p) => p.id === paletteId) ?? template.palettes[0];
   const isDefault = palette.id === template.palettes[0].id;
   const query = isDefault ? "" : `?palette=${palette.id}`;
-  const previewSrc = `/templates/${template.id}/preview${query}`;
+  // Each palette is its own cached page, so switching colours never waits on a fresh render.
+  const previewSrc = `/templates/${template.id}/preview${isDefault ? "" : `/${palette.id}`}`;
   const customizeHref = `/create/${template.id}${query}`;
 
   function syncUrl(nextPalette: string, nextView: View) {

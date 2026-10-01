@@ -46,12 +46,14 @@ export function CinematicMotion({ model }: { model: InvitationModel }) {
       const items = gsap.utils.toArray<HTMLElement>(root.querySelectorAll("[data-reveal]"));
       // Only animate what is still below the fold; what's on screen stays put.
       const below = items.filter((el) => el.getBoundingClientRect().top > window.innerHeight * 0.9);
-      gsap.set(below, { autoAlpha: 0, y: 28 });
-      ScrollTrigger.batch(below, {
-        start: "top 88%",
-        once: true,
-        onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out", stagger: 0.12, overwrite: true }),
-      });
+      if (below.length) {
+        gsap.set(below, { autoAlpha: 0, y: 28 });
+        ScrollTrigger.batch(below, {
+          start: "top 88%",
+          once: true,
+          onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1, ease: "power3.out", stagger: 0.12, overwrite: true }),
+        });
+      }
 
       // Hero: the photo drifts slower than the page while the names ease
       // away. Scale grows exactly as fast as the drift, so no edge shows, and
@@ -68,12 +70,14 @@ export function CinematicMotion({ model }: { model: InvitationModel }) {
 
       // Gallery: photos settle in with a soft stagger.
       const photos = gsap.utils.toArray<HTMLElement>(root.querySelectorAll("#gallery li"));
-      gsap.set(photos, { autoAlpha: 0, y: 24, scale: 0.97 });
-      ScrollTrigger.batch(photos, {
-        start: "top 92%",
-        once: true,
-        onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out", stagger: 0.08, overwrite: true }),
-      });
+      if (photos.length) {
+        gsap.set(photos, { autoAlpha: 0, y: 24, scale: 0.97 });
+        ScrollTrigger.batch(photos, {
+          start: "top 92%",
+          once: true,
+          onEnter: (batch) => gsap.to(batch, { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out", stagger: 0.08, overwrite: true }),
+        });
+      }
 
       return () => {
         gsap.ticker.remove(raf);

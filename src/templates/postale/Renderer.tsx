@@ -290,7 +290,7 @@ function Journal({ model, content }: SectionProps<"story">) {
 /** A boarding pass with a tear-off stub and a barcode. */
 function BoardingPass({ id, model, content, event, flip }: { id: "ceremony" | "reception"; model: InvitationModel; content: { heading: string; note: string }; event: EventModel | null; flip?: boolean }) {
   if (!event) return null;
-  const bars = Array.from({ length: 34 }, (_, i) => 1 + ((hash(`${event.id}${i}`) >> 3) % 4));
+  const bars = Array.from({ length: 34 }, (_, i) => 1 + ((hash(`${event.id}${i}`) >>> 3) % 4));
   const notch: CSSProperties = {
     WebkitMask: "radial-gradient(circle 12px at var(--cut) 0, transparent 98%, black) top/100% 51% no-repeat, radial-gradient(circle 12px at var(--cut) 100%, transparent 98%, black) bottom/100% 51% no-repeat",
     mask: "radial-gradient(circle 12px at var(--cut) 0, transparent 98%, black) top/100% 51% no-repeat, radial-gradient(circle 12px at var(--cut) 100%, transparent 98%, black) bottom/100% 51% no-repeat",

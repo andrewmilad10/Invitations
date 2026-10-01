@@ -183,3 +183,28 @@ Server Actions; the public page reads straight from the database.
 | Exports / offline         | `core/export/ExportService` — see `docs/roadmap.md#offline`. `export` render mode already exists. |
 | Admin (future)            | Separate route group guarded by an `app_admins` table + RLS; never the service key in the browser. |
 | AI generation (Phase 7)   | Produces a `WeddingBundle` (content + theme overrides) — the same contract the editor writes — so AI output is just data. |
+
+## Rendering, caching and data (Oct 2026 audit)
+
+- **Static marketing pages.** `/`, `/invitations`, `/websites` and every design
+  page (`/invitations/[id]`, `/websites/[id]`) are prerendered. They never read
+  `searchParams` on the server: filters, `?palette=`, `?view=`, card options
+  and the gallery's "show more" count (`?n=`) are applied in the browser after
+  hydration with `useUrlQuery` (`src/lib/use-url-query.ts`). Reading
+  `searchParams` in these pages would make them render per request again.
+- **Cached previews.** Sample previews are ISR pages refreshed hourly:
+  `/templates/[id]/preview` and `/templates/[id]/preview/[palette]` (one page
+  per palette, so switching colours reuses a cached page), and the try-flow
+  frame `/create/[id]/frame`.
+- **Per-request dedupe.** `getCurrentUser` and `loadEditorData` are wrapped in
+  React `cache()`; the editor loads its data in one parallel round. Private
+  data is never cached across requests.
+- **No needless refreshes.** Editor autosaves do not call `revalidatePath`
+  (it would refetch every visited page); the public invitation renders per
+  request anyway.
+- **Smaller downloads.** GSAP and Lenis load on demand (`motion-engine-impl.ts`),
+  previews load only the layout they show (`renderers.client.tsx`), website
+  thumbnails load only on the websites gallery, and the proxy skips the
+  session check on pages that don't use it.
+- **Loading and error states.** `loading.tsx` for per-request pages, branded
+  `not-found.tsx`, `error.tsx`, `global-error.tsx` and `dashboard/error.tsx`.

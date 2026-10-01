@@ -215,7 +215,7 @@ function Hero({ model, content }: SectionProps<"hero">) {
             />
           </div>
           <div className="md:col-span-5 md:col-start-8 md:pb-4">
-            <h1 className="font-inv-heading text-[clamp(3.8rem,15vw,7.5rem)] leading-[0.92] tracking-[-0.02em]">
+            <h1 className="break-words font-inv-heading text-[clamp(3.8rem,15vw,7.5rem)] leading-[0.92] tracking-[-0.02em] md:text-[clamp(3rem,7.5vw,7.5rem)]">
               {wedding.partnerOne}
               <br />
               <span className="font-inv-accent italic">&amp;</span>{" "}
@@ -357,7 +357,7 @@ function Placard({
     <Room id={id} model={model} title={content.heading} wide>
       <div className="grid items-end gap-10 sm:grid-cols-2 sm:gap-14">
         <div data-reveal className={cn(align === "end" && "sm:order-2")}>
-          <p className="font-inv-accent text-6xl italic leading-[0.95] sm:text-8xl">
+          <p className="break-words font-inv-accent text-6xl italic leading-[0.95] md:text-7xl lg:text-8xl">
             {content.heading}
           </p>
           {(event.dateLabel ?? model.wedding.date?.long) ? (
@@ -375,7 +375,7 @@ function Placard({
           className="border border-inv-fg bg-inv-surface p-7 sm:p-10"
         >
           <p className="text-sm text-inv-accent">{model.strings.time}</p>
-          <p className="mt-6 font-inv-heading text-7xl leading-none tabular-nums sm:text-8xl">
+          <p className="mt-6 whitespace-nowrap font-inv-heading text-6xl leading-none tabular-nums xl:text-8xl">
             {event.timeLabel ?? "—"}
           </p>
           {event.dateLabel ? (

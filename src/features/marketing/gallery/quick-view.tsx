@@ -9,7 +9,10 @@ import { Stationery } from "../stationery";
 import { websiteFeatures, type Product } from "../products";
 import { designHref, FavoriteButton, paletteOverrides, SwatchRow } from "./design-card";
 import { listWords } from "@/lib/words";
-import { WebsiteThumb } from "./website-thumb";
+import dynamic from "next/dynamic";
+
+// Website thumbnails carry large drawings; the cards gallery never loads them.
+const WebsiteThumb = dynamic(() => import("./website-thumb").then((m) => m.WebsiteThumb));
 
 /** A larger look at a design without leaving the gallery. */
 export function QuickView({
@@ -96,7 +99,7 @@ export function QuickView({
                 <Link href={product === "websites" ? `/create/${template.id}${query}` : `/invitations/${template.id}/customize${query}`}>Customize</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-full px-6">
-                <Link href={designHref(template.id, isDefault ? null : paletteId)}>{product === "websites" ? "See live demo" : "See details"}</Link>
+                <Link href={designHref(template, isDefault ? null : paletteId)}>{product === "websites" ? "See live demo" : "See details"}</Link>
               </Button>
               <FavoriteButton id={template.id} name={template.name} className="ms-auto border bg-background" />
             </div>

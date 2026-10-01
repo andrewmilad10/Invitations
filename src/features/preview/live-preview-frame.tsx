@@ -4,7 +4,6 @@ import { Monitor, RotateCcw, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import type { WeddingBundle } from "@/core/wedding/bundle";
 import { cn } from "@/lib/utils";
-import { resolveTemplateManifest } from "@/templates/registry";
 import { isPreviewMessage, type PreviewMessage } from "./preview-protocol";
 
 /**
@@ -15,6 +14,7 @@ import { isPreviewMessage, type PreviewMessage } from "./preview-protocol";
 export function LivePreviewFrame({
   src,
   bundle,
+  hasOpening,
   label = "Live preview",
   toolbarExtra,
   focusSection,
@@ -23,6 +23,8 @@ export function LivePreviewFrame({
 }: {
   src: string;
   bundle: WeddingBundle;
+  /** Whether the shown template has an opening (shows "Replay opening"). */
+  hasOpening: boolean;
   label?: string;
   toolbarExtra?: ReactNode;
   /** Section to highlight and scroll to in the preview. */
@@ -63,8 +65,6 @@ export function LivePreviewFrame({
   useEffect(() => {
     if (readyCount > 0 && focusSection !== undefined) post({ type: "vellum:focus-section", section: focusSection });
   }, [readyCount, focusSection, post]);
-
-  const hasOpening = resolveTemplateManifest(bundle.wedding.template_id).features.opening !== "none";
 
   return (
     <div className={cn("flex min-h-0 flex-col bg-muted", className)}>

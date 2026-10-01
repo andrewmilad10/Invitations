@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CreateWeddingWizard } from "@/features/weddings/components/create-wedding-wizard";
-import { toTemplateOption } from "@/features/weddings/components/template-picker";
+import { toTemplateOption } from "@/features/weddings/components/template-option";
 import { DEFAULT_TEMPLATE_ID, selectableTemplates } from "@/templates/registry";
 
 export const metadata: Metadata = { title: "Create wedding" };
