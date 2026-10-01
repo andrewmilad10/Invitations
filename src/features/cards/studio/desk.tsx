@@ -43,7 +43,7 @@ const SURFACE: Record<Desk, CSSProperties> = {
 
 export function DeskSurface({ desk, children, className }: { desk: Desk; children: ReactNode; className?: string }) {
   return (
-    <div className={cn("relative isolate", desk === "walnut" ? "text-white" : "text-foreground", className)} style={SURFACE[desk]}>
+    <div className={cn("relative isolate overflow-x-clip", desk === "walnut" ? "text-white" : "text-foreground", className)} style={SURFACE[desk]}>
       {/* Window light across the table, and a soft vignette */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(120deg,rgb(255_255_255/0.32),transparent_45%)]" />
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(0_0_0/0.14))]" />

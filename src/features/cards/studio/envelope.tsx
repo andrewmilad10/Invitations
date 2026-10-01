@@ -43,10 +43,12 @@ export function LinerFill({ liner, ornament, className }: { liner: Liner; orname
 }
 
 /**
- * The envelope, front (addresses) or back (flap open on its liner). Paper
- * colours come from ENVELOPE_COLORS; the liner uses the design's colours.
+ * The envelope, front (addresses) or back (the flap, sealed — or open on its
+ * liner). Paper colours come from ENVELOPE_COLORS; the liner uses the
+ * design's colours. Both sides are the same size, so it turns over cleanly;
+ * the open flap rises above the envelope.
  */
-export function EnvelopeView({ suite, ornament, side, className }: { suite: CardSuite; ornament: StationeryOrnament; side: "front" | "back"; className?: string }) {
+export function EnvelopeView({ suite, ornament, side, open = false, className }: { suite: CardSuite; ornament: StationeryOrnament; side: "front" | "back"; open?: boolean; className?: string }) {
   const [, paper] = ENVELOPE_COLORS[suite.envelope.color];
   const dark = luminance(paper) < 0.3;
   const ink = dark ? "rgb(255 255 255 / 0.92)" : "rgb(30 26 22 / 0.88)";
@@ -54,20 +56,32 @@ export function EnvelopeView({ suite, ornament, side, className }: { suite: Card
   const lines = (s: string): ReactNode => s.split("\n").map((l, i) => <span key={i} className="block">{l}</span>);
 
   if (side === "back") {
+    const flap = "polygon(0 0, 100% 0, 50% 100%)";
     return (
-      <div className={cn("relative aspect-[7/7.4] [container-type:size]", className)}>
-        {/* Open flap with the liner, then the body */}
-        <div className="absolute inset-x-0 top-0 h-[66%]" style={{ clipPath: "polygon(0 100%, 50% 0, 100% 100%)", background: paper }}>
-          <LinerFill liner={suite.envelope.liner} ornament={ornament} className="absolute inset-x-[4%] bottom-0 top-[6%] [clip-path:polygon(0_100%,50%_0,100%_100%)]" />
-        </div>
-        <div className="absolute inset-x-0 bottom-0 h-[52%] shadow-[0_20px_40px_-20px_rgb(0_0_0/0.45)]" style={{ background: paper }}>
-          <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, ${shade}, transparent 30%)` }} />
+      <div className={cn("relative aspect-[7/5] [container-type:size]", className)}>
+        {/* The body: the inside shows at the top when the flap is open */}
+        <div className="absolute inset-0 shadow-[0_20px_40px_-20px_rgb(0_0_0/0.45)]" style={{ background: paper }}>
+          <div className={cn("absolute inset-x-0 top-0 h-[7%] transition-opacity duration-700", open ? "opacity-100" : "opacity-0")} style={{ background: `linear-gradient(to bottom, color-mix(in oklab, ${paper} 85%, black), transparent)` }} />
           <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full">
-            <path d="M0 0 L50 46 L100 0 M0 100 L44 52 M100 100 L56 52" fill="none" stroke={shade} strokeWidth="0.6" vectorEffect="non-scaling-stroke" />
+            <path d="M0 100 L46 46 M100 100 L54 46 M0 0 L46 46 L54 46 L100 0" fill="none" stroke={shade} strokeWidth="1" vectorEffect="non-scaling-stroke" />
           </svg>
-          <p className="absolute start-[6%] top-[10%] text-[3.4cqmin] leading-[1.5]" style={{ color: ink }}>
+          <p className="absolute inset-x-0 bottom-[9%] text-center text-[3.6cqmin] leading-[1.45]" style={{ color: ink }}>
             {lines(suite.envelope.returnAddress)}
           </p>
+        </div>
+        {/* The flap: sealed outside, liner inside */}
+        <div className="absolute inset-x-0 top-0 h-[58%] [perspective:1400px]" style={{ zIndex: open ? 0 : 2 }}>
+          <div
+            className="relative size-full origin-top transition-transform duration-[900ms] ease-[cubic-bezier(.5,0,.2,1)] [transform-style:preserve-3d]"
+            style={{ transform: open ? "rotateX(180deg)" : "none" }}
+          >
+            <div className="absolute inset-0 [backface-visibility:hidden] [filter:drop-shadow(0_3px_3px_rgb(0_0_0/0.18))]">
+              <div className="size-full" style={{ clipPath: flap, background: `linear-gradient(to bottom, ${paper}, color-mix(in oklab, ${paper} 95%, black))` }} />
+            </div>
+            <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateX(180deg)]" style={{ clipPath: "polygon(0 100%, 100% 100%, 50% 0)", background: paper }}>
+              <LinerFill liner={suite.envelope.liner} ornament={ornament} className="absolute inset-x-[4%] bottom-0 top-[6%] [clip-path:polygon(0_100%,100%_100%,50%_0)]" />
+            </div>
+          </div>
         </div>
       </div>
     );

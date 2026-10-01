@@ -12,6 +12,7 @@ import {
 } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { foilVars, paperOverlay, silhouetteStyle } from "./finish";
+import { FitWords } from "./fit";
 import { BoutiqueLayout, handlesBlessing } from "./layouts";
 import { FlourishLine, framePath, Ornament, Ribbon, Wreath } from "./ornaments";
 import {
@@ -134,13 +135,11 @@ export function StationeryCard({
           {photoFull ? null : (
             <Ornament kind={art.ornament} h={h} shape={art.shape} />
           )}
-          {/* Square cards are shorter, so the words are set a little smaller. */}
-          <div
-            className="absolute inset-0"
-            style={art.shape === "square" ? { zoom: 0.8 } : undefined}
-          >
+          {/* Square and landscape cards are shorter, so the words start a
+              little smaller — and shrink further if they would still run off. */}
+          <FitWords base={art.shape === "square" || (art.shape === "landscape" && base.shape !== "landscape") ? 0.8 : 1}>
             <Layout art={art} text={words} photos={photos} sizes={sizes} />
-          </div>
+          </FitWords>
           {words.blessing &&
           !handlesBlessing(art.layout) &&
           !BOUTIQUE_SELF.has(art.layout) ? (

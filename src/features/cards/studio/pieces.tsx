@@ -97,12 +97,15 @@ export function SuitePiece({
   template,
   piece,
   sizes = "640px",
+  envelopeOpen = false,
   className,
 }: {
   suite: CardSuite;
   template: TemplateManifest;
   piece: Piece;
   sizes?: string;
+  /** The envelope's back with its flap open on the liner. */
+  envelopeOpen?: boolean;
   className?: string;
 }) {
   const vars = suiteVars(template, suite);
@@ -123,6 +126,7 @@ export function SuitePiece({
           suite={suite}
           ornament={art.ornament}
           side={piece === "envelope-front" ? "front" : "back"}
+          open={envelopeOpen}
         />
       </div>
     );

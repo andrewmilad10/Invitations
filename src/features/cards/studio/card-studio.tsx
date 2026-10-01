@@ -97,6 +97,7 @@ export function CardStudio({ template, initial, fromLink }: { template: Template
   const [faces, setFaces] = useState<Record<Item, "front" | "back">>({ invitation: "front", details: "front", envelope: "front" });
   const [desk, chooseDesk] = useDesk();
   const [sending, setSending] = useState(false);
+  const [flapOpen, setFlapOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const loaded = useRef(false);
   const set = useCallback<SetSuite>((update) => dispatch({ type: "set", update }), []);
@@ -131,15 +132,19 @@ export function CardStudio({ template, initial, fromLink }: { template: Template
   const face = faces[item];
 
   function pick(next: Item) {
+    setFlapOpen(false);
     setItem(next);
     setTool(TOOLS[next][0].id);
     setFaces((f) => ({ ...f, [next]: TOOLS[next][0].face }));
   }
   function chooseTool(t: (typeof TOOLS)[Item][number]) {
+    // The liner is inside: open the flap to show it.
+    setFlapOpen(t.id === "liner");
     setTool(t.id);
     setFaces((f) => ({ ...f, [item]: t.face }));
   }
   function turn() {
+    setFlapOpen(false);
     const nextFace = face === "front" ? "back" : "front";
     setFaces((f) => ({ ...f, [item]: nextFace }));
     const match = TOOLS[item].find((t) => t.face === nextFace);
@@ -234,7 +239,7 @@ export function CardStudio({ template, initial, fromLink }: { template: Template
       {/* The piece in hand */}
       <main className="relative flex flex-1 flex-col items-center justify-center px-4 pb-4 pt-2 lg:pe-[25rem]">
         <Tilt key={item}>
-          <Flip face={face} front={<PieceSlot item={item} template={template} suite={suite} face="front" piece={pieceFor(item, "front")} />} back={<PieceSlot item={item} template={template} suite={suite} face="back" piece={pieceFor(item, "back")} />} />
+          <Flip face={face} front={<PieceSlot item={item} template={template} suite={suite} face="front" piece={pieceFor(item, "front")} />} back={<PieceSlot item={item} template={template} suite={suite} face="back" piece={pieceFor(item, "back")} open={flapOpen} />} />
         </Tilt>
         <div className="mt-5 flex items-center gap-2">
           <button type="button" onClick={turn} className={cn("inline-flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium backdrop-blur transition hover:-translate-y-0.5", chrome)}>
@@ -249,6 +254,11 @@ export function CardStudio({ template, initial, fromLink }: { template: Template
           >
             <Undo2 className="size-4" />
           </button>
+          {item === "envelope" && face === "back" ? (
+            <button type="button" onClick={() => setFlapOpen((o) => !o)} aria-pressed={flapOpen} className={cn("inline-flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium backdrop-blur transition hover:-translate-y-0.5", chrome)}>
+              <Mail className="size-4" /> {flapOpen ? "Close the flap" : "Open the flap"}
+            </button>
+          ) : null}
           {item !== "envelope" ? (
             <button type="button" onClick={() => fileInput.current?.click()} className={cn("inline-flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium backdrop-blur transition hover:-translate-y-0.5", chrome)}>
               <ImagePlus className="size-4" /> {suite.photo ? "Change photo" : "Add photo"}
@@ -367,7 +377,7 @@ function Flip({ face, front, back }: { face: "front" | "back"; front: ReactNode;
   );
 }
 
-function PieceSlot({ item, template, suite, piece }: { item: Item; template: TemplateManifest; suite: CardSuite; face: "front" | "back"; piece: Piece }) {
+function PieceSlot({ item, template, suite, piece, open = false }: { item: Item; template: TemplateManifest; suite: CardSuite; face: "front" | "back"; piece: Piece; open?: boolean }) {
   const shape = item === "invitation" ? cardShape(template.stationery, suite.options) : "portrait";
   const width =
     item === "envelope"
@@ -381,7 +391,10 @@ function PieceSlot({ item, template, suite, piece }: { item: Item; template: Tem
             : "w-[min(24rem,70vw,calc((100dvh-17rem)*0.714))]";
   return (
     <div className={cn(width, "[filter:drop-shadow(0_28px_24px_rgb(0_0_0/0.28))_drop-shadow(0_4px_6px_rgb(0_0_0/0.14))]")}>
-      <SuitePiece suite={suite} template={template} piece={piece} sizes="(min-width: 1024px) 36rem, 86vw" />
+      {/* An open flap rises above the envelope, so the envelope steps back to make room. */}
+      <div className="origin-bottom transition-transform duration-[900ms] ease-[cubic-bezier(.5,0,.2,1)]" style={{ transform: open ? "scale(0.64)" : undefined }}>
+        <SuitePiece suite={suite} template={template} piece={piece} envelopeOpen={open} sizes="(min-width: 1024px) 36rem, 86vw" />
+      </div>
     </div>
   );
 }
@@ -794,12 +807,14 @@ function SendScene({ template, suite, desk, onClose }: { template: TemplateManif
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const a = window.setTimeout(() => setStage(1), reduced ? 0 : 500);
-    const b = window.setTimeout(() => setStage(2), reduced ? 0 : 1500);
+    const b = window.setTimeout(() => setStage(2), reduced ? 0 : 1300);
+    const c = window.setTimeout(() => setStage(3), reduced ? 0 : 2500);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     return () => {
       window.clearTimeout(a);
       window.clearTimeout(b);
+      window.clearTimeout(c);
       window.removeEventListener("keydown", onKey);
     };
   }, [onClose]);
@@ -908,13 +923,13 @@ function Opening({ template, suite, stage }: { template: TemplateManifest; suite
   const vars = suiteVars(template, suite);
   const landscape = cardShape(template.stationery, suite.options) === "landscape";
   return (
-    <div className="relative mx-auto aspect-[7/8] w-full max-w-[34rem]" style={vars as CSSProperties}>
+    <div className="relative mx-auto mt-[min(18%,6rem)] aspect-[7/8] w-full max-w-[34rem]" style={vars as CSSProperties}>
       {/* inside of the envelope */}
       <div className="absolute inset-x-0 bottom-0 h-[50%] rounded-sm" style={{ background: `color-mix(in oklab, ${paper} 80%, black)` }} />
-      {/* the card, rising */}
+      {/* the card: rises right out of the envelope, then is laid in front of it */}
       <div
-        className={cn("absolute bottom-[6%] left-1/2 z-[2] transition-transform duration-[1300ms] ease-[cubic-bezier(.2,.8,.2,1)]", landscape ? "w-[84%]" : "w-[58%]")}
-        style={{ transform: `translateX(-50%) translateY(${stage >= 2 ? (landscape ? "-62%" : "-48%") : "0%"})` }}
+        className={cn("absolute left-1/2 -translate-x-1/2 transition-[bottom] ease-[cubic-bezier(.2,.8,.2,1)]", stage >= 3 ? "duration-[900ms]" : "duration-[1200ms]", landscape ? "w-[74%]" : "w-[48%]")}
+        style={{ bottom: stage >= 3 ? (landscape ? "21%" : "8%") : stage >= 2 ? "51%" : "6%", zIndex: stage >= 3 ? 20 : 2 }}
       >
         <div className="[filter:drop-shadow(0_18px_20px_rgb(0_0_0/0.25))]">
           <SuitePiece suite={suite} template={template} piece="front" sizes="34rem" />
