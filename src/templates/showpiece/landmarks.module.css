@@ -1,0 +1,194 @@
+/*
+ * The Egypt venue Showpieces: Giza, the Baron Palace, Montaza and Luxor —
+ * heroes, emblems and openings. Colours only from the theme (--inv-*, and
+ * --gold from the Showpiece root); neutral rgb() for shadows.
+ *
+ * Roles: giza and luxor use the "gate" look (paper page, deep accent,
+ * gold accent-fg); baron the "toast" look (night page, gold accent);
+ * montaza the "herbarium" look (light page, sea-blue accent, warm muted).
+ */
+
+.emblemSvg { display: block; width: 100%; height: 100%; color: var(--gold); overflow: visible; }
+.skyText { align-self: start; }
+
+/* Shared bits of the openings */
+.openTop { position: absolute; top: 11vh; inset-inline: 0; z-index: 3; padding: 0 1.5rem; text-align: center; }
+.openKicker { margin: 0; font: 1.6rem/1.15 var(--inv-font-accent); color: var(--gold); }
+.openNames { margin: .4rem 0 1.3rem; font: 400 clamp(2rem, 8vw, 3.2rem)/1.1 var(--inv-font-heading); text-wrap: balance; }
+.openBtn {
+  display: inline-flex; align-items: center; gap: .55rem; border: 1px solid color-mix(in oklab, currentColor 50%, transparent);
+  border-radius: 99px; padding: .7rem 1.35rem; background: rgb(255 255 255 / .08); color: inherit;
+  font: .95rem var(--inv-font-body); cursor: pointer; transition: opacity .5s;
+}
+:is(.gizaOpen, .baronOpen, .montazaOpen, .luxorOpen):not([data-phase="closed"]) .openBtn { opacity: 0; pointer-events: none; }
+@keyframes roll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ══ Giza ═══════════════════════════════════════════════════════════════ */
+
+.duskSky {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--inv-accent), black 32%) 0%, var(--inv-accent) 36%, color-mix(in oklab, var(--inv-accent), var(--inv-accent-fg) 45%) 62%, color-mix(in oklab, var(--inv-accent-fg), white 25%) 76%);
+}
+.sun {
+  position: absolute; left: 57%; bottom: 27%; width: 7.5rem; height: 7.5rem; margin-left: -3.75rem; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--inv-accent-fg), white 60%), var(--inv-accent-fg) 62%);
+  box-shadow: 0 0 90px 34px color-mix(in oklab, var(--inv-accent-fg) 45%, transparent);
+}
+.pyramids, .openPyramids { position: absolute; left: 50%; bottom: 13%; width: max(min(100vw, 125svh), min(175vw, 74rem, 125svh)); height: auto; translate: -50% 0; }
+.pLit { fill: color-mix(in oklab, var(--inv-accent-fg) 80%, var(--inv-accent)); }
+.pShade { fill: color-mix(in oklab, var(--inv-accent) 82%, var(--inv-accent-fg)); }
+.pCap { fill: color-mix(in oklab, var(--inv-accent-fg), white 35%); opacity: .75; }
+.dunes { position: absolute; inset-inline: 0; bottom: 0; width: 100%; }
+.duneBack { height: 22%; fill: color-mix(in oklab, var(--inv-accent) 55%, var(--inv-accent-fg)); }
+.duneFront { height: 14%; fill: color-mix(in oklab, var(--inv-accent), black 28%); }
+.caravanTrack, .openCaravan { position: absolute; inset-inline: 0; bottom: 18%; height: 2rem; overflow: hidden; }
+.caravan { position: absolute; left: 0; height: 100%; width: auto; fill: color-mix(in oklab, var(--inv-accent), black 45%); animation: trek 80s linear infinite; }
+@keyframes trek { from { transform: translateX(-16rem); } to { transform: translateX(110vw); } }
+.dust { position: absolute; inset: 0; pointer-events: none; }
+.gizaText h1 { font-size: clamp(3rem, 12vw, 4.6rem); }
+.gizaText { padding-top: 0; color: var(--inv-accent-fg); text-shadow: 0 2px 18px rgb(0 0 0 / .25); }
+
+.gizaOpen { background: linear-gradient(180deg, color-mix(in oklab, var(--inv-accent), black 64%), color-mix(in oklab, var(--inv-accent), black 38%) 75%); color: var(--inv-accent-fg); }
+.gizaDawn {
+  position: absolute; inset: 0; opacity: 0; transition: opacity 2.4s ease .2s;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--inv-accent), black 25%) 0%, var(--inv-accent) 34%, color-mix(in oklab, var(--inv-accent), var(--inv-accent-fg) 50%) 62%, color-mix(in oklab, var(--inv-accent-fg), white 30%) 78%);
+}
+.gizaOpen:not([data-phase="closed"]) .gizaDawn { opacity: 1; }
+.nightStars {
+  position: absolute; inset: 0 0 45% 0; transition: opacity 1.8s;
+  background-image:
+    radial-gradient(1.4px 1.4px at 12% 22%, var(--inv-accent-fg), transparent),
+    radial-gradient(1px 1px at 34% 64%, var(--inv-accent-fg), transparent),
+    radial-gradient(1.2px 1.2px at 58% 18%, var(--inv-accent-fg), transparent),
+    radial-gradient(1px 1px at 76% 48%, var(--inv-accent-fg), transparent),
+    radial-gradient(1.6px 1.6px at 90% 80%, var(--inv-accent-fg), transparent);
+  background-size: 190px 150px;
+}
+.gizaOpen:not([data-phase="closed"]) .nightStars { opacity: 0; }
+.risingSun {
+  position: absolute; left: 57%; bottom: 27%; width: 7.5rem; height: 7.5rem; margin-left: -3.75rem; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--inv-accent-fg), white 60%), var(--inv-accent-fg) 62%);
+  box-shadow: 0 0 90px 34px color-mix(in oklab, var(--inv-accent-fg) 45%, transparent);
+  transform: translateY(15rem); transition: transform 2.7s cubic-bezier(.3, .6, .2, 1);
+}
+.gizaOpen:not([data-phase="closed"]) .risingSun { transform: translateY(0); }
+.gizaOpen .pShade { fill: color-mix(in oklab, var(--inv-accent), black 55%); transition: fill 2.2s .5s; }
+.dawnLit { fill: color-mix(in oklab, var(--inv-accent), black 45%); transition: fill 2.2s .5s; }
+.gizaOpen:not([data-phase="closed"]) .pShade { fill: color-mix(in oklab, var(--inv-accent) 82%, var(--inv-accent-fg)); }
+.gizaOpen:not([data-phase="closed"]) .dawnLit { fill: color-mix(in oklab, var(--inv-accent-fg) 80%, var(--inv-accent)); }
+.openDune { fill: color-mix(in oklab, var(--inv-accent), black 40%); }
+
+/* ══ Baron Palace ═══════════════════════════════════════════════════════ */
+
+.palaceNight { position: absolute; inset: 0; background: radial-gradient(90% 55% at 50% 100%, color-mix(in oklab, var(--gold) 16%, var(--inv-bg)), var(--inv-bg) 68%); }
+.palaceGlow { position: absolute; left: 50%; bottom: 8%; width: 70vmin; height: 70vmin; margin-left: -35vmin; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--gold) 22%, transparent), transparent 70%); }
+.palaceRow { position: absolute; inset: 0; }
+.palaceArt { position: absolute; left: 50%; bottom: 0; width: min(150vw, 40rem, 75svh); height: auto; translate: -50% 0; overflow: visible; }
+.palace { fill: color-mix(in oklab, var(--inv-bg), var(--gold) 9%); stroke: var(--gold); stroke-width: 1.1; stroke-linejoin: round; }
+.win { fill: var(--gold); opacity: .9; animation: lamp 7s ease-in-out infinite; animation-delay: calc(var(--i) * -.53s); }
+@keyframes lamp { 0%, 100% { opacity: .95; } 45% { opacity: .5; } 55% { opacity: .8; } }
+.palm { position: absolute; bottom: 0; width: 24vw; max-width: 9rem; fill: color-mix(in oklab, var(--inv-bg), black 45%); stroke: color-mix(in oklab, var(--inv-bg), black 45%); }
+.palmL { left: -3%; }
+.palmR { right: -3%; }
+.baronText { color: var(--inv-fg); }
+.baronText h1 { font-size: clamp(3rem, 12vw, 4.4rem); }
+.filigree { position: relative; padding: 3rem 1.4rem 1.6rem; border: 1px solid color-mix(in oklab, var(--gold) 60%, transparent); border-bottom: 0; border-radius: 14rem 14rem 0 0; }
+.filigree::before { content: ""; position: absolute; inset: 7px 7px 0; border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent); border-bottom: 0; border-radius: inherit; pointer-events: none; }
+
+.baronOpen { background: radial-gradient(90% 60% at 50% 100%, color-mix(in oklab, var(--gold) 9%, var(--inv-bg)), var(--inv-bg) 70%); color: var(--inv-fg); }
+.palaceBtn { position: absolute; left: 50%; bottom: 0; z-index: 2; width: min(150vw, 46rem); translate: -50% 0; border: 0; padding: 0; background: none; cursor: pointer; }
+.openPalace { display: block; width: 100%; height: auto; overflow: visible; }
+.drawLine { stroke-dasharray: 1; stroke-dashoffset: 1; fill-opacity: 0; animation: drawin 2.6s cubic-bezier(.6, 0, .3, 1) .2s forwards; transition: fill-opacity 1.2s; }
+@keyframes drawin { to { stroke-dashoffset: 0; } }
+.baronOpen:not([data-phase="closed"]) .drawLine { fill-opacity: 1; }
+.dark { animation: none; opacity: .08; transition: opacity .5s; transition-delay: calc(var(--i) * 45ms); }
+.baronOpen:not([data-phase="closed"]) .dark { opacity: .95; }
+.burst { position: absolute; left: 50%; bottom: 26%; width: 90vmin; height: 90vmin; margin: 0 0 -45vmin -45vmin; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--gold) 42%, transparent), transparent 65%); opacity: 0; transform: scale(.3); transition: opacity 1.2s 1s, transform 2.2s 1s cubic-bezier(.2, .8, .2, 1); }
+.baronOpen:not([data-phase="closed"]) .burst { opacity: 1; transform: scale(1.4); }
+.openPalm { z-index: 2; }
+
+/* ══ Montaza ════════════════════════════════════════════════════════════ */
+
+.seaSky { position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in oklab, var(--inv-accent) 28%, var(--inv-bg)), var(--inv-bg) 62%); }
+.seaSun { position: absolute; bottom: 44%; right: max(6%, calc(50% - 22rem)); width: 4.2rem; height: 4.2rem; border-radius: 50%; background: color-mix(in oklab, var(--inv-muted) 32%, var(--inv-surface)); box-shadow: 0 0 60px 22px color-mix(in oklab, var(--inv-muted) 18%, transparent); }
+.montaza, .openMontaza { position: absolute; inset-inline: 0; bottom: 6%; width: 100%; height: max(46%, min(36.7vw, 52svh)); }
+.land { fill: color-mix(in oklab, var(--inv-muted) 22%, var(--inv-bg)); }
+.seaFill { fill: color-mix(in oklab, var(--inv-accent) 50%, var(--inv-bg)); }
+.wall { fill: color-mix(in oklab, var(--inv-muted) 24%, var(--inv-surface)); stroke: color-mix(in oklab, var(--inv-fg) 28%, transparent); stroke-width: 1; }
+.trim { fill: color-mix(in oklab, var(--inv-muted) 72%, var(--inv-fg)); stroke: color-mix(in oklab, var(--inv-fg) 28%, transparent); stroke-width: .8; }
+.mWin { fill: color-mix(in oklab, var(--inv-accent) 70%, var(--inv-fg)); }
+.mPalm { position: absolute; bottom: 15%; width: 5.5rem; fill: color-mix(in oklab, var(--inv-accent) 35%, var(--inv-fg)); stroke: color-mix(in oklab, var(--inv-accent) 35%, var(--inv-fg)); }
+.mPalmA { left: calc(50% - 14rem); }
+.mPalmB { left: calc(50% + 10rem); width: 4.5rem; }
+.sea { position: absolute; inset-inline: 0; bottom: 0; height: 12%; overflow: hidden; background: color-mix(in oklab, var(--inv-accent) 60%, var(--inv-bg)); }
+.wave { position: absolute; left: 0; width: 200%; height: 2.2rem; animation: roll 9s linear infinite; }
+.w1 { bottom: 52%; fill: color-mix(in oklab, var(--inv-accent) 72%, var(--inv-bg)); animation-duration: 15s; }
+.w2 { bottom: 22%; fill: color-mix(in oklab, var(--inv-accent) 85%, var(--inv-bg)); animation-duration: 11s; animation-direction: reverse; }
+.w3 { bottom: -4px; fill: var(--inv-accent); animation-duration: 8s; }
+.sail { position: absolute; bottom: 62%; left: 12%; width: 1.5rem; height: 1.9rem; background: var(--inv-surface); clip-path: polygon(48% 0, 100% 78%, 52% 78%, 52% 84%, 100% 84%, 80% 100%, 20% 100%, 0 84%, 48% 84%); animation: sailby 50s linear infinite; }
+@keyframes sailby { from { transform: translateX(-20vw); } to { transform: translateX(110vw); } }
+.gull { position: absolute; width: 1.8rem; stroke: color-mix(in oklab, var(--inv-fg) 60%, transparent); animation: flap 1.5s ease-in-out infinite; }
+@keyframes flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.55); } }
+.montazaText { padding-top: 0; color: var(--inv-fg); }
+.montazaText h1 { font-size: clamp(3rem, 12vw, 4.4rem); }
+
+.montazaOpen { background: linear-gradient(180deg, color-mix(in oklab, var(--inv-accent) 30%, var(--inv-bg)), var(--inv-bg) 60%); color: var(--inv-fg); }
+.tide { position: absolute; inset-inline: 0; top: 100%; height: 130%; z-index: 4; transition: transform 1.6s cubic-bezier(.5, 0, .3, 1); pointer-events: none; }
+.tideCrest { position: absolute; left: 0; top: 0; width: 200%; height: 3rem; fill: var(--inv-accent); animation: roll 3s linear infinite; }
+.tideBody { position: absolute; inset: calc(3rem - 2px) 0 0; background: linear-gradient(180deg, var(--inv-accent), color-mix(in oklab, var(--inv-accent), black 22%)); }
+.montazaOpen:not([data-phase="closed"]) .tide { transform: translateY(-100%); }
+.montazaOpen[data-phase="leaving"] .tide { transform: translateY(-240%); transition-duration: 1.3s; }
+
+/* ══ Luxor ══════════════════════════════════════════════════════════════ */
+
+.templeNight {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(55% 32% at 50% 47%, color-mix(in oklab, var(--inv-accent-fg) 45%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in oklab, var(--inv-accent), black 58%) 0%, color-mix(in oklab, var(--inv-accent), black 12%) 46.5%, color-mix(in oklab, var(--inv-accent), black 45%) 47%, color-mix(in oklab, var(--inv-accent), black 70%) 100%);
+}
+.colonnade { position: absolute; inset: 0; overflow: hidden; perspective: 640px; perspective-origin: 50% 47%; pointer-events: none; }
+.pylon { position: absolute; left: 50%; top: 47%; width: 9rem; margin-left: -4.5rem; translate: 0 -100%; fill: color-mix(in oklab, var(--inv-accent), black 40%); }
+.aisle { position: absolute; left: 50%; top: 47%; transform-style: preserve-3d; }
+.pillar { position: absolute; left: -2.6rem; top: -15rem; width: 5.2rem; height: 26rem; transform: translate3d(var(--x), 0, var(--z)); }
+.pillar svg { display: block; width: 100%; height: 100%; }
+.walking { animation: walk 40s linear infinite; }
+@keyframes walk {
+  0% { transform: translate3d(var(--x), 0, -2500px); opacity: 0; }
+  12% { opacity: 1; }
+  86% { opacity: 1; }
+  100% { transform: translate3d(var(--x), 0, 330px); opacity: 0; }
+}
+.stone { fill: color-mix(in oklab, var(--inv-accent-fg) 62%, var(--inv-bg)); }
+.carve { fill: none; stroke: color-mix(in oklab, var(--inv-accent) 45%, var(--inv-accent-fg)); stroke-width: 1.2; }
+.stoneShade { fill: rgb(0 0 0 / .24); }
+.luxorText { color: var(--inv-accent-fg); }
+.cartouche h1 { font-size: clamp(2.4rem, 10vw, 3.4rem); }
+.cartouche p { letter-spacing: .1em; }
+.cartouche {
+  position: relative; max-width: 18rem; margin-inline: auto; padding: 2.4rem 1.1rem 2.2rem; border-radius: 999px;
+  border: 2px solid color-mix(in oklab, var(--inv-accent-fg) 80%, transparent);
+  background: color-mix(in oklab, var(--inv-accent) 72%, transparent);
+  box-shadow: inset 0 0 0 5px color-mix(in oklab, var(--inv-accent) 60%, transparent), inset 0 0 0 6px color-mix(in oklab, var(--inv-accent-fg) 40%, transparent);
+}
+.cartouche::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: -12px; height: 3px; border-radius: 3px; background: color-mix(in oklab, var(--inv-accent-fg) 80%, transparent); }
+
+.luxorOpen { color: var(--inv-accent-fg); }
+.luxorTop { text-shadow: 0 2px 16px rgb(0 0 0 / .5); }
+.dolly { transition: transform 2.4s cubic-bezier(.55, 0, .7, .3); }
+.luxorOpen:not([data-phase="closed"]) .dolly { transform: translateZ(2200px); }
+.doorLight {
+  position: absolute; left: 50%; top: 47%; width: 3rem; height: 3rem; margin: -2.2rem 0 0 -1.5rem; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--inv-accent-fg), white 55%) 0 22%, color-mix(in oklab, var(--inv-accent-fg) 55%, transparent) 45%, transparent 70%);
+  transition: transform 2.4s cubic-bezier(.7, 0, .7, .3);
+}
+.luxorOpen:not([data-phase="closed"]) .doorLight { transform: scale(70); }
+
+@media (max-width: 600px) {
+  .sun, .risingSun { bottom: 18%; width: 6rem; height: 6rem; margin-left: -3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caravan, .win, .wave, .sail, .gull, .walking, .tideCrest { animation: none !important; }
+  .walking { opacity: 1; }
+}

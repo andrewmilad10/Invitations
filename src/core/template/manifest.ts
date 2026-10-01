@@ -24,6 +24,7 @@ export const TEMPLATE_CATEGORIES = [
   "botanical",
   "outdoor",
   "traditional",
+  "egyptian",
 ] as const;
 export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number];
 

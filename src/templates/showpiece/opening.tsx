@@ -3,18 +3,17 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { OPENED_EVENT } from "../cinematic/opening/envelope-opening";
+import { CREATIVE_SCENES } from "./creative-open";
+import { LANDMARK_SCENES } from "./landmarks-open";
+import type { Phase, SceneEntry } from "./scene";
+import { Flower } from "./flower";
 import styles from "./showpiece.module.css";
+import { TIMING, type Variant } from "./variants";
 
-export type Variant = "gate" | "nile" | "herbarium" | "toast";
-type Phase = "closed" | "opening" | "leaving" | "done";
+export type { Variant } from "./variants";
+export { Flower } from "./flower";
 
-/** How long each opening plays before the overlay leaves, and how long leaving takes (ms). */
-const TIMING: Record<Variant, [number, number]> = {
-  gate: [1700, 900],
-  nile: [2600, 1000],
-  herbarium: [2500, 900],
-  toast: [2300, 1400],
-};
+const SCENES: Partial<Record<Variant, SceneEntry>> = { ...CREATIVE_SCENES, ...LANDMARK_SCENES };
 
 const COPY = {
   en: { invited: "You are invited", evening: "An evening on the Nile", lanterns: "Tap to light the lanterns", book: "Tap the book to open it", herbarium: "A herbarium of", hearts: "Two hearts", toast: "You are invited to a toast", glass: "Tap the glass", skip: "Skip" },
@@ -79,7 +78,8 @@ export function ShowpieceOpening({ model, variant }: { model: InvitationModel; v
   const lanterns = useMemo(() => Array.from({ length: 16 }, (_, i) => ({ left: (i * 37) % 92 + 4, dx: ((i * 53) % 80) - 40, delay: ((i * 29) % 14) / 10, scale: 0.6 + ((i * 17) % 7) / 10 })), []);
 
   if (phase === "done") return null;
-  const cls = { gate: styles.gateOpen, nile: styles.nileOpen, herbarium: styles.gardenOpen, toast: styles.toastOpen }[variant];
+  const scene = SCENES[variant];
+  const cls = scene?.className ?? { gate: styles.gateOpen, nile: styles.nileOpen, herbarium: styles.gardenOpen, toast: styles.toastOpen }[variant as "gate"];
   const skip = (
     <button type="button" className={styles.skip} onClick={open}>
       {t.skip}
@@ -87,7 +87,9 @@ export function ShowpieceOpening({ model, variant }: { model: InvitationModel; v
   );
 
   return (
-    <div className={`${styles.open} ${cls}`} data-phase={phase} role="dialog" aria-label={model.strings.openInvitation}>
+    <div className={`${styles.open} ${cls}`} data-phase={phase} data-v={variant} role="dialog" aria-label={model.strings.openInvitation}>
+      {scene ? <scene.Scene model={model} phase={phase} open={open} skip={skip} /> : null}
+
       {variant === "gate" ? (
         <>
           <div aria-hidden className={`${styles.door} ${styles.doorL}`}><div className={styles.doorArch} /><span className={styles.handle} /></div>
@@ -173,20 +175,6 @@ export function ShowpieceOpening({ model, variant }: { model: InvitationModel; v
         </>
       ) : null}
     </div>
-  );
-}
-
-/** A rose drawn in the theme's colours; each part grows on its own when the book opens. */
-export function Flower({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 124" width="90" className={`${styles.bloom} ${className ?? ""}`} aria-hidden>
-      <path style={{ ["--i" as string]: 0 }} d="M50 120 C50 90 52 70 50 50" stroke="var(--inv-accent)" strokeWidth="2" fill="none" />
-      <path style={{ ["--i" as string]: 1 }} d="M50 92 C38 86 30 76 30 66 C42 70 48 78 50 92Z" fill="var(--inv-accent)" opacity=".75" />
-      <path style={{ ["--i" as string]: 2 }} d="M50 80 C62 74 70 64 70 54 C58 58 52 66 50 80Z" fill="var(--inv-accent)" opacity=".6" />
-      <circle style={{ ["--i" as string]: 3 }} cx="50" cy="40" r="16" fill="var(--inv-muted)" opacity=".35" />
-      <circle style={{ ["--i" as string]: 4 }} cx="50" cy="40" r="10" fill="var(--inv-muted)" opacity=".65" />
-      <circle style={{ ["--i" as string]: 5 }} cx="50" cy="40" r="4.5" fill="var(--inv-muted)" />
-    </svg>
   );
 }
 

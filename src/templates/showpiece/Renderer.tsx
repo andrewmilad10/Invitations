@@ -8,8 +8,12 @@ import { MapEmbed } from "../shared/map-embed";
 import { MusicToggle } from "../shared/music-toggle";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
 import { HeroSky, ShowpieceEffects } from "./effects";
-import { Flower, ShowpieceOpening, type Variant } from "./opening";
+import { CREATIVE_EMBLEMS, CREATIVE_HEROES } from "./creative";
+import { LANDMARK_EMBLEMS, LANDMARK_HEROES } from "./landmarks";
+import { Flower } from "./flower";
+import { ShowpieceOpening } from "./opening";
 import styles from "./showpiece.module.css";
+import { lookOf, type Variant } from "./variants";
 
 /**
  * The Showpiece family — four wedding websites with their own opening moment
@@ -36,7 +40,14 @@ const KICKERS = {
 } as const;
 const kick = (model: InvitationModel) => KICKERS[model.locale as keyof typeof KICKERS] ?? KICKERS.en;
 const variantOf = (model: InvitationModel): Variant => model.template.renderer as Variant;
-const v = variantOf;
+/** How the shared sections are dressed (see ./variants). */
+const look = (model: InvitationModel) => lookOf(variantOf(model));
+
+/** Heroes and RSVP emblems drawn by the newer variants. */
+const HEROES = { ...CREATIVE_HEROES, ...LANDMARK_HEROES };
+const EMBLEMS = { ...CREATIVE_EMBLEMS, ...LANDMARK_EMBLEMS };
+/** Variants whose names are set in gold foil. */
+const FOIL: ReadonlySet<Variant> = new Set<Variant>(["gate", "toast", "glass", "keepsake", "baron", "luxor", "giza"]);
 
 function Block({ id, children, className, tone }: { id: string; children: ReactNode; className?: string; tone?: "surface" | "band" }) {
   return (
@@ -62,9 +73,9 @@ function Hero({ model, content }: SectionProps<"hero">) {
   const { wedding, media } = model;
   const names = (
     <h1 className={styles.names}>
-      <span className={v === "toast" || v === "gate" ? styles.foil : undefined}>{wedding.partnerOne}</span>
+      <span className={FOIL.has(v) ? styles.foil : undefined}>{wedding.partnerOne}</span>
       <span className={styles.amp}>&amp;</span>
-      <span className={v === "toast" || v === "gate" ? styles.foil : undefined}>{wedding.partnerTwo}</span>
+      <span className={FOIL.has(v) ? styles.foil : undefined}>{wedding.partnerTwo}</span>
     </h1>
   );
   const text = (
@@ -77,11 +88,14 @@ function Hero({ model, content }: SectionProps<"hero">) {
     </>
   );
 
+  const Art = HEROES[v];
   return (
     <header id="hero" data-section="hero" className={styles.hero}>
+      {Art ? <Art model={model} text={text} /> : null}
+
       {v === "gate" ? (
         <>
-          <HeroSky model={model} variant={v} />
+          <HeroSky model={model} kind="flecks" />
           <div className={cn(styles.col, styles.heroInner)}>
             <div aria-hidden className={styles.stack}>
               <div className={styles.tilt} data-tilt>
@@ -108,7 +122,7 @@ function Hero({ model, content }: SectionProps<"hero">) {
 
       {v === "nile" ? (
         <>
-          <div className={styles.layer} data-depth="0.15"><HeroSky model={model} variant={v} /></div>
+          <div className={styles.layer} data-depth="0.15"><HeroSky model={model} kind="stars" /></div>
           <div className={styles.layer} data-depth="0.35"><div aria-hidden className={styles.moon} /></div>
           <div className={cn(styles.layer, styles.palms)} data-depth="0.6" aria-hidden>
             <svg viewBox="0 0 200 160" style={{ insetInlineStart: "-4%" }}><path d="M60 160 C62 110 66 80 72 50 M72 50 C50 40 30 44 14 58 M72 50 C60 30 44 22 26 24 M72 50 C80 28 96 18 116 20 M72 50 C94 40 112 44 126 58 M72 50 C70 34 72 20 80 8" stroke="currentColor" strokeWidth="7" fill="none" strokeLinecap="round" /></svg>
@@ -222,7 +236,7 @@ function Story({ model, content }: SectionProps<"story">) {
               </div>
             ))}
           </div>
-        ) : v(model) === "herbarium" ? (
+        ) : look(model) === "herbarium" ? (
           <div data-fx="rise" className={cn(styles.center, "mt-8")}><Flower /></div>
         ) : null}
         {content.body ? (
@@ -296,7 +310,7 @@ function Schedule({ model, content }: SectionProps<"schedule">) {
       ? content.items
       : model.events.all.filter((e) => e.timeLabel).map((e) => ({ time: e.timeLabel!, title: e.title || (e.venueName ?? ""), note: e.venueName ?? "" }));
   if (!items.length) return null;
-  const variant = v(model);
+  const variant = look(model);
   return (
     <Block id="schedule" tone={variant === "nile" || variant === "toast" ? "band" : undefined}>
       <div className={styles.col}>
@@ -344,7 +358,7 @@ function Gallery({ model, content }: SectionProps<"gallery">) {
         <div className={styles.grid}>
           {photos.map((p) => (
             <div key={p.id} data-fx="rise" className={cn(styles.photo, styles.tilt3d)} data-tilt="page">
-              {v(model) === "herbarium" ? (
+              {look(model) === "herbarium" ? (
                 <div><InvitationImage asset={p} alt={p.alt} fill sizes="(min-width: 720px) 300px, 45vw" className="object-cover" /></div>
               ) : (
                 <InvitationImage asset={p} alt={p.alt} fill sizes="(min-width: 720px) 300px, 45vw" className="object-cover" />
@@ -358,11 +372,13 @@ function Gallery({ model, content }: SectionProps<"gallery">) {
 }
 
 function Reply({ model, content }: SectionProps<"rsvp">) {
-  const variant = v(model);
+  const variant = variantOf(model);
+  const Emblem = EMBLEMS[variant];
   return (
-    <Block id="rsvp" tone={variant === "gate" ? "band" : undefined}>
+    <Block id="rsvp" tone={look(model) === "gate" ? "band" : undefined}>
       <div className={cn(styles.col, styles.reply)}>
         <div data-fx="rise">
+          {Emblem ? <span aria-hidden className={styles.emblem}><Emblem model={model} /></span> : null}
           {variant === "gate" ? <span aria-hidden className={cn(styles.emblem, styles.seal)}>{model.wedding.initials[0]}&amp;{model.wedding.initials[1]}</span> : null}
           {variant === "nile" ? <span aria-hidden className={cn(styles.emblem, styles.lantern)} /> : null}
           {variant === "herbarium" ? <span className={styles.emblem}><Flower /></span> : null}
@@ -450,7 +466,7 @@ export default function ShowpieceRenderer({ model }: TemplateRendererProps) {
   const variant = variantOf(model);
   return (
     <InvitationRoot model={model} className="font-inv-body">
-      <div data-showpiece data-v={variant} className={styles.root}>
+      <div data-showpiece data-v={variant} data-look={lookOf(variant)} className={styles.root}>
         <main>
           <Sections model={model} components={sections} />
         </main>

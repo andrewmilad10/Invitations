@@ -37,6 +37,14 @@ const OPENINGS: Record<string, [label: string, sentence: string]> = {
   nile: ["Lantern opening", "Opens on a starry night over the Nile: guests tap and lanterns rise into the sky."],
   herbarium: ["Book opening", "Opens as a linen book: guests tap and the cover swings open on a blooming flower."],
   toast: ["Champagne opening", "Opens with a champagne coupe in a gold Deco frame: guests tap and the bubbles lift the curtain."],
+  stars: ["Constellation opening", "Opens on a night sky: guests tap and the stars join into a heart as a shooting star crosses."],
+  popup: ["Pop-up opening", "Opens as a folded card: guests tap and a paper stage pops up, layer by layer."],
+  glass: ["Stained-glass opening", "Opens on pieces of coloured glass: guests tap and they set into a rose window as the light pours in."],
+  keepsake: ["Gift-box opening", "Opens on a gift box tied with silk: guests tap, the bow unties, the lid lifts and your card rises out."],
+  giza: ["Sunrise opening", "Opens at night under the pyramids: guests tap and the sun rises behind them."],
+  baron: ["Palace-lights opening", "Opens as the palace draws itself in gold: guests tap and every window lights up."],
+  montaza: ["Wave opening", "Opens by the sea at Montaza: guests tap and a wave rolls in to reveal your page."],
+  luxor: ["Temple opening", "Opens in Luxor's colonnade at night: guests tap and walk through the columns into the light."],
 };
 export function openingOf(t: Pick<TemplateManifest, "features" | "renderer">): { label: string; sentence: string } | null {
   if (t.features.opening !== "envelope") return null;

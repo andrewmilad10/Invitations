@@ -232,8 +232,13 @@ Sections added for this family and available to every layout: **faq**
 
 ## The Showpiece family (`src/templates/showpiece`)
 
-Four wedding websites with their own opening moment and motion, drawn by
-one layout (`Renderer.tsx`; the renderer key picks the variant):
+Twelve wedding websites with their own opening moment and motion, drawn by
+one layout (`Renderer.tsx`; the renderer key picks the variant). Each
+variant has a "look" (`variants.ts`: gate, nile, herbarium or toast) that
+dresses the shared sections and fixes the colour roles its palettes follow.
+The newer variants keep their hero and emblem in `creative.tsx` /
+`landmarks.tsx`, and their opening scene in `creative-open.tsx` /
+`landmarks-open.tsx` (registered as scenes, see `scene.ts`).
 
 | Template | Renderer | Opening | Inside |
 | --- | --- | --- | --- |
@@ -241,6 +246,18 @@ one layout (`Renderer.tsx`; the renderer key picks the variant):
 | Moonlit Nile | `nile` | a night river; a tap releases lanterns and the felucca sails away | sky, moon, palms and river at different depths; moon countdown; lanterns light along the day |
 | Pressed Garden | `herbarium` | a linen book whose cover swings open on a blooming flower | sprigs, swinging herbarium tags, stems that draw themselves |
 | Gilded Toast | `toast` | a gold Deco frame draws itself; tapping the coupe fills it and lifts the curtain | Deco arch, turning sunburst, the evening as a menu card |
+| Written in the Stars | `stars` | stars join into a heart; a shooting star crosses | a gold armillary sphere turning around the initials, twinkling sky |
+| Paper Theatre | `popup` | a folded card opens and a paper stage pops up layer by layer | cut-paper sun, clouds, hills, arch and curtains at their own depths; hanging paper stars |
+| Rose Window | `glass` | coloured glass sets into a rose window; light pours in | the glowing window, coloured light falling across the page |
+| The Keepsake Box | `keepsake` | a 3D gift box: the bow unties, the lid lifts, the card rises | ribbon and bow, a floating photo, ticket and pressed flower |
+| Giza at Dusk | `giza` | night under the pyramids; the sun rises behind them | pyramids, dunes and a camel caravan at their own depths, drifting dust |
+| Baron Palace | `baron` | the palace draws itself in gold; every window lights up | the palace in gold line with flickering windows, a gold arch frame |
+| Montaza by the Sea | `montaza` | a wave rolls in over the screen | the tower, arcade and tea-island bridge over a moving sea, gulls, a sail |
+| Luxor Temple | `luxor` | a walk through the colonnade into the light | papyrus columns gliding past in 3D, names in a gold cartouche |
+
+The Egypt venue drawings are original and simple; the openings greet guests
+with the couple's own venue name when they gave one (the sample shows the
+place the design draws). These four carry the "egyptian" style category.
 
 The openings (`opening.tsx`) follow the cinematic contract: shown on live and
 sample pages, hidden in the editor until "Replay opening", never in exports,
@@ -250,3 +267,11 @@ set `data-fx="on"`, so every page reads fully without JavaScript. Colours
 come only from `--inv-*` (roles per variant are documented in the renderer).
 The RSVP section shows the couple's reply link; collecting replies in Vellum
 is Phase 2.
+
+## The Essentials family (`src/templates/essentials`)
+
+Four simple websites with no opening and almost no motion (the hero settles
+in on load): Simple Linen (`linen`, centred and classic), Monogram
+(`monogram`, initials in a double ring, ruled boxes), Side by Side (`split`,
+the photo held beside the details on wide screens) and Modern Type
+(`modern`, left-aligned type, the date in numerals, hairline rows).

@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { OPENED_EVENT } from "../cinematic/opening/envelope-opening";
 import styles from "./showpiece.module.css";
-import type { Variant } from "./opening";
 
 /**
  * Motion for a Showpiece page, switched on only for live / sample pages and
@@ -88,10 +87,12 @@ export function ShowpieceEffects({ model }: { model: InvitationModel }) {
 }
 
 /**
- * The hero's sky: gold flecks and petals falling after the gate opens, or
- * twinkling stars over the Nile. Pauses when off screen.
+ * The hero's sky: gold flecks and petals falling after the opening
+ * ("flecks"), twinkling stars ("stars") or drifting sand and dust motes
+ * ("dust"). Pauses when off screen.
  */
-export function HeroSky({ model, variant }: { model: InvitationModel; variant: Variant }) {
+export function HeroSky({ model, kind }: { model: InvitationModel; kind: "flecks" | "stars" | "dust" }) {
+  const variant = kind === "stars" ? "nile" : kind;
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = ref.current;
@@ -108,7 +109,7 @@ export function HeroSky({ model, variant }: { model: InvitationModel; variant: V
     const size = () => {
       W = c.clientWidth; H = c.clientHeight;
       c.width = W * d; c.height = H * d; g.setTransform(d, 0, 0, d, 0, 0);
-      const n = variant === "nile" ? 140 : 46;
+      const n = variant === "nile" ? 140 : variant === "dust" ? 60 : 46;
       parts = Array.from({ length: n }, (_, i) => ({ x: Math.random() * W, y: variant === "nile" ? Math.random() * H * 0.7 : -Math.random() * H, r: variant === "nile" ? Math.random() * 1.3 + 0.3 : 2 + Math.random() * 4, v: 0.4 + Math.random() * 0.9, s: Math.random() * 6.28, petal: i % 3 === 0 }));
     };
     size();
@@ -125,6 +126,11 @@ export function HeroSky({ model, variant }: { model: InvitationModel; variant: V
         if (variant === "nile") {
           g.globalAlpha = reduced ? 0.8 : 0.45 + 0.45 * Math.sin(t / 900 + p.s);
           g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.28); g.fill();
+        } else if (variant === "dust") {
+          if (!reduced) { p.x += p.v * 0.35; p.y += Math.sin(t / 1400 + p.s) * 0.12; }
+          if (p.x > W + 6) p.x = -6;
+          g.globalAlpha = 0.25 + 0.3 * Math.sin(t / 1100 + p.s * 3) ** 2;
+          g.beginPath(); g.arc(p.x, Math.abs(p.y) % H, p.r * 0.35, 0, 6.28); g.fill();
         } else if (started) {
           const fast = (t - t0) / 1000 < 4 ? 1.6 : 0.7;
           p.y += p.v * fast; p.s += 0.02; p.x += Math.sin(p.s) * 0.5;

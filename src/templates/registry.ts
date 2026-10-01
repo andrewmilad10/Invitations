@@ -6,6 +6,7 @@ import { BOUTIQUE_MANIFESTS } from "./collection/boutique";
 import { KEEPSAKE_MANIFESTS } from "./collection/keepsakes";
 import { DESIGN_MANIFESTS } from "./collection/designs";
 import { editorialManifest } from "./editorial/manifest";
+import { ESSENTIALS_MANIFESTS } from "./essentials/manifests";
 import { GALERIE_MANIFESTS } from "./galerie/manifests";
 import { MAISON_MANIFESTS } from "./maison/manifests";
 import { POSTALE_MANIFESTS } from "./postale/manifests";
@@ -35,6 +36,7 @@ const ALL: TemplateManifest[] = [
   ...GALERIE_MANIFESTS,
   ...POSTALE_MANIFESTS,
   ...SHOWPIECE_MANIFESTS,
+  ...ESSENTIALS_MANIFESTS,
 ];
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
@@ -42,6 +44,8 @@ const FEATURED = [
   "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
   "baroque-crest", "calla-lily", "golden-oval", "monochrome-bloom", "save-the-date", "wild-garden", "velvet-calla", "gilded-crest",
   "marlowe", "garden-toile", "verdant", "horizon", "gilded-garden", "serena", "peony-press", "wildwood", "cypress", "aurelia",
+  "giza-at-dusk", "written-in-the-stars", "baron-palace", "keepsake-box", "luxor-temple", "rose-window", "montaza-by-the-sea", "paper-theatre",
+  "simple-linen", "simple-monogram", "side-by-side", "modern-type",
   "the-gate", "moonlit-nile", "pressed-garden", "gilded-toast",
   "maison", "cinematic", "postale", "galerie", "meadow", "couture", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
   "monochrome", "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",

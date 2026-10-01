@@ -2,6 +2,7 @@ import type { InvitationModel } from "@/core/invitation/model";
 import AtelierRenderer from "./atelier/Renderer";
 import CinematicRenderer from "./cinematic/Renderer";
 import EditorialRenderer from "./editorial/Renderer";
+import EssentialsRenderer from "./essentials/Renderer";
 import GalerieRenderer from "./galerie/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
@@ -21,6 +22,18 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   nile: ShowpieceRenderer,
   herbarium: ShowpieceRenderer,
   toast: ShowpieceRenderer,
+  stars: ShowpieceRenderer,
+  popup: ShowpieceRenderer,
+  glass: ShowpieceRenderer,
+  keepsake: ShowpieceRenderer,
+  giza: ShowpieceRenderer,
+  baron: ShowpieceRenderer,
+  montaza: ShowpieceRenderer,
+  luxor: ShowpieceRenderer,
+  linen: EssentialsRenderer,
+  monogram: EssentialsRenderer,
+  split: EssentialsRenderer,
+  modern: EssentialsRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */
