@@ -109,7 +109,8 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
   const drag = useRef<{ x: number; pos: number; moved: boolean; samples: [number, number][] } | null>(null);
   const [active, setActive] = useState(0);
   // Cards are drawn once and kept: the ones near the start straight away, the rest while the page is idle.
-  const [drawnUpTo, setDrawnUpTo] = useState(6);
+  // Both sides of the middle are drawn from the start, so moving either way finds cards ready.
+  const [drawnUpTo, setDrawnUpTo] = useState(13);
   const wrap = useCallback((d: number) => ((((d + n / 2) % n) + n) % n) - n / 2, [n]);
 
   /** Write every card's position for the current frame — DOM only, no React. */
@@ -200,10 +201,14 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
   // Draw the remaining cards a few at a time while the browser is idle, nearest first.
   useEffect(() => {
     if (drawnUpTo >= n) return;
-    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 120));
-    const cancel = window.cancelIdleCallback ?? window.clearTimeout;
-    const id = idle(() => setDrawnUpTo((k) => Math.min(n, k + 4)));
-    return () => cancel(id);
+    // Never while someone is swiping: drawing a card then would stutter the motion.
+    let timer = 0;
+    const next = () => {
+      if (drag.current || state.current.tweening) timer = window.setTimeout(next, 250);
+      else setDrawnUpTo((k) => Math.min(n, k + 2));
+    };
+    timer = window.setTimeout(next, 200);
+    return () => window.clearTimeout(timer);
   }, [drawnUpTo, n]);
   // The order cards are drawn in: outwards from the first, both ways round.
   // Where each card starts (also the server's drawing, before any script runs).
@@ -356,7 +361,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
         </span>
         <div className="absolute inset-0 [transform-style:preserve-3d]">
           {designs.map((t, i) => (
-            <CurveCard key={t.id} template={t} index={i} centre={i === active} drawn={order[i] < drawnUpTo} first={firstStyles[i]} setRef={setRef} onPick={onPick} />
+            <CurveCard key={t.id} template={t} index={i} centre={i === active} drawn={order[i] < drawnUpTo || Math.abs(wrap(i - active)) <= 6} first={firstStyles[i]} setRef={setRef} onPick={onPick} />
           ))}
         </div>
       </div>
