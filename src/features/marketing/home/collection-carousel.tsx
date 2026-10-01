@@ -13,10 +13,10 @@ import { Stationery } from "../stationery";
 /**
  * The homepage collection: invitation cards standing on the inside of a deep
  * curve that wraps around the viewer — the front card sits furthest away,
- * the cards on either side come forward and turn in towards you. It turns
- * slowly on its own in one smooth, continuous motion and pauses while you
- * look (hover, focus) or touch it. Drag, swipe, scroll sideways, arrow keys
- * or the buttons turn it; the card in the middle opens its design.
+ * the cards on either side come forward and turn in towards you. It is
+ * still until someone moves it: drag, swipe or scroll sideways from anywhere
+ * on it (cards, gaps or caption), or use the arrow keys or buttons. The card
+ * in the middle opens its design.
  *
  * Every frame is computed from one number (`pos`), written straight to the
  * DOM — no React re-render while it moves.
@@ -28,11 +28,10 @@ interface Geometry {
   gap: number; // space between cards, × card width
   visible: number; // cards each side before fading out
   perspective: number; // px — smaller is deeper
-  speed: number; // cards per second when turning on its own
 }
 
-const DESKTOP: Geometry = { card: 200, radius: 1000, gap: 1.22, visible: 4.4, perspective: 900, speed: 0.25 };
-const MOBILE: Geometry = { card: 132, radius: 430, gap: 1.2, visible: 2.6, perspective: 560, speed: 0.25 };
+const DESKTOP: Geometry = { card: 200, radius: 1000, gap: 1.22, visible: 4.4, perspective: 900 };
+const MOBILE: Geometry = { card: 132, radius: 430, gap: 1.2, visible: 2.6, perspective: 560 };
 
 /** Transform, fade and side light of the card at offset `d` from the middle. */
 function layout(d: number, spread: number, geo: Geometry) {
@@ -103,9 +102,10 @@ const CurveCard = memo(function CurveCard({
 export function CollectionCarousel({ designs }: { designs: TemplateManifest[] }) {
   const n = designs.length;
   const stage = useRef<HTMLDivElement>(null);
+  const block = useRef<HTMLDivElement>(null);
   const cards = useRef<(HTMLAnchorElement | null)[]>([]);
   const last = useRef<{ t: string; o: string; v: string; s: string; z: string; side: number }[]>([]);
-  const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false, hover: false, focus: false, seen: true, idleUntil: 0, tweening: false, active: 0, dir: 1 });
+  const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false, tweening: false, active: 0 });
   const drag = useRef<{ x: number; pos: number; moved: boolean; samples: [number, number][] } | null>(null);
   const [active, setActive] = useState(0);
   // Cards are drawn once and kept: the ones near the start straight away, the rest while the page is idle.
@@ -160,10 +160,6 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     [],
   );
 
-  /** After someone turns the curve, it waits a moment before drifting on. */
-  const rest = (ms = 3000) => {
-    state.current.idleUntil = performance.now() + ms;
-  };
 
   const goTo = useCallback(
     (target: number, velocity = 0) => {
@@ -177,7 +173,6 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
         onUpdate: render,
         onComplete: () => {
           s.tweening = false;
-          rest();
         },
       });
     },
@@ -186,7 +181,6 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
 
   const move = useCallback(
     (by: number) => {
-      state.current.dir = by < 0 ? -1 : 1;
       goTo(Math.round(state.current.pos) + by);
     },
     [goTo],
@@ -229,7 +223,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     return rank;
   }, [n, wrap]);
 
-  // Geometry per screen, reduced motion, the opening fan-out, and the slow turn.
+  // Geometry per screen and reduced motion. The curve never moves on its own.
   useEffect(() => {
     const s = state.current;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -246,39 +240,10 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     reduced.addEventListener("change", apply);
     small.addEventListener("change", apply);
 
-    const el = stage.current;
-    let opened = s.reduced || Boolean(el && el.getBoundingClientRect().top < window.innerHeight * 0.8);
-    if (!opened) {
-      s.spread = 0.2;
-      render();
-    }
-    // Only turn while on screen; the first time it is seen, the curve opens out.
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        s.seen = entry.isIntersecting;
-        if (entry.isIntersecting && !opened) {
-          opened = true;
-          gsap.to(s, { spread: 1, duration: 1.6, ease: "power3.out", onUpdate: render });
-        }
-      },
-      { threshold: 0.15 },
-    );
-    if (el) observer.observe(el);
-
-    const tick = (_t: number, deltaMs: number) => {
-      if (s.reduced || s.hover || s.focus || !s.seen || s.tweening || drag.current || document.hidden) return;
-      if (performance.now() < s.idleUntil) return;
-      // Drift on in the direction the visitor last moved it, never back against them.
-      s.pos += (Math.min(deltaMs, 50) / 1000) * s.geo.speed * s.dir;
-      render();
-    };
-    gsap.ticker.add(tick);
 
     return () => {
       reduced.removeEventListener("change", apply);
       small.removeEventListener("change", apply);
-      observer.disconnect();
-      gsap.ticker.remove(tick);
       gsap.killTweensOf(s);
     };
   }, [render]);
@@ -301,7 +266,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     const dx = e.clientX - g.x;
     if (!g.moved && Math.abs(dx) > 6) {
       g.moved = true;
-      stage.current?.setPointerCapture(e.pointerId);
+      block.current?.setPointerCapture(e.pointerId);
     }
     if (!g.moved) return;
     state.current.pos = g.pos - dx / perCardOf(state.current.geo);
@@ -317,17 +282,15 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const [x1, t1] = g.samples[g.samples.length - 1];
       const v = (x1 - x0) / Math.max(16, t1 - t0); // px per ms
       const fling = Math.max(-6, Math.min(6, (-v * 300) / perCardOf(state.current.geo)));
-      // Finger moving right = going back through the designs.
-      if (Math.abs(x1 - x0) > 2) state.current.dir = x1 > x0 ? -1 : 1;
       goTo(Math.round(state.current.pos + fling), v);
-    } else rest();
+    }
     // Keep `moved` until the click that follows the drag has been swallowed.
     setTimeout(() => (drag.current = null), 0);
   };
 
   // Sideways trackpad / shift-wheel scrolling turns the curve, then settles.
   useEffect(() => {
-    const el = stage.current;
+    const el = block.current;
     if (!el) return;
     let settle = 0;
     const onWheel = (e: WheelEvent) => {
@@ -337,7 +300,6 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const s = state.current;
       gsap.killTweensOf(s, "pos");
       s.tweening = true;
-      s.dir = dx < 0 ? -1 : 1;
       s.pos += dx / perCardOf(s.geo);
       render();
       window.clearTimeout(settle);
@@ -363,7 +325,21 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
   const current = designs[active];
 
   return (
-    <div>
+    // Swipe, drag or scroll sideways from anywhere on the block: the cards, the gaps, or the caption.
+    <div
+      ref={block}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      onClickCapture={(e) => {
+        if (drag.current?.moved) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+      className="cursor-grab touch-pan-y select-none overscroll-x-contain active:cursor-grabbing"
+    >
       {/* The stage bleeds to the edges of the section; the caption stays in the column. */}
       <div
         ref={stage}
@@ -372,20 +348,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
         aria-label="Featured invitation designs"
         tabIndex={0}
         onKeyDown={onKeyDown}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-        onPointerEnter={(e) => {
-          if (e.pointerType === "mouse") state.current.hover = true;
-        }}
-        onPointerLeave={() => {
-          state.current.hover = false;
-          rest(800);
-        }}
-        onFocus={() => (state.current.focus = true)}
-        onBlur={() => (state.current.focus = false)}
-        className="relative h-[310px] cursor-grab touch-pan-y select-none overflow-hidden overscroll-x-contain outline-none [perspective:900px] active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[470px] [--card:200px]"
+        className="relative h-[310px] overflow-hidden outline-none [perspective:900px] active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[470px] [--card:200px]"
       >
         {/* A faint ampersand watermark behind the curve. */}
         <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] select-none font-serif text-[15rem] font-light leading-none text-foreground/[0.045] sm:text-[24rem]">
