@@ -49,7 +49,6 @@ export function layoutTemplate(
     renderer,
     categories: s.categories,
     stationery: { ornament: "none", layout: s.card.layout, shape: s.card.shape },
-    isNew: true,
     supportedSections: sections,
     defaultSectionOrder: sections,
     defaultDisabled: options.defaultDisabled,

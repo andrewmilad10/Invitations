@@ -17,7 +17,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "refined", letterpress: true },
     fonts: { heading: "instrument", body: "jost", accent: "pinyon" },
     palettes: ["snow", "claret", "stone", "midnight"],
-    isNew: true,
   }),
   design({
     id: "horizon",
@@ -28,7 +27,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "photo-overlay" },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["snow", "stone", "sage"],
-    isNew: true,
   }),
   design({
     id: "serena",
@@ -39,7 +37,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "asymmetric", shape: "corner" },
     fonts: { heading: "italiana", body: "jost", accent: "pinyon" },
     palettes: ["almond", "snow", "sage", "blush"],
-    isNew: true,
   }),
   design({
     id: "verdant",
@@ -50,7 +47,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "vines", layout: "spaced" },
     fonts: { heading: "cormorant", body: "jost", accent: "pinyon" },
     palettes: ["blushSage", "ivory", "mist"],
-    isNew: true,
   }),
   design({
     id: "wildwood",
@@ -61,7 +57,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "meadow-border", layout: "spaced", finish: { silhouette: "rounded" } },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["meadow", "blush", "sage"],
-    isNew: true,
   }),
   design({
     id: "garden-toile",
@@ -72,7 +67,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "line-florals", layout: "script", shape: "landscape" },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["deepEmerald", "mist", "oxblood", "almond"],
-    isNew: true,
   }),
   design({
     id: "gilded-garden",
@@ -83,7 +77,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "florals-band", layout: "script", finish: { foil: "gold" } },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["slate", "midnight", "navy", "emerald"],
-    isNew: true,
   }),
   design({
     id: "peony-press",
@@ -94,7 +87,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "peonies", layout: "spaced", letterpress: true, finish: { paper: "eggshell" } },
     fonts: { heading: "cormorant", body: "jost", accent: "pinyon" },
     palettes: ["pearl", "blush", "dustyBlue"],
-    isNew: true,
   }),
   design({
     id: "cypress",
@@ -105,7 +97,6 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "photo-side", shape: "landscape" },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["almond", "sage", "snow"],
-    isNew: true,
   }),
   design({
     id: "aurelia",
@@ -116,6 +107,5 @@ export const BOUTIQUE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "hairline", layout: "monogram", finish: { foil: "rose-gold" } },
     fonts: { heading: "cormorant", body: "jost", accent: "pinyon" },
     palettes: ["blush", "snow", "almond"],
-    isNew: true,
   }),
 ];

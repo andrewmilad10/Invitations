@@ -52,11 +52,11 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-1.5">
                 <Label htmlFor={`${id}-one`}>Your name</Label>
-                <Input id={`${id}-one`} placeholder="Emma" value={one} maxLength={40} onChange={(e) => setOne(e.target.value)} className="h-11 bg-card" />
+                <Input id={`${id}-one`} placeholder="Layla" value={one} maxLength={40} onChange={(e) => setOne(e.target.value)} className="h-11 bg-card" />
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor={`${id}-two`}>Your partner&apos;s</Label>
-                <Input id={`${id}-two`} placeholder="James" value={two} maxLength={40} onChange={(e) => setTwo(e.target.value)} className="h-11 bg-card" />
+                <Input id={`${id}-two`} placeholder="Omar" value={two} maxLength={40} onChange={(e) => setTwo(e.target.value)} className="h-11 bg-card" />
               </div>
             </div>
             <div className="grid gap-1.5">
@@ -114,8 +114,8 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
           <Stationery
             template={template}
             overrides={{ colors: palette?.colors }}
-            partnerOne={one.trim() || "Emma"}
-            partnerTwo={two.trim() || "James"}
+            partnerOne={one.trim() || "Layla"}
+            partnerTwo={two.trim() || "Omar"}
             dateLabel={dateLabel}
             className="w-full max-w-sm shadow-[0_30px_70px_-30px_rgb(34_29_26/0.55)]"
           />

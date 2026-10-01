@@ -9,6 +9,7 @@ import { productHref, productOf, templatesFor } from "@/features/marketing/produ
 import { SiteFooter } from "@/features/marketing/site-footer";
 import { SiteHeader } from "@/features/marketing/site-header";
 import { TemplateCard } from "@/features/marketing/template-card";
+import { listWords } from "@/lib/words";
 import { getTemplateManifest, selectableTemplates } from "@/templates/registry";
 
 export function generateStaticParams() {
@@ -55,16 +56,16 @@ export default async function InvitationCardPage(props: PageProps<"/invitations/
             <div>
               <h2 className="font-serif text-3xl font-light">About this design</h2>
               <p className="mt-4 leading-relaxed text-muted-foreground">{template.description}</p>
-              <p className="mt-4 text-sm capitalize text-muted-foreground">{template.categories.join(" · ")}</p>
+              <p className="mt-4 text-sm text-muted-foreground">Style: {listWords(template.categories)}.</p>
             </div>
             <div>
               <h2 className="font-serif text-3xl font-light">Typography</h2>
               <dl className="mt-6 grid gap-5">
                 {(["heading", "accent"] as const).map((role) => (
                   <div key={role} className="border-b pb-4">
-                    <dt className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{role === "heading" ? "Names" : "Script"}</dt>
+                    <dt className="text-sm text-muted-foreground">{role === "heading" ? "Names" : "Script"}</dt>
                     <dd className="mt-1 text-3xl" style={{ fontFamily: `var(${FONTS[fonts[role]].cssVar})` }}>
-                      Emma &amp; James
+                      Layla &amp; Omar
                     </dd>
                     <dd className="text-xs text-muted-foreground">{FONTS[fonts[role]].label}</dd>
                   </div>
@@ -87,7 +88,7 @@ export default async function InvitationCardPage(props: PageProps<"/invitations/
               <div className="mx-auto max-w-[88rem]">
                 <div className="flex items-end justify-between gap-4">
                   <h2 className="font-serif text-4xl font-light">
-                    Shop <span className="italic">similar</span> designs
+                    Similar designs
                   </h2>
                   <Link href="/invitations" className="text-sm underline underline-offset-4">
                     See all invitations

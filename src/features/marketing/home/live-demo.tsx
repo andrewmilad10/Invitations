@@ -41,11 +41,11 @@ export function LiveDemo() {
       <FadeIn duration={1400} className="absolute inset-0 -z-10 bg-forest" />
       <div className="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1fr_auto]">
         <Reveal variant="left" delay={250} duration={1000} className="max-w-xl">
-          <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">See it come to life</h2>
+          <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">What your guests will see</h2>
           <p className="mt-6 text-lg leading-relaxed text-forest-foreground/75">
             This is the Cinematic template, running for real. Tap the wax seal: the envelope opens, the card rises and becomes the first page of the wedding website.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-forest-foreground/75">Your guests get exactly this on their phones, with your names, photos and details.</p>
+          <p className="mt-4 text-lg leading-relaxed text-forest-foreground/75">Most guests will open it on a phone, so every design is made for the phone first: easy to read, quick to load, and one tap from directions to the venue.</p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Button asChild size="lg" className="rounded-full bg-forest-foreground px-7 text-forest hover:bg-forest-foreground/90">
               <Link href="/templates/cinematic">Preview the template</Link>

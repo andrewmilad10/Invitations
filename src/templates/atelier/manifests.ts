@@ -64,7 +64,7 @@ function atelier(s: Spec): TemplateManifest {
     renderer: "atelier",
     categories: s.categories,
     stationery: { ornament: "none", layout: "photo-script" },
-    isNew: s.isNew ?? true,
+    isNew: s.isNew ?? false,
     supportedSections: SECTIONS,
     defaultSectionOrder: SECTIONS,
     defaultDisabled: ["date"],

@@ -94,9 +94,9 @@ export default async function TemplatePage(props: PageProps<"/websites/[template
               <dl className="mt-6 grid gap-5">
                 {(["heading", "body", "accent"] as const).map((role) => (
                   <div key={role} className="border-b border-border pb-4">
-                    <dt className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{role}</dt>
+                    <dt className="text-sm capitalize text-muted-foreground">{role}</dt>
                     <dd className="mt-1 text-3xl" style={{ fontFamily: `var(${FONTS[fonts[role]].cssVar})` }}>
-                      {role === "body" ? "Together with their families" : "Emma & James"}
+                      {role === "body" ? "Together with their families" : "Layla & Omar"}
                     </dd>
                     <dd className="text-xs text-muted-foreground">{FONTS[fonts[role]].label}</dd>
                   </div>

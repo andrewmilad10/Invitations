@@ -8,6 +8,7 @@ import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { FavoriteButton, SwatchRow } from "../gallery/design-card";
 import { websiteFeatures } from "../products";
+import { listWords } from "@/lib/words";
 import { BrowserFrame, FittedPhone, MobileTryBar } from "./template-preview-stage";
 
 type View = "phone" | "website";
@@ -103,12 +104,12 @@ export function DesignDetail({
 
       {/* Options — arrive in sequence; the design itself is already in place (it morphs in from the gallery). */}
       <div data-stagger="80">
-        <p className="text-xs uppercase tracking-[0.25em] text-accent">{template.categories.slice(0, 3).join(" · ")}</p>
+        <p className="text-sm text-accent">{listWords(template.categories.slice(0, 3), { sentence: true })}</p>
         <div className="mt-3 flex items-start justify-between gap-4">
           <h1 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">{template.name}</h1>
           <FavoriteButton id={template.id} name={template.name} className="mt-2 shrink-0 border bg-background" />
         </div>
-        {template.isNew ? <span className="mt-3 inline-block rounded-full border px-2.5 py-0.5 text-[0.65rem] font-medium uppercase tracking-[0.14em]">New</span> : null}
+        {template.isNew ? <span className="mt-3 inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium">New</span> : null}
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">{template.description}</p>
 
         <div className="mt-8">

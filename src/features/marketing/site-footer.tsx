@@ -25,7 +25,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border">
         <p className="mx-auto max-w-7xl px-5 py-6 text-xs text-muted-foreground sm:px-8">
-          © {new Date().getFullYear()} {siteConfig.name}. Photography via Unsplash.
+          © {new Date().getFullYear()} {siteConfig.name}.
         </p>
       </div>
     </footer>

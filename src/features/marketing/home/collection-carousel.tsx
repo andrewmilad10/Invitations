@@ -7,6 +7,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProper
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { cardCouple, designHref } from "../gallery/design-card";
+import { listWords } from "@/lib/words";
 import { Stationery } from "../stationery";
 
 /**
@@ -393,12 +394,11 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
           See all {n} designs
         </Link>
         <div className="order-first col-span-2 text-center sm:order-none sm:col-span-1" aria-live="polite">
-          <p className="mb-3 hidden text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground sm:block">Drag · Swipe · Scroll sideways</p>
           <Link key={current.id} href={designHref(current.id, null)} className="carousel-caption inline-block font-serif text-3xl font-light hover:underline hover:underline-offset-4 sm:text-4xl">
             {current.name}
           </Link>
           <p className="mt-1 text-sm text-muted-foreground">
-            <span className="capitalize">{current.categories.slice(0, 2).join(" · ")}</span> · {current.palettes.length} colours
+            {listWords(current.categories.slice(0, 2), { sentence: true })}, in {current.palettes.length} colours
           </p>
         </div>
         <div className="flex justify-end gap-2">

@@ -468,3 +468,14 @@ html.motion-failed [data-image-reveal] {
   .stationery-shine:hover .stationery[data-foil] .text-inv-accent,
   .card-in-hand .stationery[data-foil] .text-inv-accent { animation: none; }
 }
+
+/* A forest-green linen surface (hero, closing section): woven cloth and a
+   soft window light, drawn in CSS — no stock photography. */
+.linen-forest {
+  background-color: var(--forest);
+  background-image:
+    radial-gradient(120% 90% at 78% 30%, rgb(255 255 255 / 0.09), transparent 60%),
+    repeating-linear-gradient(0deg, rgb(255 255 255 / 0.028) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.06) 0 1px, transparent 1px 3px),
+    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgb(0 0 0 / 0.28));
+}

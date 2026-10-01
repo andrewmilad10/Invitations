@@ -11,6 +11,7 @@ import { Stationery } from "../stationery";
 import { getTemplateManifest } from "@/templates/registry";
 import { productHref, productOf, websiteFeatures, type Product } from "../products";
 import { favoritesStore, useFavorites } from "./favorites";
+import { listWords } from "@/lib/words";
 import { WebsiteThumb } from "./website-thumb";
 
 /** Shared-element name: a gallery card and the card on its design page. */
@@ -26,13 +27,14 @@ export function designHref(id: string, paletteId: string | null) {
 
 /** Couples used only to make gallery cards feel varied; not real weddings. */
 const CARD_COUPLES: [string, string, string][] = [
-  ["Emma", "James", "14 October"],
+  ["Layla", "Omar", "14 October"],
   ["Olivia", "Daniel", "20 June"],
-  ["Sophia", "Alex", "2 May"],
-  ["Sarah", "Michael", "8 September"],
   ["Nour", "Karim", "12 April"],
-  ["Grace", "Henry", "30 August"],
+  ["Salma", "Youssef", "8 September"],
   ["Mariam", "Andrew", "21 March"],
+  ["Hana", "Adam", "2 May"],
+  ["Grace", "Henry", "30 August"],
+  ["Farida", "Ziad", "17 November"],
 ];
 
 export function cardCouple(index: number) {
@@ -117,7 +119,7 @@ export function Badge({ children, tone = "plain" }: { children: React.ReactNode;
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded px-1.5 py-0.5 text-[0.65rem] font-medium uppercase tracking-[0.1em]",
+        "inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium",
         tone === "plain" && "bg-foreground text-background",
         tone === "foil" && "bg-[linear-gradient(115deg,#8a6a2c,#f1dc9c_45%,#b8923f_60%,#8a6a2c)] text-[#3b2c10]",
         tone === "press" && "border border-foreground/25 text-muted-foreground",
@@ -235,7 +237,7 @@ export function DesignCard({
         <SwatchRow template={template} value={paletteId} onChange={setPaletteId} limit={5} />
       </div>
       <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{template.tagline}</p>
-      {website ? <p className="mt-1.5 text-xs text-muted-foreground">{websiteFeatures(template).slice(0, 3).join(" · ")}</p> : null}
+      {website ? <p className="mt-1.5 text-xs text-muted-foreground">{listWords(websiteFeatures(template).slice(0, 3), { lower: false })}</p> : null}
     </article>
   );
 }

@@ -82,7 +82,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: serif,
     palettes: ["delft", "dustyBlue", "sage", "burgundy", "ivory"],
     family: "delft",
-    isNew: true,
   }),
   design({
     id: "delft-garland-square",
@@ -94,7 +93,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: serif,
     palettes: ["delft", "dustyBlue", "sage", "blush"],
     family: "delft",
-    isNew: true,
   }),
   design({
     id: "four-frames",
@@ -107,7 +105,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     palettes: ["paper", "sage", "blush", "noir"],
     radius: 0,
     renderer: "editorial",
-    isNew: true,
   }),
   design({
     id: "wild-meadow",
@@ -118,7 +115,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "wildflowers", layout: "script" },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["ivory", "sage", "lavender", "blush", "terracotta"],
-    isNew: true,
   }),
   design({
     id: "willow-arch",
@@ -130,7 +126,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["champagne", "blush", "sage", "dustyBlue", "midnight"],
     family: "willow",
-    isNew: true,
   }),
   design({
     id: "willow",
@@ -177,7 +172,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cinzel", body: "cormorant", accent: "greatvibes" },
     palettes: ["forest", "ivory", "navy", "emerald", "burgundy"],
     family: "laurel",
-    isNew: true,
   }),
   design({
     id: "laurel-crest-square",
@@ -202,7 +196,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     radius: 0,
     shadow: "deep",
     family: "deco",
-    isNew: true,
   }),
   design({
     id: "gilded-deco-arch",
@@ -236,7 +229,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "olive", layout: "classic" },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["olive", "sage", "terracotta", "ivory"],
-    isNew: true,
   }),
   design({
     id: "moonlit",
@@ -248,7 +240,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["navy", "midnight", "plum", "wine", "dustyBlue"],
     shadow: "deep",
-    isNew: true,
   }),
   design({
     id: "confetti",
@@ -272,7 +263,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "playfair", body: "jost", accent: "greatvibes" },
     palettes: ["delft", "lemon", "terracotta", "teal"],
     radius: 0,
-    isNew: true,
   }),
   design({
     id: "morning-wash",
@@ -294,7 +284,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "photo-top", shape: "arch" },
     fonts: { heading: "cormorant", body: "jost", accent: "pinyon" },
     palettes: ["ivory", "sage", "noir", "blush"],
-    isNew: true,
     family: "chapel",
   }),
   design({
@@ -317,7 +306,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "ribbon", layout: "classic" },
     fonts: { heading: "cormorant", body: "cormorant", accent: "pinyon" },
     palettes: ["blush", "ivory", "dustyBlue", "burgundy", "lavender"],
-    isNew: true,
   }),
   design({
     id: "limoncello",
@@ -328,7 +316,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "citrus", layout: "script" },
     fonts: { heading: "playfair", body: "jost", accent: "greatvibes" },
     palettes: ["lemon", "ochre", "coral", "sage"],
-    isNew: true,
   }),
   design({
     id: "big-day",
@@ -374,7 +361,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "jost", body: "jost", accent: "greatvibes" },
     palettes: ["kraft", "paper", "blush", "sage"],
     radius: 0,
-    isNew: true,
   }),
   design({
     id: "kraft-twine",
@@ -409,7 +395,6 @@ export const DESIGN_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "cascade", layout: "classic" },
     fonts: { heading: "cormorant", body: "jost", accent: "pinyon" },
     palettes: ["teal", "sage", "paper", "forest"],
-    isNew: true,
   }),
   design({
     id: "rose-corners",

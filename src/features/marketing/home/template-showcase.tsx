@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FadeIn, FadeUp, RevealGroup, RevealLines, Stagger } from "@/features/motion/motion";
 import { selectableTemplates } from "@/templates/registry";
 import { PRODUCTS, templatesFor, websiteOrder, type Product } from "../products";
 import { TemplateCard } from "../template-card";
@@ -25,7 +24,7 @@ export function TemplateShowcase() {
   ];
 
   const header = (row: (typeof rows)[number]) => (
-    <Stagger step={120} className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="max-w-xl">
         <h3 className="font-serif text-4xl font-light">{row.heading}</h3>
         <p className="mt-2 text-muted-foreground">{row.text}</p>
@@ -33,16 +32,16 @@ export function TemplateShowcase() {
       <Button asChild variant="outline" className="self-start rounded-full px-6 sm:self-auto">
         <Link href={PRODUCTS[row.product].path}>See all {row.heading.toLowerCase()}</Link>
       </Button>
-    </Stagger>
+    </div>
   );
 
   return (
     <section id="templates" className="scroll-mt-20 overflow-hidden px-5 py-24 sm:px-8 sm:py-32">
       <div className="mx-auto max-w-2xl text-center">
-        <RevealLines className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl" lines={["Cards to send.", "Websites to share."]} />
-        <FadeUp as="p" delay={180} className="mt-5 text-lg text-muted-foreground">
+        <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">Cards to send, websites to share</h2>
+        <p className="mt-5 text-lg text-muted-foreground">
           {templatesFor("cards", all).length} invitation card designs and {templatesFor("websites", all).length} wedding website designs — all original, each in several colours.
-        </FadeUp>
+        </p>
       </div>
 
       {rows.map((row) => (
@@ -50,15 +49,15 @@ export function TemplateShowcase() {
           {header(row)}
           {row.product === "cards" ? (
             // Full-bleed: the curve runs to the edges of the screen.
-            <FadeIn duration={1200} className="-mx-5 mt-6 sm:-mx-8">
+            <div className="-mx-5 mt-6 sm:-mx-8">
               <CollectionCarousel designs={row.items} />
-            </FadeIn>
+            </div>
           ) : (
-            <RevealGroup step={100} className="mx-auto mt-10 grid max-w-7xl grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
+            <div className="mx-auto mt-10 grid max-w-7xl grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
               {row.items.map((t) => (
                 <TemplateCard key={t.id} template={t} index={all.indexOf(t)} product={row.product} />
               ))}
-            </RevealGroup>
+            </div>
           )}
         </div>
       ))}

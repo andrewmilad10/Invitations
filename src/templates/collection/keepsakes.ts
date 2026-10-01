@@ -42,7 +42,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "torn-photo", finish: { paper: "natural" }, sample: { eyebrow: "The wedding of" } },
     fonts: { heading: "cormorant", body: "jost", accent: "greatvibes" },
     palettes: ["collage", "collageRose"],
-    isNew: true,
   }),
   design({
     id: "botanical-line",
@@ -53,7 +52,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "line-garden", layout: "date-row" },
     fonts: { heading: "jost", body: "jost", accent: "greatvibes" },
     palettes: ["lineGreen", "lineBlue", "sage"],
-    isNew: true,
   }),
   design({
     id: "wild-garden",
@@ -64,7 +62,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "line-garden", layout: "script-date" },
     fonts: { heading: "cormorant", body: "cormorant", accent: "allura" },
     palettes: ["lineBlue", "lineGreen", "blush"],
-    isNew: true,
   }),
   design({
     id: "golden-fronds",
@@ -75,7 +72,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "gold-leaves", layout: "script-date" },
     fonts: { heading: "cormorant", body: "cormorant", accent: "allura" },
     palettes: ["goldLeaf", "goldBlush", "sage"],
-    isNew: true,
   }),
   design({
     id: "calla-lily",
@@ -86,7 +82,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "calla", layout: "formal-script", finish: { paper: "eggshell" } },
     fonts: { heading: "cormorant", body: "cormorant", accent: "pinyon" },
     palettes: ["calla", "snow", "blush"],
-    isNew: true,
   }),
   design({
     id: "velvet-calla",
@@ -97,7 +92,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "calla", layout: "formal-script" },
     fonts: { heading: "cormorant", body: "cormorant", accent: "pinyon" },
     palettes: ["tulipNight", "tulipWine", "emerald"],
-    isNew: true,
   }),
   design({
     id: "baroque-crest",
@@ -108,7 +102,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "calla", layout: "crest", finish: { foil: "rose-gold", paper: "eggshell" }, sample: { eyebrow: "Please join us for the wedding of" } },
     fonts: { heading: "cormorant", body: "cormorant", accent: "pinyon" },
     palettes: ["calla", "ivory", "snow"],
-    isNew: true,
   }),
   design({
     id: "gilded-crest",
@@ -119,7 +112,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "gold-leaves", layout: "crest", finish: { foil: "gold" }, sample: { eyebrow: "Please join us for the wedding of" } },
     fonts: { heading: "cormorant", body: "cormorant", accent: "pinyon" },
     palettes: ["goldLeaf", "snow", "goldBlush"],
-    isNew: true,
   }),
   design({
     id: "twilight-arch",
@@ -174,7 +166,6 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "none", layout: "photo-details", shape: "square", sample: { eyebrow: "Save the date", line: "The wedding of" } },
     fonts: { heading: "jost", body: "jost", accent: "greatvibes" },
     palettes: ["keepsake", "stone"],
-    isNew: true,
   }),
   design({
     id: "monochrome-bloom",
@@ -185,6 +176,5 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     art: { ornament: "bloom-corners", layout: "photo-half", shape: "landscape", sample: { eyebrow: "The wedding of" } },
     fonts: { heading: "jost", body: "jost", accent: "greatvibes" },
     palettes: ["monoBloom", "sage", "blush"],
-    isNew: true,
   }),
 ];

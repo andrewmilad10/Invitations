@@ -6,8 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { Stationery } from "../stationery";
-import { PRODUCTS, websiteFeatures, type Product } from "../products";
+import { websiteFeatures, type Product } from "../products";
 import { designHref, FavoriteButton, paletteOverrides, SwatchRow } from "./design-card";
+import { listWords } from "@/lib/words";
 import { WebsiteThumb } from "./website-thumb";
 
 /** A larger look at a design without leaving the gallery. */
@@ -74,18 +75,18 @@ export function QuickView({
             </div>
           )}
           <div className="flex flex-col">
-            <p className="text-xs uppercase tracking-[0.2em] text-accent">{template.categories.slice(0, 3).join(" · ")}</p>
+            <p className="text-sm text-accent">{listWords(template.categories.slice(0, 3), { sentence: true })}</p>
             <h2 id="quick-view-title" className="mt-3 font-serif text-4xl font-light leading-tight">
               {template.name}
             </h2>
             <p className="mt-3 leading-relaxed text-muted-foreground">{template.description}</p>
             {product === "websites" ? (
               <p className="mt-3 text-sm text-muted-foreground">
-                {PRODUCTS.websites.label}: {websiteFeatures(template).join(" · ")}
+                Includes {listWords(websiteFeatures(template), { lower: false })}.
               </p>
             ) : null}
-            <p className="mt-6 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Colour · <span className="normal-case tracking-normal text-foreground">{template.palettes.find((p) => p.id === paletteId)?.label}</span>
+            <p className="mt-6 text-sm text-muted-foreground">
+              Colour: <span className="text-foreground">{template.palettes.find((p) => p.id === paletteId)?.label}</span>
             </p>
             <div className="mt-3">
               <SwatchRow template={template} value={paletteId} onChange={setPaletteId} size="lg" />
