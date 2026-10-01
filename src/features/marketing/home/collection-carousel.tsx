@@ -105,7 +105,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
   const stage = useRef<HTMLDivElement>(null);
   const cards = useRef<(HTMLAnchorElement | null)[]>([]);
   const last = useRef<{ t: string; o: string; v: string; s: string; z: string; side: number }[]>([]);
-  const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false, hover: false, focus: false, seen: true, idleUntil: 0, tweening: false, active: 0 });
+  const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false, hover: false, focus: false, seen: true, idleUntil: 0, tweening: false, active: 0, dir: 1 });
   const drag = useRef<{ x: number; pos: number; moved: boolean; samples: [number, number][] } | null>(null);
   const [active, setActive] = useState(0);
   // Cards are drawn once and kept: the ones near the start straight away, the rest while the page is idle.
@@ -184,7 +184,13 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     [render],
   );
 
-  const move = useCallback((by: number) => goTo(Math.round(state.current.pos) + by), [goTo]);
+  const move = useCallback(
+    (by: number) => {
+      state.current.dir = by < 0 ? -1 : 1;
+      goTo(Math.round(state.current.pos) + by);
+    },
+    [goTo],
+  );
 
   const onPick = useCallback(
     (i: number, e: MouseEvent<HTMLAnchorElement>) => {
@@ -262,7 +268,8 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     const tick = (_t: number, deltaMs: number) => {
       if (s.reduced || s.hover || s.focus || !s.seen || s.tweening || drag.current || document.hidden) return;
       if (performance.now() < s.idleUntil) return;
-      s.pos += (Math.min(deltaMs, 50) / 1000) * s.geo.speed;
+      // Drift on in the direction the visitor last moved it, never back against them.
+      s.pos += (Math.min(deltaMs, 50) / 1000) * s.geo.speed * s.dir;
       render();
     };
     gsap.ticker.add(tick);
@@ -310,6 +317,8 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const [x1, t1] = g.samples[g.samples.length - 1];
       const v = (x1 - x0) / Math.max(16, t1 - t0); // px per ms
       const fling = Math.max(-6, Math.min(6, (-v * 300) / perCardOf(state.current.geo)));
+      // Finger moving right = going back through the designs.
+      if (Math.abs(x1 - x0) > 2) state.current.dir = x1 > x0 ? -1 : 1;
       goTo(Math.round(state.current.pos + fling), v);
     } else rest();
     // Keep `moved` until the click that follows the drag has been swallowed.
@@ -328,6 +337,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const s = state.current;
       gsap.killTweensOf(s, "pos");
       s.tweening = true;
+      s.dir = dx < 0 ? -1 : 1;
       s.pos += dx / perCardOf(s.geo);
       render();
       window.clearTimeout(settle);
@@ -375,7 +385,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
         }}
         onFocus={() => (state.current.focus = true)}
         onBlur={() => (state.current.focus = false)}
-        className="relative h-[310px] cursor-grab touch-pan-y select-none overflow-hidden outline-none [perspective:900px] active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[470px] [--card:200px]"
+        className="relative h-[310px] cursor-grab touch-pan-y select-none overflow-hidden overscroll-x-contain outline-none [perspective:900px] active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[470px] [--card:200px]"
       >
         {/* A faint ampersand watermark behind the curve. */}
         <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] select-none font-serif text-[15rem] font-light leading-none text-foreground/[0.045] sm:text-[24rem]">
