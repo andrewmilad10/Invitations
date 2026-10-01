@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { CardShape, StationeryOrnament } from "@/core/template/manifest";
+import { Motif } from "./motifs";
 
 /**
  * Original line-art motifs for stationery cards. Everything is drawn here,
@@ -11,10 +12,10 @@ import type { CardShape, StationeryOrnament } from "@/core/template/manifest";
  * centred at (50, 50).
  */
 
-const ACCENT = "var(--inv-accent)";
-const FG = "var(--inv-fg)";
-const MUTED = "var(--inv-muted)";
-const LEAF = "color-mix(in oklab, var(--inv-accent) 55%, var(--inv-muted))";
+export const ACCENT = "var(--inv-accent)";
+export const FG = "var(--inv-fg)";
+export const MUTED = "var(--inv-muted)";
+export const LEAF = "color-mix(in oklab, var(--inv-accent) 55%, var(--inv-muted))";
 
 /** Border path inset from the card edge, following the card's shape. */
 export function framePath(inset: number, h: number, shape: CardShape): string {
@@ -28,7 +29,7 @@ export function framePath(inset: number, h: number, shape: CardShape): string {
 }
 
 /** Small deterministic pseudo-random sequence, so art is identical on server and client. */
-function seeded(seed: number) {
+export function seeded(seed: number) {
   let s = seed;
   return () => {
     s = (s * 16807) % 2147483647;
@@ -36,9 +37,9 @@ function seeded(seed: number) {
   };
 }
 
-const round = (n: number) => Math.round(n * 100) / 100;
+export const round = (n: number) => Math.round(n * 100) / 100;
 
-function Svg({ h, children, style }: { h: number; children: ReactNode; style?: CSSProperties }) {
+export function Svg({ h, children, style }: { h: number; children: ReactNode; style?: CSSProperties }) {
   return (
     <svg aria-hidden viewBox={`0 0 100 ${h}`} className="pointer-events-none absolute inset-0 size-full" style={style}>
       {children}
@@ -46,7 +47,7 @@ function Svg({ h, children, style }: { h: number; children: ReactNode; style?: C
   );
 }
 
-function Frame({ inset, h, shape, width = 0.3, color = ACCENT, opacity = 0.7, dash }: { inset: number; h: number; shape: CardShape; width?: number; color?: string; opacity?: number; dash?: string }) {
+export function Frame({ inset, h, shape, width = 0.3, color = ACCENT, opacity = 0.7, dash }: { inset: number; h: number; shape: CardShape; width?: number; color?: string; opacity?: number; dash?: string }) {
   return <path d={framePath(inset, h, shape)} fill="none" stroke={color} strokeWidth={width} opacity={opacity} strokeDasharray={dash} strokeLinecap="round" />;
 }
 
@@ -63,7 +64,7 @@ function corners(h: number, shape: CardShape, inset: number): [number, number, n
 
 // ── Botanical pieces ────────────────────────────────────────────────────────
 
-function Blossom({ x, y, r, petals = 5, rotate = 0, fill = "none", stroke = ACCENT, width = 0.3 }: { x: number; y: number; r: number; petals?: number; rotate?: number; fill?: string; stroke?: string; width?: number }) {
+export function Blossom({ x, y, r, petals = 5, rotate = 0, fill = "none", stroke = ACCENT, width = 0.3 }: { x: number; y: number; r: number; petals?: number; rotate?: number; fill?: string; stroke?: string; width?: number }) {
   return (
     <g transform={`translate(${round(x)} ${round(y)}) rotate(${rotate})`} fill={fill} stroke={stroke} strokeWidth={width}>
       {Array.from({ length: petals }, (_, i) => (
@@ -74,7 +75,7 @@ function Blossom({ x, y, r, petals = 5, rotate = 0, fill = "none", stroke = ACCE
   );
 }
 
-function Leaf({ x, y, angle, len, width, fill = LEAF, opacity = 0.85 }: { x: number; y: number; angle: number; len: number; width: number; fill?: string; opacity?: number }) {
+export function Leaf({ x, y, angle, len, width, fill = LEAF, opacity = 0.85 }: { x: number; y: number; angle: number; len: number; width: number; fill?: string; opacity?: number }) {
   // A pointed leaf whose base sits at (x, y), pointing along `angle`.
   return (
     <path
@@ -87,7 +88,7 @@ function Leaf({ x, y, angle, len, width, fill = LEAF, opacity = 0.85 }: { x: num
 }
 
 /** Leaves along a quadratic curve from p0 to p2 (control p1). */
-function LeafyStem({ p0, p1, p2, count, len, width, stroke = LEAF, fill = LEAF, alternate = true, roundLeaves = false }: { p0: [number, number]; p1: [number, number]; p2: [number, number]; count: number; len: number; width: number; stroke?: string; fill?: string; alternate?: boolean; roundLeaves?: boolean }) {
+export function LeafyStem({ p0, p1, p2, count, len, width, stroke = LEAF, fill = LEAF, alternate = true, roundLeaves = false }: { p0: [number, number]; p1: [number, number]; p2: [number, number]; count: number; len: number; width: number; stroke?: string; fill?: string; alternate?: boolean; roundLeaves?: boolean }) {
   const at = (t: number): [number, number] => [
     (1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0],
     (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1],
@@ -131,7 +132,7 @@ function FloralSpray(props: { transform: string }) {
   );
 }
 
-function Rose({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; rotate?: number }) {
+export function Rose({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; rotate?: number }) {
   // A rose drawn as a loose spiral of petals.
   const petals = [
     `M${-r * 0.3} 0 A ${r * 0.3} ${r * 0.3} 0 1 1 ${r * 0.3} 0`,
@@ -596,10 +597,10 @@ function Watercolor() {
 
 // ── Fine line florals (drawn with a pen, no fills) ──────────────────────────
 
-const LINE = { fill: "none", stroke: ACCENT, strokeWidth: 0.28, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+export const LINE = { fill: "none", stroke: ACCENT, strokeWidth: 0.28, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 
 /** A layered peony in outline: rings of ruffled petals around a small heart. */
-function LinePeony({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; rotate?: number }) {
+export function LinePeony({ x, y, r, rotate = 0, color = ACCENT }: { x: number; y: number; r: number; rotate?: number; color?: string }) {
   const rings: ReactNode[] = [];
   [0.34, 0.62, 0.92].forEach((k, ring) => {
     const n = 5 + ring * 2;
@@ -622,7 +623,7 @@ function LinePeony({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; r
     }
   });
   return (
-    <g transform={`translate(${round(x)} ${round(y)}) rotate(${rotate})`} {...LINE}>
+    <g transform={`translate(${round(x)} ${round(y)}) rotate(${rotate})`} {...LINE} stroke={color}>
       {rings}
       {[0, 72, 144, 216, 288].map((a) => (
         <line key={a} x1="0" y1="0" x2={round(Math.cos((a * Math.PI) / 180) * r * 0.16)} y2={round(Math.sin((a * Math.PI) / 180) * r * 0.16)} />
@@ -632,9 +633,9 @@ function LinePeony({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; r
 }
 
 /** A leaf in outline with its midrib. */
-function LineLeaf({ x, y, angle, len, width }: { x: number; y: number; angle: number; len: number; width: number }) {
+export function LineLeaf({ x, y, angle, len, width, color = ACCENT }: { x: number; y: number; angle: number; len: number; width: number; color?: string }) {
   return (
-    <g transform={`translate(${round(x)} ${round(y)}) rotate(${round(angle)})`} {...LINE}>
+    <g transform={`translate(${round(x)} ${round(y)}) rotate(${round(angle)})`} {...LINE} stroke={color}>
       <path d={`M0 0 C ${round(width)} ${round(-len * 0.3)}, ${round(width * 0.6)} ${round(-len * 0.8)}, 0 ${round(-len)} C ${round(-width * 0.6)} ${round(-len * 0.8)}, ${round(-width)} ${round(-len * 0.3)}, 0 0 Z`} />
       <path d={`M0 0 L0 ${round(-len * 0.85)}`} opacity="0.7" />
     </g>
@@ -642,9 +643,9 @@ function LineLeaf({ x, y, angle, len, width }: { x: number; y: number; angle: nu
 }
 
 /** A simple five-petal flower in outline. */
-function LineBloom({ x, y, r, rotate = 0 }: { x: number; y: number; r: number; rotate?: number }) {
+export function LineBloom({ x, y, r, rotate = 0, color = ACCENT }: { x: number; y: number; r: number; rotate?: number; color?: string }) {
   return (
-    <g transform={`translate(${round(x)} ${round(y)}) rotate(${round(rotate)})`} {...LINE}>
+    <g transform={`translate(${round(x)} ${round(y)}) rotate(${round(rotate)})`} {...LINE} stroke={color}>
       {[0, 1, 2, 3, 4].map((i) => (
         <path key={i} d={`M0 0 C ${round(r * 0.5)} ${round(-r * 0.3)}, ${round(r * 0.45)} ${round(-r)}, 0 ${round(-r)} C ${round(-r * 0.45)} ${round(-r)}, ${round(-r * 0.5)} ${round(-r * 0.3)}, 0 0`} transform={`rotate(${i * 72})`} />
       ))}
@@ -920,6 +921,8 @@ export function Ornament({ kind, h, shape }: { kind: StationeryOrnament; h: numb
       return <LineFloralBands h={h} />;
     case "peonies":
       return <PeonyCorners h={h} />;
+    default:
+      return <>{Motif({ kind, h, shape })}</>;
   }
 }
 

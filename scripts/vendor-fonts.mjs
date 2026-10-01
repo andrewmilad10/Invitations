@@ -27,6 +27,8 @@ const FONTS = {
   "dm-serif-display": [["latin", 400, "normal"], ["latin", 400, "italic"]],
   "instrument-serif": [["latin", 400, "normal"], ["latin", 400, "italic"]],
   "space-mono": [["latin", 400, "normal"]],
+  caveat: [["latin", 500, "normal"]],
+  allura: [["latin", 400, "normal"]],
   amiri: [["arabic", 400, "normal"], ["arabic", 700, "normal"]],
   "noto-naskh-arabic": [["arabic", 400, "normal"], ["arabic", 600, "normal"]],
 };

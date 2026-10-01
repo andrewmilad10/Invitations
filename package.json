@@ -37,9 +37,11 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@fontsource/allura": "^5.3.0",
     "@fontsource/amiri": "^5.3.0",
     "@fontsource/antic-didone": "^5.3.0",
     "@fontsource/bodoni-moda": "^5.3.0",
+    "@fontsource/caveat": "^5.3.0",
     "@fontsource/cinzel": "^5.3.0",
     "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/dm-serif-display": "^5.3.0",

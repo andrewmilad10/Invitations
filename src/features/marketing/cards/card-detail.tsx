@@ -6,6 +6,7 @@ import { useEffect, useState, ViewTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
+  BLESSINGS,
   CARD_OPTION_INFO,
   cardOptionsToQuery,
   FOIL_TONES,
@@ -25,7 +26,7 @@ import { PRODUCTS, productHref } from "../products";
 import { Stationery } from "../stationery";
 import { CARD_VIEWS, CardStage, VIEW_LABELS, type CardView, type SampleText } from "./mockups";
 
-const SAMPLE: SampleText = { partnerOne: "Emma", partnerTwo: "James", dateLabel: "Saturday, 14 October", place: "Villa Aurelia · Rome" };
+const SAMPLE: SampleText = { partnerOne: "Emma", partnerTwo: "James", dateLabel: "Saturday, 17 October", place: "Villa Aurelia · Rome" };
 
 /**
  * A card's product page: the card staged five ways (front, back, envelope,
@@ -178,10 +179,10 @@ export function CardDetail({
         <p className="mt-3 leading-relaxed text-muted-foreground">{template.description}</p>
 
         {/* Design: orientation and the family's other shapes */}
-        {canRotate(baseShape) || variants.length > 1 ? (
+        {canRotate(baseShape, template.stationery.layout) || variants.length > 1 ? (
           <Group label="Design" value={SHAPE_LABELS[cardShape(template.stationery, choice)]}>
             <div className="flex flex-wrap gap-3">
-              {canRotate(baseShape)
+              {canRotate(baseShape, template.stationery.layout)
                 ? (["portrait", "landscape"] as const).map((o) => (
                     <OptionTile key={o} active={options.orientation === o} onClick={() => pick("orientation", o)} label={CARD_OPTION_INFO.orientation[o]}>
                       <Stationery
@@ -218,6 +219,29 @@ export function CardDetail({
 
         <Group label="Theme" value={palette.label}>
           <SwatchRow template={template} value={palette.id} onChange={setPaletteId} size="lg" />
+        </Group>
+
+        <Group label="Opening blessing" value={CARD_OPTION_INFO.blessing[options.blessing]}>
+          <div role="radiogroup" aria-label="Opening blessing" className="flex flex-wrap gap-3">
+            {BLESSINGS.map((b) => (
+              <button
+                key={b}
+                type="button"
+                role="radio"
+                aria-checked={options.blessing === b}
+                onClick={() => pick("blessing", b)}
+                className={cn("h-12 rounded-xl border px-5 text-sm transition", options.blessing === b ? "border-foreground bg-secondary/60 font-medium" : "hover:border-foreground/40")}
+              >
+                {b === "bismillah" ? (
+                  <span lang="ar" dir="rtl" className="text-lg" style={{ fontFamily: "var(--font-amiri), serif" }}>
+                    بسم الله الرحمن الرحيم
+                  </span>
+                ) : (
+                  "None"
+                )}
+              </button>
+            ))}
+          </div>
         </Group>
 
         <Group label="Silhouette" value={CARD_OPTION_INFO.silhouette[options.silhouette]}>

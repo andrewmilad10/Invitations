@@ -19,20 +19,26 @@ export type Foil = (typeof FOILS)[number];
 export const PAPERS = ["smooth", "eggshell", "linen", "recycled", "pearlescent", "natural", "double-thick", "triple-thick"] as const;
 export type Paper = (typeof PAPERS)[number];
 
+export const BLESSINGS = ["none", "bismillah"] as const;
+export type Blessing = (typeof BLESSINGS)[number];
+
 export interface CardOptions {
   orientation: Orientation;
   silhouette: Silhouette;
   foil: Foil;
   paper: Paper;
+  /** An opening blessing above the words (بسم الله الرحمن الرحيم). */
+  blessing: Blessing;
 }
 
-export const DEFAULT_CARD_OPTIONS: CardOptions = { orientation: "portrait", silhouette: "standard", foil: "none", paper: "smooth" };
+export const DEFAULT_CARD_OPTIONS: CardOptions = { orientation: "portrait", silhouette: "standard", foil: "none", paper: "smooth", blessing: "none" };
 
 export const cardOptionsSchema = z.object({
   orientation: z.enum(ORIENTATIONS).optional(),
   silhouette: z.enum(SILHOUETTES).optional(),
   foil: z.enum(FOILS).optional(),
   paper: z.enum(PAPERS).optional(),
+  blessing: z.enum(BLESSINGS).optional(),
 });
 
 export type CardOptionOverrides = Partial<CardOptions>;
@@ -42,7 +48,7 @@ export function sanitizeCardOptions(raw: unknown): CardOptionOverrides {
   if (!raw || typeof raw !== "object") return {};
   const input = raw as Record<string, unknown>;
   const out: CardOptionOverrides = {};
-  for (const key of ["orientation", "silhouette", "foil", "paper"] as const) {
+  for (const key of ["orientation", "silhouette", "foil", "paper", "blessing"] as const) {
     const parsed = cardOptionsSchema.shape[key].safeParse(input[key]);
     if (parsed.success && parsed.data !== undefined) (out as Record<string, string>)[key] = parsed.data;
   }
@@ -58,6 +64,7 @@ export const CARD_OPTION_INFO = {
   orientation: { portrait: "Portrait", landscape: "Landscape" },
   silhouette: { standard: "Standard", rounded: "Rounded", scalloped: "Scalloped" },
   foil: { none: "No foil", gold: "Gold", "rose-gold": "Rose gold", silver: "Silver" },
+  blessing: { none: "None", bismillah: "Bismillah" },
   paper: {
     smooth: ["Smooth", "A crisp, bright matte finish."],
     eggshell: ["Eggshell", "A soft, lightly textured surface."],
@@ -72,6 +79,7 @@ export const CARD_OPTION_INFO = {
   orientation: Record<Orientation, string>;
   silhouette: Record<Silhouette, string>;
   foil: Record<Foil, string>;
+  blessing: Record<Blessing, string>;
   paper: Record<Paper, readonly [string, string]>;
 };
 
@@ -90,13 +98,14 @@ export function cardOptionsFromQuery(params: Record<string, string | string[] | 
     silhouette: one(params.silhouette),
     foil: one(params.foil),
     paper: one(params.paper),
+    blessing: one(params.blessing),
   });
 }
 
 export function cardOptionsToQuery(options: CardOptionOverrides, base?: CardOptions): URLSearchParams {
   const q = new URLSearchParams();
   const d = base ?? DEFAULT_CARD_OPTIONS;
-  for (const key of ["orientation", "silhouette", "foil", "paper"] as const) {
+  for (const key of ["orientation", "silhouette", "foil", "paper", "blessing"] as const) {
     const v = options[key];
     if (v && v !== d[key]) q.set(key, v);
   }

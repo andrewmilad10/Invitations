@@ -14,7 +14,7 @@ export function TemplateShowcase() {
       product: "cards",
       heading: "Invitation cards",
       text: "Designed like fine stationery. Personalise one and send it on WhatsApp or by email — printed cards are coming soon.",
-      items: templatesFor("cards", all).slice(0, 9),
+      items: templatesFor("cards", all),
     },
     {
       product: "websites",

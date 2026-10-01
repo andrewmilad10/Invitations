@@ -3,6 +3,7 @@ import { ATELIER_MANIFESTS } from "./atelier/manifests";
 import { cinematicManifest } from "./cinematic/manifest";
 import { botanicalManifest, classicManifest, luxuryManifest, modernManifest, romanticManifest } from "./collection/manifests";
 import { BOUTIQUE_MANIFESTS } from "./collection/boutique";
+import { KEEPSAKE_MANIFESTS } from "./collection/keepsakes";
 import { DESIGN_MANIFESTS } from "./collection/designs";
 import { editorialManifest } from "./editorial/manifest";
 import { GALERIE_MANIFESTS } from "./galerie/manifests";
@@ -27,6 +28,7 @@ const ALL: TemplateManifest[] = [
   editorialManifest,
   ...DESIGN_MANIFESTS,
   ...BOUTIQUE_MANIFESTS,
+  ...KEEPSAKE_MANIFESTS,
   ...ATELIER_MANIFESTS,
   ...MAISON_MANIFESTS,
   ...GALERIE_MANIFESTS,
@@ -35,6 +37,8 @@ const ALL: TemplateManifest[] = [
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
+  "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
+  "baroque-crest", "calla-lily", "golden-oval", "monochrome-bloom", "save-the-date", "wild-garden", "velvet-calla", "gilded-crest",
   "marlowe", "garden-toile", "verdant", "horizon", "gilded-garden", "serena", "peony-press", "wildwood", "cypress", "aurelia",
   "maison", "cinematic", "postale", "galerie", "meadow", "couture", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
   "monochrome", "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",

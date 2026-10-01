@@ -3,8 +3,8 @@
 import { Heart, ZoomIn } from "lucide-react";
 import Link from "next/link";
 import { useState, ViewTransition } from "react";
-import { cardOptionsToQuery, resolveCardOptions, type CardOptionOverrides } from "@/core/card/options";
-import { designCardDefaults, orientedShape, type TemplateManifest } from "@/core/template/manifest";
+import { cardOptionsToQuery, type CardOptionOverrides } from "@/core/card/options";
+import { cardShape, designCardDefaults, type TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
 import { Stationery } from "../stationery";
@@ -170,7 +170,7 @@ export function DesignCard({
   if (!isDefault) query.set("palette", paletteId);
   const detailHref = productHref(productOf(template), template.id, query);
   const customizeHref = `/create/${template.id}${isDefault ? "" : `?palette=${paletteId}`}`;
-  const shape = orientedShape(template.stationery.shape ?? "portrait", resolveCardOptions(designCardDefaults(template.stationery), cardOptions).orientation);
+  const shape = cardShape(template.stationery, cardOptions);
 
   return (
     <article className={cn("group relative", className)}>

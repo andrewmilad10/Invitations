@@ -163,5 +163,19 @@ const spaceMono = localFont({
   src: [{ path: "../assets/fonts/space-mono/space-mono-latin-400-normal.woff2", weight: "400", style: "normal" }],
 });
 
+const caveat = localFont({
+  variable: "--font-caveat",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../assets/fonts/caveat/caveat-latin-500-normal.woff2", weight: "500", style: "normal" }],
+});
+
+const allura = localFont({
+  variable: "--font-allura",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../assets/fonts/allura/allura-latin-400-normal.woff2", weight: "400", style: "normal" }],
+});
+
 /** Class list that defines every font CSS variable; applied to <html>. */
-export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, dmSerif, instrument, spaceMono, amiri, naskh].map((font) => font.variable).join(" ");
+export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, dmSerif, instrument, spaceMono, caveat, allura, amiri, naskh].map((font) => font.variable).join(" ");

@@ -41,6 +41,7 @@ export const STATIONERY_ORNAMENTS = [
   "olive", "celestial", "confetti", "tile", "watercolor", "ribbon", "citrus",
   "flourish", "twine", "cascade", "rose-corners", "ornate", "petals",
   "vines", "meadow-border", "line-florals", "florals-band", "peonies",
+  "tulips-lace", "curls", "line-garden", "gold-leaves", "calla", "rose-border", "gardenia", "bloom-corners",
 ] as const;
 export type StationeryOrnament = (typeof STATIONERY_ORNAMENTS)[number];
 
@@ -49,6 +50,7 @@ export const STATIONERY_LAYOUTS = [
   "classic", "script", "typographic", "monogram", "photo-top", "photo-full", "photo-grid", "polaroid", "photo-script",
   "magazine", "framed", "postcard",
   "refined", "photo-overlay", "asymmetric", "spaced", "photo-side",
+  "formal-script", "drive", "torn-photo", "date-row", "script-date", "script-bars", "crest", "split-arch", "arch-panel", "oval-photo", "photo-details", "photo-half",
 ] as const;
 export type StationeryLayout = (typeof STATIONERY_LAYOUTS)[number];
 
@@ -64,32 +66,38 @@ export interface StationeryArt {
   finish?: CardOptionOverrides;
   /** Pressed into the paper (letterpress) — shown as a badge and filter. */
   letterpress?: boolean;
+  /** Sample words for galleries, when the design reads best with its own (e.g. "we're getting married!"). */
+  sample?: { eyebrow?: string; line?: string };
 }
 
 export const PHOTO_LAYOUTS: readonly StationeryLayout[] = [
   "photo-top", "photo-full", "photo-grid", "polaroid", "photo-script", "magazine", "framed", "postcard", "photo-overlay", "photo-side",
+  "torn-photo", "oval-photo", "photo-details", "photo-half",
 ];
 
 /** Resolved art with defaults filled in. */
 export function stationeryArt(art: StationeryArt): Required<StationeryArt> {
-  return { ornament: art.ornament, layout: art.layout ?? "classic", shape: art.shape ?? "portrait", finish: art.finish ?? {}, letterpress: art.letterpress ?? false };
+  return { ornament: art.ornament, layout: art.layout ?? "classic", shape: art.shape ?? "portrait", finish: art.finish ?? {}, letterpress: art.letterpress ?? false, sample: art.sample ?? {} };
 }
 
 /** Shapes that can be turned: a portrait design can print landscape and back. */
-export function canRotate(shape: CardShape): boolean {
-  return shape === "portrait" || shape === "landscape";
+export function canRotate(shape: CardShape, layout?: StationeryLayout): boolean {
+  return (shape === "portrait" || shape === "landscape") && !FIXED_LAYOUTS.includes(layout ?? "classic");
 }
 
+/** Layouts composed for one orientation only. */
+const FIXED_LAYOUTS: readonly StationeryLayout[] = ["drive", "torn-photo", "split-arch", "arch-panel"];
+
 /** The design's shape once the chosen orientation is applied. */
-export function orientedShape(shape: CardShape, orientation: Orientation | undefined): CardShape {
-  if (!canRotate(shape) || !orientation) return shape;
+export function orientedShape(shape: CardShape, orientation: Orientation | undefined, layout?: StationeryLayout): CardShape {
+  if (!canRotate(shape, layout) || !orientation) return shape;
   return orientation;
 }
 
 /** The shape a design is drawn in once the finishing options are applied. */
 export function cardShape(art: StationeryArt, options?: CardOptionOverrides): CardShape {
   const orientation = options?.orientation ?? designCardDefaults(art).orientation;
-  return orientedShape(art.shape ?? "portrait", orientation);
+  return orientedShape(art.shape ?? "portrait", orientation, art.layout);
 }
 
 /** The design's default finishing options (its own foil, orientation…). */
@@ -111,6 +119,7 @@ export type DecorFamily = "plain" | "crest" | "floral" | "leaves" | "gilded";
 const DECOR_FAMILY: Record<StationeryOrnament, DecorFamily> = {
   none: "plain", hairline: "plain", rule: "plain", seal: "plain", "double-border": "plain", confetti: "plain", tile: "plain", twine: "plain",
   crest: "crest", wreath: "crest", ornate: "crest", ribbon: "crest", celestial: "crest",
+  "tulips-lace": "floral", curls: "plain", "line-garden": "floral", "gold-leaves": "leaves", calla: "floral", "rose-border": "floral", gardenia: "floral", "bloom-corners": "floral",
   vines: "leaves", "meadow-border": "floral", "line-florals": "floral", "florals-band": "floral", peonies: "floral",
   floral: "floral", garland: "floral", wildflowers: "floral", scallop: "floral", watercolor: "floral", "rose-corners": "floral", petals: "floral", flourish: "floral",
   leaves: "leaves", stems: "leaves", olive: "leaves", cascade: "leaves", citrus: "leaves",

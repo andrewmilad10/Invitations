@@ -69,6 +69,9 @@ export function DownloadCardButton({ bundle, className, label = "Download card" 
               eyebrow: getSection(model, "hero")?.content.eyebrow ?? null,
               dateLabel: model.wedding.date?.long ?? null,
               place: model.events.ceremony?.venueName ?? model.events.reception?.venueName ?? null,
+              line: getSection(model, "hero")?.content.tagline || null,
+              date: model.wedding.date,
+              time: model.events.ceremony?.timeLabel ?? model.events.reception?.timeLabel ?? null,
             }}
             photos={[model.media.hero, ...model.media.gallery].filter((m) => m !== null).map((m) => ({ url: m.url, alt: m.alt }))}
             sizes={`${EXPORT_WIDTH * 2}px`}

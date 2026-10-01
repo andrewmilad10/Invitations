@@ -37,7 +37,16 @@ export function CardHero({ model, content }: SectionProps<"hero">) {
       >
         <StationeryCard
           art={template.art}
-          text={{ partnerOne: wedding.partnerOne, partnerTwo: wedding.partnerTwo, eyebrow: content.eyebrow, dateLabel: wedding.date?.long ?? null, place: venue }}
+          text={{
+            partnerOne: wedding.partnerOne,
+            partnerTwo: wedding.partnerTwo,
+            eyebrow: content.eyebrow,
+            dateLabel: wedding.date?.long ?? null,
+            place: venue,
+            line: content.tagline || null,
+            date: wedding.date,
+            time: model.events.ceremony?.timeLabel ?? model.events.reception?.timeLabel ?? null,
+          }}
           photos={photos}
           sizes="(min-width: 640px) 44rem, 92vw"
           options={template.card}

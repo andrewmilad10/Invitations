@@ -18,6 +18,8 @@ export const FONT_KEYS = [
   "dmserif",
   "instrument",
   "spacemono",
+  "caveat",
+  "allura",
   "amiri",
   "naskh",
 ] as const;
@@ -50,6 +52,8 @@ export const FONTS: Record<FontKey, FontDefinition> = {
   dmserif: { label: "DM Serif Display", category: "serif", cssVar: "--font-dmserif", fallback: "Georgia, serif", script: "latin" },
   instrument: { label: "Instrument Serif", category: "serif", cssVar: "--font-instrument", fallback: "Georgia, serif", script: "latin" },
   spacemono: { label: "Space Mono", category: "sans", cssVar: "--font-spacemono", fallback: "ui-monospace, Menlo, monospace", script: "latin" },
+  caveat: { label: "Caveat", category: "script", cssVar: "--font-caveat", fallback: "cursive", script: "latin" },
+  allura: { label: "Allura", category: "script", cssVar: "--font-allura", fallback: "cursive", script: "latin" },
   amiri: { label: "Amiri", category: "serif", cssVar: "--font-amiri", fallback: "serif", script: "arabic" },
   naskh: { label: "Noto Naskh Arabic", category: "serif", cssVar: "--font-naskh", fallback: "serif", script: "arabic" },
 };

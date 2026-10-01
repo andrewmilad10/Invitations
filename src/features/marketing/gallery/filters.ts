@@ -100,13 +100,13 @@ export function filterTemplates(all: readonly TemplateManifest[], f: GalleryFilt
     if (f.letterpress && !t.stationery.letterpress) continue;
     const shape = shapeOf(t);
     if (f.orientation === "square" && shape !== "square") continue;
-    if (f.orientation === "landscape" && !canRotate(shape)) continue;
-    if (f.orientation === "portrait" && (shape === "square" || shape === "landscape" ? !canRotate(shape) : false)) continue;
+    if (f.orientation === "landscape" && !canRotate(shape, t.stationery.layout)) continue;
+    if (f.orientation === "portrait" && (shape === "square" || shape === "landscape" ? !canRotate(shape, t.stationery.layout) : false)) continue;
     const palette = f.color ? t.palettes.find((p) => p.family === f.color) : t.palettes[0];
     if (!palette) continue;
     const options: CardOptionOverrides = {};
     if (f.foil) options.foil = f.foil;
-    if (f.orientation === "landscape" || (f.orientation === "portrait" && canRotate(shape))) options.orientation = f.orientation;
+    if (f.orientation === "landscape" || (f.orientation === "portrait" && canRotate(shape, t.stationery.layout))) options.orientation = f.orientation;
     items.push({ template: t, paletteId: palette.id, options: Object.keys(options).length ? options : undefined });
   }
   if (f.foil) items.sort((a, b) => Number(hasFoil(b.template)) - Number(hasFoil(a.template)));

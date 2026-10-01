@@ -51,8 +51,9 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
   const cards = useRef<(HTMLAnchorElement | null)[]>([]);
   const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false });
   const [active, setActive] = useState(0);
-
   const wrap = useCallback((d: number) => ((((d + n / 2) % n) + n) % n) - n / 2, [n]);
+  // Draw only the cards near the centre; the rest are empty shells.
+  const near = (i: number) => Math.abs(wrap(i - active)) <= 5;
 
   /** Write every card's transform for the current position. */
   const render = useCallback(() => {
@@ -75,8 +76,8 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       gsap.killTweensOf(s, "pos");
       gsap.to(s, {
         pos: target,
-        duration: s.reduced ? 0 : Math.min(1.25, 0.75 + Math.abs(target - s.pos) * 0.12 + Math.abs(velocity) * 0.05),
-        ease: "power3.out",
+        duration: s.reduced ? 0 : Math.min(1.5, 0.7 + Math.abs(target - s.pos) * 0.1 + Math.abs(velocity) * 0.06),
+        ease: "power4.out",
         onUpdate: render,
       });
     },
@@ -154,12 +155,36 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const [x1, t1] = g.samples[g.samples.length - 1];
       const v = (x1 - x0) / Math.max(16, t1 - t0); // px per ms
       const per = state.current.geo.card * 1.22;
-      const fling = Math.max(-3, Math.min(3, (-v * 220) / per));
+      // Momentum: a quick flick glides several cards, a slow drag settles on the nearest.
+      const fling = Math.max(-6, Math.min(6, (-v * 320) / per));
       goTo(Math.round(state.current.pos + fling), v);
     }
     // Keep `moved` until the click that follows the drag has been swallowed.
     setTimeout(() => (drag.current = null), 0);
   };
+
+  // Sideways trackpad / shift-wheel scrolling glides the cards, then settles.
+  useEffect(() => {
+    const el = stage.current;
+    if (!el) return;
+    let settle = 0;
+    const onWheel = (e: WheelEvent) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+      if (!dx) return;
+      e.preventDefault();
+      const s = state.current;
+      gsap.killTweensOf(s, "pos");
+      s.pos += dx / (s.geo.card * 1.22);
+      render();
+      window.clearTimeout(settle);
+      settle = window.setTimeout(() => goTo(Math.round(s.pos)), 140);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      window.clearTimeout(settle);
+    };
+  }, [render, goTo]);
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === "ArrowRight") {
@@ -172,7 +197,6 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
   };
 
   const current = designs[active];
-  const pad = (i: number) => String(i + 1).padStart(2, "0");
 
   return (
     <div>
@@ -191,10 +215,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
         className="relative h-[330px] cursor-grab touch-pan-y select-none overflow-hidden outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[470px] [--card:230px]"
         style={{ perspective: "1500px", perspectiveOrigin: "50% 45%" } as CSSProperties}
       >
-        {/* Large index behind the cards, and a soft shadow for them to rest on. */}
-        <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[11rem] font-light leading-none text-foreground/[0.045] sm:text-[20rem]">
-          {pad(active)}
-        </span>
+        {/* A soft shadow for the cards to rest on. */}
         <span aria-hidden className="pointer-events-none absolute bottom-[13%] left-1/2 h-8 w-[60%] -translate-x-1/2 rounded-[50%] bg-foreground/10 blur-2xl" />
 
         <div className="absolute inset-0 [transform-style:preserve-3d]">
@@ -223,14 +244,18 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
                 className="absolute left-1/2 top-1/2 block w-[var(--card)] will-change-transform [backface-visibility:hidden]"
                 style={{ transform: first.transform, opacity: first.opacity, zIndex: first.zIndex, visibility: first.opacity <= 0 ? "hidden" : "visible" }}
               >
-                <Stationery
-                  template={t}
-                  partnerOne={a}
-                  partnerTwo={b}
-                  dateLabel={date}
-                  sizes="240px"
-                  className={cn("rounded-[3px] shadow-[0_24px_40px_-24px_rgb(34_29_26/0.55)]", t.stationery.shape === "square" && "mx-auto w-[88%]")}
-                />
+                {near(i) ? (
+                  <Stationery
+                    template={t}
+                    partnerOne={a}
+                    partnerTwo={b}
+                    dateLabel={date}
+                    sizes="240px"
+                    className={cn("rounded-[3px] shadow-[0_24px_40px_-24px_rgb(34_29_26/0.55)]", t.stationery.shape === "square" && "mx-auto w-[88%]")}
+                  />
+                ) : (
+                  <span className="block aspect-[5/7]" />
+                )}
               </Link>
             );
           })}
@@ -239,12 +264,11 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
 
       {/* Caption and controls */}
       <div className="mx-auto mt-6 grid max-w-7xl grid-cols-2 items-end gap-x-4 gap-y-5 px-5 sm:grid-cols-[1fr_auto_1fr] sm:px-8 xl:px-0">
-        <p className="whitespace-nowrap font-serif text-4xl font-light leading-none sm:text-5xl" aria-hidden>
-          {pad(active)}
-          <span className="ms-1 text-base text-muted-foreground">/ {pad(n - 1)}</span>
-        </p>
+        <Link href="/invitations" className="self-center text-sm underline underline-offset-4 hover:text-muted-foreground">
+          See all {n} designs
+        </Link>
         <div className="order-first col-span-2 text-center sm:order-none sm:col-span-1" aria-live="polite">
-          <p className="mb-3 hidden text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground sm:block">Drag · Swipe · Arrow keys</p>
+          <p className="mb-3 hidden text-[0.65rem] uppercase tracking-[0.3em] text-muted-foreground sm:block">Drag · Swipe · Scroll sideways</p>
           <Link href={designHref(current.id, null)} className="font-serif text-3xl font-light hover:underline hover:underline-offset-4 sm:text-4xl">
             {current.name}
           </Link>
