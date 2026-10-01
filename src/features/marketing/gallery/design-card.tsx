@@ -169,7 +169,9 @@ export function DesignCard({
   const query = new URLSearchParams(cardOptions ? cardOptionsToQuery(cardOptions) : undefined);
   if (!isDefault) query.set("palette", paletteId);
   const detailHref = productHref(productOf(template), template.id, query);
-  const customizeHref = `/create/${template.id}${isDefault ? "" : `?palette=${paletteId}`}`;
+  const customizeHref = website
+    ? `/create/${template.id}${isDefault ? "" : `?palette=${paletteId}`}`
+    : `/invitations/${template.id}/customize${query.size ? `?${query}` : ""}`;
   const shape = cardShape(template.stationery, cardOptions);
 
   return (

@@ -12,7 +12,7 @@ import { Blessing, CalendarIcon, ClockIcon, DateRow, Eyebrow, HouseIcon, Photo, 
  */
 
 /** Layouts that place the Bismillah themselves (others get it at the top). */
-const BLESSING_INSIDE = new Set(["formal-script", "date-row", "script-date", "script-bars", "crest", "arch-panel", "photo-half", "classic", "script", "typographic", "monogram", "refined", "spaced"]);
+const BLESSING_INSIDE = new Set(["details", "formal-script", "date-row", "script-date", "script-bars", "crest", "arch-panel", "photo-half", "classic", "script", "typographic", "monogram", "refined", "spaced"]);
 export const handlesBlessing = (layout: string) => BLESSING_INSIDE.has(layout);
 
 interface Props {
@@ -335,6 +335,27 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           </div>
         </div>
       );
+
+    case "details": {
+      // The details enclosure: a heading and a few short sections.
+      const d = text.details;
+      if (!d) return null;
+      return (
+        <div className={cn(col, wide ? "px-[18%] py-[8cqmin]" : "px-[16%] py-[18cqmin]")}>
+          <p className="font-inv-heading text-[9cqmin] uppercase leading-none tracking-[0.06em]">{d.heading}</p>
+          <div className="mt-[5cqmin] flex flex-col gap-[4.5cqmin]">
+            {d.sections
+              .filter((x) => x.title || x.body)
+              .map((x, i) => (
+                <div key={i}>
+                  {x.title ? <p className="text-[2.9cqmin] uppercase tracking-[0.3em] text-inv-accent">{x.title}</p> : null}
+                  {x.body ? <p className="mt-[1cqmin] whitespace-pre-line font-inv-heading text-[3.6cqmin] italic leading-[1.45]">{x.body}</p> : null}
+                </div>
+              ))}
+          </div>
+        </div>
+      );
+    }
 
     default:
       return undefined;

@@ -60,7 +60,7 @@ export function CardDetail({
   const query = cardOptionsToQuery(choice, defaults);
   if (palette.id !== template.palettes[0].id) query.set("palette", palette.id);
   const q = query.toString();
-  const customizeHref = `/create/${template.id}${q ? `?${q}` : ""}`;
+  const customizeHref = `/invitations/${template.id}/customize${q ? `?${q}` : ""}`;
 
   // Keep the URL in step, so a chosen finish can be shared or reloaded.
   useEffect(() => {

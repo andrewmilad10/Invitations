@@ -51,6 +51,7 @@ export const STATIONERY_LAYOUTS = [
   "magazine", "framed", "postcard",
   "refined", "photo-overlay", "asymmetric", "spaced", "photo-side",
   "formal-script", "drive", "torn-photo", "date-row", "script-date", "script-bars", "crest", "split-arch", "arch-panel", "oval-photo", "photo-details", "photo-half",
+  "details",
 ] as const;
 export type StationeryLayout = (typeof STATIONERY_LAYOUTS)[number];
 

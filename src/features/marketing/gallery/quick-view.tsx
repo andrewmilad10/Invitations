@@ -92,7 +92,7 @@ export function QuickView({
             </div>
             <div className="mt-auto flex flex-wrap items-center gap-2 pt-8">
               <Button asChild className="rounded-full px-6">
-                <Link href={`/create/${template.id}${query}`}>Customize</Link>
+                <Link href={product === "websites" ? `/create/${template.id}${query}` : `/invitations/${template.id}/customize${query}`}>Customize</Link>
               </Button>
               <Button asChild variant="outline" className="rounded-full px-6">
                 <Link href={designHref(template.id, isDefault ? null : paletteId)}>{product === "websites" ? "See live demo" : "See details"}</Link>

@@ -45,12 +45,18 @@ export function formatDateOnly(date: string, locale: Locale): DateParts {
   const d = dateOnlyToUtc(date);
   const tag = intl(locale);
   const part = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(tag, { timeZone: "UTC", ...opts }).format(d);
+  const weekday = part({ weekday: "long" });
+  const day = part({ day: "numeric" });
+  const month = part({ month: "long" });
+  const year = part({ year: "numeric" });
   return {
-    weekday: part({ weekday: "long" }),
-    day: part({ day: "numeric" }),
-    month: part({ month: "long" }),
-    year: part({ year: "numeric" }),
-    long: part({ weekday: "long", day: "numeric", month: "long", year: "numeric" }),
+    weekday,
+    day,
+    month,
+    year,
+    // English is assembled from its parts: ICU versions disagree on the comma
+    // after the weekday, which would make server and browser renders differ.
+    long: locale === "en" ? `${weekday}, ${day} ${month} ${year}` : part({ weekday: "long", day: "numeric", month: "long", year: "numeric" }),
     short: part({ day: "2-digit", month: "2-digit", year: "numeric" }).replace(/\//g, "."),
   };
 }

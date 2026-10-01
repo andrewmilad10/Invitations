@@ -21,6 +21,17 @@ export interface StationeryText {
   time?: string | null;
   /** Show the Bismillah above the words. */
   blessing?: boolean;
+  /** For the details enclosure. */
+  details?: { heading: string; sections: { title: string; body: string }[] } | null;
+}
+
+/** How the reverse of a card is printed (the card studio sets this). */
+export interface BackDesign {
+  layout: "blank" | "monogram" | "photo" | "note" | "pattern";
+  note?: string;
+  photo?: StationeryPhoto | null;
+  /** A link to print as a QR code. */
+  qr?: string | null;
 }
 
 export interface StationeryPhoto {
@@ -146,6 +157,19 @@ export function RingsIcon({ className }: { className?: string }) {
       <ellipse cx="15" cy="12" rx="6.6" ry="5.2" transform="rotate(-18 15 12)" />
       <ellipse cx="25" cy="12" rx="9" ry="7.5" transform="rotate(14 25 12)" />
       <ellipse cx="25" cy="12" rx="6.6" ry="5.2" transform="rotate(14 25 12)" />
+    </svg>
+  );
+}
+
+/** A QR code drawn as squares in the current text colour. */
+export function QrCode({ matrix, className }: { matrix: boolean[][]; className?: string }) {
+  const n = matrix.length;
+  let d = "";
+  matrix.forEach((row, y) => row.forEach((on, x) => on && (d += `M${x} ${y}h1v1h-1z`)));
+  return (
+    <svg aria-hidden viewBox={`-2 -2 ${n + 4} ${n + 4}`} className={className} shapeRendering="crispEdges">
+      <rect x="-2" y="-2" width={n + 4} height={n + 4} fill="var(--inv-surface)" />
+      <path d={d} fill="currentColor" />
     </svg>
   );
 }

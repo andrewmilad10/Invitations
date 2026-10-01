@@ -20,11 +20,13 @@ import {
   Eyebrow,
   initial,
   Photo,
+  QrCode,
+  type BackDesign,
   type StationeryPhoto,
   type StationeryText,
 } from "./parts";
 
-export type { StationeryPhoto, StationeryText } from "./parts";
+export type { BackDesign, StationeryPhoto, StationeryText } from "./parts";
 
 /** Boutique layouts that place the blessing themselves or deliberately leave it out. */
 const BOUTIQUE_SELF = new Set([
@@ -74,6 +76,8 @@ export function StationeryCard({
   sizes = "(min-width: 1024px) 22vw, 45vw",
   options,
   side = "front",
+  back,
+  qr,
   className,
   style,
 }: {
@@ -84,6 +88,10 @@ export function StationeryCard({
   /** Finishing options; the design's own defaults (e.g. its foil) apply underneath. */
   options?: CardOptionOverrides;
   side?: "front" | "back";
+  /** The back's design (defaults to the monogram). */
+  back?: BackDesign;
+  /** QR modules for the back (from the caller, so the drawing stays pure). */
+  qr?: boolean[][] | null;
   className?: string;
   style?: CSSProperties;
 }) {
@@ -120,7 +128,7 @@ export function StationeryCard({
       }}
     >
       {side === "back" ? (
-        <Back art={art} text={words} foil={finish.foil !== "none"} />
+        <Back art={art} text={words} foil={finish.foil !== "none"} design={back ?? { layout: "monogram" }} qr={qr ?? null} sizes={sizes} />
       ) : (
         <>
           {photoFull ? null : (
@@ -164,56 +172,85 @@ function Back({
   art,
   text,
   foil,
+  design,
+  qr,
+  sizes,
 }: {
   art: Required<StationeryArt>;
   text: StationeryText;
   foil: boolean;
+  design: BackDesign;
+  qr: boolean[][] | null;
+  sizes: string;
 }) {
   const h = HEIGHT[art.shape];
-  // Foil cards keep a paper back with a stamped monogram; others are printed in colour.
-  return (
-    <div
-      className={cn(
-        "absolute inset-0",
-        foil
-          ? "bg-inv-surface"
-          : "bg-[color-mix(in_oklab,var(--inv-accent)_82%,var(--inv-fg))] text-inv-surface",
-      )}
-    >
-      <svg
-        aria-hidden
-        viewBox={`0 0 100 ${h}`}
-        className="absolute inset-0 size-full"
-      >
-        <path
-          d={framePath(5, h, art.shape)}
-          fill="none"
-          stroke={foil ? "var(--inv-accent)" : "currentColor"}
-          strokeWidth="0.25"
-          opacity="0.55"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-[3cqmin] font-inv-body">
-        <div
-          className={cn(
-            "flex flex-col items-center gap-[3cqmin]",
-            foil && "text-inv-accent",
-          )}
-        >
-          <p className="font-inv-heading text-[14cqmin] leading-none">
-            {initial(text.partnerOne)}
-            <span className="mx-[1.5cqmin] font-inv-accent text-[8cqmin] opacity-80">
-              &amp;
-            </span>
-            {initial(text.partnerTwo)}
-          </p>
-          {text.dateLabel ? (
-            <p className="text-[2.8cqmin] uppercase tracking-[0.35em] opacity-80">
-              {text.dateLabel}
-            </p>
-          ) : null}
+  const monogram = (size: string) => (
+    <p className={cn("font-inv-heading leading-none", size)}>
+      {initial(text.partnerOne)}
+      <span className="mx-[1.5cqmin] font-inv-accent text-[0.55em] opacity-80">&amp;</span>
+      {initial(text.partnerTwo)}
+    </p>
+  );
+  const code = qr ? (
+    <div className="flex flex-col items-center gap-[1.2cqmin]">
+      <QrCode matrix={qr} className="w-[22cqmin] text-inv-fg" />
+    </div>
+  ) : null;
+
+  if (design.layout === "monogram") {
+    // Foil cards keep a paper back with a stamped monogram; others are printed in colour.
+    return (
+      <div className={cn("absolute inset-0", foil ? "bg-inv-surface" : "bg-[color-mix(in_oklab,var(--inv-accent)_82%,var(--inv-fg))] text-inv-surface")}>
+        <svg aria-hidden viewBox={`0 0 100 ${h}`} className="absolute inset-0 size-full">
+          <path d={framePath(5, h, art.shape)} fill="none" stroke={foil ? "var(--inv-accent)" : "currentColor"} strokeWidth="0.25" opacity="0.55" />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-[3cqmin] font-inv-body">
+          <div className={cn("flex flex-col items-center gap-[3cqmin]", foil && "text-inv-accent")}>
+            {monogram("text-[14cqmin]")}
+            {text.dateLabel ? <p className="text-[2.8cqmin] uppercase tracking-[0.35em] opacity-80">{text.dateLabel}</p> : null}
+          </div>
+          {code ? <div className="mt-[6cqmin]">{code}</div> : null}
         </div>
       </div>
+    );
+  }
+
+  if (design.layout === "pattern") {
+    return (
+      <div className="absolute inset-0 bg-inv-surface">
+        <div
+          className="absolute inset-0 opacity-70"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 50%, var(--inv-accent) 0 9%, transparent 10%), linear-gradient(45deg, transparent 47%, color-mix(in oklab, var(--inv-accent) 40%, transparent) 48% 52%, transparent 53%), linear-gradient(-45deg, transparent 47%, color-mix(in oklab, var(--inv-accent) 40%, transparent) 48% 52%, transparent 53%)",
+            backgroundSize: "9cqmin 9cqmin",
+          }}
+        />
+        <div className="absolute inset-0 grid place-items-center">
+          <div className="grid size-[38cqmin] place-items-center rounded-full bg-inv-surface text-inv-accent shadow-[0_0_0_1.2cqmin_var(--inv-surface),0_0_0_1.5cqmin_var(--inv-accent)]">
+            {monogram("text-[12cqmin]")}
+          </div>
+        </div>
+        {code ? <div className="absolute inset-x-0 bottom-[7cqmin] flex justify-center">{code}</div> : null}
+      </div>
+    );
+  }
+
+  // blank, note and photo share a plain paper back.
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-[4cqmin] bg-inv-surface px-[12%] text-center font-inv-body text-inv-fg">
+      {design.layout === "photo" ? (
+        <Photo photo={design.photo ?? undefined} sizes={sizes} className="aspect-[4/3] w-full" />
+      ) : null}
+      {design.layout === "note" || design.layout === "photo" ? (
+        <>
+          {design.note ? <p className="whitespace-pre-line font-inv-heading text-[4.6cqmin] italic leading-[1.5]">{design.note}</p> : null}
+          <p className="font-inv-accent text-[7cqmin] leading-none text-inv-accent">
+            {text.partnerOne} &amp; {text.partnerTwo}
+          </p>
+        </>
+      ) : null}
+      {code}
     </div>
   );
 }

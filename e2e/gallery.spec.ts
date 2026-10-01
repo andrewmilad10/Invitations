@@ -40,7 +40,9 @@ test("card page: colour and finish carry into Customize", async ({ page }) => {
   await expect(page).toHaveURL(/silhouette=scalloped/);
   for (const view of ["Back", "Envelope", "Suite", "Close-up"]) await page.getByRole("tab", { name: view }).click();
   await page.getByRole("link", { name: "Customize", exact: true }).first().click();
-  await expect(page).toHaveURL(/\/create\/laurel-crest/);
+  await expect(page).toHaveURL(/\/invitations\/laurel-crest\/customize\?.*foil=gold/);
+  // The studio opens with the chosen finish.
+  await expect(page.getByRole("radio", { name: "Gold", exact: true })).toHaveAttribute("aria-checked", "true");
 });
 
 test("an earlier draft is offered back", async ({ context }) => {
@@ -66,4 +68,20 @@ test("wedding websites gallery and a design opened as a website", async ({ page 
   await page.getByRole("link", { name: "Cinematic", exact: true }).click();
   await expect(page).toHaveURL(/\/websites\/cinematic/);
   await expect(page.frameLocator("iframe").first().locator("[data-section=hero]")).toBeAttached();
+});
+
+test("card studio: front to review, no RSVP, similar designs stay cards", async ({ page }) => {
+  await page.goto("/invitations/rose-arch");
+  // Similar designs open card pages, never the website builder.
+  const similar = page.locator("section", { hasText: "similar" }).getByRole("link", { name: "Customize" }).first();
+  await expect(similar).toHaveAttribute("href", /^\/invitations\/[a-z0-9-]+\/customize/);
+  await page.getByRole("link", { name: "Customize", exact: true }).first().click();
+  await expect(page).toHaveURL(/\/invitations\/rose-arch\/customize/);
+  await expect(page.getByRole("button", { name: "RSVP" })).toHaveCount(0);
+  await page.getByLabel("First name").fill("Nour");
+  for (const step of ["Invitation Back", "Enclosure Front", "Enclosure Back", "Envelope", "Review"]) {
+    await page.getByRole("button", { name: step, exact: true }).click();
+  }
+  await expect(page.getByRole("button", { name: /Download suite/ })).toBeVisible();
+  await page.getByRole("button", { name: "Undo" }).click();
 });
