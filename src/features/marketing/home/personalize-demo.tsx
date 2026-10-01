@@ -23,7 +23,8 @@ export function PersonalizeDemo({ templates }: { templates: TemplateOption[] }) 
   const [one, setOne] = useState("");
   const [two, setTwo] = useState("");
   const [date, setDate] = useState("");
-  const [paletteId, setPaletteId] = useState<string>();
+  // Opens in the brand emerald when the design has it.
+  const [paletteId, setPaletteId] = useState<string | undefined>("emerald");
 
   const template = templates.find((t) => t.id === templateId) ?? templates[0];
   const palette = template.palettes.find((p) => p.id === paletteId) ?? template.palettes[0];

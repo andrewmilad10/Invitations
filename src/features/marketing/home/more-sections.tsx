@@ -15,7 +15,7 @@ export function WhyUs() {
         <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">Made for how couples plan</h2>
         <dl className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
           {REASONS.map((r) => (
-            <div key={r.title} className="border-t border-border pt-6">
+            <div key={r.title} className="border-t border-gold/50 pt-6">
               <dt className="font-serif text-2xl">{r.title}</dt>
               <dd className="mt-2 leading-relaxed text-muted-foreground">{r.body}</dd>
             </div>

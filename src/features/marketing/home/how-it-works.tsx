@@ -11,11 +11,11 @@ export function HowItWorks() {
       <div className="mx-auto max-w-7xl">
         <h2 className="max-w-2xl font-serif text-5xl font-light leading-[1.02] sm:text-6xl">From first idea to a shared link in an afternoon</h2>
         <div className="relative mt-16">
-          <span aria-hidden className="absolute inset-x-0 top-0 hidden h-px bg-border lg:block" />
+          <span aria-hidden className="absolute inset-x-0 top-0 hidden h-px bg-gold/60 lg:block" />
           <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
             {STEPS.map((step, i) => (
               <li key={step.title} className="relative lg:pt-10">
-                <span aria-hidden className="absolute start-0 top-0 hidden size-2 -translate-y-1/2 rounded-full bg-accent lg:block" />
+                <span aria-hidden className="absolute start-0 top-0 hidden size-2 -translate-y-1/2 rounded-full bg-gold lg:block" />
                 <h3 className="font-serif text-3xl">
                   <span className="me-2 text-accent">{i + 1}.</span>
                   {step.title}

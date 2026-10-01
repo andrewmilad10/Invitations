@@ -10,8 +10,10 @@ import { Stationery } from "../stationery";
  * photography.
  */
 export function Hero() {
-  const front = getTemplateManifest("rose-arch") ?? getTemplateManifest("romantic")!;
+  // In the brand colours: an ivory-and-gold card over an emerald one.
+  const front = getTemplateManifest("laurel-crest") ?? getTemplateManifest("rose-arch")!;
   const back = getTemplateManifest("velvet-tulips") ?? front;
+  const colours = (t: typeof front, id: string) => ({ colors: t.palettes.find((p) => p.id === id)?.colors });
   const cardCount = templatesFor("cards", selectableTemplates()).length;
 
   return (
@@ -56,6 +58,7 @@ export function Hero() {
           </div>
           <Stationery
             template={back}
+            overrides={colours(back, "emerald")}
             partnerOne="Layla"
             partnerTwo="Omar"
             dateLabel="14 October 2026"
@@ -64,6 +67,7 @@ export function Hero() {
           />
           <Stationery
             template={front}
+            overrides={colours(front, "ivory")}
             partnerOne="Nour"
             partnerTwo="Karim"
             dateLabel="12 April 2027"

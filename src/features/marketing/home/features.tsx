@@ -57,7 +57,7 @@ export function Features() {
 
         <ul className="mt-12 grid gap-x-10 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map(({ title, body }) => (
-            <li key={title} className="border-t border-border py-7">
+            <li key={title} className="border-t border-gold/50 py-7">
               <h3 className="font-serif text-2xl leading-tight">{title}</h3>
               <p className="mt-2 leading-relaxed text-muted-foreground">
                 {body}
