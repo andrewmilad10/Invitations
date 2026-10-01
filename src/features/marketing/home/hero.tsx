@@ -21,7 +21,7 @@ export function Hero() {
           <h1 className="font-serif text-[3.4rem] font-light leading-[0.95] sm:text-7xl lg:text-[6.2rem]">
             {["Your love story,", "beautifully invited."].map((line, i) => (
               <span key={line} className="block overflow-hidden pb-[0.08em]">
-                <span className="open-line block" style={{ animationDelay: `${175 + i * 150}ms` }}>
+                <span className="open-line gold-foil block" style={{ animationDelay: `${175 + i * 150}ms` }}>
                   {line}
                 </span>
               </span>
@@ -31,7 +31,7 @@ export function Hero() {
             Invitation cards to send on WhatsApp and wedding websites to share, in {cardCount} original designs. Write them in English or Arabic.
           </p>
           <div className="open-rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:740ms]">
-            <Button asChild size="lg" className="h-13 rounded-full bg-white px-8 text-base text-foreground hover:bg-white/90">
+            <Button asChild size="lg" className="h-13 rounded-full bg-gold px-8 text-base text-gold-foreground hover:bg-gold/90">
               <Link href="/invitations">Invitation cards</Link>
             </Button>
             <Button

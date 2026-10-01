@@ -47,7 +47,7 @@ export function LiveDemo() {
           </p>
           <p className="mt-4 text-lg leading-relaxed text-forest-foreground/75">Most guests will open it on a phone, so every design is made for the phone first: easy to read, quick to load, and one tap from directions to the venue.</p>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Button asChild size="lg" className="rounded-full bg-forest-foreground px-7 text-forest hover:bg-forest-foreground/90">
+            <Button asChild size="lg" className="rounded-full bg-gold px-7 text-gold-foreground hover:bg-gold/90">
               <Link href="/templates/cinematic">Preview the template</Link>
             </Button>
             <Button asChild size="lg" variant="ghost" className="rounded-full px-6 text-forest-foreground hover:bg-white/10 hover:text-forest-foreground">

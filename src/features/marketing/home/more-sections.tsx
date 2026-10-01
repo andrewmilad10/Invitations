@@ -30,11 +30,11 @@ export function FinalCta() {
   return (
     <section className="linen-forest relative isolate overflow-hidden px-5 py-28 text-center text-white sm:px-8 sm:py-36">
       <div className="mx-auto max-w-3xl">
-        <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-7xl">Ready to make your invitation?</h2>
+        <h2 className="gold-foil font-serif text-5xl font-light leading-[1.02] sm:text-7xl">Ready to make your invitation?</h2>
         <p className="mx-auto mt-6 max-w-lg text-lg text-white/80">
           Pick a design and add your names. It&apos;s free to try, and nobody sees it until you publish.
         </p>
-        <Button asChild size="lg" className="mt-10 h-13 rounded-full bg-white px-8 text-base text-foreground hover:bg-white/90">
+        <Button asChild size="lg" className="mt-10 h-13 rounded-full bg-gold px-8 text-base text-gold-foreground hover:bg-gold/90">
           <Link href="/invitations">Choose a design</Link>
         </Button>
       </div>
