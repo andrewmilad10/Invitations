@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { SECTION_DEFINITIONS } from "@/core/sections/registry";
 import { FONTS } from "@/core/theme/fonts";
 import { DesignDetail } from "@/features/marketing/preview/design-detail";
-import { productHref, productOf, PRODUCTS, templatesFor, type Product } from "@/features/marketing/products";
+import { openingOf, productHref, productOf, PRODUCTS, templatesFor, type Product } from "@/features/marketing/products";
 import { SiteFooter } from "@/features/marketing/site-footer";
 import { SiteHeader } from "@/features/marketing/site-header";
 import { TemplateCard } from "@/features/marketing/template-card";
@@ -108,7 +108,7 @@ export default async function TemplatePage(props: PageProps<"/websites/[template
               <ul className="mt-6 grid gap-4 text-sm leading-relaxed text-muted-foreground">
                 <li>A complete wedding website: story, schedule, venues with maps, photos and RSVP.</li>
                 <li>Looks right on every phone, tablet and computer.</li>
-                {template.features.opening === "envelope" ? <li>Opens with a sealed envelope your guests tap to open.</li> : null}
+                {openingOf(template) ? <li>{openingOf(template)!.sentence}</li> : null}
                 {template.features.music ? <li>Optional background music once guests open the invitation.</li> : null}
                 <li>Switch to any other template later without retyping anything.</li>
               </ul>

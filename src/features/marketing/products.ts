@@ -31,10 +31,24 @@ export function isProduct(value: unknown): value is Product {
   return value === "cards" || value === "websites";
 }
 
+/** What a website's opening moment is, in a few words (null when it has none). */
+const OPENINGS: Record<string, [label: string, sentence: string]> = {
+  gate: ["Palace-door opening", "Opens with palace doors sealed with your initials: guests tap the seal and the doors swing open."],
+  nile: ["Lantern opening", "Opens on a starry night over the Nile: guests tap and lanterns rise into the sky."],
+  herbarium: ["Book opening", "Opens as a linen book: guests tap and the cover swings open on a blooming flower."],
+  toast: ["Champagne opening", "Opens with a champagne coupe in a gold Deco frame: guests tap and the bubbles lift the curtain."],
+};
+export function openingOf(t: Pick<TemplateManifest, "features" | "renderer">): { label: string; sentence: string } | null {
+  if (t.features.opening !== "envelope") return null;
+  const [label, sentence] = OPENINGS[t.renderer] ?? ["Envelope opening", "Opens with a sealed envelope your guests tap to open."];
+  return { label, sentence };
+}
+
 /** Website highlights of a template, for labels on website cards. */
 export function websiteFeatures(t: TemplateManifest): string[] {
   const out: string[] = [];
-  if (t.features.opening === "envelope") out.push("Envelope opening");
+  const opening = openingOf(t);
+  if (opening) out.push(opening.label);
   if (t.supportedSections.includes("countdown")) out.push("Countdown");
   if (t.supportedSections.includes("venue")) out.push("Maps");
   if (t.supportedSections.includes("rsvp")) out.push("RSVP");

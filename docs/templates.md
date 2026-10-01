@@ -229,3 +229,24 @@ shadow and **photos: colour / black & white** in the Design panel.
 Sections added for this family and available to every layout: **faq**
 (questions & answers), a **quote** on the story, and an optional https-only
 **reply link** on RSVP.
+
+## The Showpiece family (`src/templates/showpiece`)
+
+Four wedding websites with their own opening moment and motion, drawn by
+one layout (`Renderer.tsx`; the renderer key picks the variant):
+
+| Template | Renderer | Opening | Inside |
+| --- | --- | --- | --- |
+| The Gate | `gate` | palace doors sealed with the couple's initials; the seal breaks and the doors swing open in 3D | tilting card stack, falling gold, flip-style countdown tiles, fanned photos, a gold timeline that draws itself |
+| Moonlit Nile | `nile` | a night river; a tap releases lanterns and the felucca sails away | sky, moon, palms and river at different depths; moon countdown; lanterns light along the day |
+| Pressed Garden | `herbarium` | a linen book whose cover swings open on a blooming flower | sprigs, swinging herbarium tags, stems that draw themselves |
+| Gilded Toast | `toast` | a gold Deco frame draws itself; tapping the coupe fills it and lifts the curtain | Deco arch, turning sunburst, the evening as a menu card |
+
+The openings (`opening.tsx`) follow the cinematic contract: shown on live and
+sample pages, hidden in the editor until "Replay opening", never in exports,
+and replaced by a short fade with reduced motion. `effects.tsx` adds scroll
+reveals, the self-drawing timeline, pointer tilt and depth — only once it has
+set `data-fx="on"`, so every page reads fully without JavaScript. Colours
+come only from `--inv-*` (roles per variant are documented in the renderer).
+The RSVP section shows the couple's reply link; collecting replies in Vellum
+is Phase 2.

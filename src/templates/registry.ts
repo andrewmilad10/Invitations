@@ -9,6 +9,7 @@ import { editorialManifest } from "./editorial/manifest";
 import { GALERIE_MANIFESTS } from "./galerie/manifests";
 import { MAISON_MANIFESTS } from "./maison/manifests";
 import { POSTALE_MANIFESTS } from "./postale/manifests";
+import { SHOWPIECE_MANIFESTS } from "./showpiece/manifests";
 
 /**
  * Every template the platform knows about (metadata only — safe to import
@@ -33,6 +34,7 @@ const ALL: TemplateManifest[] = [
   ...MAISON_MANIFESTS,
   ...GALERIE_MANIFESTS,
   ...POSTALE_MANIFESTS,
+  ...SHOWPIECE_MANIFESTS,
 ];
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
@@ -40,6 +42,7 @@ const FEATURED = [
   "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
   "baroque-crest", "calla-lily", "golden-oval", "monochrome-bloom", "save-the-date", "wild-garden", "velvet-calla", "gilded-crest",
   "marlowe", "garden-toile", "verdant", "horizon", "gilded-garden", "serena", "peony-press", "wildwood", "cypress", "aurelia",
+  "the-gate", "moonlit-nile", "pressed-garden", "gilded-toast",
   "maison", "cinematic", "postale", "galerie", "meadow", "couture", "delft-garland", "willow-arch", "laurel-crest", "gilded-deco", "wild-meadow",
   "monochrome", "romantic", "four-frames", "olive-grove", "moonlit", "chapel-window", "classic",
   "riviera", "big-day", "satin-bow", "limoncello", "botanical", "amalfi-tile", "rose-corners",
