@@ -362,7 +362,7 @@ function Tilt({ children }: { children: ReactNode }) {
     ref.current?.style.setProperty("--ry", "0deg");
   };
   return (
-    <div ref={ref} onPointerMove={move} onPointerLeave={leave} className="animate-[desk-lift_700ms_cubic-bezier(.2,.8,.2,1)] [perspective:1600px]">
+    <div ref={ref} onPointerMove={move} onPointerLeave={leave} className="card-in-hand animate-[desk-lift_700ms_cubic-bezier(.2,.8,.2,1)] [perspective:1600px]">
       <div className="transition-transform duration-300 ease-out [transform-style:preserve-3d] [transform:rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]">{children}</div>
     </div>
   );

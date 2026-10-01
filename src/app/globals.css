@@ -437,3 +437,36 @@ html.motion-failed [data-image-reveal] {
     transition: none;
   }
 }
+
+/* Homepage ring: the front card catches the light; its name settles in. */
+@keyframes carousel-glint {
+  from { background-position: 120% 0; opacity: 1; }
+  to { background-position: -40% 0; opacity: 0.6; }
+}
+.carousel-glint {
+  background: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.38) 48%, rgb(255 255 255 / 0.08) 56%, transparent 66%) no-repeat;
+  background-size: 260% 100%;
+  mix-blend-mode: soft-light;
+  animation: carousel-glint 1.6s cubic-bezier(0.3, 0.6, 0.2, 1) 0.15s both;
+}
+@keyframes carousel-caption {
+  from { opacity: 0; transform: translateY(6px); filter: blur(3px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.carousel-caption { animation: carousel-caption 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* Foil catches the light while a card is looked at. */
+@keyframes foil-glint {
+  0%, 100% { background-position: 0% 0; }
+  50% { background-position: 100% 0; }
+}
+.stationery-shine:hover .stationery[data-foil] .text-inv-accent,
+.card-in-hand .stationery[data-foil] .text-inv-accent {
+  animation: foil-glint 3.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel-glint, .carousel-caption { animation: none; }
+  .carousel-glint { opacity: 0; }
+  .stationery-shine:hover .stationery[data-foil] .text-inv-accent,
+  .card-in-hand .stationery[data-foil] .text-inv-accent { animation: none; }
+}
