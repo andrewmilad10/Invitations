@@ -137,7 +137,7 @@ export function StationeryCard({
           )}
           {/* Square and landscape cards are shorter, so the words start a
               little smaller — and shrink further if they would still run off. */}
-          <FitWords base={art.shape === "square" || (art.shape === "landscape" && base.shape !== "landscape") ? 0.8 : 1}>
+          <FitWords base={art.shape === "square" || (art.shape === "landscape" && base.shape !== "landscape") ? 0.8 : 1} watch={`${art.layout}|${art.shape}|${JSON.stringify(words)}`}>
             <Layout art={art} text={words} photos={photos} sizes={sizes} />
           </FitWords>
           {words.blessing &&

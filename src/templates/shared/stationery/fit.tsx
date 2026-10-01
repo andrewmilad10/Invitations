@@ -11,7 +11,7 @@ const MIN_ZOOM = 0.55;
  * card, a long name, a long line), sets them a little smaller until they
  * fit. Measured in the browser; the server draws them at the base size.
  */
-export function FitWords({ base = 1, children }: { base?: number; children: ReactNode }) {
+export function FitWords({ base = 1, watch, children }: { base?: number; /** Re-fit only when this changes (the words and layout). */ watch: string; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -57,7 +57,7 @@ export function FitWords({ base = 1, children }: { base?: number; children: Reac
       alive = false;
       ro.disconnect();
     };
-  });
+  }, [base, watch]);
 
   return (
     <div ref={ref} className="absolute inset-0" style={base === 1 ? undefined : { zoom: base }}>

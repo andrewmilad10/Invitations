@@ -440,14 +440,12 @@ html.motion-failed [data-image-reveal] {
 
 /* Homepage ring: the front card catches the light; its name settles in. */
 @keyframes carousel-glint {
-  from { background-position: 120% 0; opacity: 1; }
-  to { background-position: -40% 0; opacity: 0.6; }
+  from { transform: translateX(-110%) skewX(-18deg); }
+  to { transform: translateX(260%) skewX(-18deg); }
 }
 .carousel-glint {
-  background: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.38) 48%, rgb(255 255 255 / 0.08) 56%, transparent 66%) no-repeat;
-  background-size: 260% 100%;
-  mix-blend-mode: soft-light;
-  animation: carousel-glint 1.6s cubic-bezier(0.3, 0.6, 0.2, 1) 0.15s both;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.32), transparent);
+  animation: carousel-glint 1.4s cubic-bezier(0.3, 0.6, 0.2, 1) 0.2s both;
 }
 @keyframes carousel-caption {
   from { opacity: 0; transform: translateY(6px); filter: blur(3px); }
@@ -466,7 +464,7 @@ html.motion-failed [data-image-reveal] {
 }
 @media (prefers-reduced-motion: reduce) {
   .carousel-glint, .carousel-caption { animation: none; }
-  .carousel-glint { opacity: 0; }
+  .carousel-glint { display: none; }
   .stationery-shine:hover .stationery[data-foil] .text-inv-accent,
   .card-in-hand .stationery[data-foil] .text-inv-accent { animation: none; }
 }

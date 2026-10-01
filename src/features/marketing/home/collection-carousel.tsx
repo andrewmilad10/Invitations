@@ -3,7 +3,7 @@
 import gsap from "gsap";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { cardCouple, designHref } from "../gallery/design-card";
@@ -26,60 +26,141 @@ interface Geometry {
   radius: number; // curve radius, px
   gap: number; // space between cards, × card width
   visible: number; // cards each side before fading out
+  perspective: number; // px — smaller is deeper
   speed: number; // cards per second when turning on its own
 }
 
-const DESKTOP: Geometry = { card: 190, radius: 1050, gap: 1.28, visible: 4.6, speed: 0.22 };
-const MOBILE: Geometry = { card: 128, radius: 480, gap: 1.24, visible: 2.8, speed: 0.2 };
+const DESKTOP: Geometry = { card: 200, radius: 1000, gap: 1.22, visible: 4.4, perspective: 900, speed: 0.25 };
+const MOBILE: Geometry = { card: 132, radius: 430, gap: 1.2, visible: 2.6, perspective: 560, speed: 0.25 };
 
-/** Transform and fade of the card at offset `d` from the middle. */
+/** Transform, fade and side light of the card at offset `d` from the middle. */
 function layout(d: number, spread: number, geo: Geometry) {
   const step = (geo.card * geo.gap) / geo.radius; // angle between cards
   const a = d * step * spread;
   const x = Math.sin(a) * geo.radius;
-  const z = (1 - Math.cos(a)) * geo.radius; // sides come towards you
-  const fade = Math.min(1, Math.max(0, geo.visible + 0.6 - Math.abs(d)));
+  const z = (1 - Math.cos(a)) * geo.radius; // the sides come towards you
   return {
     transform: `translate3d(-50%, -50%, 0) translate3d(${x.toFixed(1)}px, 0, ${z.toFixed(1)}px) rotateY(${((-a * 180) / Math.PI).toFixed(2)}deg)`,
-    fade,
-    zIndex: Math.round(1000 - Math.abs(d) * 10),
+    fade: Math.min(1, Math.max(0, geo.visible + 0.6 - Math.abs(d))),
+    // Light from the middle: a card turned in is shaded on its outer edge.
+    shade: Math.min(0.32, Math.abs(Math.sin(a)) * 0.45),
+    side: a < 0 ? -1 : 1,
   };
 }
+
+
+/** One card on the curve. Memoised: moving the curve never re-renders it. */
+const CurveCard = memo(function CurveCard({
+  template,
+  index,
+  centre,
+  drawn,
+  first,
+  setRef,
+  onPick,
+}: {
+  template: TemplateManifest;
+  index: number;
+  centre: boolean;
+  drawn: boolean;
+  first: CSSProperties;
+  setRef: (i: number, el: HTMLAnchorElement | null) => void;
+  onPick: (i: number, e: MouseEvent<HTMLAnchorElement>) => void;
+}) {
+  const [a, b, date] = cardCouple(index);
+  return (
+    <Link
+      ref={(el) => setRef(index, el)}
+      href={designHref(template.id, null)}
+      draggable={false}
+      tabIndex={centre ? 0 : -1}
+      aria-hidden={!centre}
+      aria-label={centre ? `Open ${template.name}` : undefined}
+      onClick={(e) => onPick(index, e)}
+      className="absolute left-1/2 top-1/2 block w-[var(--card)] will-change-transform [backface-visibility:hidden]"
+      style={first}
+    >
+      {drawn ? (
+        <span className={cn("relative block overflow-hidden rounded-[14px] shadow-[0_18px_30px_-16px_rgb(34_29_26/0.45),0_2px_6px_rgb(34_29_26/0.08)]", template.stationery.shape === "square" && "mx-auto w-[88%]")}>
+          <Stationery template={template} partnerOne={a} partnerTwo={b} dateLabel={date} sizes="240px" />
+          {/* Side light: written per frame as plain opacity (cheap for the browser). */}
+          <span aria-hidden data-shade className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgb(34_29_26/0.9),transparent_70%)] opacity-0 will-change-[opacity,transform]" />
+          {/* The middle card catches a glint of light as it arrives. */}
+          {centre ? (
+            <span aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+              <span className="carousel-glint absolute inset-y-0 left-0 w-1/2" />
+            </span>
+          ) : null}
+        </span>
+      ) : (
+        <span className="block aspect-[5/7] rounded-[14px] bg-muted" />
+      )}
+    </Link>
+  );
+});
 
 export function CollectionCarousel({ designs }: { designs: TemplateManifest[] }) {
   const n = designs.length;
   const stage = useRef<HTMLDivElement>(null);
   const cards = useRef<(HTMLAnchorElement | null)[]>([]);
-  const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false, hover: false, focus: false, seen: true, idleUntil: 0, tweening: false });
-  const [active, setActive] = useState(0);
+  const last = useRef<{ t: string; o: string; v: string; s: string; z: string; side: number }[]>([]);
+  const state = useRef({ pos: 0, spread: 1, geo: DESKTOP, reduced: false, hover: false, focus: false, seen: true, idleUntil: 0, tweening: false, active: 0 });
   const drag = useRef<{ x: number; pos: number; moved: boolean; samples: [number, number][] } | null>(null);
+  const [active, setActive] = useState(0);
+  // Cards are drawn once and kept: the ones near the start straight away, the rest while the page is idle.
+  const [drawnUpTo, setDrawnUpTo] = useState(6);
   const wrap = useCallback((d: number) => ((((d + n / 2) % n) + n) % n) - n / 2, [n]);
-  // Draw only the cards on the ring; the rest are empty shells.
-  const near = (i: number) => Math.abs(wrap(i - active)) <= DESKTOP.visible + 2;
 
-  /** Write every card's transform for the current position. */
+  /** Write every card's position for the current frame — DOM only, no React. */
   const render = useCallback(() => {
-    const { pos, spread, geo } = state.current;
+    const s = state.current;
+    const { pos, spread, geo } = s;
     cards.current.forEach((el, i) => {
       if (!el) return;
+      const prev = (last.current[i] ??= { t: "", o: "", v: "", s: "", z: "", side: 0 });
       const d = wrap(i - pos);
-      if (Math.abs(d) > geo.visible + 1) {
-        if (el.style.visibility !== "hidden") el.style.visibility = "hidden";
-        return;
+      const show = Math.abs(d) <= geo.visible + 0.6;
+      // Cards off the curve leave the page entirely (fewer layers for the browser to juggle).
+      const v = show ? "block" : "none";
+      if (prev.v !== v) {
+        el.style.display = prev.v = v;
+        el.style.visibility = "visible";
       }
+      if (!show) return;
       const l = layout(d, spread, geo);
-      el.style.transform = l.transform;
-      // Fade the faces, not the card: opacity on the card would flatten its 3D (and show fronts at the back).
-      el.style.setProperty("--fade", l.fade.toFixed(3));
-      el.style.visibility = l.fade <= 0 ? "hidden" : "visible";
-      el.style.zIndex = String(l.zIndex);
+      if (prev.t !== l.transform) el.style.transform = prev.t = l.transform;
+      const o = l.fade.toFixed(3);
+      if (prev.o !== o) el.style.opacity = prev.o = o;
+      const shade = el.querySelector<HTMLElement>("[data-shade]");
+      if (shade) {
+        const sh = l.shade.toFixed(3);
+        if (prev.s !== sh) shade.style.opacity = prev.s = sh;
+        // A card left of the middle is shaded on its left (outer) edge, and the other way round.
+        if (prev.side !== l.side) {
+          shade.style.transform = l.side < 0 ? "none" : "scaleX(-1)";
+          prev.side = l.side;
+        }
+      }
+      const z = String(1000 - Math.round(Math.abs(d) * 10));
+      if (prev.z !== z) el.style.zIndex = prev.z = z;
     });
     const current = ((Math.round(pos) % n) + n) % n;
-    setActive((prev) => (prev === current ? prev : current));
+    if (current !== s.active) {
+      s.active = current;
+      setActive(current);
+    }
   }, [n, wrap]);
 
-  /** After someone turns the ring, it waits a moment before drifting on. */
-  const rest = (ms = 3500) => {
+  const setRef = useCallback(
+    (i: number, el: HTMLAnchorElement | null) => {
+      cards.current[i] = el;
+      if (el && last.current[i]) last.current[i] = { t: "", o: "", v: "", s: "", z: "", side: 0 };
+    },
+    [],
+  );
+
+  /** After someone turns the curve, it waits a moment before drifting on. */
+  const rest = (ms = 3000) => {
     state.current.idleUntil = performance.now() + ms;
   };
 
@@ -88,10 +169,9 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const s = state.current;
       gsap.killTweensOf(s, "pos");
       s.tweening = true;
-      rest();
       gsap.to(s, {
         pos: target,
-        duration: s.reduced ? 0 : Math.min(1.8, 0.9 + Math.abs(target - s.pos) * 0.08 + Math.abs(velocity) * 0.06),
+        duration: s.reduced ? 0 : Math.min(1.6, 0.8 + Math.abs(target - s.pos) * 0.08 + Math.abs(velocity) * 0.05),
         ease: "power3.out",
         onUpdate: render,
         onComplete: () => {
@@ -105,6 +185,43 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
 
   const move = useCallback((by: number) => goTo(Math.round(state.current.pos) + by), [goTo]);
 
+  const onPick = useCallback(
+    (i: number, e: MouseEvent<HTMLAnchorElement>) => {
+      if (drag.current?.moved) return e.preventDefault();
+      if (i !== state.current.active) {
+        e.preventDefault();
+        goTo(state.current.pos + wrap(i - state.current.pos));
+      }
+    },
+    [goTo, wrap],
+  );
+
+  // Draw the remaining cards a few at a time while the browser is idle, nearest first.
+  useEffect(() => {
+    if (drawnUpTo >= n) return;
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 120));
+    const cancel = window.cancelIdleCallback ?? window.clearTimeout;
+    const id = idle(() => setDrawnUpTo((k) => Math.min(n, k + 4)));
+    return () => cancel(id);
+  }, [drawnUpTo, n]);
+  // The order cards are drawn in: outwards from the first, both ways round.
+  // Where each card starts (also the server's drawing, before any script runs).
+  const firstStyles = useMemo(
+    () =>
+      designs.map((_, i): CSSProperties => {
+        const d = wrap(i);
+        if (Math.abs(d) > DESKTOP.visible + 0.6) return { display: "none" };
+        const l = layout(d, 1, DESKTOP);
+        return { transform: l.transform, opacity: l.fade, zIndex: 1000 - Math.round(Math.abs(d) * 10) };
+      }),
+    [designs, wrap],
+  );
+  const order = useMemo(() => {
+    const rank = new Array<number>(n);
+    for (let i = 0; i < n; i++) rank[i] = Math.abs(wrap(i)) * 2 - (wrap(i) > 0 ? 1 : 0);
+    return rank;
+  }, [n, wrap]);
+
   // Geometry per screen, reduced motion, the opening fan-out, and the slow turn.
   useEffect(() => {
     const s = state.current;
@@ -113,7 +230,9 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     const apply = () => {
       s.reduced = reduced.matches;
       s.geo = small.matches ? MOBILE : DESKTOP;
-      stage.current?.style.setProperty("--card", `${s.geo.card}px`);
+      const el = stage.current;
+      el?.style.setProperty("--card", `${s.geo.card}px`);
+      if (el) el.style.perspective = `${s.geo.perspective}px`;
       render();
     };
     apply();
@@ -121,29 +240,28 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     small.addEventListener("change", apply);
 
     const el = stage.current;
-    const inView = el && el.getBoundingClientRect().top < window.innerHeight;
-    let opened = Boolean(inView) || s.reduced;
+    let opened = s.reduced || Boolean(el && el.getBoundingClientRect().top < window.innerHeight * 0.8);
     if (!opened) {
-      s.spread = 0.15;
+      s.spread = 0.2;
       render();
     }
-    // Only turn while on screen; the first time it is seen, the ring opens out.
+    // Only turn while on screen; the first time it is seen, the curve opens out.
     const observer = new IntersectionObserver(
       ([entry]) => {
         s.seen = entry.isIntersecting;
         if (entry.isIntersecting && !opened) {
           opened = true;
-          gsap.to(s, { spread: 1, duration: 1.8, ease: "power3.out", delay: 0.1, onUpdate: render });
+          gsap.to(s, { spread: 1, duration: 1.6, ease: "power3.out", onUpdate: render });
         }
       },
-      { threshold: 0.2 },
+      { threshold: 0.15 },
     );
     if (el) observer.observe(el);
 
-    const tick = (_time: number, deltaMs: number) => {
+    const tick = (_t: number, deltaMs: number) => {
       if (s.reduced || s.hover || s.focus || !s.seen || s.tweening || drag.current || document.hidden) return;
       if (performance.now() < s.idleUntil) return;
-      s.pos += (Math.min(deltaMs, 64) / 1000) * s.geo.speed;
+      s.pos += (Math.min(deltaMs, 50) / 1000) * s.geo.speed;
       render();
     };
     gsap.ticker.add(tick);
@@ -157,8 +275,12 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
     };
   }, [render]);
 
-  // Drag / swipe with a little momentum.
-  const perCard = () => perCardOf(state.current.geo);
+  // Newly drawn cards need their position written.
+  useEffect(() => {
+    render();
+  }, [drawnUpTo, render]);
+
+  // Drag / swipe follows the finger 1:1, then glides on with momentum.
   const onPointerDown = (e: PointerEvent) => {
     if (e.button !== 0) return;
     gsap.killTweensOf(state.current, "pos");
@@ -174,7 +296,7 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       stage.current?.setPointerCapture(e.pointerId);
     }
     if (!g.moved) return;
-    state.current.pos = g.pos - dx / perCard();
+    state.current.pos = g.pos - dx / perCardOf(state.current.geo);
     g.samples.push([e.clientX, e.timeStamp]);
     if (g.samples.length > 5) g.samples.shift();
     render();
@@ -186,15 +308,14 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
       const [x0, t0] = g.samples[0];
       const [x1, t1] = g.samples[g.samples.length - 1];
       const v = (x1 - x0) / Math.max(16, t1 - t0); // px per ms
-      // Momentum: a quick flick glides several cards, a slow drag settles on the nearest.
-      const fling = Math.max(-6, Math.min(6, (-v * 320) / perCard()));
+      const fling = Math.max(-6, Math.min(6, (-v * 300) / perCardOf(state.current.geo)));
       goTo(Math.round(state.current.pos + fling), v);
     } else rest();
     // Keep `moved` until the click that follows the drag has been swallowed.
     setTimeout(() => (drag.current = null), 0);
   };
 
-  // Sideways trackpad / shift-wheel scrolling turns the ring, then settles.
+  // Sideways trackpad / shift-wheel scrolling turns the curve, then settles.
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
@@ -249,58 +370,20 @@ export function CollectionCarousel({ designs }: { designs: TemplateManifest[] })
         }}
         onPointerLeave={() => {
           state.current.hover = false;
-          rest(1200);
+          rest(800);
         }}
         onFocus={() => (state.current.focus = true)}
         onBlur={() => (state.current.focus = false)}
-        className="relative h-[300px] cursor-grab touch-pan-y select-none overflow-hidden outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[460px] [--card:190px]"
-        style={{ perspective: "1100px", perspectiveOrigin: "50% 50%" } as CSSProperties}
+        className="relative h-[310px] cursor-grab touch-pan-y select-none overflow-hidden outline-none [perspective:900px] active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-ring/40 sm:h-[470px] [--card:200px]"
       >
-        {/* A faint ampersand watermark behind the curve, and soft light on the floor. */}
+        {/* A faint ampersand watermark behind the curve. */}
         <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] select-none font-serif text-[15rem] font-light leading-none text-foreground/[0.045] sm:text-[24rem]">
           &amp;
         </span>
-        <span aria-hidden className="pointer-events-none absolute bottom-[6%] left-1/2 h-16 w-[70%] -translate-x-1/2 rounded-[50%] bg-foreground/[0.07] blur-3xl" />
-
         <div className="absolute inset-0 [transform-style:preserve-3d]">
-          {designs.map((t, i) => {
-            const [a, b, date] = cardCouple(i);
-            const centre = i === active;
-            const d0 = wrap(i);
-            const first = Math.abs(d0) > DESKTOP.visible + 1 ? null : layout(d0, 1, DESKTOP);
-            return (
-              <Link
-                key={t.id}
-                ref={(el) => {
-                  cards.current[i] = el;
-                }}
-                href={designHref(t.id, null)}
-                draggable={false}
-                tabIndex={centre ? 0 : -1}
-                aria-hidden={!centre}
-                aria-label={centre ? `Open ${t.name}` : undefined}
-                onClick={(e) => {
-                  if (drag.current?.moved) return e.preventDefault();
-                  if (!centre) {
-                    e.preventDefault();
-                    goTo(state.current.pos + wrap(i - state.current.pos));
-                  }
-                }}
-                className="absolute left-1/2 top-1/2 block w-[var(--card)] opacity-[var(--fade,1)] will-change-transform"
-                style={first ? ({ transform: first.transform, zIndex: first.zIndex, "--fade": first.fade } as CSSProperties) : { visibility: "hidden" }}
-              >
-                {near(i) ? (
-                  <span className={cn("relative block overflow-hidden rounded-[14px] shadow-[0_16px_28px_-14px_rgb(34_29_26/0.4),0_2px_6px_rgb(34_29_26/0.08)] transition-transform duration-500 hover:-translate-y-1.5", t.stationery.shape === "square" && "mx-auto w-[88%]")}>
-                    <Stationery template={t} partnerOne={a} partnerTwo={b} dateLabel={date} sizes="240px" />
-                    {/* The middle card catches the light as it arrives. */}
-                    {centre ? <span key={active} aria-hidden className="carousel-glint pointer-events-none absolute inset-0" /> : null}
-                  </span>
-                ) : (
-                  <span className="block aspect-[5/7]" />
-                )}
-              </Link>
-            );
-          })}
+          {designs.map((t, i) => (
+            <CurveCard key={t.id} template={t} index={i} centre={i === active} drawn={order[i] < drawnUpTo} first={firstStyles[i]} setRef={setRef} onPick={onPick} />
+          ))}
         </div>
       </div>
 
