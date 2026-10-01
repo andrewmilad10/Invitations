@@ -42,6 +42,7 @@ test("card page: colour and finish carry into Customize", async ({ page }) => {
   await page.getByRole("link", { name: "Customize", exact: true }).first().click();
   await expect(page).toHaveURL(/\/invitations\/laurel-crest\/customize\?.*foil=gold/);
   // The studio opens with the chosen finish.
+  await page.getByRole("button", { name: "Finish", exact: true }).click();
   await expect(page.getByRole("radio", { name: "Gold", exact: true })).toHaveAttribute("aria-checked", "true");
 });
 
@@ -70,7 +71,7 @@ test("wedding websites gallery and a design opened as a website", async ({ page 
   await expect(page.frameLocator("iframe").first().locator("[data-section=hero]")).toBeAttached();
 });
 
-test("card studio: front to review, no RSVP, similar designs stay cards", async ({ page }) => {
+test("card studio: the desk, Arabic, and sending — no RSVP, similar designs stay cards", async ({ page }) => {
   await page.goto("/invitations/rose-arch");
   // Similar designs open card pages, never the website builder.
   const similar = page.locator("section", { hasText: "similar" }).getByRole("link", { name: "Customize" }).first();
@@ -79,9 +80,15 @@ test("card studio: front to review, no RSVP, similar designs stay cards", async 
   await expect(page).toHaveURL(/\/invitations\/rose-arch\/customize/);
   await expect(page.getByRole("button", { name: "RSVP" })).toHaveCount(0);
   await page.getByLabel("First name").fill("Nour");
-  for (const step of ["Invitation Back", "Enclosure Front", "Enclosure Back", "Envelope", "Review"]) {
-    await page.getByRole("button", { name: step, exact: true }).click();
-  }
-  await expect(page.getByRole("button", { name: /Download suite/ })).toBeVisible();
+  await page.getByRole("button", { name: "Turn over" }).click();
+  await expect(page.getByRole("button", { name: "Turn back" })).toBeVisible();
+  await page.getByRole("button", { name: "Details card" }).click();
+  await page.getByRole("button", { name: "Envelope", exact: true }).click();
   await page.getByRole("button", { name: "Undo" }).click();
+  // Arabic: the card turns right to left with Arabic wording.
+  await page.getByRole("radio", { name: "عربي" }).click();
+  await expect(page.locator('[lang="ar"][dir="rtl"]').first()).toBeAttached();
+  await page.getByRole("button", { name: "أرسل" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await expect(page.getByRole("button", { name: "تنزيل كل القطع" })).toBeVisible();
 });

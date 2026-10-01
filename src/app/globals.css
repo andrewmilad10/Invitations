@@ -107,6 +107,15 @@
   .card-settle { animation: none; }
 }
 
+/* Card studio: a piece lifted from the table. */
+@keyframes desk-lift {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[desk-lift_700ms_cubic-bezier\(\.2\,\.8\,\.2\,1\)\] { animation: none; }
+}
+
 /* Section style hint: start alignment keeps each section's column centred
    but left-aligns (right-aligns in RTL) the narrow blocks inside it. */
 [data-align="start"] [data-section] > div .mx-auto {

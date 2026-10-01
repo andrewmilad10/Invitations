@@ -43,7 +43,12 @@ export const LINER_LABELS: Record<Liner, string> = {
   design: "Your design",
 };
 
+export const SUITE_LANGS = ["en", "ar"] as const;
+export type SuiteLang = (typeof SUITE_LANGS)[number];
+
 export interface SuiteText {
+  /** The card's language: English, or Arabic (right to left). */
+  lang: SuiteLang;
   partnerOne: string;
   partnerTwo: string;
   eyebrow: string;
@@ -76,7 +81,7 @@ export interface CardSuite {
   envelope: { color: EnvelopeColor; liner: Liner; returnAddress: string; guestName: string; guestAddress: string };
 }
 
-export function defaultSuite(templateId: string, paletteId: string | null = null, options: CardOptionOverrides = {}): CardSuite {
+export function defaultSuite(templateId: string, paletteId: string | null = null, options: CardOptionOverrides = {}, sample: { eyebrow?: string; line?: string } = {}): CardSuite {
   return {
     v: 1,
     templateId,
@@ -84,10 +89,11 @@ export function defaultSuite(templateId: string, paletteId: string | null = null
     options,
     background: null,
     text: {
+      lang: "en",
       partnerOne: "Emma",
       partnerTwo: "James",
-      eyebrow: "",
-      line: "",
+      eyebrow: sample.eyebrow ?? "Together with their families",
+      line: sample.line ?? "invite you to celebrate their wedding",
       date: "2026-10-17",
       time: "7:00 pm",
       place: "Villa Aurelia · Rome",
@@ -122,6 +128,7 @@ export const suiteSchema = z.object({
   options: cardOptionsSchema,
   background: hex.nullable(),
   text: z.object({
+    lang: z.enum(SUITE_LANGS).default("en"),
     partnerOne: text(80),
     partnerTwo: text(80),
     eyebrow: text(140),
@@ -164,4 +171,39 @@ export function safeQrUrl(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+/** Wording each language starts with (swapped in when the couple switches language). */
+export const SUITE_WORDING: Record<SuiteLang, { eyebrow: string; line: string; partnerOne: string; partnerTwo: string; place: string; time: string; heading: string }> = {
+  en: { eyebrow: "Together with their families", line: "invite you to celebrate their wedding", partnerOne: "Emma", partnerTwo: "James", place: "Villa Aurelia · Rome", time: "7:00 pm", heading: "The details" },
+  ar: { eyebrow: "بمشاركة عائلتيهما", line: "يتشرفان بدعوتكم لمشاركتهما فرحة زفافهما", partnerOne: "ليلى", partnerTwo: "عمر", place: "قصر البارون · القاهرة", time: "٧:٠٠ مساءً", heading: "التفاصيل" },
+};
+
+/**
+ * Switch the suite's language. Words the couple left as the sample wording
+ * are translated; anything they typed themselves is kept.
+ */
+export function withLanguage(suite: CardSuite, lang: SuiteLang, sample: { eyebrow?: string; line?: string } = {}): CardSuite {
+  if (suite.text.lang === lang) return suite;
+  // The design's own English wording counts as sample wording too.
+  const english = { ...SUITE_WORDING.en, eyebrow: sample.eyebrow ?? SUITE_WORDING.en.eyebrow, line: sample.line ?? SUITE_WORDING.en.line };
+  const from = suite.text.lang === "en" ? english : SUITE_WORDING[suite.text.lang];
+  const to = lang === "en" ? english : SUITE_WORDING[lang];
+  const swap = <K extends keyof typeof from>(value: string, key: K) => (value === from[key] || value === SUITE_WORDING[suite.text.lang][key] || value === "" ? to[key] : value);
+  const isSampleSection = suite.enclosure.heading === from.heading;
+  return {
+    ...suite,
+    options: lang === "ar" && suite.options.blessing === undefined ? { ...suite.options, blessing: "bismillah" } : suite.options,
+    text: {
+      ...suite.text,
+      lang,
+      partnerOne: swap(suite.text.partnerOne, "partnerOne"),
+      partnerTwo: swap(suite.text.partnerTwo, "partnerTwo"),
+      eyebrow: swap(suite.text.eyebrow, "eyebrow"),
+      line: swap(suite.text.line, "line"),
+      place: swap(suite.text.place, "place"),
+      time: swap(suite.text.time, "time"),
+    },
+    enclosure: isSampleSection ? { ...suite.enclosure, heading: to.heading } : suite.enclosure,
+  };
 }

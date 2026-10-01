@@ -187,7 +187,7 @@ function Back({
   const monogram = (size: string) => (
     <p className={cn("font-inv-heading leading-none", size)}>
       {initial(text.partnerOne)}
-      <span className="mx-[1.5cqmin] font-inv-accent text-[0.55em] opacity-80">&amp;</span>
+      <span className="mx-[1.5cqmin] font-inv-accent text-[0.55em] opacity-80">{text.amp ?? "&"}</span>
       {initial(text.partnerTwo)}
     </p>
   );
@@ -246,7 +246,7 @@ function Back({
         <>
           {design.note ? <p className="whitespace-pre-line font-inv-heading text-[4.6cqmin] italic leading-[1.5]">{design.note}</p> : null}
           <p className="font-inv-accent text-[7cqmin] leading-none text-inv-accent">
-            {text.partnerOne} &amp; {text.partnerTwo}
+            {text.partnerOne} {text.amp ?? "&"} {text.partnerTwo}
           </p>
         </>
       ) : null}
@@ -255,12 +255,12 @@ function Back({
   );
 }
 
-function Ampersand({ className }: { className?: string }) {
+function Ampersand({ className, children = "&" }: { className?: string; children?: string }) {
   return (
     <p
       className={cn("font-inv-accent leading-none text-inv-accent", className)}
     >
-      &amp;
+      {children}
     </p>
   );
 }
@@ -337,7 +337,7 @@ function Layout({
             {text.partnerOne || " "}
           </p>
           <p className="my-[1cqmin] font-inv-heading text-[4cqmin] uppercase tracking-[0.3em] opacity-70">
-            and
+            {text.and ?? "and"}
           </p>
           <p className="font-inv-accent text-[13.5cqmin] leading-[1.05] text-inv-accent">
             {text.partnerTwo || " "}
@@ -359,7 +359,7 @@ function Layout({
           </p>
           <div className="my-[2.5cqmin] flex w-full items-center gap-[3cqmin]">
             <span className="h-px flex-1 bg-current opacity-40" />
-            <Ampersand className="text-[8cqmin]" />
+            <Ampersand className="text-[8cqmin]">{text.amp ?? "&"}</Ampersand>
             <span className="h-px flex-1 bg-current opacity-40" />
           </div>
           <p className="break-words font-inv-heading text-[14cqmin] uppercase leading-[0.92] tracking-[-0.01em]">
@@ -384,7 +384,7 @@ function Layout({
             <span className="font-inv-heading text-[10cqmin] leading-none text-inv-accent">
               {initial(text.partnerOne)}
               <span className="mx-[0.6cqmin] align-middle text-[4cqmin] opacity-70">
-                &amp;
+                {text.amp ?? "&"}
               </span>
               {initial(text.partnerTwo)}
             </span>
@@ -394,7 +394,7 @@ function Layout({
             {text.partnerOne || " "}
             <span className="font-inv-accent normal-case text-inv-accent">
               {" "}
-              &amp;{" "}
+              {text.amp ?? "&"}{" "}
             </span>
             {text.partnerTwo || " "}
           </p>
@@ -420,7 +420,7 @@ function Layout({
             <Eyebrow>{text.eyebrow}</Eyebrow>
             <p className="mt-[2.5cqmin] font-inv-heading text-[9cqmin] leading-[1.05]">
               {text.partnerOne || " "}{" "}
-              <span className="font-inv-accent text-inv-accent">&amp;</span>{" "}
+              <span className="font-inv-accent text-inv-accent">{text.amp ?? "&"}</span>{" "}
               {text.partnerTwo || " "}
             </p>
             <DateLine text={text} className="mt-[3cqmin]" />
@@ -439,7 +439,7 @@ function Layout({
               {text.partnerOne || " "}
             </p>
             <p className="font-inv-accent text-[7cqmin] leading-none opacity-90">
-              &amp;
+              {text.amp ?? "&"}
             </p>
             <p className="font-inv-heading text-[12cqmin] leading-[1]">
               {text.partnerTwo || " "}
@@ -464,7 +464,7 @@ function Layout({
               {text.partnerOne || " "}
             </p>
             <p className="font-inv-accent text-[8cqmin] leading-none opacity-85">
-              &amp;
+              {text.amp ?? "&"}
             </p>
             <p className="font-inv-accent text-[13cqmin] leading-[1.05]">
               {text.partnerTwo || " "}
@@ -499,7 +499,7 @@ function Layout({
             <p className="mt-[2cqmin] font-inv-heading text-[9cqmin] uppercase leading-[1] tracking-[0.04em]">
               {text.partnerOne || " "}{" "}
               <span className="font-inv-accent normal-case text-inv-accent">
-                &amp;
+                {text.amp ?? "&"}
               </span>{" "}
               {text.partnerTwo || " "}
             </p>
@@ -524,7 +524,7 @@ function Layout({
               className="aspect-square w-full"
             />
             <p className="mt-[3cqmin] font-inv-accent text-[7.5cqmin] leading-none text-inv-fg">
-              {text.partnerOne || " "} &amp; {text.partnerTwo || " "}
+              {text.partnerOne || " "} {text.amp ?? "&"} {text.partnerTwo || " "}
             </p>
           </div>
           <Eyebrow className="mt-[7cqmin]">{text.eyebrow}</Eyebrow>
@@ -552,7 +552,7 @@ function Layout({
               {text.partnerOne || " "}
             </p>
             <p className="font-inv-accent text-[9cqmin] italic leading-[0.9] text-inv-accent">
-              &amp;
+              {text.amp ?? "&"}
             </p>
             <p className="break-words font-inv-heading text-[16cqmin] uppercase leading-[0.84] tracking-[-0.03em]">
               {text.partnerTwo || " "}
@@ -585,7 +585,7 @@ function Layout({
             <div className="min-w-0">
               <p className="font-inv-heading text-[8.5cqmin] leading-[1]">
                 {text.partnerOne || " "}{" "}
-                <span className="italic text-inv-accent">&amp;</span>{" "}
+                <span className="italic text-inv-accent">{text.amp ?? "&"}</span>{" "}
                 {text.partnerTwo || " "}
               </p>
               {text.dateLabel ? (
@@ -640,7 +640,7 @@ function Layout({
             </p>
             <p className="mt-[1.5cqmin] font-inv-heading text-[11cqmin] leading-[0.95]">
               {text.partnerOne || " "}{" "}
-              <span className="italic text-inv-muted">&amp;</span>{" "}
+              <span className="italic text-inv-muted">{text.amp ?? "&"}</span>{" "}
               {text.partnerTwo || " "}
             </p>
             {text.dateLabel ? (
@@ -670,7 +670,7 @@ function Layout({
           <div className="my-[2.2cqmin] flex w-[62%] items-center gap-[3cqmin]">
             <span className="h-px flex-1 bg-current opacity-40" />
             <span className="font-inv-accent text-[7cqmin] leading-none text-inv-accent">
-              and
+              {text.and ?? "and"}
             </span>
             <span className="h-px flex-1 bg-current opacity-40" />
           </div>
@@ -704,7 +704,7 @@ function Layout({
               {text.partnerOne || " "}
             </p>
             <p className="my-[1cqmin] font-inv-accent text-[8cqmin] leading-none">
-              and
+              {text.and ?? "and"}
             </p>
             <p className="font-inv-heading text-[5.6cqmin] uppercase tracking-[0.34em]">
               {text.partnerTwo || " "}
@@ -736,7 +736,7 @@ function Layout({
             {text.partnerOne || " "}
           </p>
           <p className="-my-[2cqmin] ms-[34%] font-inv-accent text-[11cqmin] leading-none text-inv-accent">
-            and
+            {text.and ?? "and"}
           </p>
           <p className="self-end break-words text-end font-inv-heading text-[11cqmin] uppercase leading-[0.95] tracking-[0.02em]">
             {text.partnerTwo || " "}
@@ -766,7 +766,7 @@ function Layout({
             {text.partnerOne || " "}
           </p>
           <p className="my-[1.5cqmin] font-inv-accent text-[6cqmin] leading-none text-inv-accent">
-            and
+            {text.and ?? "and"}
           </p>
           <p className="font-inv-heading text-[6.6cqmin] uppercase leading-[1.2] tracking-[0.32em]">
             {text.partnerTwo || " "}
@@ -805,7 +805,7 @@ function Layout({
               {text.partnerOne || " "}
             </p>
             <p className="font-inv-heading text-[3.6cqmin] uppercase tracking-[0.3em] opacity-70">
-              and
+              {text.and ?? "and"}
             </p>
             <p className="font-inv-accent text-[12cqmin] leading-[1] text-inv-accent">
               {text.partnerTwo || " "}
@@ -852,7 +852,7 @@ function ClassicLayout({
       <p className="mt-[5cqmin] font-inv-heading text-[11cqmin] font-light leading-[1.02]">
         {text.partnerOne || " "}
       </p>
-      <Ampersand className="my-[1.5cqmin] text-[9cqmin]" />
+      <Ampersand className="my-[1.5cqmin] text-[9cqmin]">{text.amp ?? "&"}</Ampersand>
       <p className="font-inv-heading text-[11cqmin] font-light leading-[1.02]">
         {text.partnerTwo || " "}
       </p>

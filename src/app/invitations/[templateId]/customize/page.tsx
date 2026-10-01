@@ -22,6 +22,6 @@ export default async function CustomizeCardPage(props: PageProps<"/invitations/[
   const palette = typeof q.palette === "string" && template.palettes.some((p) => p.id === q.palette) ? q.palette : null;
   const options = cardOptionsFromQuery(q);
   const fromLink = Boolean(palette || Object.keys(options).length);
-  const initial = defaultSuite(template.id, palette, options);
+  const initial = defaultSuite(template.id, palette, options, template.stationery.sample ?? {});
   return <CardStudio template={template} initial={initial} fromLink={fromLink} />;
 }

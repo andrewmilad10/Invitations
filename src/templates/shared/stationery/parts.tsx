@@ -21,6 +21,12 @@ export interface StationeryText {
   time?: string | null;
   /** Show the Bismillah above the words. */
   blessing?: boolean;
+  /** The joining word between the names ("and", "و"). */
+  and?: string;
+  /** The ampersand between the names ("&", or "و" in Arabic). */
+  amp?: string;
+  /** Small labels some layouts print (Day / Month / Year). */
+  labels?: { day: string; month: string; year: string };
   /** For the details enclosure. */
   details?: { heading: string; sections: { title: string; body: string }[] } | null;
 }

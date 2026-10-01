@@ -24,7 +24,7 @@ interface Props {
 
 const col = "absolute inset-0 flex flex-col items-center justify-center text-center font-inv-body";
 
-function Names({ text, className, amp = "&" }: { text: StationeryText; className?: string; amp?: ReactNode }) {
+function Names({ text, className, amp = text.amp ?? "&" }: { text: StationeryText; className?: string; amp?: ReactNode }) {
   return (
     <p className={cn("font-inv-accent leading-[1.1]", className)}>
       {text.partnerOne || " "} <span className="text-inv-accent">{amp}</span> {text.partnerTwo || " "}
@@ -56,7 +56,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           {blessing}
           {text.eyebrow ? <p className="mt-[1.5cqmin] font-inv-heading text-[3.8cqmin] opacity-90">{text.eyebrow}</p> : null}
           <p className="mt-[4cqmin] break-words font-inv-accent text-[15cqmin] leading-[0.95] text-inv-accent">{text.partnerOne || " "}</p>
-          <p className="my-[0.5cqmin] font-inv-heading text-[3cqmin] uppercase tracking-[0.25em]">and</p>
+          <p className="my-[0.5cqmin] font-inv-heading text-[3cqmin] uppercase tracking-[0.25em]">{text.and ?? "and"}</p>
           <p className="break-words font-inv-accent text-[15cqmin] leading-[0.95] text-inv-accent">{text.partnerTwo || " "}</p>
           {text.line ? <p className="mt-[5cqmin] font-inv-heading text-[4cqmin] leading-snug">{text.line}</p> : null}
           {text.dateLabel ? <p className="mt-[3cqmin] font-inv-heading text-[3.2cqmin]">{[text.dateLabel, text.time].filter(Boolean).join(" | ")}</p> : null}
@@ -119,7 +119,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           <span aria-hidden className="absolute left-[1%] top-[77%] h-[6%] w-[30%] -rotate-[7deg] bg-[color-mix(in_oklab,var(--inv-accent)_45%,transparent)]" />
           <div className="absolute bottom-[6%] right-[5%] top-[58%] flex w-[66%] flex-col items-center justify-center text-center">
             <p className="font-inv-accent text-[12cqmin] leading-[1]">
-              {text.partnerOne || " "} &amp;
+              {text.partnerOne || " "} {text.amp ?? "&"}
               <br />
               {text.partnerTwo || " "}
             </p>
@@ -151,7 +151,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           {bars && text.eyebrow ? <p className="mt-[2cqmin] text-[3.6cqmin] leading-[1.5] tracking-[0.04em] opacity-90">{text.eyebrow}</p> : null}
           <StackedNames
             text={text}
-            and={bars ? "&" : "and"}
+            and={bars ? (text.amp ?? "&") : (text.and ?? "and")}
             className={cn("text-inv-accent", bars ? "mt-[3cqmin] text-[13cqmin] text-inv-fg" : "text-[16cqmin]")}
             andClassName={bars ? "my-[1cqmin] font-inv-heading text-[6cqmin] leading-none text-inv-accent" : "my-[1.5cqmin] font-inv-heading text-[4.6cqmin] italic uppercase tracking-[0.3em]"}
           />
@@ -177,7 +177,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
             </p>
           </div>
           <p className="mt-[4cqmin] font-inv-heading text-[4.6cqmin] uppercase tracking-[0.18em]">
-            {text.partnerOne || " "} <span className="font-inv-accent normal-case text-inv-accent">&amp;</span> {text.partnerTwo || " "}
+            {text.partnerOne || " "} <span className="font-inv-accent normal-case text-inv-accent">{text.amp ?? "&"}</span> {text.partnerTwo || " "}
           </p>
           {text.dateLabel ? <p className="mt-[2cqmin] text-[2.8cqmin] uppercase tracking-[0.28em] opacity-80">{text.dateLabel}</p> : null}
         </div>
@@ -203,7 +203,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           ) : null}
           <div className="absolute left-0 top-[34%] flex w-[60%] flex-col items-center px-[5%] text-center">
             {text.blessing ? <Blessing className="text-[5cqmin] text-inv-surface" /> : null}
-            <StackedNames text={text} and="&" className="text-[12cqmin]" andClassName="font-inv-accent text-[6cqmin] leading-none" />
+            <StackedNames text={text} and={text.amp ?? "&"} className="text-[12cqmin]" andClassName="font-inv-accent text-[6cqmin] leading-none" />
             {text.line ? <p className="mt-[5cqmin] text-[3.4cqmin] leading-[1.5]">{text.line}</p> : null}
           </div>
           <div className="absolute right-0 top-[44%] flex w-[50%] flex-col items-center gap-[1.4cqmin] px-[4%] text-center">
@@ -232,7 +232,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
             <div className="absolute inset-0 flex flex-col items-center justify-center px-[9%] pb-[6cqmin] pt-[14cqmin] text-center">
               {blessing}
               {text.eyebrow ? <p className="mt-[1cqmin] text-[2.8cqmin] leading-[1.5] tracking-[0.04em]">{text.eyebrow}</p> : null}
-              <StackedNames text={text} and="&" className="mt-[2cqmin] text-[11cqmin] text-inv-accent" andClassName="font-inv-heading text-[6cqmin] leading-none text-inv-accent" />
+              <StackedNames text={text} and={text.amp ?? "&"} className="mt-[2cqmin] text-[11cqmin] text-inv-accent" andClassName="font-inv-heading text-[6cqmin] leading-none text-inv-accent" />
               <span className="my-[3cqmin] h-px w-[80%] bg-inv-accent" />
               <DateRow text={text} variant="bars" className="w-full" />
               {text.place ? <p className="mt-[3.4cqmin] font-inv-heading text-[4.4cqmin] font-semibold uppercase leading-tight tracking-[0.04em]">{text.place}</p> : null}
@@ -266,7 +266,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
             <p className="mt-[3cqmin] font-inv-heading text-[7.5cqmin] font-semibold uppercase leading-[1.15] tracking-[0.24em]">
               {text.partnerOne || " "}
               <br />
-              <span className="text-inv-accent">&amp;</span>
+              <span className="text-inv-accent">{text.amp ?? "&"}</span>
               <br />
               {text.partnerTwo || " "}
             </p>
@@ -291,9 +291,9 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
             {dd ? (
               <div className="mt-[4cqmin] flex items-start gap-[4cqmin]">
                 {[
-                  [dd, "Day"],
-                  [mm, "Month"],
-                  [yy, "Year"],
+                  [dd, text.labels?.day ?? "Day"],
+                  [mm, text.labels?.month ?? "Month"],
+                  [yy, text.labels?.year ?? "Year"],
                 ].map(([n, l], i) => (
                   <div key={l} className={cn("flex flex-col items-center", i > 0 && "border-s border-white/80 ps-[4cqmin]")}>
                     <span className="text-[8cqmin] font-light leading-none">{n}</span>
@@ -329,7 +329,7 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           <div className="flex flex-1 flex-col items-center justify-center px-[5%] text-center">
             {blessing}
             {text.eyebrow ? <p className="text-[3cqmin] tracking-[0.16em]">{text.eyebrow}</p> : null}
-            <StackedNames text={text} and="&" className="text-[11cqmin]" andClassName="font-inv-accent text-[8cqmin] leading-none" />
+            <StackedNames text={text} and={text.amp ?? "&"} className="text-[11cqmin]" andClassName="font-inv-accent text-[8cqmin] leading-none" />
             <DateRow text={text} variant="bars" className="mt-[4cqmin] w-[92%]" />
             {text.place ? <p className="mt-[3cqmin] text-[2.8cqmin] uppercase tracking-[0.2em]">{text.place}</p> : null}
           </div>
