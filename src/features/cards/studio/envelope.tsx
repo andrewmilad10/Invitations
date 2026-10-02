@@ -1,3 +1,4 @@
+import { PlaneSealMark } from "@/templates/shared/stationery/travel";
 import type { CSSProperties, ReactNode } from "react";
 import { ENVELOPE_COLORS, type CardSuite, type Liner } from "@/core/card/suite";
 import type { StationeryOrnament } from "@/core/template/manifest";
@@ -48,7 +49,7 @@ export function LinerFill({ liner, ornament, className }: { liner: Liner; orname
  * design's colours. Both sides are the same size, so it turns over cleanly;
  * the open flap rises above the envelope.
  */
-export function EnvelopeView({ suite, ornament, side, open = false, className }: { suite: CardSuite; ornament: StationeryOrnament; side: "front" | "back"; open?: boolean; className?: string }) {
+export function EnvelopeView({ suite, ornament, seal, side, open = false, className }: { suite: CardSuite; ornament: StationeryOrnament; /** A wax seal pressed with this mark on the closed flap. */ seal?: "plane"; side: "front" | "back"; open?: boolean; className?: string }) {
   const [, paper] = ENVELOPE_COLORS[suite.envelope.color];
   const dark = luminance(paper) < 0.3;
   const ink = dark ? "rgb(255 255 255 / 0.92)" : "rgb(30 26 22 / 0.88)";
@@ -83,6 +84,15 @@ export function EnvelopeView({ suite, ornament, side, open = false, className }:
             </div>
           </div>
         </div>
+        {seal ? (
+          <div
+            aria-hidden
+            className={cn("absolute left-1/2 top-[58%] z-[3] grid size-[19cqmin] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full shadow-[0_2px_6px_rgb(0_0_0/0.35)] transition-opacity duration-300", open ? "opacity-0" : "opacity-100")}
+            style={{ background: "radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--inv-accent-fg) 55%, white), var(--inv-accent-fg) 55%, color-mix(in oklab, var(--inv-accent-fg) 60%, black))", borderRadius: "48% 52% 50% 46% / 52% 47% 53% 48%" }}
+          >
+            <PlaneSealMark className="w-[9cqmin] text-[color-mix(in_oklab,var(--inv-accent-fg)_45%,black)]" />
+          </div>
+        ) : null}
       </div>
     );
   }

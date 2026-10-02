@@ -22,7 +22,7 @@ const SAMPLE_DATES: Record<string, string> = {
 };
 
 /** Layouts that show the venue on gallery samples (the older ones read best without). */
-const DETAILED = new Set(["formal-script", "drive", "torn-photo", "date-row", "script-date", "script-bars", "split-arch", "arch-panel", "oval-photo", "photo-details", "photo-half"]);
+const DETAILED = new Set(["boarding-pass", "formal-script", "drive", "torn-photo", "date-row", "script-date", "script-bars", "split-arch", "arch-panel", "oval-photo", "photo-details", "photo-half"]);
 
 /**
  * A template drawn as a printed invitation card, in the template's own theme

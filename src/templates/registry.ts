@@ -41,7 +41,7 @@ const ALL: TemplateManifest[] = [
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
-  "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
+  "bon-voyage", "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
   "baroque-crest", "calla-lily", "golden-oval", "monochrome-bloom", "save-the-date", "wild-garden", "velvet-calla", "gilded-crest",
   "marlowe", "garden-toile", "verdant", "horizon", "gilded-garden", "serena", "peony-press", "wildwood", "cypress", "aurelia",
   "giza-at-dusk", "written-in-the-stars", "baron-palace", "keepsake-box", "luxor-temple", "rose-window", "montaza-by-the-sea", "paper-theatre",

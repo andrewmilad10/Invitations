@@ -125,6 +125,7 @@ export function SuitePiece({
         <EnvelopeView
           suite={suite}
           ornament={art.ornament}
+          seal={art.layout === "boarding-pass" ? "plane" : undefined}
           side={piece === "envelope-front" ? "front" : "back"}
           open={envelopeOpen}
         />
@@ -133,13 +134,17 @@ export function SuitePiece({
   }
 
   if (piece === "enclosure-front" || piece === "enclosure-back") {
-    const details = {
-      ...art,
-      layout: "details" as const,
-      shape: "portrait" as const,
-      // Photo-led designs get a quiet hairline frame on their enclosure.
-      ornament: art.ornament === "none" ? ("hairline" as const) : art.ornament,
-    };
+    // The travel design keeps its own landscape travel-details card.
+    const travel = art.layout === "boarding-pass";
+    const details = travel
+      ? { ...art, layout: "boarding-pass-details" as const, shape: "landscape" as const }
+      : {
+          ...art,
+          layout: "details" as const,
+          shape: "portrait" as const,
+          // Photo-led designs get a quiet hairline frame on their enclosure.
+          ornament: art.ornament === "none" ? ("hairline" as const) : art.ornament,
+        };
     return (
       <div dir={dir} lang={lang} className={className}>
         <StationeryCard
@@ -153,7 +158,7 @@ export function SuitePiece({
           }}
           options={{
             ...suite.options,
-            orientation: "portrait",
+            orientation: travel ? "landscape" : "portrait",
             blessing: "none",
           }}
           side={piece === "enclosure-front" ? "front" : "back"}

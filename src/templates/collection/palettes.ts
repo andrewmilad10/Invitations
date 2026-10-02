@@ -59,6 +59,10 @@ export const PALETTES = {
   twilightGreen: p("Forest & peach", "green", ["#f3e7da", "#f6ece1", "#163a2e", "#4f6e55", "#c97a5a", "#ffffff", "#e6d4c2"]),
   roseArch: p("Rose arch", "pink", ["#ece3d8", "#ffffff", "#4a3530", "#5e3d3f", "#8a5652", "#ffffff", "#e2d6c8"]),
   gardenia: p("Gardenia", "green", ["#f4efe7", "#f7f3ec", "#3b3a30", "#8a9a7e", "#4f6e52", "#ffffff", "#e4dccd"]),
+  // Bon Voyage: surface = the ticket paper, accent = the dark band, accent-fg = gold, muted = label brown.
+  voyageMidnight: p("Midnight & gold", "black", ["#ece5d8", "#f6efe2", "#1d1a17", "#7a6230", "#161514", "#d9b46a", "#e2d6c2"]),
+  voyageNavy: p("Navy & champagne", "blue", ["#e9e6df", "#f7f3ea", "#18213a", "#6e6248", "#1b2643", "#e3c98f", "#ddd6c8"]),
+  voyageForest: p("Forest & brass", "green", ["#e8e6dc", "#f5f1e6", "#1b2620", "#6f6640", "#1d3a2f", "#d8b878", "#dcd6c4"]),
   goldenOval: p("Golden meadow", "gold", ["#fbfaf2", "#fdfcf6", "#4a3410", "#6f8a5a", "#c3a046", "#2b1d05", "#ece6cf"]),
   keepsake: p("Keepsake", "black", ["#2b2620", "#3a332b", "#f4efe6", "#b9ad9c", "#e9dcc4", "#2b2620", "#4a4238"]),
   monoBloom: p("Monochrome", "white", ["#fbf8f6", "#fbf8f6", "#1c1c22", "#6a6a70", "#1c1c22", "#ffffff", "#e6e1dd"]),

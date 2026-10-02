@@ -147,6 +147,18 @@ export const KEEPSAKE_MANIFESTS: TemplateManifest[] = [
     isNew: true,
   }),
   design({
+    id: "bon-voyage",
+    name: "Bon Voyage",
+    tagline: "A boarding pass for the two of you.",
+    description:
+      "A landscape boarding pass: your names as the passengers, the date, time and venue as the flight details, a dotted route from today to forever and a tear-off stub with your initials. The back is a gold-stamped passport, the details card is a travel note with an arrival stamp, and the envelope is sealed with a plane.",
+    categories: ["modern", "luxury", "typography"],
+    art: { ornament: "none", layout: "boarding-pass", shape: "landscape", sample: { eyebrow: "Together with their families", line: "invite you to fly away to their wedding" } },
+    fonts: { heading: "didone", body: "spacemono", accent: "allura" },
+    palettes: ["voyageMidnight", "voyageNavy", "voyageForest"],
+    isNew: true,
+  }),
+  design({
     id: "golden-oval",
     name: "Golden Oval",
     tagline: "Your photo in a gold oval.",

@@ -1,3 +1,4 @@
+import { PassportCover } from "./travel";
 import type { CSSProperties } from "react";
 import {
   resolveCardOptions,
@@ -195,6 +196,8 @@ function Back({
       <QrCode matrix={qr} className="w-[22cqmin] text-inv-fg" />
     </div>
   ) : null;
+
+  if (design.layout === "monogram" && art.layout === "boarding-pass") return <PassportCover text={text} />;
 
   if (design.layout === "monogram") {
     // Foil cards keep a paper back with a stamped monogram; others are printed in colour.

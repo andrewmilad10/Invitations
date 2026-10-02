@@ -118,6 +118,27 @@ export function defaultSuite(templateId: string, paletteId: string | null = null
   };
 }
 
+/**
+ * Starting choices that belong to a design's theme: the travel design
+ * ("boarding-pass") starts with a black envelope and travel notes.
+ */
+export function travelDefaults(suite: CardSuite, layout: string | undefined): CardSuite {
+  if (layout !== "boarding-pass") return suite;
+  return {
+    ...suite,
+    enclosure: {
+      ...suite.enclosure,
+      heading: "Travel details",
+      sections: [
+        { title: "Where to stay", body: "Rooms are held for our guests at Hotel Lord Byron.\nMention our names when you book." },
+        { title: "Getting there", body: "Fly into Rome Fiumicino (FCO).\nA shuttle will bring you to the villa." },
+        { title: "The venue", body: "Villa Aurelia\nLargo di Porta San Pancrazio, Rome" },
+      ],
+    },
+    envelope: { ...suite.envelope, color: "black" },
+  };
+}
+
 const text = (max: number) => z.string().max(max);
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 

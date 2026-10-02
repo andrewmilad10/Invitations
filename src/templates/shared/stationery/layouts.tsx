@@ -3,6 +3,7 @@ import type { StationeryArt } from "@/core/template/manifest";
 import { cn } from "@/lib/utils";
 import { Bird, Cartouche, PressedFlower, RoseSpray, VintageCar } from "./motifs";
 import { Leaf } from "./ornaments";
+import { BoardingPass, TravelDetails } from "./travel";
 import { Blessing, CalendarIcon, ClockIcon, DateRow, Eyebrow, HouseIcon, Photo, PinIcon, RingsIcon, type StationeryPhoto, type StationeryText } from "./parts";
 
 /**
@@ -12,7 +13,7 @@ import { Blessing, CalendarIcon, ClockIcon, DateRow, Eyebrow, HouseIcon, Photo, 
  */
 
 /** Layouts that place the Bismillah themselves (others get it at the top). */
-const BLESSING_INSIDE = new Set(["details", "formal-script", "date-row", "script-date", "script-bars", "crest", "arch-panel", "photo-half", "classic", "script", "typographic", "monogram", "refined", "spaced"]);
+const BLESSING_INSIDE = new Set(["details", "boarding-pass", "boarding-pass-details", "formal-script", "date-row", "script-date", "script-bars", "crest", "arch-panel", "photo-half", "classic", "script", "typographic", "monogram", "refined", "spaced"]);
 export const handlesBlessing = (layout: string) => BLESSING_INSIDE.has(layout);
 
 interface Props {
@@ -335,6 +336,12 @@ export function BoutiqueLayout({ art, text, photos, sizes }: Props): ReactNode |
           </div>
         </div>
       );
+
+    case "boarding-pass":
+      return <BoardingPass text={text} />;
+
+    case "boarding-pass-details":
+      return <TravelDetails text={text} />;
 
     case "details": {
       // The details enclosure: a heading and a few short sections.

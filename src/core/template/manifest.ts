@@ -53,6 +53,7 @@ export const STATIONERY_LAYOUTS = [
   "refined", "photo-overlay", "asymmetric", "spaced", "photo-side",
   "formal-script", "drive", "torn-photo", "date-row", "script-date", "script-bars", "crest", "split-arch", "arch-panel", "oval-photo", "photo-details", "photo-half",
   "details",
+  "boarding-pass", "boarding-pass-details",
 ] as const;
 export type StationeryLayout = (typeof STATIONERY_LAYOUTS)[number];
 
@@ -88,7 +89,7 @@ export function canRotate(shape: CardShape, layout?: StationeryLayout): boolean 
 }
 
 /** Layouts composed for one orientation only. */
-const FIXED_LAYOUTS: readonly StationeryLayout[] = ["drive", "torn-photo", "split-arch", "arch-panel"];
+const FIXED_LAYOUTS: readonly StationeryLayout[] = ["drive", "torn-photo", "split-arch", "arch-panel", "boarding-pass", "boarding-pass-details"];
 
 /** The design's shape once the chosen orientation is applied. */
 export function orientedShape(shape: CardShape, orientation: Orientation | undefined, layout?: StationeryLayout): CardShape {
