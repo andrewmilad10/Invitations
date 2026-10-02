@@ -460,4 +460,55 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       <span className={cn("absolute grid -rotate-12 place-items-center rounded-full border-2 border-inv-accent font-inv-heading text-inv-accent opacity-80", phone ? "bottom-[30%] start-[8%] size-[22cqw] text-[3cqw]" : "bottom-[10%] start-[46%] size-[11cqw] text-[1.6cqw]")}>{dateLabel}</span>
     </div>
   ),
+  // The Arch: a colonnade of three arches over the names.
+  arch: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-center text-inv-fg">
+      <div className={cn("absolute left-1/2 flex -translate-x-1/2 items-end gap-[3%]", phone ? "top-[6%] w-[84%]" : "top-[6%] w-[46%]")}>
+        <span className="aspect-[3/5] w-[22%] rounded-t-full bg-inv-muted" />
+        <div className="relative aspect-[3/4.4] w-[50%] overflow-hidden rounded-t-full"><HeroPhoto className="inset-0" /></div>
+        <span className="aspect-[3/4] w-[22%] rounded-t-full bg-inv-accent" />
+      </div>
+      <p className={cn("absolute inset-x-0 font-inv-heading leading-none", phone ? "top-[52%] text-[10cqw]" : "top-[64%] text-[5cqw]")}>{partnerOne} <span className="font-inv-accent text-inv-accent">&amp;</span> {partnerTwo}</p>
+      <p className={cn("absolute inset-x-0 uppercase tracking-[0.3em]", phone ? "top-[62%] text-[3cqw]" : "top-[78%] text-[1.3cqw]")}>{dateLabel}</p>
+    </div>
+  ),
+  // Film Story: a letterboxed frame with title credits.
+  film: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-black text-white">
+      <div className={cn("absolute inset-x-0 overflow-hidden", phone ? "inset-y-[12%]" : "inset-y-[10%]")}>
+        <HeroPhoto className="inset-0 sepia-[.2]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse,transparent_35%,rgb(0_0_0/0.75))]" />
+        <div className="absolute inset-0 grid place-content-center text-center">
+          <p className={cn("font-inv-heading uppercase leading-[0.9] tracking-[0.08em]", phone ? "text-[13cqw]" : "text-[7cqw]")}>{partnerOne}<br /><span className="font-inv-accent text-[0.35em] normal-case italic text-inv-accent">&amp;</span><br />{partnerTwo}</p>
+          <p className={cn("mt-[4%] font-inv-heading uppercase tracking-[0.3em] text-inv-accent", phone ? "text-[3.4cqw]" : "text-[1.6cqw]")}>{dateLabel}</p>
+        </div>
+      </div>
+    </div>
+  ),
+  // Botanical Glasshouse: a domed glasshouse with the photo inside and a leaf.
+  glasshouse: ({ partnerOne, partnerTwo, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-center text-inv-fg">
+      <div className={cn("absolute left-1/2 -translate-x-1/2", phone ? "top-[6%] w-[90%]" : "top-[4%] w-[56%]")}>
+        <div className="relative aspect-[4/3]">
+          <div className="absolute inset-0" style={{ clipPath: "polygon(7.5% 96%, 7.5% 52%, 30% 40%, 36% 22%, 50% 10%, 64% 22%, 70% 40%, 92.5% 52%, 92.5% 96%)" }}><HeroPhoto className="inset-0" /></div>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute inset-0 size-full text-inv-fg/70" fill="none" stroke="currentColor" strokeWidth="3"><path d="M30 290 V160 Q30 150 40 148 L120 120 Q140 50 200 30 Q260 50 280 120 L360 148 Q370 150 370 160 V290 Z M200 30 V290 M30 205 H370 M120 150 H280" /></svg>
+        </div>
+      </div>
+      <p className={cn("absolute inset-x-0 font-inv-heading leading-none", phone ? "top-[50%] text-[10cqw]" : "top-[74%] text-[5cqw]")}>{partnerOne} <span className="font-inv-accent text-inv-accent">&amp;</span> {partnerTwo}</p>
+    </div>
+  ),
+  // Monogram House: a seal and wide wordmark beside a canvas gift box.
+  house: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className={cn("absolute inset-0 flex items-center justify-center bg-inv-bg text-inv-fg", phone ? "flex-col gap-[6%]" : "gap-[8%]")}>
+      <div className="text-center">
+        <span className={cn("mx-auto grid place-items-center rounded-full border border-inv-accent font-inv-accent text-inv-accent", phone ? "size-[18cqw] text-[7cqw]" : "size-[8cqw] text-[3cqw]")}>{partnerOne[0]}{partnerTwo[0]}</span>
+        <p className={cn("mt-[6%] font-inv-heading font-bold uppercase leading-tight tracking-[0.16em]", phone ? "text-[7cqw]" : "text-[3.2cqw]")}>{partnerOne}<br />&amp; {partnerTwo}</p>
+        <p className={cn("uppercase tracking-[0.3em] text-inv-muted", phone ? "text-[2.6cqw]" : "text-[1.1cqw]")}>{dateLabel}</p>
+      </div>
+      <div className={cn("relative bg-inv-accent", phone ? "aspect-square w-[50%]" : "aspect-square w-[28%]")} style={{ backgroundImage: "radial-gradient(circle, color-mix(in oklab, var(--inv-accent-fg) 45%, transparent) 1.5px, transparent 2px)", backgroundSize: "12% 12%" }}>
+        <span className="absolute inset-y-0 left-1/2 w-[11%] -translate-x-1/2 bg-inv-bg" />
+        <span className="absolute inset-x-0 top-[38%] h-[11%] bg-inv-bg" />
+      </div>
+    </div>
+  ),
 };

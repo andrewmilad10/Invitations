@@ -24,6 +24,10 @@ const BlackTie = dynamic(() => import("./kit/blacktie/Renderer"));
 const Jardin = dynamic(() => import("./kit/jardin/Renderer"));
 const Glossy = dynamic(() => import("./kit/glossy/Renderer"));
 const Ephemera = dynamic(() => import("./kit/ephemera/Renderer"));
+const Arch = dynamic(() => import("./kit/arch/Renderer"));
+const Film = dynamic(() => import("./kit/film/Renderer"));
+const Glasshouse = dynamic(() => import("./kit/glasshouse/Renderer"));
+const House = dynamic(() => import("./kit/house/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
 const Showpiece = dynamic(() => import("./showpiece/Renderer"));
@@ -59,6 +63,10 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   jardin: Jardin,
   glossy: Glossy,
   ephemera: Ephemera,
+  arch: Arch,
+  film: Film,
+  glasshouse: Glasshouse,
+  house: House,
 };
 
 export function ClientInvitationRenderer({ model }: { model: InvitationModel }) {

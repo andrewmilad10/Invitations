@@ -313,6 +313,10 @@ thumbnail to `LAYOUT_HEROES` in `features/marketing/gallery/website-thumb.tsx`.
 | 6 | French Garden | `jardin` | A self-drawing parterre plan, trellis frames, a garden-stake date, topiary countdown, stepping-stone schedule, diamond-lattice gallery, seed-packet reply |
 | 7 | Luxury Magazine | `glossy` | A cover with initials masthead, cover lines and barcode; a linked contents page, feature columns, "by the numbers", running order, portfolio, tear-out reply card |
 | 8 | Vintage Paper | `ephemera` | Grainy aged paper, deckled letterpress card, postmark stamp, typed letter, tear-off calendar, mechanical counter, luggage tags, index card, library-card reply |
+| 9 | The Arch | `arch` | A colonnade hero, nested-arch date, arched countdown panes, an arcade schedule, arched-window gallery, doorway reply; arches open upwards |
+| 10 | Film Story | `film` | Projector-leader opening, letterboxed title credits, clapperboard date, screenplay scenes, end-credits schedule, film-strip gallery, marquee "coming soon" reply, iris-out end |
+| 11 | Botanical Glasshouse | `glasshouse` | Photo seen through a domed glasshouse, swaying oversized leaves, frosted panels, pot-and-sprout date, glazed countdown, climbing-vine schedule, gabled cold-frame cards |
+| 12 | Monogram House | `house` | Initials as a monogram canvas and seal, a gift box whose lid lifts, embossed date, watch-dial countdown, care-label schedule, lookbook gallery, shopping-bag reply |
 
 Extra reveal variants in `kit.module.css`: `draw` (paths marked `data-draw` with
-`pathLength="1"`, fills marked `data-draw-fill`), `stamp` and `drop`.
+`pathLength="1"`, fills marked `data-draw-fill`), `stamp`, `drop`, `archopen`, `iris` and `letterbox`. Parallax offsets are clamped to one screen height.

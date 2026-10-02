@@ -32,7 +32,7 @@ export function KitMotion({ model }: { model: InvitationModel }) {
 
     // Clip-path variants start fully clipped, which IntersectionObserver
     // reports as never visible, so those are watched through their parent.
-    const CLIPPED = new Set(["mask", "mask-up", "wipe"]);
+    const CLIPPED = new Set(["mask", "mask-up", "wipe", "archopen", "iris", "letterbox"]);
     const waiting = new Map<Element, Element[]>();
     const io = new IntersectionObserver(
       (entries) =>
@@ -65,7 +65,8 @@ export function KitMotion({ model }: { model: InvitationModel }) {
       const vh = window.innerHeight;
       for (const el of parallax) {
         const r = el.parentElement?.getBoundingClientRect() ?? el.getBoundingClientRect();
-        const centre = r.top + r.height / 2 - vh / 2;
+        // Clamped, so things far off screen sit near their place (full-page captures, jumps).
+        const centre = Math.max(-vh, Math.min(vh, r.top + r.height / 2 - vh / 2));
         const f = Number(el.dataset.kParallax) * (small ? 0.5 : 1);
         el.style.transform = `translate3d(0, ${(-centre * f).toFixed(1)}px, 0)`;
       }

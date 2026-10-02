@@ -1,0 +1,184 @@
+/* 12 · Monogram House. Colours only from --inv-*; neutral rgb() for shadows. */
+
+.root {
+  --k-dur: 1.3s;
+  --k-ease: cubic-bezier(.23, 1, .32, 1);
+  --k-dist: 20px;
+  --k-step: 100ms;
+  --pad: clamp(1.25rem, 5vw, 3.5rem);
+  --house: var(--inv-accent);
+  --mono: var(--inv-accent-fg);
+  --stone: color-mix(in oklab, var(--inv-fg) 62%, var(--inv-bg));
+  position: relative;
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font: 400 1rem/1.7 var(--inv-font-body);
+}
+.root [data-grade] { filter: contrast(1.04) saturate(.94); }
+
+/* Local reveals: a slow slide in, and the box lid */
+.root[data-fx="on"] [data-k="slide"]:not([data-in]) { opacity: 0; transform: translateX(calc(var(--k-dist) * 2)); }
+.root[data-fx="on"]:dir(rtl) [data-k="slide"]:not([data-in]) { transform: translateX(calc(var(--k-dist) * -2)); }
+.root[data-fx="on"] [data-k="lid"]:not([data-in]) .lid { transform: none; }
+
+.center { text-align: center; }
+.kicker { margin: 0; font-size: .7rem; letter-spacing: .4em; text-transform: uppercase; color: var(--stone); }
+.h2 { margin: .5rem 0 0; font: 700 clamp(1.5rem, 3.8vw, 2.5rem)/1.12 var(--inv-font-heading); letter-spacing: .1em; text-transform: uppercase; text-wrap: balance; }
+.h3 { margin: .4rem 0 0; font: 700 clamp(1.4rem, 3.6vw, 2rem)/1.1 var(--inv-font-heading); letter-spacing: .1em; text-transform: uppercase; }
+.small { margin: .3rem 0 0; font-size: .88rem; color: var(--stone); }
+.lead { max-width: 34rem; margin: 1.2rem auto 0; font-size: 1.08rem; }
+.signature { margin: 1.4rem 0 0; font: 400 1.4rem var(--inv-font-accent); letter-spacing: .14em; color: var(--house); }
+.sec { max-width: 72rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.prose { margin-top: 1.2rem; }
+.prose > p + p { margin-top: .9rem; }
+
+/* The monogram canvas */
+.canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.canvasText { font: 400 15px var(--inv-font-accent); letter-spacing: 1px; fill: var(--mono); opacity: .5; text-anchor: middle; }
+.canvasMark { fill: var(--mono); opacity: .38; }
+
+/* The seal: interlaced initials in a ring */
+.seal { position: relative; display: grid; place-items: center; width: 6.4rem; aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--house), inset 0 0 0 5px var(--inv-bg), inset 0 0 0 6px var(--house); font: 400 2.6rem/1 var(--inv-font-accent); color: var(--house); }
+.sealA, .sealB { grid-area: 1 / 1; }
+.sealA { translate: -.22em -.12em; }
+.sealB { translate: .22em .14em; }
+.smallSeal { width: 4.6rem; margin: 0 auto 1.4rem; font-size: 1.8rem; }
+
+/* ── Hero: lockup and the gift box ── */
+.hero { display: grid; gap: 3.4rem; align-items: center; max-width: 76rem; min-height: 100svh; margin-inline: auto; padding: clamp(3rem, 7vw, 5rem) var(--pad); }
+@media (min-width: 900px) { .hero { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+.lockup { display: grid; justify-items: center; text-align: center; }
+.heroSeal { margin-bottom: 1.8rem; }
+.wordmark { display: grid; margin: .8rem 0 0; font: 700 clamp(2.4rem, 7vw, 4.6rem)/1.02 var(--inv-font-heading); letter-spacing: .16em; text-transform: uppercase; margin-inline-end: -.16em; }
+.wordmark i { font: 400 .5em/1.5 var(--inv-font-accent); letter-spacing: 0; color: var(--house); }
+.est { margin: 1.4rem 0 0; padding-top: 1rem; border-top: 1px solid var(--inv-fg); font-size: .76rem; letter-spacing: .3em; text-transform: uppercase; }
+.tagline { max-width: 26rem; margin: 1rem auto 0; color: var(--stone); }
+
+.box { position: relative; width: min(100%, 28rem); aspect-ratio: 1 / 1.05; margin: 3.4rem auto 0; }
+@media (min-width: 900px) { .box { margin-top: 7rem; } }
+.boxInside { position: absolute; inset: 6% 7% 34%; overflow: hidden; background: var(--inv-surface); box-shadow: inset 0 10px 20px rgb(0 0 0 / .25); }
+.boxPhoto { width: 100%; height: 100%; }
+.boxFront { position: absolute; inset: auto 0 0; height: 46%; overflow: hidden; background: var(--house); box-shadow: 0 30px 40px -24px rgb(0 0 0 / .45); }
+.ribbonV { position: absolute; top: 0; bottom: 0; left: 50%; width: 11%; translate: -50% 0; background: var(--inv-bg); box-shadow: inset 2px 0 0 rgb(0 0 0 / .06), inset -2px 0 0 rgb(0 0 0 / .06); }
+.lid {
+  position: absolute; inset: auto -3% 46% -3%; height: 20%; z-index: 2; background: var(--house); box-shadow: 0 10px 18px -8px rgb(0 0 0 / .45);
+  transform: translateY(-120%) rotate(-7deg); transform-origin: 10% 100%;
+  transition: transform 1.6s cubic-bezier(.3, 1.3, .5, 1) .5s;
+}
+.lid .canvas { overflow: hidden; }
+.bow { position: absolute; left: 50%; bottom: 72%; width: 34%; translate: -50% 0; fill: var(--inv-bg); stroke: color-mix(in oklab, var(--inv-bg) 80%, black); stroke-width: 1; }
+
+/* ── Couple: a house letter ── */
+.letter { max-width: 44rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); text-align: center; }
+
+/* ── Date: blind embossed ── */
+.embossSec { padding: clamp(4rem, 9vw, 6rem) var(--pad); }
+.embossCard { max-width: 30rem; margin: 0 auto; padding: 3rem 2rem; text-align: center; background: var(--inv-surface); box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 30px 50px -36px rgb(0 0 0 / .35); }
+.emboss { margin: .6rem 0 0; font: 700 clamp(6rem, 22vw, 9rem)/1 var(--inv-font-heading); color: var(--inv-surface); text-shadow: -1px -1px 0 rgb(255 255 255 / .9), 1.5px 1.5px 1px rgb(0 0 0 / .2), 3px 3px 6px rgb(0 0 0 / .08); }
+.embossLine { margin: 0; font-size: .84rem; letter-spacing: .34em; text-transform: uppercase; }
+
+/* ── Countdown: watch dials ── */
+.dials { display: grid; grid-template-columns: repeat(2, minmax(0, 10rem)); justify-content: center; gap: clamp(1rem, 4vw, 2.2rem); margin-top: 2.4rem; }
+@media (min-width: 760px) { .dials { grid-template-columns: repeat(4, minmax(0, 10rem)); } }
+.dial {
+  display: grid; place-content: center; justify-items: center; gap: .2rem; aspect-ratio: 1; border-radius: 50%;
+  background:
+    radial-gradient(circle, var(--inv-surface) 0 74%, transparent 74.5%),
+    repeating-conic-gradient(var(--inv-fg) 0 1deg, transparent 1deg 6deg),
+    var(--inv-surface);
+  box-shadow: inset 0 0 0 1px var(--inv-fg), inset 0 0 0 9px var(--inv-surface), inset 0 0 0 10px color-mix(in oklab, var(--inv-fg) 40%, transparent), 0 18px 30px -20px rgb(0 0 0 / .4);
+}
+.dialValue { font: 700 clamp(2rem, 7vw, 3rem)/1 var(--inv-font-heading); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.dialLabel { font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--house); }
+
+/* ── Story ── */
+.story { display: grid; gap: 3rem; align-items: center; max-width: 70rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+@media (min-width: 900px) { .story { grid-template-columns: .9fr 1.1fr; gap: 5rem; } }
+.storyFrame { position: relative; width: min(100%, 26rem); margin-inline: auto; padding: 18px; background: var(--house); }
+.storyCanvas { position: absolute; }
+.storyPhoto { position: relative; aspect-ratio: 4 / 5; }
+.quote { margin: 2rem 0 0; padding: 1.6rem 0 0; border-top: 1px solid var(--inv-fg); font: 400 clamp(1.2rem, 2.8vw, 1.5rem)/1.4 var(--inv-font-accent); letter-spacing: .04em; }
+.quote cite { display: block; margin-top: .5rem; font: normal .7rem var(--inv-font-body); letter-spacing: .3em; text-transform: uppercase; color: var(--stone); }
+
+/* ── Ceremony / reception: appointment cards ── */
+.apptSec { padding: clamp(1.6rem, 4vw, 2.4rem) var(--pad); }
+.appt { max-width: 40rem; margin: 0 auto; background: var(--inv-surface); box-shadow: 0 1px 2px rgb(0 0 0 / .06), 0 30px 50px -36px rgb(0 0 0 / .4); }
+@media (min-width: 900px) { .appt { margin-inline-start: 10%; } .apptAlt { margin-inline: auto 10%; } }
+.apptStrip { position: relative; height: 5.4rem; overflow: hidden; background: var(--house); }
+.apptTag { position: absolute; inset-inline-start: 1.6rem; bottom: -1px; padding: .5rem 1rem .4rem; background: var(--inv-surface); font-size: .7rem; letter-spacing: .34em; text-transform: uppercase; }
+.apptBody { padding: 1.8rem clamp(1.4rem, 5vw, 2.4rem) 2.2rem; }
+.apptGrid { display: grid; gap: 1rem; align-items: baseline; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--inv-border); }
+@media (min-width: 560px) { .apptGrid { grid-template-columns: auto 1fr; gap: 2rem; } }
+.apptTime { margin: 0; font: 700 clamp(1.8rem, 5vw, 2.6rem)/1 var(--inv-font-heading); letter-spacing: .04em; color: var(--house); }
+.venue { margin: 0; font-size: .82rem; letter-spacing: .26em; text-transform: uppercase; }
+.note { margin: 1rem 0 0; color: var(--stone); }
+.textButton { display: inline-block; margin-top: 1.4rem; padding: .7rem 1.4rem; border: 1px solid var(--inv-fg); color: var(--inv-fg); font-size: .7rem; letter-spacing: .3em; text-decoration: none; text-transform: uppercase; transition: background .3s ease, color .3s ease; }
+.textButton:hover { background: var(--inv-fg); color: var(--inv-bg); }
+
+/* ── Venue ── */
+.maps { display: grid; gap: 2rem; margin-top: 2.4rem; }
+@media (min-width: 800px) { .maps { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
+.mapFig { margin: 0; }
+.map { display: block; width: 100%; aspect-ratio: 4 / 3; border: 0; filter: grayscale(1) contrast(1.05); }
+.mapFig figcaption { display: grid; margin-top: .9rem; }
+.mapFig b { font-weight: 700; font-family: var(--inv-font-heading); letter-spacing: .14em; text-transform: uppercase; }
+.mapFig span { font-size: .88rem; color: var(--stone); }
+
+/* ── Schedule: a woven care label ── */
+.label { position: relative; width: min(100%, 24rem); margin: 0 auto; padding: 2.8rem 1.8rem 2rem; text-align: center; background: var(--inv-surface); box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 24px 40px -30px rgb(0 0 0 / .45); outline: 1px dashed color-mix(in oklab, var(--inv-fg) 45%, transparent); outline-offset: -9px; rotate: -1.5deg; }
+.labelFold { position: absolute; inset: 0 0 auto; height: 1.2rem; background: color-mix(in oklab, var(--inv-surface) 88%, var(--inv-fg)); }
+.labelBrand { margin: 0; font: 700 1.6rem var(--inv-font-heading); letter-spacing: .3em; margin-inline-end: -.3em; color: var(--house); }
+.labelTitle { margin: .4rem 0 0; font-size: .82rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; }
+.labelSub { margin: .2rem 0 0; font-size: .64rem; letter-spacing: .3em; text-transform: uppercase; color: var(--stone); }
+.labelList { display: grid; gap: .7rem; margin: 1.4rem 0 0; padding: 1.2rem 0 0; list-style: none; border-top: 1px solid var(--inv-border); }
+.labelList li { display: grid; grid-template-columns: 4.6rem 1fr; gap: .8rem; text-align: start; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
+.labelList time { font-weight: 700; }
+.labelList small { display: block; letter-spacing: .06em; text-transform: none; color: var(--stone); }
+.labelFoot { margin: 1.4rem 0 0; font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--stone); }
+
+/* ── Gallery: a lookbook ── */
+.lookbook { max-width: 66rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.looks { display: grid; gap: 2.4rem 2rem; margin-top: 2.6rem; }
+@media (min-width: 800px) { .looks { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
+.look { margin: 0; }
+.lookPhoto { aspect-ratio: 3 / 4; }
+.look figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: .6rem; font-size: .68rem; letter-spacing: .26em; text-transform: uppercase; }
+.look figcaption span:last-child { color: var(--stone); letter-spacing: .06em; text-transform: none; text-align: end; }
+@media (min-width: 800px) {
+  .look:nth-child(4n + 1) { grid-column: 1 / span 7; }
+  .look:nth-child(4n + 2) { grid-column: 9 / span 4; margin-top: 8rem; }
+  .look:nth-child(4n + 3) { grid-column: 2 / span 4; margin-top: -4rem; }
+  .look:nth-child(4n + 4) { grid-column: 7 / span 6; }
+  .look:nth-child(4n + 1) .lookPhoto { aspect-ratio: 4 / 5; }
+  .look:nth-child(4n + 4) .lookPhoto { aspect-ratio: 5 / 4; }
+}
+
+/* ── RSVP: a shopping bag ── */
+.bagSec { padding: clamp(5rem, 11vw, 7.5rem) var(--pad); background: var(--inv-surface); }
+.bag { position: relative; width: min(100%, 26rem); margin: 3.4rem auto 0; }
+.handle { position: absolute; left: 50%; bottom: 100%; width: 40%; height: 4.2rem; translate: -50% 1rem; border: 5px solid var(--house); border-bottom: 0; border-radius: 999px 999px 0 0; }
+.bagBody { position: relative; padding: 4rem 1.6rem 2.4rem; overflow: hidden; background: var(--house); box-shadow: 0 40px 60px -40px rgb(0 0 0 / .55); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+.bagBody::before { content: ""; position: absolute; inset: 0 0 auto; height: 1.6rem; background: color-mix(in oklab, var(--house) 82%, black); z-index: 1; }
+.bagTag { position: relative; z-index: 1; padding: 2rem 1.4rem; text-align: center; background: var(--inv-bg); box-shadow: 0 10px 20px -10px rgb(0 0 0 / .35); }
+.tagText { max-width: 20rem; margin: .8rem auto 0; font-size: .95rem; }
+.button { display: inline-block; margin-top: 1.4rem; padding: .9rem 1.8rem; background: var(--inv-fg); color: var(--inv-bg); font-size: .72rem; letter-spacing: .32em; text-decoration: none; text-transform: uppercase; transition: background .3s ease; }
+.button:hover { background: var(--house); color: var(--mono); }
+
+/* ── FAQ ── */
+.faqList { max-width: 44rem; margin: 2.4rem auto 0; border-top: 1px solid var(--inv-fg); }
+.qa { border-bottom: 1px solid var(--inv-border); }
+.qa summary { display: flex; justify-content: space-between; gap: 1rem; padding: 1.2rem 0; cursor: pointer; list-style: none; font-size: .86rem; letter-spacing: .2em; text-transform: uppercase; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary::after { content: "+"; font-size: 1.2rem; line-height: 1; transition: rotate .4s var(--k-ease); }
+.qa[open] summary::after { rotate: 45deg; }
+.qa p { margin: 0 0 1.3rem; color: var(--stone); white-space: pre-line; }
+
+/* ── Closing ── */
+.closing { padding: clamp(5rem, 12vw, 8rem) var(--pad); text-align: center; }
+.closingBow { display: block; width: 7rem; margin: 0 auto 1.6rem; fill: none; stroke: var(--house); stroke-width: 1.6; stroke-linecap: round; }
+.closingTitle { margin: 0; font: 700 clamp(1.7rem, 4.6vw, 3rem)/1.12 var(--inv-font-heading); letter-spacing: .1em; text-transform: uppercase; }
+
+/* ── Footer ── */
+.footer { padding: 0 0 3rem; text-align: center; }
+.footBand { position: relative; height: 4.6rem; overflow: hidden; background: var(--house); }
+.footMark { margin: 2rem 0 0; font: 700 1.1rem var(--inv-font-heading); letter-spacing: .3em; text-transform: uppercase; }

@@ -4,10 +4,14 @@ import CinematicRenderer from "./cinematic/Renderer";
 import EditorialRenderer from "./editorial/Renderer";
 import EssentialsRenderer from "./essentials/Renderer";
 import GalerieRenderer from "./galerie/Renderer";
+import ArchRenderer from "./kit/arch/Renderer";
 import BlackTieRenderer from "./kit/blacktie/Renderer";
 import EphemeraRenderer from "./kit/ephemera/Renderer";
+import FilmRenderer from "./kit/film/Renderer";
+import GlasshouseRenderer from "./kit/glasshouse/Renderer";
 import GlossyRenderer from "./kit/glossy/Renderer";
 import HeritageRenderer from "./kit/heritage/Renderer";
+import HouseRenderer from "./kit/house/Renderer";
 import JardinRenderer from "./kit/jardin/Renderer";
 import LimoneRenderer from "./kit/limone/Renderer";
 import MinimalRenderer from "./kit/minimal/Renderer";
@@ -50,6 +54,10 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   jardin: JardinRenderer,
   glossy: GlossyRenderer,
   ephemera: EphemeraRenderer,
+  arch: ArchRenderer,
+  film: FilmRenderer,
+  glasshouse: GlasshouseRenderer,
+  house: HouseRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */

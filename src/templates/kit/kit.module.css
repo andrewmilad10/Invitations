@@ -28,6 +28,12 @@
 .root[data-fx="on"] [data-k="fade"]:not([data-in]) { opacity: 0; }
 .root[data-fx="on"] [data-k="blur"]:not([data-in]) { opacity: 0; filter: blur(10px); }
 .root[data-fx="on"] [data-k="scale"]:not([data-in]) { opacity: 0; transform: scale(.94); }
+/* Clip reveals need an explicit end shape so the change can animate. */
+.root[data-fx="on"] :is([data-k="mask"], [data-k="mask-up"], [data-k="wipe"], [data-k="archopen"], [data-k="letterbox"]) { clip-path: inset(0 0 0 0); }
+.root[data-fx="on"] [data-k="letterbox"]:not([data-in]) { clip-path: inset(50% 0 50% 0); }
+.root[data-fx="on"] [data-k="iris"] { clip-path: circle(75% at 50% 50%); }
+.root[data-fx="on"] [data-k="iris"]:not([data-in]) { clip-path: circle(0% at 50% 50%); }
+.root[data-fx="on"] [data-k="archopen"]:not([data-in]) { clip-path: inset(100% 0 0 0); }
 .root[data-fx="on"] [data-k="mask"]:not([data-in]) { clip-path: inset(0 0 100% 0); }
 .root[data-fx="on"] [data-k="mask-up"]:not([data-in]) { clip-path: inset(100% 0 0 0); }
 .root[data-fx="on"] [data-k="wipe"]:not([data-in]) { clip-path: inset(0 100% 0 0); }

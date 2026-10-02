@@ -45,6 +45,22 @@ const P = {
   sepia: { id: "sepia", label: "Sepia & red ink", family: "neutral", colors: c("#f1e6cf", "#f8f0dd", "#3a2a1c", "#8c6f4e", "#9b3b2a", "#f8f0dd", "#dccaa6") },
   fadedBlue: { id: "faded-blue", label: "Faded blue ink", family: "blue", colors: c("#ece6d6", "#f6f1e3", "#22303f", "#7b8794", "#2f4f78", "#f6f1e3", "#d6ccb4") },
   oliveInk: { id: "olive-ink", label: "Olive ink", family: "green", colors: c("#ede5cf", "#f6efdc", "#2c2a1d", "#8a8257", "#5d6332", "#f6efdc", "#d8cda9") },
+  // 9 · The Arch
+  terracotta: { id: "terracotta", label: "Terracotta", family: "orange", colors: c("#f3ece3", "#faf6f0", "#3b2a22", "#d9b99b", "#b35c3c", "#faf6f0", "#e5d9cb") },
+  olivePlaster: { id: "olive-plaster", label: "Olive & plaster", family: "green", colors: c("#f1efe6", "#f9f8f2", "#2f3324", "#c8c6a2", "#6b7240", "#f9f8f2", "#e0decf") },
+  roseStone: { id: "rose-stone", label: "Rose stone", family: "pink", colors: c("#f5ece9", "#fbf6f4", "#3a2a2c", "#e2bfb8", "#a4545e", "#fbf6f4", "#eadad6") },
+  // 10 · Film Story
+  projector: { id: "projector", label: "Projector amber", family: "black", colors: c("#0f0d0b", "#1a1714", "#f1e9dc", "#8f8574", "#e8b04a", "#0f0d0b", "#2c2722") },
+  silverScreen: { id: "silver-screen", label: "Silver screen", family: "white", colors: c("#ecebe7", "#f7f6f3", "#121212", "#7d7b75", "#b0262c", "#f7f6f3", "#d6d4ce") },
+  noirTeal: { id: "noir-teal", label: "Noir teal", family: "blue", colors: c("#0c1314", "#142022", "#e6efee", "#7f9593", "#6fc3b8", "#0c1314", "#213133") },
+  // 11 · Botanical
+  fern: { id: "fern", label: "Fern", family: "green", colors: c("#eef0e8", "#f8f9f4", "#1d2b22", "#9fbf96", "#2e5b43", "#f8f9f4", "#d8ddd0") },
+  nightHouse: { id: "night-glasshouse", label: "Night glasshouse", family: "green", colors: c("#142019", "#1c2b22", "#e9efe6", "#4f7a58", "#c9d8a8", "#142019", "#2a3b30") },
+  pots: { id: "terracotta-pots", label: "Terracotta pots", family: "orange", colors: c("#f4ece4", "#fbf7f2", "#2b211c", "#a9b98f", "#8a4b32", "#fbf7f2", "#e6d9cc") },
+  // 12 · Monogram House
+  ivoryNoir: { id: "ivory-noir", label: "Ivory & noir", family: "black", colors: c("#f6f3ee", "#fffdfa", "#141414", "#a39a8c", "#141414", "#e9e2d6", "#e4ded4") },
+  sageMaison: { id: "sage-maison", label: "Sage", family: "green", colors: c("#f3f4ef", "#fbfcf8", "#1b221d", "#9aa596", "#3f5747", "#e7ecdf", "#dfe3d9") },
+  bordeaux: { id: "bordeaux", label: "Bordeaux", family: "red", colors: c("#f7f1ee", "#fffbf9", "#22141a", "#a8939a", "#5b1a28", "#ecd9c6", "#eadfdb") },
 } satisfies Record<string, Palette>;
 
 export const KIT_MANIFESTS: TemplateManifest[] = [
@@ -140,5 +156,53 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     palettes: [P.sepia, P.fadedBlue, P.oliveInk],
     fonts: { heading: "oldstandard", body: "spacemono", accent: "homemade" },
     card: { layout: "torn-photo" },
+  }),
+  kitTemplate("arch", {
+    id: "the-arch",
+    name: "The Arch",
+    tagline: "Mediterranean arches, terracotta and plaster.",
+    description:
+      "Everything is framed in an arch: a colonnade around your photo, nested arches for the date, arched panes for the countdown, an arcade for the day, a gallery of arched windows and an open doorway for the reply. Arches open upwards as guests scroll.",
+    categories: ["modern", "outdoor", "romantic", "minimalist"],
+    palettes: [P.terracotta, P.olivePlaster, P.roseStone],
+    fonts: { heading: "italiana", body: "jost", accent: "allura" },
+    card: { layout: "split-arch" },
+  }),
+  kitTemplate(
+    "film",
+    {
+      id: "film-story",
+      name: "Film Story",
+      tagline: "Your love story as a feature film.",
+      description:
+        "Opens on a projector countdown, then a letterboxed title sequence. The date is a clapperboard, the ceremony and party are screenplay scenes, the day rolls like end credits, photos run on a film strip and the reply is a 'coming soon' poster under marquee bulbs.",
+      categories: ["photo", "modern", "whimsical", "typography"],
+      palettes: [P.projector, P.silverScreen, P.noirTeal],
+      fonts: { heading: "bebas", body: "jost", accent: "dmserif" },
+      card: { layout: "photo-full" },
+    },
+    { opening: true },
+  ),
+  kitTemplate("glasshouse", {
+    id: "botanical-glasshouse",
+    name: "Botanical Glasshouse",
+    tagline: "A Victorian glasshouse full of leaves.",
+    description:
+      "Your photo seen through the glazing of a domed glasshouse, with oversized leaves that sway and drift as guests scroll. Frosted-glass panels, the date on a terracotta pot, the countdown in a glazed frame, a climbing vine for the day and a wall of glazed photographs.",
+    categories: ["botanical", "greenery", "photo", "outdoor"],
+    palettes: [P.fern, P.nightHouse, P.pots],
+    fonts: { heading: "dmserif", body: "manrope", accent: "caveat" },
+    card: { layout: "photo-top" },
+  }),
+  kitTemplate("house", {
+    id: "monogram-house",
+    name: "Monogram House",
+    tagline: "Your initials as a fashion house.",
+    description:
+      "Your initials woven into a monogram canvas and a house seal. A gift box whose lid lifts to show your photo, the date blind-embossed, the countdown on watch dials, the day on a woven label, a lookbook of photos and a shopping bag for the reply.",
+    categories: ["monogram", "luxury", "modern", "typography"],
+    palettes: [P.ivoryNoir, P.sageMaison, P.bordeaux],
+    fonts: { heading: "syne", body: "inter", accent: "cinzeldeco" },
+    card: { layout: "monogram" },
   }),
 ];
