@@ -1,0 +1,175 @@
+/* 7 · Luxury Magazine. Colours only from --inv-*; neutral rgb() for photo shading. */
+
+.root {
+  --k-dur: 1s;
+  --k-ease: cubic-bezier(.77, 0, .175, 1);
+  --k-dist: 26px;
+  --k-step: 80ms;
+  --pad: clamp(1.25rem, 4.5vw, 3.5rem);
+  --rule: var(--inv-fg);
+  --grey: color-mix(in oklab, var(--inv-fg) 62%, var(--inv-bg));
+  position: relative;
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font: 400 1rem/1.65 var(--inv-font-body);
+}
+.root [data-grade] { filter: contrast(1.06) saturate(1.04); }
+
+.label { margin: 0; font: 400 1rem/1.1 var(--inv-font-accent); letter-spacing: .12em; text-transform: uppercase; color: var(--inv-accent); }
+.caption { display: block; margin: .3rem 0 0; font-size: .8rem; line-height: 1.5; color: var(--grey); }
+.h2 { margin: .4rem 0 0; font: 600 clamp(2.2rem, 6vw, 4.4rem)/1 var(--inv-font-heading); letter-spacing: -.02em; }
+.h3 { margin: 0; font: 600 clamp(1.6rem, 4vw, 2.4rem)/1.05 var(--inv-font-heading); letter-spacing: -.01em; }
+.headline { margin: .5rem 0 0; font: italic 400 clamp(3rem, 10vw, 8rem)/.92 var(--inv-font-heading); letter-spacing: -.03em; }
+.sec { max-width: 76rem; margin-inline: auto; padding: clamp(4rem, 9vw, 6.5rem) var(--pad); }
+.thickRule { height: 6px; margin-bottom: 1rem; background: var(--rule); transform-origin: 0 50%; }
+.num { display: inline-grid; place-items: center; flex: none; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--inv-accent); color: var(--inv-accent-fg); font: 400 .9rem/1 var(--inv-font-accent); }
+
+/* ── The cover ── */
+.cover { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 100svh; padding: clamp(1rem, 3vw, 2rem) var(--pad) clamp(1.4rem, 3vw, 2.2rem); overflow: hidden; color: var(--inv-bg); }
+.coverPhoto { position: absolute !important; inset: 0; }
+.coverPhoto img { animation: pushIn 9s cubic-bezier(.2, .6, .2, 1) both; }
+@keyframes pushIn { from { transform: scale(1.12); } to { transform: scale(1); } }
+.coverShade { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(0 0 0 / .45), rgb(0 0 0 / 0) 34%, rgb(0 0 0 / 0) 50%, rgb(0 0 0 / .62)); pointer-events: none; }
+.coverTop, .coverBottom { position: relative; }
+.issueLine { display: flex; justify-content: space-between; margin: 0; padding-bottom: .4rem; border-bottom: 1px solid currentColor; font: 400 .95rem var(--inv-font-accent); letter-spacing: .16em; text-transform: uppercase; }
+.masthead { display: flex; align-items: baseline; justify-content: center; margin: 0; font: 600 clamp(9rem, 40vw, 22rem)/.8 var(--inv-font-heading); letter-spacing: -.04em; text-transform: uppercase; }
+.masthead i { margin: 0 .04em; font: italic 400 .62em/1 var(--inv-font-heading); color: var(--inv-accent); }
+.coverBottom { display: grid; gap: 1.4rem; align-items: end; }
+@media (min-width: 900px) { .coverBottom { grid-template-columns: 1fr auto auto; gap: 3rem; } }
+.coverKicker { margin: 0; font: 400 1.05rem var(--inv-font-accent); letter-spacing: .16em; text-transform: uppercase; color: var(--inv-bg); }
+.coverStory .coverKicker { display: inline-block; padding: .2rem .5rem; background: var(--inv-accent); color: var(--inv-accent-fg); }
+.coverNames { margin: .5rem 0 0; font: italic 400 clamp(2.6rem, 8vw, 5.6rem)/.95 var(--inv-font-heading); letter-spacing: -.02em; text-wrap: balance; }
+.coverNames i { color: var(--inv-accent); }
+.coverDek { max-width: 30rem; margin: .7rem 0 0; font-size: 1.05rem; }
+.coverLines { display: grid; gap: .3rem; margin: 0; padding: 0; list-style: none; font: 400 1.25rem/1.1 var(--inv-font-accent); letter-spacing: .06em; text-transform: uppercase; }
+.coverLines b { font-weight: 400; color: var(--inv-accent); }
+.coverLines span { opacity: .75; font-size: .8em; }
+@media (max-width: 899px) { .coverLines { display: none; } }
+.barcode { display: grid; justify-items: center; gap: .2rem; justify-self: start; padding: .5rem .6rem .3rem; background: var(--inv-bg); color: var(--inv-fg); font: 400 .7rem var(--inv-font-accent); letter-spacing: .2em; }
+.bars { display: block; width: 6.4rem; height: 2.4rem; background: repeating-linear-gradient(90deg, var(--inv-fg) 0 2px, transparent 2px 3px, var(--inv-fg) 3px 4px, transparent 4px 7px, var(--inv-fg) 7px 10px, transparent 10px 11px); }
+@media (min-width: 900px) { .barcode { justify-self: end; } }
+
+/* ── Contents + letter ── */
+.spread { display: grid; gap: 3rem; max-width: 76rem; margin-inline: auto; padding: clamp(4rem, 9vw, 6.5rem) var(--pad); }
+@media (min-width: 900px) { .spread { grid-template-columns: 22rem 1fr; gap: 5rem; } }
+.contents ol { margin: 1rem 0 0; padding: 0; list-style: none; border-top: 6px solid var(--rule); }
+.contents li { border-bottom: 1px solid var(--inv-border); }
+.contents a { display: flex; align-items: baseline; gap: 1rem; padding: .7rem 0; color: inherit; font: 400 1.25rem var(--inv-font-heading); text-decoration: none; transition: color .25s ease, padding .3s var(--k-ease); }
+.contents a:hover { color: var(--inv-accent); padding-inline-start: .4rem; }
+.pageNo { flex: none; width: 2.2rem; font: 400 1.35rem var(--inv-font-accent); color: var(--inv-accent); }
+.letter .h2 { margin-top: .8rem; }
+.dropcap { margin: 1.4rem 0 0; max-width: 40rem; font-size: 1.15rem; line-height: 1.75; }
+.dropcap::first-letter { float: inline-start; margin: .06em .12em 0 0; font: 600 4.6em/.82 var(--inv-font-heading); color: var(--inv-accent); }
+.byline { display: flex; align-items: center; gap: .9rem; margin-top: 1.6rem; font: italic 400 1.3rem var(--inv-font-heading); }
+.byline p { margin: 0; }
+.avatar { width: 3.4rem; height: 3.4rem; border-radius: 50%; }
+
+/* ── Date: a giant number ── */
+.dateSpread { display: grid; gap: 1rem 3rem; align-items: center; max-width: 76rem; margin-inline: auto; padding: clamp(3rem, 7vw, 5rem) var(--pad); border-block: 1px solid var(--inv-border); }
+@media (min-width: 700px) { .dateSpread { grid-template-columns: auto 1fr; } }
+.dateDay { margin: 0; font: 600 clamp(9rem, 32vw, 20rem)/.78 var(--inv-font-heading); letter-spacing: -.06em; color: var(--inv-accent); }
+.dateMonth { margin: .4rem 0 0; font: 600 clamp(2rem, 5vw, 3.6rem)/1 var(--inv-font-heading); }
+.dateWeek { margin: .3rem 0 0; font: 400 1.6rem var(--inv-font-accent); letter-spacing: .1em; text-transform: uppercase; }
+
+/* ── Countdown: by the numbers ── */
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 2.2rem; border-top: 1px solid var(--rule); }
+@media (min-width: 800px) { .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.stat { display: grid; gap: .3rem; padding: 1.2rem 1rem 1rem 0; border-bottom: 1px solid var(--inv-border); }
+@media (min-width: 800px) { .stat + .stat { padding-inline-start: 1.4rem; border-inline-start: 1px solid var(--inv-border); } }
+.statValue { font: 600 clamp(3.6rem, 10vw, 6.6rem)/.9 var(--inv-font-heading); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.statLabel { font: 400 1.1rem var(--inv-font-accent); letter-spacing: .12em; text-transform: uppercase; color: var(--inv-accent); }
+
+/* ── The feature ── */
+.feature { max-width: 76rem; margin-inline: auto; padding: clamp(4rem, 9vw, 6.5rem) var(--pad); }
+.featureFig { margin: 2rem 0 0; }
+.featurePhoto { aspect-ratio: 16 / 9; }
+.columns { margin-top: 2.2rem; font-size: 1.04rem; line-height: 1.75; column-gap: 2.6rem; column-rule: 1px solid var(--inv-border); }
+@media (min-width: 700px) { .columns { columns: 2; } }
+@media (min-width: 1100px) { .columns { columns: 3; } }
+.columns > p { margin: 0 0 1rem; break-inside: avoid-column; }
+.columns > p:first-child::first-letter { float: inline-start; margin: .05em .1em 0 0; font: 600 3.6em/.82 var(--inv-font-heading); color: var(--inv-accent); }
+.pull { margin: 2.6rem 0 0; padding: 1.6rem 0; border-block: 6px solid var(--rule); font: italic 400 clamp(1.8rem, 4.4vw, 3.2rem)/1.15 var(--inv-font-heading); color: var(--inv-accent); }
+.pull cite { display: block; margin-top: .8rem; font: normal 400 1rem var(--inv-font-accent); letter-spacing: .14em; text-transform: uppercase; color: var(--inv-fg); }
+
+/* ── Agenda boxes ── */
+.agendaSec { max-width: 76rem; margin-inline: auto; padding: clamp(1.4rem, 3vw, 2rem) var(--pad); }
+.agenda { max-width: 40rem; border: 1px solid var(--rule); background: var(--inv-surface); }
+.agendaRight .agenda { margin-inline-start: auto; }
+.agendaBar { display: flex; justify-content: space-between; padding: .55rem 1rem .45rem; background: var(--inv-fg); color: var(--inv-bg); font: 400 1.15rem var(--inv-font-accent); letter-spacing: .14em; text-transform: uppercase; }
+.agendaBody { padding: 1.6rem clamp(1.2rem, 4vw, 2rem) 1.8rem; }
+.agendaTime { margin: .4rem 0 0; font: italic 400 clamp(2.6rem, 7vw, 4rem)/1 var(--inv-font-heading); color: var(--inv-accent); }
+.agendaFacts { display: grid; gap: 1rem; margin: 1.4rem 0 0; padding-top: 1rem; border-top: 1px solid var(--inv-border); }
+@media (min-width: 560px) { .agendaFacts { grid-template-columns: 1fr 1fr; } }
+.agendaFacts dd { margin: .3rem 0 0; font-size: 1.05rem; }
+.textLink { display: inline-block; margin-top: 1.2rem; color: var(--inv-fg); font: 400 1.05rem var(--inv-font-accent); letter-spacing: .12em; text-transform: uppercase; text-decoration: underline; text-decoration-color: var(--inv-accent); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+/* ── Venue ── */
+.maps { display: grid; gap: 2rem; margin-top: 2rem; }
+@media (min-width: 800px) { .maps { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
+.maps figure { margin: 0; }
+.map { width: 100%; aspect-ratio: 16 / 10; border: 0; filter: grayscale(1) contrast(1.05); }
+.maps figcaption { display: flex; gap: .8rem; margin-top: .7rem; }
+.maps b { font: 600 1.15rem var(--inv-font-heading); }
+
+/* ── Running order ── */
+.running { margin: 2rem 0 0; padding: 0; list-style: none; }
+.running li { display: grid; grid-template-columns: 6.5rem 1fr; gap: .2rem 1.4rem; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--inv-border); }
+.running time { grid-row: span 2; font: 400 clamp(1.6rem, 4vw, 2.2rem)/1 var(--inv-font-accent); color: var(--inv-accent); }
+.running p { margin: 0; font: 600 clamp(1.3rem, 3vw, 1.8rem)/1.15 var(--inv-font-heading); }
+.running .caption { margin: 0; }
+@media (min-width: 900px) { .running li { grid-template-columns: 8rem 1fr 18rem; } .running time { grid-row: auto; } }
+
+/* ── Portfolio ── */
+.portfolioSec { max-width: 84rem; margin-inline: auto; padding: clamp(4rem, 9vw, 6.5rem) var(--pad); }
+.portfolio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem 1rem; margin-top: 2.4rem; }
+@media (min-width: 900px) { .portfolio { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2rem 1.4rem; } }
+.folio { margin: 0; }
+.folio figcaption { display: flex; align-items: center; gap: .6rem; margin-top: .6rem; font-size: .82rem; color: var(--grey); }
+.folioPhoto { aspect-ratio: 4 / 5; }
+.folio:nth-child(1) { grid-column: 1 / -1; }
+.folio:nth-child(1) .folioPhoto { aspect-ratio: 16 / 10; }
+@media (min-width: 900px) {
+  .folio:nth-child(1) { grid-column: span 4; grid-row: span 2; }
+  .folio:nth-child(1) .folioPhoto { aspect-ratio: auto; height: calc(100% - 2.2rem); }
+  .folio:nth-child(2), .folio:nth-child(3) { grid-column: span 2; }
+  .folio:nth-child(4), .folio:nth-child(5) { grid-column: span 3; }
+  .folio:nth-child(4) .folioPhoto, .folio:nth-child(5) .folioPhoto { aspect-ratio: 3 / 2; }
+  .folio:nth-child(n + 6) { grid-column: span 3; }
+}
+
+/* ── RSVP: a tear-out card ── */
+.rsvpSec { padding: clamp(4rem, 9vw, 6.5rem) var(--pad); background: var(--inv-surface); }
+.tearOut { position: relative; max-width: 40rem; margin: 0 auto; padding: clamp(2.4rem, 6vw, 3.4rem) clamp(1.4rem, 5vw, 3rem); background: var(--inv-bg); outline: 2px dashed var(--inv-fg); outline-offset: 10px; }
+.scissors { position: absolute; top: -1.95rem; inset-inline-start: 1.4rem; padding-inline: .3rem; background: var(--inv-surface); font-size: 1.4rem; line-height: 1; }
+.rsvpTitle { margin: .5rem 0 0; font: italic 400 clamp(3rem, 9vw, 5.4rem)/.95 var(--inv-font-heading); color: var(--inv-accent); }
+.deadline { margin: .8rem 0 0; font: 400 1.4rem var(--inv-font-accent); letter-spacing: .1em; text-transform: uppercase; }
+.tearOut > p:not(.label):not(.deadline) { max-width: 30rem; }
+.button { display: inline-block; margin-top: 1.4rem; padding: 1rem 1.8rem; background: var(--inv-fg); color: var(--inv-bg); font: 400 1.15rem var(--inv-font-accent); letter-spacing: .14em; text-decoration: none; text-transform: uppercase; transition: background .3s ease, color .3s ease; }
+.button:hover { background: var(--inv-accent); color: var(--inv-accent-fg); }
+
+/* ── FAQ as an interview ── */
+.interview { display: grid; gap: 1.6rem; margin-top: 2rem; max-width: 50rem; }
+.q { margin: 0; font: 600 1.35rem/1.3 var(--inv-font-heading); }
+.q::before { content: "Q "; font: 400 1.5rem var(--inv-font-accent); color: var(--inv-accent); }
+.q:dir(rtl)::before { content: "س "; }
+.a { margin: .4rem 0 0; white-space: pre-line; }
+.a::before { content: "A "; font: 400 1.25rem var(--inv-font-accent); color: var(--grey); }
+.a:dir(rtl)::before { content: "ج "; }
+
+/* ── Back cover ── */
+.back { position: relative; display: grid; align-items: end; min-height: 90svh; padding: clamp(2rem, 6vw, 4rem) var(--pad); overflow: hidden; color: var(--inv-bg); }
+.backPhoto { position: absolute !important; inset: 0; }
+.backText { position: relative; max-width: 46rem; }
+.backTitle { margin: .6rem 0; font: italic 400 clamp(3rem, 9vw, 7rem)/.92 var(--inv-font-heading); letter-spacing: -.03em; }
+
+/* ── Footer ── */
+.footer { display: grid; justify-items: center; gap: .4rem; padding: 2.6rem var(--pad) 3rem; text-align: center; border-top: 6px solid var(--rule); }
+.footMast { font-size: 3.6rem; }
+/* An odd photo out closes the spread full width instead of sitting alone. */
+.folio:last-child:nth-child(even) { grid-column: 1 / -1; }
+.folio:last-child:nth-child(even) .folioPhoto { aspect-ratio: 21 / 9; }
+@media (min-width: 900px) {
+  .folio:last-child:nth-child(even) { grid-column: 1 / -1; }
+  .folio:nth-child(7):last-child { grid-column: span 3; }
+  .folio:nth-child(7):last-child .folioPhoto { aspect-ratio: 4 / 5; }
+}

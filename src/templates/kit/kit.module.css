@@ -47,6 +47,19 @@
 .root[data-fx="on"] [data-k="zoom"]:not([data-in]) { opacity: .001; }
 .root[data-fx="on"] [data-k="zoom"] { transition-property: opacity; transition-duration: calc(var(--k-dur) * .8); }
 
+/* Line art that draws itself: paths marked data-draw with pathLength="1" */
+.root[data-fx="on"] [data-k="draw"] [data-draw] { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset calc(var(--k-dur) * 2.2) var(--k-ease); transition-delay: calc(var(--d, 0) * 1ms); }
+.root[data-fx="on"] [data-k="draw"][data-in] [data-draw] { stroke-dashoffset: 0; }
+.root[data-fx="on"] [data-k="draw"] [data-draw-fill] { opacity: 0; transition: opacity var(--k-dur) ease; transition-delay: calc(var(--k-dur) + var(--d, 0) * 1ms); }
+.root[data-fx="on"] [data-k="draw"][data-in] [data-draw-fill] { opacity: 1; }
+
+/* A rubber stamp landing: big and tilted, then pressed flat */
+.root[data-fx="on"] [data-k="stamp"] { transition-timing-function: cubic-bezier(.3, 1.6, .5, 1); transition-duration: calc(var(--k-dur) * .6); }
+.root[data-fx="on"] [data-k="stamp"]:not([data-in]) { opacity: 0; transform: scale(1.7) rotate(-14deg); }
+
+/* Dropped onto the page: falls with a little turn */
+.root[data-fx="on"] [data-k="drop"]:not([data-in]) { opacity: 0; transform: translateY(calc(var(--k-dist) * -2)) rotate(-6deg); }
+
 @media (prefers-reduced-motion: reduce) {
   .root *, .root *::before, .root *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }

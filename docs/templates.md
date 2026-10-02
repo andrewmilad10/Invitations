@@ -309,3 +309,10 @@ thumbnail to `LAYOUT_HEROES` in `features/marketing/gallery/website-thumb.tsx`.
 | 2 | Old Money | `heritage` | Engraved card under a drawn laurel crest, club-tie stripes, Roman-numeral order of the day, framed prints, a reply card |
 | 3 | Modern Minimal | `minimal` | Swiss grid with column guides, giant light names, numbered sections with self-drawing rules, table details, scroll-snap photo strip, colour-block RSVP |
 | 4 | Italian Summer | `limone` | Fluttering striped awning, swaying lemon branches, arched window on majolica tiles, scalloped card, trattoria-menu schedule, scattered snapshots |
+| 5 | Black Tie | `blacktie` | Night and a scroll-following spotlight, wide Didone capitals, bevel-cornered ivory cards, a centre-line programme; opens on satin lapels that part at the bow tie |
+| 6 | French Garden | `jardin` | A self-drawing parterre plan, trellis frames, a garden-stake date, topiary countdown, stepping-stone schedule, diamond-lattice gallery, seed-packet reply |
+| 7 | Luxury Magazine | `glossy` | A cover with initials masthead, cover lines and barcode; a linked contents page, feature columns, "by the numbers", running order, portfolio, tear-out reply card |
+| 8 | Vintage Paper | `ephemera` | Grainy aged paper, deckled letterpress card, postmark stamp, typed letter, tear-off calendar, mechanical counter, luggage tags, index card, library-card reply |
+
+Extra reveal variants in `kit.module.css`: `draw` (paths marked `data-draw` with
+`pathLength="1"`, fills marked `data-draw-fill`), `stamp` and `drop`.

@@ -408,4 +408,56 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Black Tie: night, a spotlight, wide capitals and a bow tie.
+  blacktie: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg text-center text-inv-fg" style={{ backgroundImage: "radial-gradient(ellipse 50% 60% at 50% 0%, color-mix(in oklab, var(--inv-fg) 16%, transparent), transparent 70%)" }}>
+      <div>
+        <svg viewBox="0 0 120 50" className={cn("mx-auto text-inv-accent", phone ? "w-[16cqw]" : "w-[7cqw]")} fill="none" stroke="currentColor" strokeWidth="2"><path d="M52 19 C40 6 22 2 8 6 C2 16 2 34 8 44 C22 48 40 44 52 31 Z M68 19 C80 6 98 2 112 6 C118 16 118 34 112 44 C98 48 80 44 68 31 Z" /><rect x="52" y="17" width="16" height="16" rx="3" /></svg>
+        <p className={cn("mt-[3%] font-inv-heading uppercase leading-[1.1] tracking-[0.2em]", phone ? "text-[9cqw]" : "text-[4.6cqw]")}>{partnerOne}<br /><span className="font-inv-accent normal-case tracking-normal text-inv-accent">and</span><br />{partnerTwo}</p>
+        <div className={cn("mx-auto my-[4%] border-y border-inv-accent", phone ? "h-[1.2cqw] w-[30cqw]" : "h-[0.6cqw] w-[14cqw]")} />
+        <p className={cn("uppercase tracking-[0.3em]", phone ? "text-[3cqw]" : "text-[1.3cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
+  // French Garden: a parterre plan above italic names.
+  jardin: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg text-center text-inv-fg">
+      <div className="w-full">
+        <svg viewBox="0 0 400 260" className={cn("mx-auto text-inv-accent", phone ? "w-[80%]" : "w-[44%]")} fill="none" stroke="currentColor" strokeWidth="4">
+          <rect x="12" y="12" width="376" height="236" rx="4" />
+          {["", "matrix(-1 0 0 1 400 0)", "matrix(1 0 0 -1 0 260)", "matrix(-1 0 0 -1 400 260)"].map((t) => <path key={t} transform={t || undefined} d="M30 30 H184 V86.9 A46 46 0 0 0 156.9 114 H30 Z" />)}
+          <circle cx="200" cy="130" r="30" />
+        </svg>
+        <p className={cn("mt-[4%] font-inv-heading italic leading-none", phone ? "text-[11cqw]" : "text-[5.4cqw]")}>{partnerOne} <span className="font-inv-accent text-inv-accent">&amp;</span> {partnerTwo}</p>
+        <p className={cn("mt-[3%] uppercase tracking-[0.3em]", phone ? "text-[3cqw]" : "text-[1.3cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
+  // Luxury Magazine: a cover with the initials as masthead.
+  glossy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 text-inv-bg">
+      <HeroPhoto className="inset-0" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.45),transparent_35%,transparent_55%,rgb(0_0_0/0.6))]" />
+      <p className={cn("absolute inset-x-0 top-[3%] text-center font-inv-heading font-semibold uppercase leading-none tracking-[-0.04em]", phone ? "text-[34cqw]" : "text-[17cqw]")}>{partnerOne[0]}<i className="font-normal text-inv-accent">&amp;</i>{partnerTwo[0]}</p>
+      <div className={cn("absolute start-[5%] bottom-[6%]", phone ? "end-[5%]" : "end-[40%]")}>
+        <p className={cn("inline-block bg-inv-accent px-[1%] font-inv-accent uppercase text-inv-accent-fg", phone ? "text-[3.6cqw]" : "text-[1.6cqw]")}>The wedding issue</p>
+        <p className={cn("font-inv-heading italic leading-none", phone ? "text-[10cqw]" : "text-[5cqw]")}>{partnerOne} &amp; {partnerTwo}</p>
+        <p className={cn(phone ? "text-[3cqw]" : "text-[1.4cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
+  // Vintage Paper: a deckled card, a snapshot and a postmark.
+  ephemera: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg">
+      <div className={cn("absolute -rotate-2 bg-inv-surface text-center shadow-[0_2cqw_3cqw_-1.5cqw_rgb(0_0_0/0.35)]", phone ? "inset-x-[8%] top-[8%] py-[10%]" : "start-[8%] top-[14%] w-[48%] py-[6%]")}>
+        <p className={cn("font-inv-body", phone ? "text-[2.8cqw]" : "text-[1.2cqw]")}>— You are invited —</p>
+        <p className={cn("font-inv-heading italic leading-tight", phone ? "text-[11cqw]" : "text-[5cqw]")}>{partnerOne}<br /><span className="font-inv-accent text-[0.45em] text-inv-accent">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("font-inv-body", phone ? "text-[2.8cqw]" : "text-[1.2cqw]")}>{dateLabel}</p>
+      </div>
+      <div className={cn("absolute rotate-3 bg-inv-surface p-[1.2%] pb-[4%] shadow-[0_2cqw_3cqw_-1.5cqw_rgb(0_0_0/0.35)]", phone ? "bottom-[6%] end-[10%] w-[48%]" : "end-[10%] top-[18%] w-[28%]")}>
+        <div className="relative aspect-[4/5]"><HeroPhoto className="inset-0 sepia-[.5]" /></div>
+      </div>
+      <span className={cn("absolute grid -rotate-12 place-items-center rounded-full border-2 border-inv-accent font-inv-heading text-inv-accent opacity-80", phone ? "bottom-[30%] start-[8%] size-[22cqw] text-[3cqw]" : "bottom-[10%] start-[46%] size-[11cqw] text-[1.6cqw]")}>{dateLabel}</span>
+    </div>
+  ),
 };

@@ -1,0 +1,169 @@
+/* 6 · French Garden. Colours only from --inv-*; neutral rgb() for shadows. */
+
+.root {
+  --k-dur: 1.3s;
+  --k-ease: cubic-bezier(.25, .8, .25, 1);
+  --k-dist: 24px;
+  --k-step: 110ms;
+  --pad: clamp(1.25rem, 5vw, 3.5rem);
+  --box: var(--inv-accent);
+  --flower: var(--inv-muted);
+  --lime: color-mix(in oklab, var(--inv-accent) 14%, var(--inv-surface));
+  --treillage:
+    repeating-linear-gradient(45deg, transparent 0 13px, color-mix(in oklab, var(--inv-accent) 60%, transparent) 13px 15px),
+    repeating-linear-gradient(-45deg, transparent 0 13px, color-mix(in oklab, var(--inv-accent) 60%, transparent) 13px 15px);
+  position: relative;
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font: 400 1.18rem/1.65 var(--inv-font-body);
+}
+.root [data-grade] { filter: saturate(.92) brightness(1.03) sepia(.06); }
+
+.center { text-align: center; }
+.kicker { margin: 0; font-size: .78rem; letter-spacing: .32em; text-transform: uppercase; color: var(--box); }
+.script { margin: 0; font: 400 clamp(1.8rem, 4vw, 2.3rem)/1.15 var(--inv-font-accent); color: var(--box); }
+.h2 { margin: .3rem 0 0; font: italic 400 clamp(2rem, 5.2vw, 3.3rem)/1.15 var(--inv-font-heading); text-wrap: balance; }
+.h3 { margin: .2rem 0 0; font: italic 400 clamp(1.7rem, 4vw, 2.3rem)/1.15 var(--inv-font-heading); }
+.small { margin: .3rem 0 0; font-size: 1rem; color: color-mix(in oklab, var(--inv-fg) 72%, var(--inv-bg)); }
+.lead { max-width: 34rem; margin: 1.2rem auto 0; font-size: 1.25rem; }
+.sign { margin: 1.4rem 0 0; font: 400 2.1rem/1.1 var(--inv-font-accent); color: var(--box); }
+.sec { max-width: 70rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.prose > p + p { margin-top: .9rem; }
+
+/* Line art */
+.parterre { display: block; width: 100%; height: auto; overflow: visible; }
+.hedge { fill: none; stroke: var(--box); stroke-width: 2.4; stroke-linejoin: round; }
+.bed { fill: color-mix(in oklab, var(--box) 8%, transparent); }
+.scroll { fill: none; stroke: color-mix(in oklab, var(--flower) 85%, var(--inv-fg)); stroke-width: 1.3; stroke-linecap: round; }
+.water { fill: color-mix(in oklab, var(--flower) 35%, var(--inv-surface)); }
+.topiary { fill: var(--box); }
+.sprig { display: block; width: 3.6rem; margin: 0 auto .6rem; color: var(--box); }
+
+/* ── Hero: the parterre and the names ── */
+.hero { display: grid; justify-items: center; gap: 0; min-height: 100svh; padding: clamp(2.4rem, 6vw, 4rem) var(--pad) clamp(3rem, 8vw, 5rem); text-align: center; align-content: center; }
+.heroPlan { width: min(100%, 44rem); margin: 1.6rem 0 .4rem; }
+.names { display: grid; margin: 0; font: italic 400 clamp(3rem, 10vw, 6.4rem)/1 var(--inv-font-heading); }
+.amp { margin: .1em 0 .05em; font: 400 .6em/1 var(--inv-font-accent); color: var(--box); }
+.heroDate { display: grid; gap: .2rem; margin: 1.6rem 0 0; font-size: .86rem; letter-spacing: .3em; text-transform: uppercase; }
+.heroDate span { letter-spacing: .2em; color: color-mix(in oklab, var(--inv-fg) 70%, var(--inv-bg)); }
+.tagline { max-width: 28rem; margin: 1.2rem auto 0; font-style: italic; }
+
+/* ── Couple: a photo behind a trellis ── */
+.couple { display: grid; gap: 3rem; align-items: center; max-width: 68rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); text-align: center; }
+@media (min-width: 900px) { .couple { grid-template-columns: 1fr 1fr; gap: 5rem; } }
+.trellis { padding: 22px; background: var(--treillage), var(--lime); box-shadow: inset 0 0 0 3px var(--box), inset 0 0 0 7px var(--inv-surface), inset 0 0 0 8px var(--box); }
+.trellisPhoto { aspect-ratio: 4 / 5; box-shadow: 0 0 0 4px var(--inv-surface); }
+
+/* ── Date: a garden stake ── */
+.dateSec { display: grid; justify-items: center; gap: .6rem; padding: clamp(4rem, 9vw, 6rem) var(--pad); text-align: center; }
+.stake {
+  position: relative; display: grid; justify-items: center; width: 12rem; padding: 1.8rem 1rem 4.4rem; rotate: -3deg;
+  background: var(--inv-surface); border: 2px solid var(--box);
+  clip-path: polygon(0 0, 100% 0, 100% 74%, 50% 100%, 0 74%);
+  filter: drop-shadow(0 16px 18px rgb(0 0 0 / .12));
+}
+.stake::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 2px; height: 26%; background: var(--box); }
+.stakeWeekday { margin: 0; font: 400 1.7rem/1 var(--inv-font-accent); color: var(--box); }
+.stakeDay { margin: .2rem 0; font: italic 400 4.4rem/1 var(--inv-font-heading); }
+.stakeMonth { margin: 0; font-size: .78rem; letter-spacing: .3em; text-transform: uppercase; }
+
+/* ── Countdown: topiary in pots ── */
+.topiaries { display: grid; grid-template-columns: repeat(4, minmax(0, 8.5rem)); justify-content: center; gap: clamp(.6rem, 3vw, 2rem); margin-top: 2.6rem; }
+.topiaryUnit { display: grid; justify-items: center; gap: 0; }
+.topiaryValue {
+  display: grid; place-items: center; width: 100%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, color-mix(in oklab, var(--box) 70%, white), var(--box) 55%, color-mix(in oklab, var(--box) 75%, black));
+  color: var(--inv-accent-fg); font: italic 400 clamp(1.7rem, 6vw, 3rem)/1 var(--inv-font-heading); font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 -6px 14px rgb(0 0 0 / .18);
+}
+.topiaryUnit::after { content: ""; order: 2; width: 2px; height: .8rem; background: color-mix(in oklab, var(--inv-fg) 60%, var(--inv-bg)); }
+.topiaryLabel {
+  order: 3; display: block; width: 72%; padding: .5rem 0 .4rem; text-align: center;
+  background: color-mix(in oklab, var(--flower) 60%, var(--inv-surface)); color: var(--inv-fg);
+  clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%); font-size: clamp(.58rem, 2.2vw, .74rem); letter-spacing: .16em; text-transform: uppercase;
+}
+
+/* ── Story: a diamond-cut photo ── */
+.story { display: grid; gap: 3rem; align-items: center; max-width: 68rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+@media (min-width: 900px) { .story { grid-template-columns: 1.2fr .8fr; gap: 5rem; } }
+.storyText .prose { margin-top: 1.2rem; }
+.quote { margin: 1.8rem 0 0; font: italic 400 clamp(1.3rem, 2.8vw, 1.6rem)/1.45 var(--inv-font-heading); color: var(--box); }
+.quote cite { display: block; margin-top: .5rem; font: normal .78rem var(--inv-font-body); letter-spacing: .24em; text-transform: uppercase; color: var(--inv-fg); }
+.diamondPhoto { width: min(100%, 24rem); margin-inline: auto; aspect-ratio: 1; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+
+/* ── Ceremony / reception: hedge-topped allées ── */
+.alleeSec { padding: clamp(2rem, 5vw, 3rem) var(--pad); }
+.allee { max-width: 34rem; margin: 0 auto; text-align: center; filter: drop-shadow(0 20px 24px rgb(0 0 0 / .08)); }
+.alleeAlt { margin-inline: auto; }
+@media (min-width: 900px) { .allee { margin-inline-start: 12%; } .alleeAlt { margin-inline: auto 12%; } }
+.hedgeTop {
+  display: block; height: 46px; background: var(--box);
+  -webkit-mask: radial-gradient(circle 15px at 15px 24px, black 98%, transparent) 0 0 / 30px 46px repeat-x, linear-gradient(black, black) 0 24px / 100% 22px no-repeat;
+  mask: radial-gradient(circle 15px at 15px 24px, black 98%, transparent) 0 0 / 30px 46px repeat-x, linear-gradient(black, black) 0 24px / 100% 22px no-repeat;
+}
+.alleeBody { padding: 2.2rem 1.6rem 2.4rem; background: var(--inv-surface); border: 1px solid var(--inv-border); border-top: 0; }
+.time { margin: .6rem 0 .2rem; font: italic 400 2rem/1 var(--inv-font-heading); color: var(--box); }
+.venue { margin: .8rem 0 0; font-size: .82rem; letter-spacing: .26em; text-transform: uppercase; }
+.note { max-width: 26rem; margin: 1rem auto 0; font-style: italic; }
+.pill { display: inline-block; margin-top: 1.3rem; padding: .55rem 1.4rem; border: 1px solid var(--box); border-radius: 999px; color: var(--box); font-size: .76rem; letter-spacing: .22em; text-decoration: none; text-transform: uppercase; transition: background .3s ease, color .3s ease; }
+.pill:hover { background: var(--box); color: var(--inv-accent-fg); }
+
+/* ── Venue: maps on trellis ── */
+.maps { display: grid; gap: 2rem; margin-top: 2.4rem; }
+@media (min-width: 800px) { .maps { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
+.mapFig { margin: 0; text-align: center; }
+.mapFrame { padding: 14px; background: var(--treillage), var(--lime); }
+.map { display: block; width: 100%; aspect-ratio: 4 / 3; border: 0; filter: saturate(.6) sepia(.15); }
+.mapFig figcaption { display: grid; margin-top: .8rem; }
+.mapFig b { font: italic 400 1.3rem var(--inv-font-heading); }
+.mapFig span { font-size: 1rem; color: color-mix(in oklab, var(--inv-fg) 72%, var(--inv-bg)); }
+
+/* ── Schedule: a gravel walk of stepping stones ── */
+.walk { position: relative; max-width: 34rem; margin: 2.8rem auto 0; padding: 0; list-style: none; }
+.walk::before { content: ""; position: absolute; inset-block: .6rem; inset-inline-start: 1.15rem; width: 1.2rem; background: radial-gradient(circle, color-mix(in oklab, var(--inv-fg) 30%, transparent) 1.2px, transparent 1.6px) 0 0 / 8px 8px; }
+.walk li { position: relative; padding: 0 0 2rem 4.2rem; }
+.walk li:dir(rtl) { padding: 0 4.2rem 2rem 0; }
+.stone { position: absolute; inset-inline-start: 0; top: -.1rem; width: 3.4rem; height: 2.5rem; border-radius: 52% 48% 44% 56% / 58% 46% 54% 42%; background: var(--inv-surface); border: 2px solid var(--box); rotate: var(--r); }
+.walk time { font: italic 400 1.35rem var(--inv-font-heading); color: var(--box); }
+.walkTitle { margin: .1rem 0 0; font-size: 1.2rem; }
+
+/* ── Gallery: a diamond lattice ── */
+/* The section is the size container, so lattice rows can be a fraction of its width. */
+.gallery { container-type: inline-size; max-width: 64rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.lattice { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 25cqw; margin-top: 3rem; }
+.latticeCell { grid-row: var(--row-m) / span 2; grid-column: var(--col-m) / span 2; padding: 4px; background: var(--box); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.latticePhoto { width: 100%; height: 100%; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+@media (min-width: 800px) {
+  .lattice { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: calc(100cqw / 6); }
+  .latticeCell { grid-row: var(--row-d) / span 2; grid-column: var(--col-d) / span 2; }
+}
+
+/* ── RSVP: a seed packet ── */
+.rsvpSec { padding: clamp(5rem, 11vw, 7.5rem) var(--pad); background: var(--treillage), var(--lime); }
+.packet { position: relative; max-width: 30rem; margin: 0 auto; padding: 4.6rem 2rem 2.6rem; text-align: center; background: var(--inv-surface); box-shadow: 0 30px 50px -30px rgb(0 0 0 / .35); }
+.flap { position: absolute; inset: 0 0 auto; height: 2.6rem; background: color-mix(in oklab, var(--flower) 55%, var(--inv-surface)); clip-path: polygon(0 0, 100% 0, 100% 40%, 50% 100%, 0 40%); }
+.packetKicker { margin: 0; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: var(--box); }
+.packetSprig { width: 5rem; margin: 1rem auto .2rem; }
+.deadline { margin: .8rem 0 0; font: 400 1.7rem var(--inv-font-accent); color: var(--box); }
+.button { display: inline-block; margin-top: 1.6rem; padding: .9rem 2rem; border-radius: 999px; background: var(--box); color: var(--inv-accent-fg); font-size: .8rem; letter-spacing: .22em; text-decoration: none; text-transform: uppercase; transition: transform .3s ease; }
+.button:hover { transform: translateY(-2px); }
+
+/* ── FAQ ── */
+.faqList { max-width: 42rem; margin: 2.4rem auto 0; }
+.qa { border-bottom: 1px solid var(--inv-border); }
+.qa summary { display: flex; align-items: center; gap: .8rem; padding: 1.1rem 0; cursor: pointer; list-style: none; font: italic 400 1.25rem var(--inv-font-heading); }
+.qa summary::-webkit-details-marker { display: none; }
+.qaSprig { flex: none; width: 2rem; margin: 0; transition: rotate .4s ease; }
+.qa[open] .qaSprig { rotate: -24deg; }
+.qa p { margin: 0 0 1.2rem 2.8rem; white-space: pre-line; }
+.qa p:dir(rtl) { margin: 0 2.8rem 1.2rem 0; }
+
+/* ── Closing ── */
+.closing { padding: clamp(5rem, 12vw, 8rem) var(--pad); text-align: center; }
+.fountain { display: block; width: 7rem; margin: 0 auto 1.6rem; }
+.closingTitle { margin: 0; font: italic 400 clamp(2.2rem, 6vw, 3.8rem)/1.15 var(--inv-font-heading); }
+
+/* ── Footer: a strip of trellis ── */
+.footer { position: relative; padding: 3.2rem var(--pad) 3rem; text-align: center; background: var(--inv-surface); }
+.footer::before { content: ""; position: absolute; inset: 0 0 auto; height: 14px; background: var(--treillage), var(--lime); }
+.footerNames { margin: 0; font: italic 400 1.6rem var(--inv-font-heading); }

@@ -29,6 +29,22 @@ const P = {
   limone: { id: "limone", label: "Limone", family: "yellow", colors: c("#fbf6e9", "#fffdf6", "#1d2b57", "#e2b93b", "#1f4fa3", "#fffdf6", "#ecdfb8") },
   terracottaSole: { id: "terracotta-sole", label: "Terracotta sole", family: "orange", colors: c("#fbf1e6", "#fffaf3", "#3a1f14", "#e0a33a", "#b04e2a", "#fffaf3", "#eed9c2") },
   verdeOliva: { id: "verde-oliva", label: "Verde oliva", family: "green", colors: c("#f7f4e6", "#fffef6", "#23301f", "#d9b84a", "#4c6b3c", "#fffef6", "#e3dfc2") },
+  // 5 · Black Tie
+  onyx: { id: "onyx-champagne", label: "Onyx & champagne", family: "black", colors: c("#0e0e10", "#18181c", "#f3efe6", "#a8a197", "#cdb683", "#0e0e10", "#2b2a2e") },
+  midnight: { id: "midnight-silver", label: "Midnight & silver", family: "blue", colors: c("#0b1020", "#141a2e", "#eef1f6", "#9aa3b5", "#c9ced8", "#0b1020", "#252c42") },
+  oxblood: { id: "oxblood-gold", label: "Oxblood & gold", family: "red", colors: c("#140b0d", "#1f1215", "#f4ece4", "#b09a8c", "#c9a25e", "#140b0d", "#33201f") },
+  // 6 · French Garden
+  sageBlush: { id: "sage-blush", label: "Sage & blush", family: "green", colors: c("#f5f3ec", "#fbfaf5", "#233127", "#c99a94", "#4f6b4a", "#fbfaf5", "#dde0d2") },
+  lavande: { id: "lavande", label: "Lavande", family: "purple", colors: c("#f4f2f6", "#fbfafc", "#2b2838", "#a99cc4", "#5b5486", "#fbfafc", "#e0dce8") },
+  buis: { id: "buis-or", label: "Box & gilt", family: "green", colors: c("#f3f1e8", "#faf9f2", "#1f2a1f", "#b9975b", "#2f4a32", "#faf9f2", "#dcd8c6") },
+  // 7 · Luxury Magazine
+  rouge: { id: "rouge", label: "Rouge", family: "red", colors: c("#ffffff", "#f4f1ee", "#0d0d0d", "#7a7a7a", "#c8102e", "#ffffff", "#e2ded9") },
+  noirGold: { id: "noir-gold", label: "Noir & gold", family: "gold", colors: c("#faf8f4", "#f0ebe3", "#111111", "#8a7a5c", "#9a7b3c", "#ffffff", "#e0d9cc") },
+  fuchsia: { id: "fuchsia", label: "Fuchsia", family: "pink", colors: c("#fff8fa", "#fbeef2", "#1a0f14", "#8b6b77", "#c41e66", "#ffffff", "#f0dde4") },
+  // 8 · Vintage Paper
+  sepia: { id: "sepia", label: "Sepia & red ink", family: "neutral", colors: c("#f1e6cf", "#f8f0dd", "#3a2a1c", "#8c6f4e", "#9b3b2a", "#f8f0dd", "#dccaa6") },
+  fadedBlue: { id: "faded-blue", label: "Faded blue ink", family: "blue", colors: c("#ece6d6", "#f6f1e3", "#22303f", "#7b8794", "#2f4f78", "#f6f1e3", "#d6ccb4") },
+  oliveInk: { id: "olive-ink", label: "Olive ink", family: "green", colors: c("#ede5cf", "#f6efdc", "#2c2a1d", "#8a8257", "#5d6332", "#f6efdc", "#d8cda9") },
 } satisfies Record<string, Palette>;
 
 export const KIT_MANIFESTS: TemplateManifest[] = [
@@ -76,5 +92,53 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     palettes: [P.limone, P.terracottaSole, P.verdeOliva],
     fonts: { heading: "fraunces", body: "jost", accent: "allura" },
     card: { layout: "arch-panel" },
+  }),
+  kitTemplate(
+    "blacktie",
+    {
+      id: "black-tie",
+      name: "Black Tie",
+      tagline: "An evening affair under a spotlight.",
+      description:
+        "Opens on a pair of satin lapels that part when guests tap the bow tie. Inside: your names in wide-set capitals under a soft spotlight, champagne hairlines, bevel-cornered ivory cards for the ceremony and the reply, and a programme strung on a single line.",
+      categories: ["luxury", "elegant", "modern", "typography"],
+      palettes: [P.onyx, P.midnight, P.oxblood],
+      fonts: { heading: "didone", body: "jost", accent: "pinyon" },
+      card: { layout: "refined" },
+    },
+    { opening: true },
+  ),
+  kitTemplate("jardin", {
+    id: "french-garden",
+    name: "French Garden",
+    tagline: "A formal parterre, trellis and topiary.",
+    description:
+      "A French formal garden seen from above draws itself in box-hedge lines around a fountain. Photos sit behind trellis, the date is written on a garden stake, the countdown grows in clipped topiary and the day is a walk of stepping stones.",
+    categories: ["botanical", "greenery", "outdoor", "elegant"],
+    palettes: [P.sageBlush, P.lavande, P.buis],
+    fonts: { heading: "baskerville", body: "cormorant", accent: "greatvibes" },
+    card: { layout: "framed" },
+  }),
+  kitTemplate("glossy", {
+    id: "luxury-magazine",
+    name: "Luxury Magazine",
+    tagline: "Your wedding as a glossy cover story.",
+    description:
+      "A full-bleed cover with your initials as the masthead, cover lines and a barcode. Inside: a contents page that links to every section, a feature in columns with a pull quote, the countdown 'by the numbers', a running order, a portfolio spread and a tear-out reply card.",
+    categories: ["photo", "modern", "luxury", "typography"],
+    palettes: [P.rouge, P.noirGold, P.fuchsia],
+    fonts: { heading: "playfair", body: "inter", accent: "bebas" },
+    card: { layout: "photo-overlay" },
+  }),
+  kitTemplate("ephemera", {
+    id: "vintage-paper",
+    name: "Vintage Paper",
+    tagline: "Letterpress, typewriter and an inked postmark.",
+    description:
+      "A box of old paper things: a deckle-edged letterpress card with a postmark that thumps down, a typed letter under a paperclip, a tear-off calendar page, luggage tags for the ceremony and party, a ruled index card for the day, deckled snapshots and a library card for replies.",
+    categories: ["vintage", "rustic", "romantic", "whimsical"],
+    palettes: [P.sepia, P.fadedBlue, P.oliveInk],
+    fonts: { heading: "oldstandard", body: "spacemono", accent: "homemade" },
+    card: { layout: "torn-photo" },
   }),
 ];

@@ -20,6 +20,10 @@ const Romance = dynamic(() => import("./kit/romance/Renderer"));
 const Heritage = dynamic(() => import("./kit/heritage/Renderer"));
 const Minimal = dynamic(() => import("./kit/minimal/Renderer"));
 const Limone = dynamic(() => import("./kit/limone/Renderer"));
+const BlackTie = dynamic(() => import("./kit/blacktie/Renderer"));
+const Jardin = dynamic(() => import("./kit/jardin/Renderer"));
+const Glossy = dynamic(() => import("./kit/glossy/Renderer"));
+const Ephemera = dynamic(() => import("./kit/ephemera/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
 const Showpiece = dynamic(() => import("./showpiece/Renderer"));
@@ -51,6 +55,10 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   heritage: Heritage,
   minimal: Minimal,
   limone: Limone,
+  blacktie: BlackTie,
+  jardin: Jardin,
+  glossy: Glossy,
+  ephemera: Ephemera,
 };
 
 export function ClientInvitationRenderer({ model }: { model: InvitationModel }) {

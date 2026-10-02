@@ -4,7 +4,11 @@ import CinematicRenderer from "./cinematic/Renderer";
 import EditorialRenderer from "./editorial/Renderer";
 import EssentialsRenderer from "./essentials/Renderer";
 import GalerieRenderer from "./galerie/Renderer";
+import BlackTieRenderer from "./kit/blacktie/Renderer";
+import EphemeraRenderer from "./kit/ephemera/Renderer";
+import GlossyRenderer from "./kit/glossy/Renderer";
 import HeritageRenderer from "./kit/heritage/Renderer";
+import JardinRenderer from "./kit/jardin/Renderer";
 import LimoneRenderer from "./kit/limone/Renderer";
 import MinimalRenderer from "./kit/minimal/Renderer";
 import RomanceRenderer from "./kit/romance/Renderer";
@@ -42,6 +46,10 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   heritage: HeritageRenderer,
   minimal: MinimalRenderer,
   limone: LimoneRenderer,
+  blacktie: BlackTieRenderer,
+  jardin: JardinRenderer,
+  glossy: GlossyRenderer,
+  ephemera: EphemeraRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */
