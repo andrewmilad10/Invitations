@@ -4,6 +4,10 @@ import CinematicRenderer from "./cinematic/Renderer";
 import EditorialRenderer from "./editorial/Renderer";
 import EssentialsRenderer from "./essentials/Renderer";
 import GalerieRenderer from "./galerie/Renderer";
+import HeritageRenderer from "./kit/heritage/Renderer";
+import LimoneRenderer from "./kit/limone/Renderer";
+import MinimalRenderer from "./kit/minimal/Renderer";
+import RomanceRenderer from "./kit/romance/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -34,6 +38,10 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   monogram: EssentialsRenderer,
   split: EssentialsRenderer,
   modern: EssentialsRenderer,
+  romance: RomanceRenderer,
+  heritage: HeritageRenderer,
+  minimal: MinimalRenderer,
+  limone: LimoneRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */

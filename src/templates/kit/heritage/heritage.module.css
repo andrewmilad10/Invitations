@@ -1,0 +1,143 @@
+/* 2 · Old Money. Colours only from --inv-*; neutral rgb() for shades. */
+
+.root {
+  --k-dur: 1.9s;
+  --k-ease: cubic-bezier(.25, .1, .25, 1);
+  --k-dist: 14px;
+  --k-step: 160ms;
+  --gold: var(--inv-muted);
+  --pad: clamp(1.4rem, 6vw, 4rem);
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font-family: var(--inv-font-body);
+  font-size: 1.08rem;
+}
+.root [data-grade] { filter: sepia(.18) saturate(.86) contrast(1.02); }
+
+.center { text-align: center; }
+.caps { margin: 0; font: 400 .74rem/1.6 var(--inv-font-accent); letter-spacing: .32em; text-transform: uppercase; }
+.italic { margin: .5rem 0 0; font-style: italic; line-height: 1.6; }
+.small { display: block; margin: .3rem 0 0; font-size: .9rem; color: color-mix(in oklab, var(--inv-fg) 70%, var(--inv-bg)); }
+.h2 { margin: .6rem 0 0; font: 400 clamp(2rem, 5vw, 3rem)/1.1 var(--inv-font-heading); letter-spacing: .02em; text-wrap: balance; }
+.title { text-align: center; margin-bottom: 2.4rem; }
+.divider { display: block; width: 7.5rem; margin: 1.2rem auto 0; color: var(--gold); }
+.lead { max-width: 34rem; margin: 0 auto; text-align: center; font-size: 1.18rem; line-height: 1.8; }
+.signature { margin: 1.8rem 0 0; text-align: center; font: italic 1.5rem var(--inv-font-heading); color: var(--inv-accent); }
+.prose { max-width: 36rem; margin: 2rem auto 0; line-height: 1.85; }
+.prose > p + p { margin-top: 1rem; }
+.narrow { max-width: 46rem; margin-inline: auto; padding: clamp(5rem, 11vw, 8rem) var(--pad); }
+.wide { max-width: 72rem; margin-inline: auto; padding: clamp(5rem, 11vw, 8rem) var(--pad); }
+
+/* The club-tie band */
+.stripes {
+  height: 2.4rem;
+  background: repeating-linear-gradient(-45deg, var(--inv-accent) 0 14px, var(--gold) 14px 17px, var(--inv-accent) 17px 30px, var(--inv-bg) 30px 33px);
+  opacity: .95;
+}
+
+/* ── Hero: the engraved card ── */
+.hero { padding-bottom: clamp(4rem, 10vw, 7rem); }
+.card {
+  position: relative; max-width: 40rem; margin: clamp(2.5rem, 7vw, 5rem) auto 0; padding: clamp(2.6rem, 7vw, 4.4rem) clamp(1.4rem, 5vw, 3.6rem);
+  text-align: center; background: var(--inv-surface); outline: 1px solid var(--gold); outline-offset: -10px;
+  box-shadow: inset 0 0 0 14px var(--inv-surface), inset 0 0 0 15px color-mix(in oklab, var(--gold) 55%, transparent), 0 30px 60px -40px rgb(0 0 0 / .35);
+  margin-inline: max(var(--pad), calc(50% - 20rem));
+}
+.mono { display: flex; align-items: baseline; gap: .1em; font: 400 2.4rem/1 var(--inv-font-heading); color: var(--inv-accent); letter-spacing: .04em; }
+.mono i { font-size: .55em; color: var(--gold); }
+.names { margin: 1.6rem 0 0; font: 500 clamp(2.1rem, 7vw, 3.4rem)/1.12 var(--inv-font-heading); letter-spacing: .14em; text-transform: uppercase; color: var(--inv-accent); }
+.names span { display: block; }
+.names i { display: block; margin: .5rem 0; font: italic 400 1.3rem var(--inv-font-heading); letter-spacing: 0; text-transform: none; color: var(--inv-fg); }
+.hero .caps { margin-top: 1.4rem; }
+.dateLine { margin: 1.8rem 0 0; font: italic 1.35rem var(--inv-font-heading); }
+.venue { display: block; margin: .6rem 0 0; font: 400 .9rem/1.6 var(--inv-font-accent); letter-spacing: .22em; text-transform: uppercase; }
+.matted { max-width: 40rem; margin: 3.2rem auto 0; padding: 16px; background: var(--inv-surface); box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 50%, transparent), 0 30px 60px -40px rgb(0 0 0 / .4); margin-inline: max(var(--pad), calc(50% - 20rem)); }
+.heroPhoto { aspect-ratio: 3 / 2; outline: 1px solid color-mix(in oklab, var(--gold) 60%, transparent); outline-offset: 6px; }
+
+/* The laurel crest */
+.laurel { position: relative; width: 9.5rem; aspect-ratio: 1; margin: 0 auto; display: grid; place-items: center; }
+.laurelArt { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--gold); overflow: visible; }
+.stem { fill: none; stroke: currentColor; stroke-width: .7; }
+.leaves path { fill: currentColor; opacity: .9; }
+.laurelInner { position: relative; }
+.root[data-fx="on"] [data-k="draw"] .stem { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.4s var(--k-ease); }
+.root[data-fx="on"] [data-k="draw"][data-in] .stem { stroke-dashoffset: 0; }
+.root[data-fx="on"] [data-k="draw"] .leaves path { opacity: 0; transition: opacity .8s ease; transition-delay: calc(.6s + var(--i) * 110ms); }
+.root[data-fx="on"] [data-k="draw"][data-in] .leaves path { opacity: .9; }
+
+/* ── Date ── */
+.dateSec { text-align: center; }
+.bigDate { margin: 1rem 0 0; font: 400 clamp(2rem, 6vw, 3.4rem)/1.15 var(--inv-font-heading); color: var(--inv-accent); }
+.yearRoman { margin: .8rem 0 0; font: 400 1rem var(--inv-font-accent); letter-spacing: .5em; color: var(--gold); }
+
+/* ── Countdown on the house colour ── */
+.band { padding: 4.4rem var(--pad); text-align: center; background: var(--inv-accent); color: var(--inv-accent-fg); }
+.clock { display: flex; justify-content: center; flex-wrap: wrap; gap: clamp(1.2rem, 5vw, 3.4rem); margin-top: 1.6rem; }
+.unit { display: grid; gap: .5rem; position: relative; }
+.unit + .unit::before { content: ""; position: absolute; inset-inline-start: calc(clamp(1.2rem, 5vw, 3.4rem) / -2 - 2px); top: 1.1rem; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+.value { font: 400 clamp(2.4rem, 7vw, 3.6rem)/1 var(--inv-font-heading); font-variant-numeric: tabular-nums oldstyle-nums; }
+.unitLabel { font: 400 .68rem var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; opacity: .8; }
+
+/* ── Story: an oval portrait in a mat ── */
+.ovalMat { width: min(17rem, 70vw); margin: 0 auto; padding: 12px; border-radius: 50%; background: var(--inv-surface); box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 55%, transparent), 0 24px 40px -30px rgb(0 0 0 / .45); }
+.oval { aspect-ratio: 4 / 5; border-radius: 50%; }
+.quote { max-width: 32rem; margin: 2.4rem auto 0; text-align: center; font: italic 1.45rem/1.45 var(--inv-font-heading); }
+.quote cite { display: block; margin-top: .8rem; font: normal .72rem var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+
+/* ── Ceremony / reception: place cards ── */
+.placeWrap { padding: clamp(2.5rem, 6vw, 4rem) var(--pad); }
+.placeCard {
+  max-width: 30rem; margin: 0 auto; padding: 2.6rem 2rem; text-align: center; background: var(--inv-surface);
+  border: 3px double color-mix(in oklab, var(--gold) 80%, transparent); box-shadow: 0 24px 40px -34px rgb(0 0 0 / .45);
+}
+.time { margin: 1.2rem 0 0; font: 400 2.2rem/1 var(--inv-font-heading); color: var(--inv-accent); }
+.smallLink { display: inline-block; margin-top: 1.4rem; font: .74rem var(--inv-font-accent); letter-spacing: .28em; text-transform: uppercase; color: var(--inv-accent); text-decoration: none; border-bottom: 1px solid var(--gold); padding-bottom: .2rem; }
+
+/* ── Venue ── */
+.maps { display: grid; gap: 2rem; }
+@media (min-width: 900px) { .maps { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); } }
+.mapFrame { margin: 0; padding: 12px; background: var(--inv-surface); box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 50%, transparent); text-align: center; }
+.mapFrame figcaption { padding-top: 1rem; }
+.map { width: 100%; aspect-ratio: 16 / 10; border: 0; filter: sepia(.3) saturate(.7); }
+
+/* ── Order of the day ── */
+.programme { margin: 0; padding: 0; list-style: none; text-align: center; }
+.programme li { display: grid; justify-items: center; gap: .15rem; padding: 1.3rem 0; }
+.programme li + li { border-top: 1px solid color-mix(in oklab, var(--gold) 40%, transparent); }
+.numeral { font: 400 .8rem var(--inv-font-accent); letter-spacing: .3em; color: var(--gold); }
+.progTitle { font: 400 1.5rem/1.2 var(--inv-font-heading); }
+
+/* ── Gallery: framed prints ── */
+.prints { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2.2rem); }
+@media (min-width: 900px) { .prints { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.print { padding: clamp(8px, 1.6vw, 18px); background: var(--inv-surface); box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold) 45%, transparent), 0 20px 40px -30px rgb(0 0 0 / .45); }
+.printPhoto { aspect-ratio: 4 / 5; outline: 1px solid color-mix(in oklab, var(--gold) 50%, transparent); outline-offset: 4px; }
+.print:nth-child(even) .printPhoto { aspect-ratio: 1; }
+
+/* ── RSVP: the reply card ── */
+.rsvp { padding: clamp(5rem, 11vw, 8rem) var(--pad); background: color-mix(in oklab, var(--inv-bg) 92%, var(--inv-fg)); }
+.replyCard { max-width: 30rem; margin: 0 auto; padding: 2.8rem 2.2rem; text-align: center; background: var(--inv-surface); outline: 1px solid var(--gold); outline-offset: -9px; box-shadow: 0 30px 50px -36px rgb(0 0 0 / .5); }
+.formLines { margin: 1.8rem 0 .6rem; text-align: start; font-style: italic; }
+.formLines p { margin: .7rem 0 0; }
+.formLines span { display: inline-block; width: 70%; border-bottom: 1px solid color-mix(in oklab, var(--inv-fg) 40%, transparent); }
+.button { display: inline-block; margin-top: 1.8rem; padding: .95rem 2.2rem; background: var(--inv-accent); color: var(--inv-accent-fg); text-decoration: none; font: .74rem var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; transition: background .4s; }
+.button:hover { background: color-mix(in oklab, var(--inv-accent) 85%, black); }
+
+/* ── FAQ ── */
+.faqList { display: grid; gap: 2rem; margin: 0; }
+@media (min-width: 900px) { .faqList { grid-template-columns: 1fr 1fr; gap: 2.4rem 4rem; } }
+.faqList dt { color: var(--inv-accent); }
+.faqList dd { margin: .6rem 0 0; line-height: 1.7; white-space: pre-line; }
+
+/* ── Closing ── */
+.closing { padding-bottom: clamp(5rem, 10vw, 7rem); text-align: center; }
+.smallLaurel { width: 7rem; margin-top: 3.6rem; }
+.monoSmall { font: 400 1.6rem var(--inv-font-heading); color: var(--inv-accent); letter-spacing: .1em; }
+.closingTitle { margin: 1.6rem 0 1rem; padding-inline: var(--pad); font: 400 clamp(2rem, 6vw, 3.2rem)/1.15 var(--inv-font-heading); }
+.closing .lead { padding-inline: var(--pad); }
+
+/* ── Footer ── */
+.footer { padding: 3rem var(--pad) 3.6rem; text-align: center; background: var(--inv-accent); color: var(--inv-accent-fg); }
+.footer p { margin: .3rem 0 0; }
+.footer .small { color: color-mix(in oklab, var(--inv-accent-fg) 75%, var(--inv-accent)); }
+.footerMono { font: 400 1.4rem var(--inv-font-heading); letter-spacing: .3em; }

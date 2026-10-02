@@ -1,0 +1,171 @@
+/* 1 · Editorial Romance. Colours only from --inv-*; neutral rgb() for shades. */
+
+.root {
+  --k-dur: 1.5s;
+  --k-ease: cubic-bezier(.16, 1, .3, 1);
+  --k-dist: 44px;
+  --k-step: 110ms;
+  --pad: clamp(1.4rem, 6vw, 6rem);
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+}
+/* photos are black & white by default via the theme photo tone (manifest) */
+
+/* ── Type ── */
+.h2 { margin: 0; font: italic 400 clamp(2.6rem, 6.4vw, 5.2rem)/1 var(--inv-font-heading); letter-spacing: -.01em; text-wrap: balance; }
+.kicker { margin: 0 0 1rem; font: italic 400 1.15rem/1.2 var(--inv-font-accent); color: var(--inv-accent); }
+.mutedLine { display: block; margin: .3rem 0 0; color: color-mix(in oklab, var(--inv-fg) 62%, var(--inv-bg)); font-size: .95rem; }
+.prose { margin-top: 1.8rem; font-size: 1.05rem; line-height: 1.85; }
+.prose > p + p { margin-top: 1rem; }
+.sign { margin: 2rem 0 0; font: italic 1.6rem var(--inv-font-heading); }
+
+/* ── Hero: names invert where they cross the portrait ── */
+.hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; overflow: hidden; }
+.heroPhoto { height: 74svh; width: 100%; }
+.names {
+  position: relative; z-index: 2; margin: -0.62em 0 0; padding-inline: var(--pad);
+  font: italic 400 clamp(4.4rem, 19vw, 13.5rem)/.86 var(--inv-font-heading); letter-spacing: -.02em;
+  color: white; mix-blend-mode: difference;
+}
+.names span { display: block; padding-bottom: .04em; }
+.names .second { padding-inline-start: .9em; }
+.names i { font-size: .62em; }
+.vertical { display: none; }
+.heroMeta { padding: 1.6rem var(--pad) 3rem; font-size: .95rem; letter-spacing: .04em; }
+.rule { display: block; width: 3.5rem; height: 1px; margin-bottom: 1.2rem; background: var(--inv-accent); }
+.tagline { margin: 1rem 0 0; max-width: 24rem; font: italic 1.15rem/1.5 var(--inv-font-accent); }
+
+@media (min-width: 900px) {
+  .hero { display: block; }
+  .heroPhoto { position: absolute; inset-block: 0; inset-inline-end: 0; width: 56%; height: 100%; }
+  .names { position: absolute; inset-inline-start: 0; bottom: 9vh; margin: 0; padding-inline-start: 7vw; font-size: clamp(6rem, 13vw, 14rem); }
+  .vertical {
+    display: block; position: absolute; inset-inline-start: 2.2vw; top: 50%; margin: 0;
+    writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg);
+    font: italic 1rem var(--inv-font-accent); color: var(--inv-accent); letter-spacing: .04em;
+  }
+  .heroMeta { position: absolute; top: 18vh; inset-inline-start: 7vw; width: 28vw; padding: 0; }
+}
+
+/* ── Couple: a letter with a drop cap ── */
+.letter { max-width: 46rem; margin-inline: auto; padding: clamp(6rem, 14vw, 11rem) var(--pad); }
+.letter .h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+.dropcap { margin: 2.2rem 0 0; font-size: clamp(1.15rem, 2vw, 1.35rem); line-height: 1.8; }
+.dropcap::first-letter { float: inline-start; margin: .06em .12em 0 0; font: italic 400 4.6em/.8 var(--inv-font-heading); color: var(--inv-accent); }
+
+/* ── Date ── */
+.dateBlock { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: clamp(1.5rem, 5vw, 4rem); max-width: 60rem; margin-inline: auto; padding: 4rem var(--pad); }
+.bigDay { margin: 0; font: italic 400 clamp(8rem, 24vw, 16rem)/.8 var(--inv-font-heading); color: var(--inv-accent); }
+.dateMonth { margin: 0; font: italic 400 clamp(2rem, 5vw, 3.4rem)/1 var(--inv-font-heading); }
+
+/* ── Countdown ── */
+.countdown { padding: 4rem var(--pad) 6rem; text-align: center; border-block: 1px solid var(--inv-border); }
+.clock { display: flex; justify-content: center; flex-wrap: wrap; }
+.unit { display: grid; gap: .4rem; padding: .6rem clamp(1rem, 4vw, 3rem); border-inline-start: 1px solid var(--inv-border); }
+.unit:first-child { border-inline-start: 0; }
+.value { font: italic 400 clamp(2.8rem, 8vw, 5.4rem)/1 var(--inv-font-heading); font-variant-numeric: tabular-nums; }
+.unitLabel { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: color-mix(in oklab, var(--inv-fg) 60%, var(--inv-bg)); }
+
+/* ── Story ── */
+.story { display: grid; gap: 3rem; max-width: 76rem; margin-inline: auto; padding: clamp(6rem, 12vw, 10rem) var(--pad); }
+.storyFig { margin: 0; }
+.storyPhoto { aspect-ratio: 4 / 5; }
+.storyFig figcaption { margin-top: .8rem; font: italic .95rem var(--inv-font-accent); color: color-mix(in oklab, var(--inv-fg) 60%, var(--inv-bg)); }
+.pull { margin: 2.6rem 0 0; padding-inline-start: 1.6rem; border-inline-start: 2px solid var(--inv-accent); font: italic 400 clamp(1.5rem, 2.6vw, 2.1rem)/1.3 var(--inv-font-heading); }
+.pull cite { display: block; margin-top: .8rem; font: normal .85rem var(--inv-font-body); letter-spacing: .08em; color: color-mix(in oklab, var(--inv-fg) 60%, var(--inv-bg)); }
+@media (min-width: 900px) {
+  .story { grid-template-columns: 5fr 6fr; align-items: center; gap: 6vw; }
+}
+
+/* ── Ceremony / reception: numbered spreads ── */
+.spread { display: grid; gap: 1rem; max-width: 76rem; margin-inline: auto; padding: clamp(4rem, 9vw, 7rem) var(--pad); border-top: 1px solid var(--inv-border); }
+.number { margin: 0; font: italic 400 clamp(6rem, 20vw, 15rem)/.8 var(--inv-font-heading); color: transparent; -webkit-text-stroke: 1px var(--inv-accent); }
+.time { margin: 1.2rem 0 0; font: italic 400 clamp(2.4rem, 6vw, 4.4rem)/1 var(--inv-font-heading); color: var(--inv-accent); }
+.facts { margin-top: 1.6rem; }
+.venue { display: block; font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase; }
+.note { margin: 1rem 0 0; max-width: 30rem; line-height: 1.7; }
+.arrowLink { display: inline-flex; align-items: center; gap: .6rem; margin-top: 1.6rem; padding-bottom: .2rem; border-bottom: 1px solid currentColor; color: var(--inv-fg); text-decoration: none; transition: gap .4s var(--k-ease); }
+.arrowLink::after { content: "→"; }
+.arrowLink:dir(rtl)::after { content: "←"; }
+.arrowLink:hover { gap: 1.2rem; }
+@media (min-width: 900px) {
+  .spread { grid-template-columns: 1fr 1.4fr; align-items: end; gap: 6vw; }
+  .flip .number { order: 2; text-align: end; }
+}
+
+/* ── Venue ── */
+.venueSec { max-width: 76rem; margin-inline: auto; padding: clamp(5rem, 10vw, 8rem) var(--pad); }
+.maps { display: grid; gap: 2rem; margin-top: 2.4rem; }
+.maps figure { margin: 0; }
+.maps figcaption { margin-top: .9rem; }
+.map { width: 100%; aspect-ratio: 16 / 10; border: 0; filter: grayscale(1) contrast(1.05); }
+@media (min-width: 900px) { .maps { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); } }
+
+/* ── Schedule: dotted leaders ── */
+.schedule { max-width: 52rem; margin-inline: auto; padding: clamp(5rem, 10vw, 8rem) var(--pad); }
+.leaders { margin: 2.6rem 0 0; padding: 0; list-style: none; }
+.leaders li { display: flex; align-items: baseline; gap: 1rem; padding: 1.1rem 0; border-bottom: 1px solid var(--inv-border); }
+.leadTitle { font: italic 1.5rem/1.2 var(--inv-font-heading); }
+.leadTitle small { display: block; margin-top: .25rem; font: normal .85rem var(--inv-font-body); color: color-mix(in oklab, var(--inv-fg) 60%, var(--inv-bg)); }
+.dots { flex: 1; min-width: 1.5rem; border-bottom: 1px dotted color-mix(in oklab, var(--inv-fg) 40%, transparent); transform: translateY(-.35rem); }
+.leaders time { font: italic 1.4rem var(--inv-font-heading); color: var(--inv-accent); white-space: nowrap; }
+
+/* ── Gallery: captioned plates in an editorial rhythm ── */
+.gallery { max-width: 84rem; margin-inline: auto; padding: clamp(5rem, 10vw, 8rem) var(--pad); }
+.galleryHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.plates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(.8rem, 2vw, 1.6rem); margin-top: 2.6rem; }
+.plate { margin: 0; }
+.plate figcaption { margin-top: .5rem; font: italic .9rem var(--inv-font-accent); color: color-mix(in oklab, var(--inv-fg) 60%, var(--inv-bg)); }
+.platePhoto { aspect-ratio: 4 / 5; background: color-mix(in oklab, var(--inv-fg) 10%, var(--inv-bg)); }
+.plate:nth-child(3n + 1) { grid-column: span 2; }
+.plate:nth-child(3n + 1) .platePhoto { aspect-ratio: 16 / 10; }
+@media (min-width: 900px) {
+  .plates { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .plate:nth-child(3n + 1) { grid-column: auto; }
+  .plate:nth-child(7n + 1) { grid-column: span 4; }
+  .plate:nth-child(7n + 1) .platePhoto { aspect-ratio: 4 / 3; }
+  .plate:nth-child(7n + 2) { grid-column: span 2; }
+  .plate:nth-child(7n + 2) .platePhoto { aspect-ratio: auto; height: calc(100% - 1.9rem); }
+  .plate:nth-child(7n + 3), .plate:nth-child(7n + 4), .plate:nth-child(7n + 5) { grid-column: span 2; }
+  .plate:nth-child(7n + 6), .plate:nth-child(7n + 7) { grid-column: span 3; }
+  .plate:nth-child(7n + 6) .platePhoto, .plate:nth-child(7n + 7) .platePhoto { aspect-ratio: 3 / 2; }
+}
+
+/* ── RSVP ── */
+.rsvp { padding: clamp(6rem, 14vw, 11rem) var(--pad); text-align: center; background: var(--inv-surface); }
+.rsvpTitle { margin: 0; font: italic 400 clamp(3.4rem, 11vw, 9rem)/.92 var(--inv-font-heading); letter-spacing: -.02em; }
+.rsvpText { max-width: 32rem; margin: 1.6rem auto 0; line-height: 1.7; }
+.replyLink {
+  display: inline-flex; align-items: center; gap: .8rem; margin-top: 2.6rem; padding: 1rem 2.2rem;
+  border-radius: 999px; background: var(--inv-accent); color: var(--inv-accent-fg); text-decoration: none;
+  font-size: .95rem; letter-spacing: .08em; transition: gap .4s var(--k-ease), transform .4s var(--k-ease);
+}
+.replyLink::after { content: "→"; }
+.replyLink:dir(rtl)::after { content: "←"; }
+.replyLink:hover { gap: 1.4rem; transform: translateY(-2px); }
+
+/* ── FAQ: an interview ── */
+.faq { max-width: 52rem; margin-inline: auto; padding: clamp(5rem, 10vw, 8rem) var(--pad); }
+.faq dl { margin: 2.4rem 0 0; }
+.faq dl > div { padding: 1.4rem 0; border-top: 1px solid var(--inv-border); }
+.faq dt { font: italic 1.4rem/1.3 var(--inv-font-heading); }
+.faq dd { margin: .6rem 0 0; line-height: 1.7; white-space: pre-line; }
+.faq b { font-weight: 400; color: var(--inv-accent); }
+
+/* ── Closing ── */
+.closing { position: relative; }
+.closingFrame { position: relative; height: 82svh; overflow: hidden; }
+.closingInner { position: absolute; inset: -12% 0; will-change: transform; }
+.closingPhoto { width: 100%; height: 100%; }
+.closingShade { position: absolute; inset: 0; background: linear-gradient(to top, rgb(0 0 0 / .62), rgb(0 0 0 / .1) 60%); }
+.closingText { position: absolute; inset-inline: 0; bottom: 0; padding: 0 var(--pad) clamp(3rem, 8vh, 6rem); color: white; max-width: 56rem; }
+.closingTitle { margin: 0; font: italic 400 clamp(2.8rem, 8vw, 6.4rem)/.95 var(--inv-font-heading); }
+.closingText p + p { margin-top: 1rem; }
+.closingText .sign { color: white; }
+
+/* ── Footer ── */
+.footer { padding: 3.2rem var(--pad) 4rem; text-align: center; font-size: .85rem; letter-spacing: .1em; color: color-mix(in oklab, var(--inv-fg) 65%, var(--inv-bg)); }
+.footerNames { margin: 0 0 .4rem; font: italic 1.8rem var(--inv-font-heading); letter-spacing: 0; color: var(--inv-fg); }
+
+/* Spacing presets from the editor */
+:global(.group\/sec)[data-spacing="compact"] > section { padding-block: 3.5rem; }

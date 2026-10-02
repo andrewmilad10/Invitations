@@ -1,0 +1,173 @@
+/* 4 · Italian Summer. Colours only from --inv-*; neutral rgb() for shades. */
+
+.root {
+  --k-dur: .95s;
+  --k-ease: cubic-bezier(.34, 1.45, .64, 1);
+  --k-dist: 30px;
+  --k-step: 100ms;
+  --lemon: var(--inv-muted);
+  --leaf: color-mix(in oklab, var(--inv-muted) 42%, var(--inv-accent));
+  --pad: clamp(1.25rem, 5vw, 3.5rem);
+  --tile: radial-gradient(circle at 50% 50%, var(--inv-accent) 0 13%, transparent 14%),
+    radial-gradient(circle at 50% 50%, transparent 0 26%, color-mix(in oklab, var(--inv-accent) 70%, transparent) 27% 30%, transparent 31%),
+    radial-gradient(circle at 0 0, var(--inv-accent) 0 20%, transparent 21%),
+    radial-gradient(circle at 100% 0, var(--inv-accent) 0 20%, transparent 21%),
+    radial-gradient(circle at 0 100%, var(--inv-accent) 0 20%, transparent 21%),
+    radial-gradient(circle at 100% 100%, var(--inv-accent) 0 20%, transparent 21%),
+    conic-gradient(from 45deg at 50% 50%, color-mix(in oklab, var(--lemon) 55%, transparent) 0 6%, transparent 6% 25%, color-mix(in oklab, var(--lemon) 55%, transparent) 25% 31%, transparent 31% 50%, color-mix(in oklab, var(--lemon) 55%, transparent) 50% 56%, transparent 56% 75%, color-mix(in oklab, var(--lemon) 55%, transparent) 75% 81%, transparent 81%),
+    var(--inv-surface);
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font: 400 1.04rem/1.65 var(--inv-font-body);
+}
+.root [data-grade] { filter: saturate(1.08) contrast(1.02) brightness(1.03); }
+
+.center { text-align: center; }
+.hidden { display: none; }
+.script { margin: 0; font: 400 clamp(1.8rem, 4vw, 2.4rem)/1.1 var(--inv-font-accent); color: var(--inv-accent); }
+.h2 { margin: .2rem 0 0; font: italic 500 clamp(2.2rem, 6vw, 3.6rem)/1.05 var(--inv-font-heading); letter-spacing: -.01em; text-wrap: balance; }
+.title { margin-bottom: 2.2rem; text-align: center; }
+.wave { display: block; width: 7rem; height: .9rem; margin: .9rem auto 0; fill: none; stroke: var(--inv-accent); stroke-width: 2; stroke-linecap: round; }
+.lead { max-width: 34rem; margin: 0 auto; font-size: 1.1rem; }
+.sign { margin: 1.4rem 0 0; font: 400 2rem var(--inv-font-accent); color: var(--inv-accent); }
+.small { margin: .3rem 0 0; font-size: .92rem; color: color-mix(in oklab, var(--inv-fg) 72%, var(--inv-bg)); }
+.place { margin: .8rem 0 0; font-size: .82rem; letter-spacing: .2em; text-transform: uppercase; }
+.sec { max-width: 70rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.prose { line-height: 1.85; }
+.prose > p + p { margin-top: 1rem; }
+
+/* ── The awning ── */
+.awning { position: relative; height: clamp(3rem, 8vw, 4.6rem); background: repeating-linear-gradient(90deg, var(--inv-accent) 0 44px, var(--inv-surface) 44px 88px); box-shadow: 0 10px 20px -16px rgb(0 0 0 / .4); z-index: 2; }
+.awning::after {
+  content: ""; position: absolute; top: 100%; inset-inline: 0; height: 22px; background: inherit;
+  -webkit-mask: radial-gradient(circle at 50% 0, #000 70%, transparent 71%) 0 0 / 44px 22px repeat-x;
+  mask: radial-gradient(circle at 50% 0, #000 70%, transparent 71%) 0 0 / 44px 22px repeat-x;
+  transform-origin: top; animation: flutter 5s ease-in-out infinite;
+}
+@keyframes flutter { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.82); } }
+
+/* ── Hero ── */
+.hero { position: relative; overflow: hidden; }
+.heroGrid { display: grid; gap: 2.6rem; align-items: center; max-width: 76rem; margin-inline: auto; padding: clamp(4rem, 10vw, 6rem) var(--pad) clamp(4rem, 10vw, 6.5rem); }
+@media (min-width: 900px) { .heroGrid { grid-template-columns: 1.1fr .9fr; } }
+.heroText { position: relative; text-align: center; }
+.heroBranch { position: absolute; inset-inline-start: -2rem; top: -4.6rem; width: clamp(9rem, 20vw, 13rem); }
+.names { margin: 1rem 0 0; font: italic 400 clamp(3.6rem, 12vw, 7.4rem)/.95 var(--inv-font-heading); letter-spacing: -.02em; color: var(--inv-fg); }
+.and { display: block; margin: .2rem 0; font: 400 .5em/1 var(--inv-font-accent); color: var(--inv-accent); }
+.datePill { display: inline-block; margin: 1.8rem 0 0; padding: .6rem 1.4rem; border-radius: 999px; background: var(--lemon); color: var(--inv-fg); font-weight: 500; letter-spacing: .04em; }
+.tagline { max-width: 26rem; margin: 1.2rem auto 0; font-style: italic; }
+.window { position: relative; padding: 14px; border-radius: 999px 999px 18px 18px; background: var(--tile); background-size: 38px 38px; box-shadow: 0 30px 50px -30px rgb(0 0 0 / .45); }
+.windowPhoto { aspect-ratio: 4 / 5; border-radius: 999px 999px 8px 8px; box-shadow: 0 0 0 4px var(--inv-surface); }
+
+/* The branch and its lemons */
+.branch { display: block; overflow: visible; pointer-events: none; }
+.flipX { transform: scaleX(-1); }
+.stem { fill: none; stroke: color-mix(in oklab, var(--leaf) 70%, black); stroke-width: 2; stroke-linecap: round; }
+.leaf { fill: var(--leaf); }
+.fruit { fill: var(--lemon); stroke: color-mix(in oklab, var(--lemon) 75%, black); stroke-width: .8; }
+.shine { fill: white; opacity: .55; }
+.fruitSwing { animation: sway 4.6s ease-in-out infinite; transform-box: view-box; }
+@keyframes sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+
+/* ── Couple: a scalloped card on tiles ── */
+.tiled { padding: clamp(4.5rem, 11vw, 7.5rem) var(--pad); background: linear-gradient(color-mix(in oklab, var(--inv-bg) 28%, transparent) 0 0), var(--tile); background-size: 88px 88px; }
+/* The scalloped edge: a field of discs behind the card; only the outer row shows. */
+.scallopCard { position: relative; isolation: isolate; max-width: 38rem; margin: 0 auto; padding: 3rem 2rem; text-align: center; }
+/* Inside an isolated card, negative z-index layers paint above its own background, so the fill is a layer too. */
+.scallopCard::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--inv-surface); }
+.scallopCard::before {
+  content: ""; position: absolute; inset: -11px; z-index: -1;
+  background: radial-gradient(circle 11px at 11px 11px, var(--inv-surface) 96%, transparent) 0 0 / 22px 22px;
+  filter: drop-shadow(0 18px 24px rgb(0 0 0 / .18));
+}
+
+/* ── Date: a lemon badge ── */
+.lemonBadge { display: grid; place-items: center; align-content: center; width: 13rem; aspect-ratio: 1.25; margin: 0 auto 1.6rem; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--lemon) 50%, white), var(--lemon) 60%); box-shadow: 0 20px 30px -20px rgb(0 0 0 / .35); }
+.badgeMonth, .badgeYear { font-size: .8rem; letter-spacing: .24em; text-transform: uppercase; }
+.badgeDay { font: italic 500 4rem/1 var(--inv-font-heading); }
+
+/* ── Countdown: ceramic tiles ── */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 8rem)); justify-content: center; gap: clamp(.45rem, 2vw, 1rem); }
+.tile { display: grid; place-items: center; align-content: center; gap: .3rem; width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--inv-surface); box-shadow: inset 0 0 0 5px var(--inv-surface), inset 0 0 0 7px var(--inv-accent), 0 14px 24px -18px rgb(0 0 0 / .5); position: relative; }
+.tile::before { content: ""; position: absolute; inset: 11px; border-radius: 6px; background: var(--tile); background-size: 26px 26px; opacity: .14; }
+.tileValue { position: relative; font: italic 500 clamp(2.2rem, 7vw, 3.2rem)/1 var(--inv-font-heading); color: var(--inv-accent); font-variant-numeric: tabular-nums; }
+.tileLabel { position: relative; font-size: clamp(.56rem, 2.3vw, .7rem); letter-spacing: .14em; text-transform: uppercase; }
+
+/* ── Story: a taped snapshot ── */
+.story { display: grid; gap: 3rem; align-items: center; max-width: 70rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+@media (min-width: 900px) { .story { grid-template-columns: .85fr 1.15fr; gap: 5vw; } .story .title { text-align: start; } .story .wave { margin-inline: 0; } }
+.snapshot { position: relative; margin: 0 auto; width: min(22rem, 80vw); padding: 12px 12px 3.2rem; background: white; rotate: -3deg; box-shadow: 0 24px 40px -24px rgb(0 0 0 / .45); }
+.snapPhoto { aspect-ratio: 4 / 5; }
+.hand { position: absolute; inset-inline: 0; bottom: .7rem; text-align: center; font: 400 1.6rem var(--inv-font-accent); color: var(--inv-accent); }
+.tape { position: absolute; top: -12px; left: 50%; width: 7rem; height: 1.6rem; margin-left: -3.5rem; rotate: 4deg; background: color-mix(in oklab, var(--lemon) 55%, transparent); z-index: 1; }
+.quote { margin: 1.8rem 0 0; font: italic 1.5rem/1.4 var(--inv-font-heading); color: var(--inv-accent); }
+.quote span { font: normal .9rem var(--inv-font-body); color: var(--inv-fg); }
+
+/* ── Ceremony / reception ── */
+.eventSec { padding-block: clamp(2rem, 5vw, 3rem); }
+.eventCard { max-width: 30rem; margin: 0 auto; padding: 2.6rem 1.8rem 2.4rem; text-align: center; background: var(--inv-surface); border-radius: 24px; border: 2px dashed color-mix(in oklab, var(--inv-accent) 45%, transparent); box-shadow: 0 0 0 8px var(--inv-surface), 0 24px 40px -30px rgb(0 0 0 / .45); }
+.icon { width: 3rem; margin: 0 auto .6rem; fill: none; stroke: var(--inv-accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.time { margin: 1rem 0 0; font: italic 500 2.6rem/1 var(--inv-font-heading); color: var(--inv-accent); }
+.pill { display: inline-block; margin-top: 1.4rem; padding: .6rem 1.3rem; border-radius: 999px; background: var(--inv-accent); color: var(--inv-accent-fg); text-decoration: none; font-size: .9rem; transition: transform .3s var(--k-ease); }
+.pill:hover { transform: translateY(-2px) rotate(-1deg); }
+
+/* ── Venue ── */
+.maps { display: grid; gap: 2rem; }
+@media (min-width: 900px) { .maps { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); } }
+.mapArch { margin: 0; padding: 10px; border-radius: 999px 999px 16px 16px; background: var(--tile); background-size: 34px 34px; }
+.map { width: 100%; aspect-ratio: 4 / 3.4; border: 0; border-radius: 999px 999px 10px 10px; }
+.mapArch figcaption { padding: .9rem; margin-top: 10px; border-radius: 10px; background: var(--inv-surface); text-align: center; }
+.mapArch b { display: block; font: italic 500 1.3rem var(--inv-font-heading); }
+.mapArch span { font-size: .9rem; }
+
+/* ── Schedule: a trattoria menu ── */
+.menu { max-width: 34rem; margin: 0 auto; padding: 2.8rem 2rem; background: var(--inv-surface); box-shadow: 0 0 0 1px color-mix(in oklab, var(--inv-accent) 30%, transparent), 0 0 0 8px var(--inv-surface), 0 0 0 9px color-mix(in oklab, var(--inv-accent) 30%, transparent), 0 30px 50px -36px rgb(0 0 0 / .5); }
+.menu ol { margin: 0; padding: 0; list-style: none; }
+.menu li { display: flex; align-items: baseline; gap: .7rem; padding: .7rem 0; }
+.bullet { flex: none; width: .7rem; height: .5rem; border-radius: 50%; background: var(--lemon); box-shadow: 0 0 0 1px color-mix(in oklab, var(--lemon) 70%, black); }
+.menuItem { font: italic 500 1.25rem var(--inv-font-heading); }
+.menuItem small { display: block; font: normal .85rem var(--inv-font-body); color: color-mix(in oklab, var(--inv-fg) 65%, var(--inv-bg)); }
+.menuDots { flex: 1; border-bottom: 2px dotted color-mix(in oklab, var(--inv-accent) 40%, transparent); }
+.menu time { font-weight: 500; color: var(--inv-accent); white-space: nowrap; }
+
+/* ── Gallery: snapshots on the table ── */
+.scatter { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2rem); padding: 1rem 0; }
+@media (min-width: 900px) { .scatter { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.scatterItem { padding: 8px 8px 2rem; background: white; box-shadow: 0 18px 30px -20px rgb(0 0 0 / .5); rotate: -2.5deg; transition: rotate .5s var(--k-ease), translate .5s var(--k-ease), opacity var(--k-dur) var(--k-ease); }
+.scatterItem:nth-child(even) { rotate: 2.5deg; translate: 0 1.2rem; }
+.scatterItem:nth-child(3n) { rotate: -1deg; }
+.scatterItem:hover { rotate: 0deg; translate: 0 -.4rem; }
+.scatterPhoto { aspect-ratio: 1; }
+
+/* ── RSVP: a lemon badge under the awning ── */
+.rsvp { position: relative; background: color-mix(in oklab, var(--lemon) 22%, var(--inv-bg)); }
+.awningSmall { height: 2.6rem; }
+.rsvpInner { max-width: 40rem; margin: 0 auto; padding: clamp(5rem, 12vw, 7rem) var(--pad) clamp(4.5rem, 10vw, 6rem); text-align: center; }
+.rsvpBadge { display: grid; place-items: center; width: min(19rem, 76vw); aspect-ratio: 1; margin: 0 auto 1rem; border-radius: 50%; background: var(--inv-accent); color: var(--inv-accent-fg); box-shadow: 0 0 0 10px color-mix(in oklab, var(--inv-accent) 18%, transparent), 0 30px 40px -24px rgb(0 0 0 / .45); }
+.rsvpBadge span { padding: 0 1.4rem; font: italic 500 clamp(2rem, 6vw, 2.8rem)/1.05 var(--inv-font-heading); }
+.rsvpInner .lead { margin-top: 1rem; }
+.button { display: inline-block; margin-top: 1.8rem; padding: 1rem 2.2rem; border-radius: 999px; background: var(--inv-fg); color: var(--inv-bg); text-decoration: none; font-weight: 500; transition: transform .35s var(--k-ease); }
+.button:hover { transform: scale(1.05) rotate(-1deg); }
+
+/* ── FAQ ── */
+.faqList { max-width: 42rem; margin: 0 auto; display: grid; gap: .8rem; }
+.faqItem { border-radius: 14px; background: var(--inv-surface); box-shadow: 0 10px 20px -18px rgb(0 0 0 / .4); }
+.faqItem summary { display: flex; align-items: center; gap: .9rem; padding: 1.1rem 1.3rem; cursor: pointer; list-style: none; font: italic 500 1.2rem var(--inv-font-heading); }
+.faqItem summary::-webkit-details-marker { display: none; }
+.tileDot { flex: none; width: 1.4rem; height: 1.4rem; border-radius: 4px; background: var(--tile); background-size: 1.4rem 1.4rem; transition: rotate .4s var(--k-ease); }
+.faqItem[open] .tileDot { rotate: 45deg; }
+.faqItem p { margin: 0; padding: 0 1.3rem 1.2rem 3.6rem; white-space: pre-line; }
+
+/* ── Closing / footer ── */
+.closing { position: relative; padding: clamp(5rem, 12vw, 8rem) var(--pad); text-align: center; overflow: hidden; }
+.closeBranch { width: 11rem; margin: 0 auto 1rem; }
+.closingTitle { margin: 0 0 1rem; font: italic 400 clamp(2.4rem, 7vw, 4.4rem)/1.05 var(--inv-font-heading); }
+.footer { padding: 2.6rem var(--pad) 3rem; text-align: center; background: var(--tile); background-size: 40px 40px; }
+.footer p { display: table; margin: .4rem auto 0; padding: .3rem 1rem; border-radius: 999px; background: var(--inv-surface); font-size: .85rem; }
+.footer .footerNames { padding: .6rem 1.4rem; font: italic 500 1.5rem var(--inv-font-heading); }
+
+/* Phones: the branch hangs above the script line instead of over it. */
+@media (max-width: 899px) {
+  .heroText { padding-top: 3.4rem; }
+  .heroBranch { top: -2.6rem; inset-inline-start: -.6rem; width: 8.4rem; }
+}

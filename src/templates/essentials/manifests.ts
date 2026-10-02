@@ -30,7 +30,6 @@ const P = {
 
 const simple = (renderer: string, s: Parameters<typeof layoutTemplate>[2]): TemplateManifest => ({
   ...layoutTemplate(renderer, SECTIONS, s, { defaultDisabled: ["date"] }),
-  isNew: true,
 });
 
 export const ESSENTIALS_MANIFESTS: TemplateManifest[] = [

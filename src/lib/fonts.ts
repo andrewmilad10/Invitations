@@ -180,4 +180,110 @@ const allura = localFont({
 });
 
 /** Class list that defines every font CSS variable; applied to <html>. */
-export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, dmSerif, instrument, spaceMono, caveat, allura, amiri, naskh].map((font) => font.variable).join(" ");
+const garamondFont = localFont({
+  variable: "--font-garamond",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/eb-garamond/eb-garamond-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/eb-garamond/eb-garamond-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../assets/fonts/eb-garamond/eb-garamond-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+});
+
+const frauncesFont = localFont({
+  variable: "--font-fraunces",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/fraunces/fraunces-latin-300-normal.woff2", weight: "300", style: "normal" },
+    { path: "../assets/fonts/fraunces/fraunces-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/fraunces/fraunces-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../assets/fonts/fraunces/fraunces-latin-300-italic.woff2", weight: "300", style: "italic" },
+    { path: "../assets/fonts/fraunces/fraunces-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+});
+
+const manropeFont = localFont({
+  variable: "--font-manrope",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/manrope/manrope-latin-300-normal.woff2", weight: "300", style: "normal" },
+    { path: "../assets/fonts/manrope/manrope-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/manrope/manrope-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../assets/fonts/manrope/manrope-latin-600-normal.woff2", weight: "600", style: "normal" },
+  ],
+});
+
+const oldstandardFont = localFont({
+  variable: "--font-oldstandard",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/old-standard-tt/old-standard-tt-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/old-standard-tt/old-standard-tt-latin-700-normal.woff2", weight: "700", style: "normal" },
+    { path: "../assets/fonts/old-standard-tt/old-standard-tt-latin-400-italic.woff2", weight: "400", style: "italic" },
+  ],
+});
+
+const frakturFont = localFont({
+  variable: "--font-fraktur",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/unifrakturmaguntia/unifrakturmaguntia-latin-400-normal.woff2", weight: "400", style: "normal" },
+  ],
+});
+
+const homemadeFont = localFont({
+  variable: "--font-homemade",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/homemade-apple/homemade-apple-latin-400-normal.woff2", weight: "400", style: "normal" },
+  ],
+});
+
+const cinzeldecoFont = localFont({
+  variable: "--font-cinzeldeco",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/cinzel-decorative/cinzel-decorative-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/cinzel-decorative/cinzel-decorative-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+});
+
+const baskervilleFont = localFont({
+  variable: "--font-baskerville",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/libre-baskerville/libre-baskerville-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/libre-baskerville/libre-baskerville-latin-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "../assets/fonts/libre-baskerville/libre-baskerville-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+});
+
+const syneFont = localFont({
+  variable: "--font-syne",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/syne/syne-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../assets/fonts/syne/syne-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../assets/fonts/syne/syne-latin-800-normal.woff2", weight: "800", style: "normal" },
+  ],
+});
+
+const bebasFont = localFont({
+  variable: "--font-bebas",
+  display: "swap",
+  preload: false,
+  src: [
+    { path: "../assets/fonts/bebas-neue/bebas-neue-latin-400-normal.woff2", weight: "400", style: "normal" },
+  ],
+});
+
+export const fontVariables = [cormorant, playfair, italiana, inter, jost, pinyon, cinzel, bodoni, greatVibes, marcellus, anticDidone, dmSerif, instrument, spaceMono, caveat, allura, garamondFont, frauncesFont, manropeFont, oldstandardFont, frakturFont, homemadeFont, cinzeldecoFont, baskervilleFont, syneFont, bebasFont, amiri, naskh].map((font) => font.variable).join(" ");

@@ -16,6 +16,10 @@ const Cinematic = dynamic(() => import("./cinematic/Renderer"));
 const Editorial = dynamic(() => import("./editorial/Renderer"));
 const Essentials = dynamic(() => import("./essentials/Renderer"));
 const Galerie = dynamic(() => import("./galerie/Renderer"));
+const Romance = dynamic(() => import("./kit/romance/Renderer"));
+const Heritage = dynamic(() => import("./kit/heritage/Renderer"));
+const Minimal = dynamic(() => import("./kit/minimal/Renderer"));
+const Limone = dynamic(() => import("./kit/limone/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
 const Showpiece = dynamic(() => import("./showpiece/Renderer"));
@@ -43,6 +47,10 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   monogram: Essentials,
   split: Essentials,
   modern: Essentials,
+  romance: Romance,
+  heritage: Heritage,
+  minimal: Minimal,
+  limone: Limone,
 };
 
 export function ClientInvitationRenderer({ model }: { model: InvitationModel }) {

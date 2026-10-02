@@ -8,6 +8,7 @@ import { DESIGN_MANIFESTS } from "./collection/designs";
 import { editorialManifest } from "./editorial/manifest";
 import { ESSENTIALS_MANIFESTS } from "./essentials/manifests";
 import { GALERIE_MANIFESTS } from "./galerie/manifests";
+import { KIT_MANIFESTS } from "./kit/manifests";
 import { MAISON_MANIFESTS } from "./maison/manifests";
 import { POSTALE_MANIFESTS } from "./postale/manifests";
 import { SHOWPIECE_MANIFESTS } from "./showpiece/manifests";
@@ -37,10 +38,12 @@ const ALL: TemplateManifest[] = [
   ...POSTALE_MANIFESTS,
   ...SHOWPIECE_MANIFESTS,
   ...ESSENTIALS_MANIFESTS,
+  ...KIT_MANIFESTS,
 ];
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
+  "editorial-romance", "old-money", "modern-minimal", "italian-summer",
   "bon-voyage", "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
   "baroque-crest", "calla-lily", "golden-oval", "monochrome-bloom", "save-the-date", "wild-garden", "velvet-calla", "gilded-crest",
   "marlowe", "garden-toile", "verdant", "horizon", "gilded-garden", "serena", "peony-press", "wildwood", "cypress", "aurelia",

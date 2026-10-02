@@ -275,3 +275,37 @@ in on load): Simple Linen (`linen`, centred and classic), Monogram
 (`monogram`, initials in a double ring, ruled boxes), Side by Side (`split`,
 the photo held beside the details on wide screens) and Modern Type
 (`modern`, left-aligned type, the date in numerals, hairline rows).
+
+## The Kit collection (`src/templates/kit`)
+
+Twenty-four full wedding websites, built four at a time. Each template has its
+own renderer and CSS module (`kit/<name>/Renderer.tsx`, `<name>.module.css`):
+its own layout, type system, hero, section designs, gallery, RSVP, shapes and
+motion. What they share is plumbing, not looks:
+
+| Piece | File | What it gives a template |
+| --- | --- | --- |
+| Data helpers | `kit/data.ts` | `KIT_SECTIONS`, schedule/FAQ/photo pickers, `kitCopy` (en/ar labels), `roman`, `pad2` |
+| Root + parts | `kit/pieces.tsx` | `KitRoot`, `Pic` (photo with a `[data-grade]` layer for the template's colour grade), `Sec`, `Clock`, `KitMap`, `ReplyLink`, `Directions`, `fx()` |
+| Motion | `kit/motion.tsx`, `kit/kit.module.css` | `fx("rise" \| "fade" \| "blur" \| "scale" \| "mask" \| "mask-up" \| "wipe" \| "line" \| "zoom", delay)`, `data-k-stagger`, `data-k-parallax`, `data-k-progress` |
+| Opening | `kit/intro.tsx` | `KitIntro`: an optional opening overlay with phases, skip, replay and scroll lock |
+| Manifest | `kit/manifest.ts`, `kit/manifests.ts` | `kitTemplate()` and the palettes |
+
+Motion tokens are CSS variables on the template root (`--k-dur`, `--k-ease`,
+`--k-dist`, `--k-step`), so each template sets its own tempo. Hidden "before"
+states only exist once `data-fx="on"` is set (live and sample pages, no
+reduced motion), so the editor, exports and no-JS views always show
+everything. Clip-path reveals are triggered through their parent, because a
+fully clipped element never reports as visible.
+
+**Adding a kit template:** make `kit/<name>/Renderer.tsx` + CSS module
+(colours from `--inv-*` only), add its manifest to `KIT_MANIFESTS`, register
+the renderer key in `renderers.tsx` and `renderers.client.tsx`, add a
+thumbnail to `LAYOUT_HEROES` in `features/marketing/gallery/website-thumb.tsx`.
+
+| # | Template | Key | Idea |
+| --- | --- | --- | --- |
+| 1 | Editorial Romance | `romance` | Fashion-magazine: B&W portrait, giant italic Didone names in difference blend, drop-cap letter, numbered spreads, photo plates, parallax closing |
+| 2 | Old Money | `heritage` | Engraved card under a drawn laurel crest, club-tie stripes, Roman-numeral order of the day, framed prints, a reply card |
+| 3 | Modern Minimal | `minimal` | Swiss grid with column guides, giant light names, numbered sections with self-drawing rules, table details, scroll-snap photo strip, colour-block RSVP |
+| 4 | Italian Summer | `limone` | Fluttering striped awning, swaying lemon branches, arched window on majolica tiles, scalloped card, trattoria-menu schedule, scattered snapshots |

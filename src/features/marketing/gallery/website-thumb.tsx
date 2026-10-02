@@ -365,4 +365,47 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       <div className={cn("absolute inset-x-0 bottom-0 border-t border-inv-border", phone ? "h-[18%]" : "h-[16%]")} />
     </div>
   ),
+  // Editorial Romance: a black-and-white portrait, huge italic names over it.
+  romance: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg">
+      <HeroPhoto className={cn("grayscale", phone ? "inset-x-[6%] top-[6%] h-[64%]" : "inset-y-[6%] start-[34%] end-[6%]")} />
+      <div className={cn("absolute font-inv-heading italic leading-[0.85] tracking-[-0.03em] text-white mix-blend-difference", phone ? "start-[9%] top-[44%] text-[16cqw]" : "start-[6%] top-[30%] text-[9cqw]")}>
+        <p>{partnerOne}</p>
+        <p className="ps-[0.6em]">&amp; {partnerTwo}</p>
+      </div>
+      <p className={cn("absolute start-[6%] uppercase tracking-[0.3em]", phone ? "bottom-[8%] text-[3.4cqw]" : "bottom-[8%] text-[1.4cqw]")}>{dateLabel}</p>
+    </div>
+  ),
+  // Old Money: club stripes over an engraved card with a laurel ring.
+  heritage: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg">
+      <div className={cn("absolute inset-x-0 top-0", phone ? "h-[5%]" : "h-[7%]")} style={{ background: "repeating-linear-gradient(-45deg, var(--inv-accent) 0 6%, var(--inv-bg) 6% 8%, var(--inv-muted) 8% 10%, var(--inv-bg) 10% 12%)" }} />
+      <div className={cn("absolute left-1/2 grid -translate-x-1/2 place-items-center border border-inv-accent bg-inv-surface text-center shadow-[inset_0_0_0_0.6cqw_var(--inv-surface),inset_0_0_0_0.75cqw_var(--inv-muted)]", phone ? "top-[14%] h-[66%] w-[80%] gap-[3cqw]" : "top-[16%] h-[74%] w-[42%] gap-[1.4cqw]")}>
+        <span className={cn("grid place-items-center rounded-full border-2 border-dotted border-inv-muted font-inv-accent text-inv-accent", phone ? "size-[18cqw] text-[6cqw]" : "size-[8cqw] text-[2.6cqw]")}>{partnerOne[0]}{partnerTwo[0]}</span>
+        <p className={cn("font-inv-accent uppercase tracking-[0.25em] text-inv-accent", phone ? "text-[5.4cqw]" : "text-[2.4cqw]")}>{partnerOne}<br />&amp; {partnerTwo}</p>
+        <p className={cn("italic", phone ? "text-[3.6cqw]" : "text-[1.5cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
+  // Modern Minimal: a column grid, giant light names, one coloured dot.
+  minimal: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg" style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), color-mix(in oklab, var(--inv-fg) 8%, transparent) calc(25% - 1px) 25%)" }}>
+      <p className={cn("absolute inset-x-[6%] top-[5%] flex justify-between border-b border-inv-fg/20 pb-[1%] font-inv-accent", phone ? "text-[3cqw]" : "text-[1.3cqw]")}><span>(01)</span><span>{dateLabel}</span></p>
+      <div className={cn("absolute inset-x-[6%] font-inv-heading font-light leading-[0.86] tracking-[-0.05em]", phone ? "bottom-[24%] text-[19cqw]" : "bottom-[16%] text-[11cqw]")}>
+        <p>{partnerOne}</p>
+        <p className="flex items-center gap-[0.15em] text-[0.2em] tracking-normal text-inv-accent"><span className="inline-block size-[0.7em] rounded-full bg-inv-accent" />&amp;</p>
+        <p className="text-end">{partnerTwo}</p>
+      </div>
+    </div>
+  ),
+  // Italian Summer: a striped awning, names in italic, an arched window on tiles.
+  limone: ({ partnerOne, partnerTwo, phone }) => (
+    <div className="absolute inset-0 bg-inv-bg text-inv-fg">
+      <div className={cn("absolute inset-x-0 top-0", phone ? "h-[9%]" : "h-[13%]")} style={{ background: "repeating-linear-gradient(90deg, var(--inv-accent) 0 6%, var(--inv-surface) 6% 12%)", maskImage: "radial-gradient(circle at 50% 0, black 70%, transparent 71%)", maskSize: "12% 140%", maskRepeat: "repeat-x" }} />
+      <p className={cn("absolute inset-x-0 text-center font-inv-heading italic leading-[0.95] text-inv-accent", phone ? "top-[16%] text-[12cqw]" : "top-[22%] text-[5.6cqw]")}>{partnerOne}<br />&amp; {partnerTwo}</p>
+      <div className={cn("absolute left-1/2 -translate-x-1/2 overflow-hidden rounded-t-full border-[0.8cqw] border-inv-muted", phone ? "bottom-[6%] h-[40%] w-[62%]" : "bottom-[6%] h-[40%] w-[22%]")}>
+        <HeroPhoto className="inset-0" />
+      </div>
+    </div>
+  ),
 };
