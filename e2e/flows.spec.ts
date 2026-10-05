@@ -40,26 +40,20 @@ test("header navigation reaches every page", async ({ page }) => {
   await expect(page).toHaveURL(/\/$/);
 });
 
-test("home: carousel, make-it-yours and the live demo", async ({ page }) => {
-  await page.goto("/");
-  const caption = page.locator(".carousel-caption");
-  const first = await caption.textContent();
-  await page.getByRole("button", { name: "Next design" }).click();
-  await expect(caption).not.toHaveText(first ?? "");
-  await page.getByRole("button", { name: "Previous design" }).click();
-  await expect(caption).toHaveText(first ?? "");
-  await caption.click();
-  await expect(page).toHaveURL(/\/invitations\/[a-z0-9-]+$/);
-
+test("home: design filters, open the envelope with your names, and the live demo", async ({ page }) => {
   await page.goto("/");
   await waitForApp(page);
-  await page.getByPlaceholder("Layla").fill("Salma");
-  await page.getByPlaceholder("Omar").fill("Youssef");
-  await page.getByRole("link", { name: "Continue with these details" }).click();
-  await expect(page).toHaveURL(/\/create\/[a-z0-9-]+\?.*one=Salma.*two=Youssef/);
-  await expect(page.getByLabel("First name")).toHaveValue("Salma");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("The invitation");
+  // Filters: "Egyptian nights" keeps only those designs.
+  await page.getByRole("button", { name: "Egyptian nights" }).click();
+  await expect(page.getByRole("heading", { name: "The Gate", level: 3 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Swan Lake", level: 3 })).toHaveCount(0);
+  // The envelope shows the visitor's names.
+  await page.getByLabel("Your name").fill("Salma");
+  await page.getByLabel("Your partner's name").fill("Youssef");
+  await page.getByRole("button", { name: "Open the envelope" }).click();
+  await expect(page.getByText("Salma & Youssef")).toBeVisible();
 
-  await page.goto("/");
   await page.getByRole("link", { name: "Preview the template" }).click();
   await expect(page).toHaveURL(/\/websites\/swan-lake$/);
 });

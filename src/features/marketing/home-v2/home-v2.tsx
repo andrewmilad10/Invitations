@@ -130,17 +130,15 @@ function OnWhatsApp() {
   );
 }
 
-/** Pricing in one line, then help on WhatsApp. PRICE is still to be confirmed. */
+/** How paying works. (Add the price and a WhatsApp help card once they're decided.) */
 function Pricing() {
   return (
     <section className="px-5 py-24 sm:px-8 sm:py-28">
-      <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1.2fr_1fr]">
+      <div className="mx-auto max-w-2xl">
         <div className="relative overflow-hidden rounded-xl border border-border bg-card p-8 text-center shadow-[0_4px_12px_-2px_rgb(42_39_35/0.04),0_12px_28px_-4px_rgb(38_51_43/0.10)]">
           <span aria-hidden className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#9c7a4c,#e6cf93,#9c7a4c)]" />
           <h2 className="font-serif text-4xl font-light sm:text-5xl">Free to design. One fee to publish.</h2>
           <p className="mx-auto mt-4 max-w-md text-muted-foreground">Make it, change it and preview it with your partner for free. Pay once when you&apos;re ready to send it to your guests.</p>
-          <p className="mt-6 font-serif text-5xl">[price]</p>
-          <p className="text-sm text-muted-foreground">one time, per wedding</p>
           <ul className="mx-auto mt-6 grid max-w-sm gap-2 text-start text-sm">
             {["Your own link to share on WhatsApp", "Every section: story, schedule, maps, photos, replies", "English or Arabic", "Change it any time before and after you publish"].map((x) => (
               <li key={x} className="flex gap-2">
@@ -151,13 +149,6 @@ function Pricing() {
           </ul>
           <Button asChild size="lg" className="mt-8 h-12 rounded-full px-8">
             <Link href="/websites">Start with a design</Link>
-          </Button>
-        </div>
-        <div className="flex flex-col justify-center rounded-xl bg-[#f3e4dc] p-8 text-center">
-          <h3 className="font-serif text-3xl">Help with your wording?</h3>
-          <p className="mt-3 text-muted-foreground">Send us your names in Arabic or English, your wording or a question. We&apos;ll answer on WhatsApp.</p>
-          <Button asChild variant="outline" className="mx-auto mt-6 rounded-full border-foreground/30 px-6">
-            <a href="#" rel="noopener noreferrer">Chat with us on WhatsApp</a>
           </Button>
         </div>
       </div>
