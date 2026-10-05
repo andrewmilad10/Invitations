@@ -29,6 +29,7 @@ const Film = dynamic(() => import("./kit/film/Renderer"));
 const Glasshouse = dynamic(() => import("./kit/glasshouse/Renderer"));
 const House = dynamic(() => import("./kit/house/Renderer"));
 const Swan = dynamic(() => import("./kit/swan/Renderer"));
+const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
 const Showpiece = dynamic(() => import("./showpiece/Renderer"));
@@ -69,6 +70,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   glasshouse: Glasshouse,
   house: House,
   swan: Swan,
+  burgundy: Burgundy,
 };
 
 export function ClientInvitationRenderer({ model }: { model: InvitationModel }) {

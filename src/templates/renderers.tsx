@@ -6,6 +6,7 @@ import EssentialsRenderer from "./essentials/Renderer";
 import GalerieRenderer from "./galerie/Renderer";
 import ArchRenderer from "./kit/arch/Renderer";
 import BlackTieRenderer from "./kit/blacktie/Renderer";
+import BurgundyRenderer from "./kit/burgundy/Renderer";
 import EphemeraRenderer from "./kit/ephemera/Renderer";
 import FilmRenderer from "./kit/film/Renderer";
 import GlasshouseRenderer from "./kit/glasshouse/Renderer";
@@ -60,6 +61,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   glasshouse: GlasshouseRenderer,
   house: HouseRenderer,
   swan: SwanRenderer,
+  burgundy: BurgundyRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */

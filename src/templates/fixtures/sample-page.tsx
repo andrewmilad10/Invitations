@@ -10,7 +10,9 @@ import { InvitationRenderer } from "@/templates/renderers";
  */
 export function SamplePage({ templateId, paletteId }: { templateId: string; paletteId?: string }) {
   const template = getTemplateManifest(templateId);
-  if (!template || template.status === "hidden") notFound();
+  // Hidden templates can be previewed locally with SHOW_HIDDEN_TEMPLATES=1 (never set it in production).
+  const showHidden = process.env.SHOW_HIDDEN_TEMPLATES === "1";
+  if (!template || (template.status === "hidden" && !showHidden)) notFound();
   const bundle = sampleBundle(template.id);
   if (paletteId !== undefined) {
     const chosen = template.palettes.find((p) => p.id === paletteId);

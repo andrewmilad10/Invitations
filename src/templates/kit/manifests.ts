@@ -63,6 +63,8 @@ const P = {
   bordeaux: { id: "bordeaux", label: "Bordeaux", family: "red", colors: c("#f7f1ee", "#fffbf9", "#22141a", "#a8939a", "#5b1a28", "#ecd9c6", "#eadfdb") },
   // Swan Lake: one palette, matched to its embroidered linen artwork
   swanLinen: { id: "swan-linen", label: "Blue-grey linen", family: "blue", colors: c("#969fa8", "#f6f3ee", "#1d2a42", "#27354f", "#1d2a42", "#f6f3ee", "#d9d3c8") },
+  // Burgundy Envelope
+  burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
 } satisfies Record<string, Palette>;
 
 export const KIT_MANIFESTS: TemplateManifest[] = [
@@ -222,4 +224,23 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     },
     { opening: true },
   ),
+  {
+    // Hidden until its placeholder media are replaced: see public/templates/burgundy-envelope/MEDIA-NOTICE.md
+    ...kitTemplate(
+      "burgundy",
+      {
+        id: "burgundy-envelope",
+        name: "Burgundy Envelope",
+        tagline: "A candle-lit evening that opens from an embossed envelope.",
+        description:
+          "Opens on an embossed burgundy envelope with a gold leaf crest that lifts slowly, then a cinematic hero video with your names in script. Cream pages in wine and gold for the welcome, countdown, a calendar with your day circled, the celebration, the venue, guidelines and the reply.",
+        categories: ["luxury", "romantic", "elegant", "classic"],
+        palettes: [P.burgundyCream],
+        fonts: { heading: "pinyon", body: "cormorant", accent: "jost" },
+        card: { layout: "classic" },
+      },
+      { opening: true },
+    ),
+    status: "hidden",
+  },
 ];
