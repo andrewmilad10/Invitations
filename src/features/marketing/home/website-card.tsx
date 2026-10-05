@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme, themeToCssVars } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,22 @@ const SAMPLE = { partnerOne: "Nour", partnerTwo: "Adam", dateLabel: "12 · 06 ·
  * opening screen and, beside it, the envelope it arrives in (in the design's
  * own colours). Name, a short description and a "Try demo" button below.
  */
-export function WebsiteCard({ template, className, href }: { template: TemplateManifest; className?: string; /** Where the picture and name lead (the demo by default). */ href?: string }) {
+export function WebsiteCard({
+  template,
+  className,
+  href,
+  subtitle,
+  extra,
+}: {
+  template: TemplateManifest;
+  className?: string;
+  /** Where the picture and name lead (the demo by default). */
+  href?: string;
+  /** A second line under the name (e.g. the name in Arabic). */
+  subtitle?: string;
+  /** Rendered under the tagline (e.g. "Shown with your names"). */
+  extra?: ReactNode;
+}) {
   const vars = themeToCssVars(resolveTheme(template.themeDefaults, {})) as CSSProperties;
   const demo = `/templates/${template.id}/preview`;
   const main = href ?? demo;
@@ -58,7 +73,13 @@ export function WebsiteCard({ template, className, href }: { template: TemplateM
             template.name
           )}
         </h3>
+        {subtitle ? (
+          <p dir="rtl" lang="ar" className="mt-0.5 font-[family-name:var(--font-amiri)] text-base text-accent">
+            {subtitle}
+          </p>
+        ) : null}
         <p className="mt-2 line-clamp-3 flex-1 text-[0.82rem] leading-relaxed text-muted-foreground sm:line-clamp-4 sm:text-sm">{template.tagline}</p>
+        {extra}
         <Link
           href={demo}
           className="mt-4 inline-flex h-10 items-center justify-center rounded-xl bg-[#1f2620] text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:bg-[#2c372e] sm:h-12 sm:text-xs"
