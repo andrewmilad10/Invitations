@@ -1,9 +1,10 @@
+"""Photograph each live design's opening and first screen for the marketing pages (see src/features/marketing/home/screens.ts)."""
 import asyncio, glob, zlib, io
 from PIL import Image
 from playwright.async_api import async_playwright
 IDS=["swan-lake","villa-rosa","something-blue","cotton-press","rose-marble","burgundy-envelope","the-gate","moonlit-nile","pressed-garden"]
-OUT="/home/claude/vellum/public/marketing/screens/"
-imgs=sorted(glob.glob("/home/claude/vellum/public/samples/*.jpg"))
+OUT="public/marketing/screens/"  # run from the repo root with the site running on :3100
+imgs=sorted(glob.glob("public/samples/*.jpg"))
 async def shot(b,id):
     pg=await b.new_page(viewport={"width":390,"height":844},device_scale_factor=2)
     async def stub(route): await route.fulfill(path=imgs[zlib.crc32(route.request.url.encode())%len(imgs)], content_type="image/jpeg")
