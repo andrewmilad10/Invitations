@@ -55,6 +55,27 @@ any page, card, colour, font or animation.
 - "New" badges only on designs added in the latest batch (`isNew`).
 - Everything works at 390px wide with no sideways scroll.
 
+## Real stationery finish
+
+Every invitation (cards, envelopes, openings and website heroes) must look
+like real printed stationery, never flat graphics. Apply all four:
+
+1. **Realistic shadows.** Layered, soft and directional: a tight contact
+   shadow under edges plus a wide, faint ambient shadow; flaps cast
+   shadows on the paper beneath them. No hard or uniform drop shadows.
+2. **Embossed / debossed effect.** Monograms, crests, borders and seals
+   are pressed into or raised from the paper: a light edge on one side and
+   a dark edge on the other (consistent light from the top left).
+3. **Texture.** Paper, linen or card stock grain on every surface: fine,
+   subtle and matched across all layers so pieces read as one material.
+4. **Foil details.** Gold, silver or rose-gold foil on accents (names,
+   ornaments, rules, seal rims) with a metallic gradient and a soft sheen,
+   used sparingly.
+
+Envelopes follow one shape: a pointed top flap with a softly rounded tip
+carrying the seal, side and bottom flaps meeting beneath it, every fold a
+fine dark crease with a thin light edge beside it.
+
 ## Motion
 
 - See `docs/motion.md`. One orchestrated moment per page beats an animation
