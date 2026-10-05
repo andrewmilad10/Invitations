@@ -36,6 +36,7 @@
     "server-only": "^0.0.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.7.0",
+    "three": "^0.170.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -73,6 +74,7 @@
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.170.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.7",
     "pg": "^8.23.0",

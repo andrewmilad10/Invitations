@@ -112,7 +112,7 @@ function Envelope({ template }: { template: TemplateManifest }) {
   const blue = template.renderer === "blue";
   const rosa = template.renderer === "rosa";
   const pond = template.renderer === "pond";
-  const voyage = template.renderer === "voyage";
+  const voyage = template.renderer === "voyage" || template.renderer === "bottle";
   const paper: CSSProperties = swan
     ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" }
     : cotton

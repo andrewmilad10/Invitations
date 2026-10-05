@@ -325,7 +325,7 @@ function Footer({ model, content }: SectionProps<"footer">) {
   );
 }
 
-const sections: SectionComponents = {
+export const voyageSections: SectionComponents = {
   hero: Hero,
   couple: Couple,
   date: DateBlock,
@@ -345,7 +345,7 @@ const sections: SectionComponents = {
 export default function VoyageRenderer({ model }: TemplateRendererProps) {
   return (
     <KitRoot model={model} kit="voyage" className={s.root} after={model.mode === "export" ? null : <VoyageOpening model={model} />}>
-      <Sections model={model} components={sections} />
+      <Sections model={model} components={voyageSections} />
     </KitRoot>
   );
 }

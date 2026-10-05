@@ -590,6 +590,17 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Message in a Bottle: the letter on the sea with the bottle beside it.
+  bottle: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-[url(/templates/set-sail/sea.webp)] bg-cover bg-[center_26%]">
+      <span className={cn("absolute aspect-[560/478] bg-[url(/templates/set-sail/bottle.webp)] bg-contain bg-no-repeat", phone ? "left-[2%] top-[8%] w-[46%]" : "left-[14%] top-[10%] w-[18%]")} />
+      <div className={cn("relative bg-[#efe1bf] bg-[url(/templates/set-sail/paper.webp)] bg-[length:160px] bg-blend-multiply text-center shadow-[0_10px_20px_-8px_rgb(20_40_55/0.5)]", phone ? "mt-[16%] w-[76%] px-[6%] py-[14%]" : "h-[76%] aspect-[3/4] px-[4%] py-[8%]")}>
+        <p className={cn("font-inv-body text-[#2c3a44]", phone ? "text-[5cqw]" : "text-[1.8cqw]")}>Our adventure begins</p>
+        <p className={cn("mt-[6%] font-inv-heading leading-[1] text-[#1f3345]", phone ? "text-[11cqw]" : "text-[4cqw]")}>{partnerOne}<br /><span className="text-[0.6em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[8%] font-inv-body text-[#3b3427]", phone ? "text-[3.8cqw]" : "text-[1.3cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

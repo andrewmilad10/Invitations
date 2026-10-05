@@ -2,7 +2,7 @@
 import asyncio, glob, zlib, io
 from PIL import Image
 from playwright.async_api import async_playwright
-IDS=["swan-lake","villa-rosa","something-blue","cotton-press","rose-marble","burgundy-envelope","the-gate","moonlit-nile","pressed-garden","set-sail"]
+IDS=["swan-lake","villa-rosa","something-blue","cotton-press","rose-marble","burgundy-envelope","the-gate","moonlit-nile","pressed-garden","set-sail","message-in-a-bottle"]
 OUT="public/marketing/screens/"  # run from the repo root with the site running on :3100
 imgs=sorted(glob.glob("public/samples/*.jpg"))
 async def shot(b,id):
@@ -16,7 +16,10 @@ async def shot(b,id):
         Image.open(io.BytesIO(png)).convert("RGB").save(OUT+name,"WEBP",quality=82,method=6)
     save(await pg.screenshot(),f"{id}-opening.webp")
     d=pg.locator('[role=dialog]')
-    if await d.count():
+    if id=="message-in-a-bottle":
+        await pg.wait_for_timeout(5000); save(await pg.screenshot(),f"{id}-opening.webp")
+        await pg.locator('button[class*="tapRing"]').click(force=True); await pg.wait_for_timeout(9000)
+    elif await d.count():
         await d.locator('button[aria-label]').first.click(force=True)
         try: await pg.wait_for_selector('[role=dialog]', state="detached", timeout=12000)
         except: pass
@@ -26,7 +29,7 @@ async def shot(b,id):
     await pg.close()
 async def main():
     async with async_playwright() as p:
-        b=await p.chromium.launch()
+        b=await p.chromium.launch(args=["--use-gl=angle","--use-angle=swiftshader","--enable-unsafe-swiftshader","--ignore-gpu-blocklist"])
         import sys
         for id in (sys.argv[1].split(",") if len(sys.argv)>1 else IDS): await shot(b,id)
         await b.close()

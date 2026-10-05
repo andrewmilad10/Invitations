@@ -69,6 +69,7 @@ const P = {
   roseMarble: { id: "marble-rose-gold", label: "Marble & rose gold", family: "pink", colors: c("#efebe7", "#fbf8f3", "#3a3030", "#84746e", "#b5735f", "#fbf8f3", "#e2d6cf") },
   // Something Blue
   setSail: { id: "sea-glass", label: "Sea glass & slate", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
+  bottle: { id: "open-sea", label: "Open sea & parchment", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Villa Rosa
   villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
@@ -276,6 +277,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["romantic", "botanical", "elegant", "modern"],
       palettes: [P.somethingBlue],
       fonts: { heading: "greatvibes", body: "cormorant", accent: "italiana" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "bottle",
+    {
+      id: "message-in-a-bottle",
+      name: "Message in a Bottle",
+      tagline: "A live 3D sea: a bottle drifts in, the cork pops and your letter unrolls.",
+      description:
+        "Opens on a moving 3D ocean where a glass bottle drifts in on the swell. One tap: the camera closes in, the bottle rises dripping from the water, the cork twists and pops, and the letter slides out and unrolls with your names on it. As your guests scroll, the sun sets over the sea behind the invitation, with stars by the end. A painted chart of the islands, the day as a ship's log, questions, and a wax seal to press and hold to reply.",
+      categories: ["modern", "romantic", "elegant"],
+      palettes: [P.bottle],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "marcellus" },
       card: { layout: "classic" },
     },
     { opening: true },
