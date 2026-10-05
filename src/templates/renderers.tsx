@@ -16,6 +16,7 @@ import JardinRenderer from "./kit/jardin/Renderer";
 import LimoneRenderer from "./kit/limone/Renderer";
 import MinimalRenderer from "./kit/minimal/Renderer";
 import RomanceRenderer from "./kit/romance/Renderer";
+import SwanRenderer from "./kit/swan/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -58,6 +59,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   film: FilmRenderer,
   glasshouse: GlasshouseRenderer,
   house: HouseRenderer,
+  swan: SwanRenderer,
 };
 
 /** Renders a model with the layout of the template it was built for. */

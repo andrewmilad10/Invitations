@@ -61,6 +61,8 @@ const P = {
   ivoryNoir: { id: "ivory-noir", label: "Ivory & noir", family: "black", colors: c("#f6f3ee", "#fffdfa", "#141414", "#a39a8c", "#141414", "#e9e2d6", "#e4ded4") },
   sageMaison: { id: "sage-maison", label: "Sage", family: "green", colors: c("#f3f4ef", "#fbfcf8", "#1b221d", "#9aa596", "#3f5747", "#e7ecdf", "#dfe3d9") },
   bordeaux: { id: "bordeaux", label: "Bordeaux", family: "red", colors: c("#f7f1ee", "#fffbf9", "#22141a", "#a8939a", "#5b1a28", "#ecd9c6", "#eadfdb") },
+  // Swan Lake: one palette, matched to its embroidered linen artwork
+  swanLinen: { id: "swan-linen", label: "Blue-grey linen", family: "blue", colors: c("#969fa8", "#f6f3ee", "#1d2a42", "#27354f", "#1d2a42", "#f6f3ee", "#d9d3c8") },
 } satisfies Record<string, Palette>;
 
 export const KIT_MANIFESTS: TemplateManifest[] = [
@@ -205,4 +207,19 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "syne", body: "inter", accent: "cinzeldeco" },
     card: { layout: "monogram" },
   }),
+  kitTemplate(
+    "swan",
+    {
+      id: "swan-lake",
+      name: "Swan Lake",
+      tagline: "Hand embroidery on linen, swans and a moonlit lake.",
+      description:
+        "Opens on a stitched linen envelope with a pearl wax seal; the flap lifts and the invitation dissolves in. Inside: an embroidered arch of feathers and water lilies under a full moon, pearl-ringed countdown, your photo in a pearl frame, an embroidered château for the venue and the day inside a feather wreath.",
+      categories: ["romantic", "luxury", "botanical", "elegant"],
+      palettes: [P.swanLinen],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "pinyon" },
+      card: { layout: "arch-panel" },
+    },
+    { opening: true },
+  ),
 ];

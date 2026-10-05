@@ -511,4 +511,15 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Swan Lake: the embroidered arch with the names.
+  swan: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg" style={{ backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "220px" }}>
+      <div className={cn("relative bg-contain bg-center bg-no-repeat", phone ? "h-[96%] w-full" : "h-[96%] aspect-[1120/1869]")} style={{ backgroundImage: "url(/templates/swan-lake/hero.webp)" }}>
+        <div className="absolute inset-x-[28%] top-[30%] text-center text-inv-fg">
+          <p className={cn("font-inv-heading leading-[0.95]", phone ? "text-[11cqw]" : "text-[4.6cqw]")}>{partnerOne}<br /><span className="text-[0.5em]">&amp;</span><br />{partnerTwo}</p>
+          <p className={cn("mt-[6%] font-semibold tracking-[0.2em]", phone ? "text-[2.6cqw]" : "text-[1.1cqw]")}>{dateLabel}</p>
+        </div>
+      </div>
+    </div>
+  ),
 };

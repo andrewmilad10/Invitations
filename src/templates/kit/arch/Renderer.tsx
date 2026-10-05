@@ -179,7 +179,7 @@ function Schedule({ model, content }: SectionProps<"schedule">) {
       <h2 className={cn(s.h2, s.center)} {...fx("rise")}>{content.heading || kitCopy(model).schedule}</h2>
       <ol className={s.arcade}>
         {items.map((it, i) => (
-          <li key={i} className={s.bay} style={{ "--i": i } as CSSProperties} {...fx("archopen", i * 120)}>
+          <li key={i} className={s.bay} style={{ "--i": i, transitionDelay: `${i * 120}ms` } as CSSProperties} {...fx("archopen")}>
             <time>{it.time}</time>
             <p className={s.bayTitle}>{it.title}</p>
             {it.note ? <p className={s.small}>{it.note}</p> : null}
