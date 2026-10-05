@@ -56,13 +56,13 @@ export function WebsiteThumb({
   );
 }
 
-function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { template: TemplateManifest; partnerOne: string; partnerTwo: string; dateLabel: string; device: "desktop" | "phone" }) {
+export function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device, openingOnly }: { template: TemplateManifest; partnerOne: string; partnerTwo: string; dateLabel: string; device: "desktop" | "phone"; /** Only the opening screen, filling the frame. */ openingOnly?: boolean }) {
   const cardHero = (template.features.hero ?? "photo") === "card";
   const atelier = template.renderer === "atelier";
   const phone = device === "phone";
   return (
     <div className="flex h-full flex-col bg-inv-bg font-inv-body text-inv-fg">
-      <div className={cn("relative flex shrink-0 items-center justify-center overflow-hidden", phone ? "h-[78%]" : "h-[64%]")}>
+      <div className={cn("relative flex shrink-0 items-center justify-center overflow-hidden", openingOnly ? "h-full" : phone ? "h-[78%]" : "h-[64%]")}>
         {LAYOUT_HEROES[template.renderer] ? (
           LAYOUT_HEROES[template.renderer]({ partnerOne, partnerTwo, dateLabel, phone })
         ) : cardHero ? (
@@ -98,7 +98,7 @@ function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { tem
         )}
       </div>
       {/* the start of the sections below the opening screen */}
-      <div className={cn("flex flex-1 flex-col items-center text-center", phone ? "gap-[2.5cqw] pt-[5cqw]" : "gap-[1.2cqw] pt-[3cqw]")}>
+      {openingOnly ? null : <div className={cn("flex flex-1 flex-col items-center text-center", phone ? "gap-[2.5cqw] pt-[5cqw]" : "gap-[1.2cqw] pt-[3cqw]")}>
         <span className={cn("bg-inv-accent", phone ? "h-[0.6cqw] w-[10cqw]" : "h-[0.35cqw] w-[6cqw]")} />
         <p className={cn("font-inv-heading leading-none", phone ? "text-[7cqw]" : "text-[3.6cqw]")}>Our story</p>
         <div className={cn("flex", phone ? "gap-[2cqw]" : "gap-[1.2cqw]")}>
@@ -108,7 +108,7 @@ function MiniSite({ template, partnerOne, partnerTwo, dateLabel, device }: { tem
             </span>
           ))}
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

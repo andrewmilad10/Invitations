@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { selectableTemplates } from "@/templates/registry";
 import { PRODUCTS, templatesFor, websiteOrder, type Product } from "../products";
-import { TemplateCard } from "../template-card";
 import { CollectionCarousel } from "./collection-carousel";
+import { WebsiteCard } from "./website-card";
 
 /** The two products, side by side: invitation cards and wedding websites. */
 export function TemplateShowcase() {
@@ -53,9 +53,10 @@ export function TemplateShowcase() {
               <CollectionCarousel designs={row.items.map(({ id, name, categories, palettes, stationery, themeDefaults, features }) => ({ id, name, categories, palettes, stationery, themeDefaults, features }))} />
             </div>
           ) : (
-            <div className="mx-auto mt-10 grid max-w-7xl grid-cols-2 gap-x-5 gap-y-12 sm:gap-x-8 lg:grid-cols-4">
-              {row.items.map((t) => (
-                <TemplateCard key={t.id} template={t} index={all.indexOf(t)} product={row.product} />
+            // Four on wide screens, the first two on phones.
+            <div className="mx-auto mt-10 grid max-w-7xl grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+              {row.items.map((t, i) => (
+                <WebsiteCard key={t.id} template={t} className={i >= 2 ? "hidden lg:flex" : undefined} />
               ))}
             </div>
           )}
