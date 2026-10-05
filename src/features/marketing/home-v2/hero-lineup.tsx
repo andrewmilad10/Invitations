@@ -50,11 +50,11 @@ export function HeroLineup() {
       </div>
 
       {/* the line-up */}
-      <div aria-hidden className="relative mx-auto mt-14 h-[calc(var(--pw)*19/9*0.78)] max-w-6xl [--pw:min(46vw,300px)] sm:mt-16">
+      <div aria-hidden className="relative mx-auto mt-14 h-[calc(var(--pw)*19/9*0.78)] max-w-6xl overflow-hidden [contain:layout_paint] [--pw:min(46vw,300px)] sm:mt-16">
         {LINEUP.map((p) => (
           <div
             key={p.id}
-            className="lineup-phone absolute bottom-[-22%] left-1/2 w-[var(--pw)]"
+            className="lineup-phone absolute top-0 left-1/2 w-[var(--pw)]"
             style={{ zIndex: p.z, ["--x" as string]: `${p.x}%`, ["--r" as string]: `${p.r}deg`, ["--s" as string]: p.s, animationDelay: `${700 + p.d}ms` }}
           >
             <Phone id={p.id} />
@@ -64,7 +64,7 @@ export function HeroLineup() {
       </div>
 
       {/* facts */}
-      <div className="relative z-10 border-t border-white/10 bg-[#1c2620]">
+      <div className="relative z-10 border-t border-white/10 bg-[#1c2620] [transform:translateZ(0)]">
         <dl className="mx-auto grid max-w-5xl grid-cols-2 gap-y-6 px-5 py-8 text-center sm:grid-cols-4 sm:px-8">
           {[
             ["9", "original designs"],

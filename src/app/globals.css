@@ -485,7 +485,10 @@ html.motion-failed [data-image-reveal] {
   transform: translateX(calc(-50% + var(--x))) rotate(var(--r)) scale(var(--s));
   transform-origin: 50% 100%;
   animation: lineup-in 1.4s cubic-bezier(.2, .8, .25, 1) both;
+  will-change: transform;
 }
+/* The designs inside the phones hold still: no lantern, moon or petal loops repainting while you scroll. */
+.lineup-phone *, .lineup-phone *::before, .lineup-phone *::after { animation: none !important; transition: none !important; }
 @keyframes lineup-in {
   from { opacity: 0; transform: translateX(-50%) translateY(18%) rotate(0deg) scale(calc(var(--s) * .92)); }
 }
