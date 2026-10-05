@@ -575,6 +575,20 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       <span className={cn("absolute aspect-square bg-[url(/templates/swan-pond/bunch-a.webp)] bg-contain bg-no-repeat", phone ? "right-[2%] top-[14%] w-[48%]" : "right-[18%] top-[6%] w-[22%]")} />
     </div>
   ),
+  // Set Sail: the parchment scroll on navy linen.
+  voyage: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-accent bg-[url(/templates/set-sail/linen.webp)] bg-[length:160px] bg-blend-multiply">
+      <div className={cn("relative", phone ? "w-[84%]" : "h-[84%] aspect-[4/3.6]")}>
+        <span className="absolute inset-x-[-4%] top-0 z-10 h-[9%] rounded-full bg-[linear-gradient(180deg,#8f7447,#f3e6c9_42%,#8a6e42)]" />
+        <div className={cn("mx-[1%] my-[5%] bg-[#ece0c4] bg-[url(/templates/set-sail/paper.webp)] bg-[length:160px] bg-blend-multiply text-center", phone ? "px-[6%] py-[16%]" : "px-[4%] py-[10%]")}>
+          <p className={cn("font-inv-body text-inv-accent", phone ? "text-[5cqw]" : "text-[1.9cqw]")}>Our adventure begins</p>
+          <p className={cn("mt-[4%] font-inv-heading leading-[1] text-inv-accent", phone ? "text-[12cqw]" : "text-[4.6cqw]")}>{partnerOne} <span className="text-[0.7em]">&amp;</span> {partnerTwo}</p>
+          <p className={cn("mt-[8%] font-inv-body text-inv-fg", phone ? "text-[3.8cqw]" : "text-[1.4cqw]")}>{dateLabel}</p>
+        </div>
+        <span className="absolute inset-x-[-4%] bottom-0 z-10 h-[9%] rounded-full bg-[linear-gradient(180deg,#8f7447,#f3e6c9_42%,#8a6e42)]" />
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

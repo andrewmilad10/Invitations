@@ -17,6 +17,7 @@ const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
   "swan-pond": { ar: "بحيرة البجع الصغيرة", mood: "floral" },
   "something-blue": { ar: "لمسة زرقاء", mood: "floral" },
   "pressed-garden": { ar: "حديقة الزهور المجففة", mood: "floral" },
+  "set-sail": { ar: "نُبحر معاً", mood: "classic" },
   "cotton-press": { ar: "حبر وقطن", mood: "classic" },
   "rose-marble": { ar: "رخام وردي", mood: "classic" },
   "burgundy-envelope": { ar: "الظرف العنابي", mood: "classic" },
