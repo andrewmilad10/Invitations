@@ -225,7 +225,7 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     { opening: true },
   ),
   {
-    // Hidden until its placeholder media are replaced: see public/templates/burgundy-envelope/MEDIA-NOTICE.md
+    // Its media are placeholders from a third-party demo: see public/templates/burgundy-envelope/MEDIA-NOTICE.md
     ...kitTemplate(
       "burgundy",
       {
@@ -241,6 +241,5 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       },
       { opening: true },
     ),
-    status: "hidden",
   },
 ];
