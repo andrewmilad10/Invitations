@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/select";
-import { BLESSINGS, CARD_OPTION_INFO, FOILS, ORIENTATIONS, PAPERS, resolveCardOptions, SILHOUETTES, type CardOptionOverrides, type CardOptions } from "@/core/card/options";
+import { CARD_OPTION_INFO, FOILS, ORIENTATIONS, PAPERS, resolveCardOptions, SILHOUETTES, type CardOptionOverrides, type CardOptions } from "@/core/card/options";
 import { canRotate, designCardDefaults } from "@/core/template/manifest";
 import { FONT_KEYS, FONTS, type FontKey } from "@/core/theme/fonts";
 import { productOf } from "@/features/marketing/products";
@@ -190,13 +190,6 @@ export function ThemePanel() {
               value={card.foil}
               onChange={(v) => saveCard({ foil: v as CardOptions["foil"] })}
               options={FOILS.map((o) => ({ value: o, label: o === "none" ? "None" : CARD_OPTION_INFO.foil[o] }))}
-            />
-          </Control>
-          <Control label="Opening blessing">
-            <Segmented
-              value={card.blessing}
-              onChange={(v) => saveCard({ blessing: v as CardOptions["blessing"] })}
-              options={BLESSINGS.map((o) => ({ value: o, label: o === "none" ? "None" : "بسم الله" }))}
             />
           </Control>
           <Control label="Paper">

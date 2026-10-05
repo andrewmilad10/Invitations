@@ -6,7 +6,6 @@ import { useEffect, useState, ViewTransition, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  BLESSINGS,
   CARD_OPTION_INFO,
   cardOptionsFromQuery,
   cardOptionsToQuery,
@@ -230,29 +229,6 @@ export function CardDetail({
 
         <Group label="Theme" value={palette.label}>
           <SwatchRow template={template} value={palette.id} onChange={setPaletteId} size="lg" />
-        </Group>
-
-        <Group label="Opening blessing" value={CARD_OPTION_INFO.blessing[options.blessing]}>
-          <div role="radiogroup" aria-label="Opening blessing" className="flex flex-wrap gap-3">
-            {BLESSINGS.map((b) => (
-              <button
-                key={b}
-                type="button"
-                role="radio"
-                aria-checked={options.blessing === b}
-                onClick={() => pick("blessing", b)}
-                className={cn("h-12 rounded-xl border px-5 text-sm transition", options.blessing === b ? "border-foreground bg-secondary/60 font-medium" : "hover:border-foreground/40")}
-              >
-                {b === "bismillah" ? (
-                  <span lang="ar" dir="rtl" className="text-lg" style={{ fontFamily: "var(--font-amiri), serif" }}>
-                    بسم الله الرحمن الرحيم
-                  </span>
-                ) : (
-                  "None"
-                )}
-              </button>
-            ))}
-          </div>
         </Group>
 
         <Group label="Silhouette" value={CARD_OPTION_INFO.silhouette[options.silhouette]}>

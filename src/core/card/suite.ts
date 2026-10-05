@@ -214,7 +214,7 @@ export function withLanguage(suite: CardSuite, lang: SuiteLang, sample: { eyebro
   const isSampleSection = suite.enclosure.heading === from.heading;
   return {
     ...suite,
-    options: lang === "ar" && suite.options.blessing === undefined ? { ...suite.options, blessing: "bismillah" } : suite.options,
+    options: suite.options,
     text: {
       ...suite.text,
       lang,

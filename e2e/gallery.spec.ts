@@ -2,7 +2,8 @@ import { expect, test } from "@playwright/test";
 
 /** The design gallery and design pages (no database needed). */
 
-test("filters, colours and saved designs in the gallery", async ({ page }) => {
+// The invitation card gallery is paused (coming soon); re-enable with it.
+test.skip("filters, colours and saved designs in the gallery", async ({ page }) => {
   await page.goto("/templates"); // old address → invitation cards
   await expect(page).toHaveURL(/\/invitations/);
   const count = page.getByText(/^Showing /);
@@ -91,4 +92,11 @@ test("card studio: the desk, Arabic, and sending — no RSVP, similar designs st
   await page.getByRole("button", { name: "أرسل" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(page.getByRole("button", { name: "تنزيل كل القطع" })).toBeVisible();
+});
+
+test("the invitation card gallery says coming soon", async ({ page }) => {
+  await page.goto("/invitations");
+  await expect(page.getByRole("heading", { name: "Coming soon" })).toBeVisible();
+  await page.getByRole("link", { name: "Browse wedding websites" }).click();
+  await expect(page).toHaveURL(/\/websites$/);
 });

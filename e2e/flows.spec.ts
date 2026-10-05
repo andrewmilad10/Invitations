@@ -64,7 +64,8 @@ test("home: carousel, make-it-yours and the live demo", async ({ page }) => {
   await expect(page).toHaveURL(/\/websites\/cinematic$/);
 });
 
-test("gallery: quick view, show more and filters survive going back", async ({ page }) => {
+// Paused with the invitation card gallery (coming soon).
+test.skip("gallery: quick view, show more and filters survive going back", async ({ page }) => {
   await page.goto("/invitations");
   const count = page.getByText(/^Showing /);
   await expect(count).toHaveText(/1–48 of \d+/);
@@ -95,7 +96,8 @@ test("gallery: quick view, show more and filters survive going back", async ({ p
   await expect(count).toHaveText(filtered ?? "");
 });
 
-test("a saved design stays saved across pages", async ({ page }) => {
+// Paused with the invitation card gallery (coming soon).
+test.skip("a saved design stays saved across pages", async ({ page }) => {
   await page.goto("/invitations/velvet-tulips");
   await page.getByRole("button", { name: "Save Velvet Tulips" }).first().click();
   await expect(page.getByRole("button", { name: "Remove Velvet Tulips from saved designs" }).first()).toBeVisible();

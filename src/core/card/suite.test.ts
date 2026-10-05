@@ -2,14 +2,14 @@ import { describe, expect, it } from "vitest";
 import { defaultSuite, parseSuite, safeQrUrl, SUITE_WORDING, withLanguage } from "./suite";
 
 describe("withLanguage", () => {
-  it("translates sample wording, including the design's own, and adds the Bismillah", () => {
+  it("translates sample wording, including the design's own, without adding a blessing", () => {
     const sample = { eyebrow: "Please join us to celebrate the wedding of" };
     const ar = withLanguage(defaultSuite("x", null, {}, sample), "ar", sample);
     expect(ar.text.lang).toBe("ar");
     expect(ar.text.eyebrow).toBe(SUITE_WORDING.ar.eyebrow);
     expect(ar.text.partnerOne).toBe(SUITE_WORDING.ar.partnerOne);
     expect(ar.enclosure.heading).toBe(SUITE_WORDING.ar.heading);
-    expect(ar.options.blessing).toBe("bismillah");
+    expect(ar.options.blessing).toBeUndefined();
     // and back again
     const en = withLanguage(ar, "en", sample);
     expect(en.text.eyebrow).toBe(sample.eyebrow);

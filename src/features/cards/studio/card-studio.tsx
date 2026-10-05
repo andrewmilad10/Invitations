@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { BLESSINGS, CARD_OPTION_INFO, FOIL_TONES, FOILS, PAPERS, resolveCardOptions, SILHOUETTES, type CardOptions } from "@/core/card/options";
+import { CARD_OPTION_INFO, FOIL_TONES, FOILS, PAPERS, resolveCardOptions, SILHOUETTES, type CardOptions } from "@/core/card/options";
 import {
   BACK_LAYOUTS,
   ENCLOSURE_BACKS,
@@ -545,24 +545,6 @@ function FinishTool({ template, options, set }: { template: TemplateManifest; op
   const opt = <K extends keyof CardOptions>(key: K, value: CardOptions[K]) => set((s) => ({ ...s, options: { ...s.options, [key]: value } }));
   return (
     <>
-      <Group title="Opening blessing">
-        <Chips
-          label="Opening blessing"
-          value={options.blessing}
-          options={BLESSINGS}
-          cols={2}
-          onChange={(v) => opt("blessing", v)}
-          render={(v) =>
-            v === "none" ? (
-              "None"
-            ) : (
-              <span lang="ar" dir="rtl" className="text-sm" style={{ fontFamily: "var(--font-amiri), serif" }}>
-                بسم الله الرحمن الرحيم
-              </span>
-            )
-          }
-        />
-      </Group>
       {canRotate(template.stationery.shape ?? "portrait", template.stationery.layout) ? (
         <Group title="Orientation">
           <Chips label="Orientation" value={options.orientation} options={["portrait", "landscape"] as const} cols={2} onChange={(v) => opt("orientation", v)} render={(v) => CARD_OPTION_INFO.orientation[v]} />

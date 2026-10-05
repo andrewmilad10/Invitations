@@ -108,7 +108,8 @@ export function StationeryCard({
   const paper = paperOverlay(finish.paper);
   const words: StationeryText = {
     ...text,
-    blessing: finish.blessing === "bismillah",
+    // The opening blessing option was retired; older saved cards no longer show it.
+    blessing: false,
   };
 
   return (
