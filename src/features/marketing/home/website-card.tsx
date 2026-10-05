@@ -4,6 +4,11 @@ import type { TemplateManifest } from "@/core/template/manifest";
 import { resolveTheme, themeToCssVars } from "@/core/theme/tokens";
 import { cn } from "@/lib/utils";
 import { MiniSite } from "../gallery/website-thumb";
+import { FirstScreen } from "./first-screen";
+import { ScaledScreen } from "./scaled-screen";
+
+/** Designs that open on their own scene (doors, lanterns, a book) rather than an envelope. */
+const SCENE_OPENINGS = new Set(["gate", "nile", "herbarium"]);
 
 const SAMPLE = { partnerOne: "Nour", partnerTwo: "Adam", dateLabel: "12 · 06 · 2027" };
 
@@ -15,6 +20,7 @@ const SAMPLE = { partnerOne: "Nour", partnerTwo: "Adam", dateLabel: "12 · 06 ·
 export function WebsiteCard({ template, className }: { template: TemplateManifest; className?: string }) {
   const vars = themeToCssVars(resolveTheme(template.themeDefaults, {})) as CSSProperties;
   const demo = `/templates/${template.id}/preview`;
+  const scene = SCENE_OPENINGS.has(template.renderer);
   return (
     <article
       className={cn(
@@ -27,12 +33,18 @@ export function WebsiteCard({ template, className }: { template: TemplateManifes
           <div className="w-[46%] shrink-0 transition-transform duration-700 ease-out group-hover:-translate-y-[2%] group-hover:-rotate-1">
             <div className="overflow-hidden rounded-[7cqw] border-[1.6cqw] border-neutral-900 bg-neutral-900 shadow-[0_6cqw_8cqw_-4cqw_rgb(0_0_0/0.5)]">
               <div className="relative aspect-[9/19] overflow-hidden rounded-[5cqw] [container-type:inline-size]">
-                <MiniSite template={template} {...SAMPLE} device="phone" openingOnly />
+                {scene ? (
+                  <ScaledScreen>
+                    <FirstScreen templateId={template.id} />
+                  </ScaledScreen>
+                ) : (
+                  <MiniSite template={template} {...SAMPLE} device="phone" openingOnly />
+                )}
                 <span className="absolute left-1/2 top-[2.5%] h-[3.6%] w-[34%] -translate-x-1/2 rounded-full bg-neutral-900" />
               </div>
             </div>
           </div>
-          <Envelope template={template} />
+          {scene ? <OpeningScene template={template} /> : <Envelope template={template} />}
         </div>
       </Link>
       <div className="flex flex-1 flex-col px-2 pb-1 pt-4 sm:px-3">
@@ -92,6 +104,15 @@ function Envelope({ template }: { template: TemplateManifest }) {
           <p className="absolute inset-x-0 bottom-[9%] text-center font-inv-heading text-[2.8cqw] italic text-inv-accent-fg opacity-85">This invitation is for you</p>
         </>
       )}
+    </div>
+  );
+}
+
+/** The design's opening scene (doors, lanterns, a book) as a card beside the phone. */
+function OpeningScene({ template }: { template: TemplateManifest }) {
+  return (
+    <div className="relative aspect-[10/17] w-[40%] shrink-0 overflow-hidden rounded-[1.4cqw] shadow-[0_5cqw_7cqw_-4cqw_rgb(0_0_0/0.45)] ring-1 ring-black/10 transition-transform duration-700 ease-out [container-type:inline-size] group-hover:translate-y-[1.5%] group-hover:rotate-1">
+      <MiniSite template={template} {...SAMPLE} device="phone" openingOnly />
     </div>
   );
 }
