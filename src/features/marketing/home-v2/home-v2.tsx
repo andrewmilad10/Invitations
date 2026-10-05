@@ -7,6 +7,7 @@ import { LiveDemo } from "../home/live-demo";
 import { WebsiteCard } from "../home/website-card";
 import { FilteredGrid } from "./filtered-grid";
 import { HeroEnvelope } from "./hero-envelope";
+import { HeroLineup } from "./hero-lineup";
 import { NamesProvider } from "./names";
 
 /** Each website design's name in Arabic, and its mood for the filter. */
@@ -27,32 +28,18 @@ const MOODS: [string, string][] = [
   ["nights", "Egyptian nights"],
 ];
 
-function Hero() {
+function OpenOne() {
   return (
     <section className="linen-forest relative isolate overflow-hidden text-white">
-      <div className="mx-auto grid w-full max-w-7xl gap-6 px-5 pb-24 pt-28 sm:px-8 lg:min-h-[88svh] lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:pt-24">
-        <div className="max-w-2xl text-center lg:text-start">
-          <h1 className="font-serif text-[2.9rem] font-light leading-[1] sm:text-6xl lg:text-[4.4rem]">
-            <span className="open-line block">Wedding invitations</span>
-            <span className="open-line block [animation-delay:150ms]">your guests will keep.</span>
-          </h1>
-          <p dir="rtl" lang="ar" className="open-rise mt-4 text-center font-[family-name:var(--font-amiri)] text-2xl text-[#e6cf93] [animation-delay:400ms] sm:text-3xl lg:text-left">
-            دعوات زفاف تبقى في الذاكرة
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-14">
+        <div className="max-w-xl text-center lg:text-start">
+          <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">Open one yourself</h2>
+          <p dir="rtl" lang="ar" className="mt-3 text-center font-[family-name:var(--font-amiri)] text-2xl text-[#e6cf93] lg:text-left">جرّبوا فتح دعوتكم</p>
+          <p className="mx-auto mt-5 max-w-md text-lg leading-relaxed text-white/80 lg:mx-0">
+            This is how your guests meet your invitation: a sealed envelope, then your names. Type yours below the envelope and tap the seal.
           </p>
-          <p className="open-rise mx-auto mt-6 max-w-lg text-lg leading-relaxed text-white/85 [animation-delay:550ms] lg:mx-0">
-            A wedding website that opens like real stationery on your guests&apos; phones: your story, the day&apos;s plan, maps, a countdown and replies. In English or Arabic.
-          </p>
-          <div className="open-rise mt-8 flex flex-col items-center gap-3 [animation-delay:700ms] sm:flex-row sm:justify-center lg:justify-start">
-            <Button asChild size="lg" className="h-13 w-full rounded-full bg-[#e6cf93] px-8 text-base text-[#26332b] shadow-[inset_0_1px_0_rgb(255_255_255/0.5),0_10px_20px_-10px_rgb(0_0_0/0.5)] hover:bg-[#ecd9a8] sm:w-auto">
-              <Link href="#designs">See the designs</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="h-13 w-full rounded-full border-white/50 bg-transparent px-8 text-base text-white hover:bg-white/10 hover:text-white sm:w-auto">
-              <Link href="#inspiration">What guests see</Link>
-            </Button>
-          </div>
-          <p className="open-rise mt-6 text-sm text-white/65 [animation-delay:850ms]">Free to try. You only create an account when you&apos;re ready to save.</p>
         </div>
-        <div className="open-rise [animation-delay:500ms]">
+        <div>
           <HeroEnvelope />
         </div>
       </div>
@@ -194,8 +181,9 @@ function FinalCta() {
 export function HomeV2() {
   return (
     <NamesProvider>
-      <Hero />
+      <HeroLineup />
       <Designs />
+      <OpenOne />
       <LiveDemo />
       <OnWhatsApp />
       <HowItWorks />

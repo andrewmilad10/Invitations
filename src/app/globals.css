@@ -479,3 +479,14 @@ html.motion-failed [data-image-reveal] {
     repeating-linear-gradient(90deg, rgb(0 0 0 / 0.06) 0 1px, transparent 1px 3px),
     radial-gradient(140% 120% at 50% 50%, transparent 55%, rgb(0 0 0 / 0.28));
 }
+
+/* Home hero line-up: phones rise and fan out into place. */
+.lineup-phone {
+  transform: translateX(calc(-50% + var(--x))) rotate(var(--r)) scale(var(--s));
+  transform-origin: 50% 100%;
+  animation: lineup-in 1.4s cubic-bezier(.2, .8, .25, 1) both;
+}
+@keyframes lineup-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(18%) rotate(0deg) scale(calc(var(--s) * .92)); }
+}
+@media (prefers-reduced-motion: reduce) { .lineup-phone { animation: none; } }
