@@ -1,22 +1,20 @@
+/* eslint-disable @next/next/no-img-element -- transparent art layers that animate (CSS transforms on the element itself); sized and preloaded with the page */
 import { cn } from "@/lib/utils";
 import s from "./voyage.module.css";
 
-/** Line art for Set Sail, drawn here (no stock): an anchor, a compass rose, a chart of the bay and a washing line. */
+/**
+ * Line art for Set Sail, drawn here: an anchor, a compass rose, the route and
+ * pins over the painted chart, and a washing line of sketched travel things.
+ * (The painted and rendered art lives in public/templates/set-sail.)
+ */
 
 export function Anchor({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 40 48" aria-hidden focusable="false">
-      <circle cx="20" cy="6" r="4" />
-      <path d="M20 10v32M12 18h16M5 30c2 8 8 12 15 12s13-4 15-12M5 30l-3 3M5 30l4 1M35 30l3 3M35 30l-4 1" />
-    </svg>
-  );
-}
-
-export function Pin({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden focusable="false">
-      <path d="M12 22s-7-8-7-13a7 7 0 0 1 14 0c0 5-7 13-7 13z" />
-      <circle cx="12" cy="9" r="2.5" />
+      <g fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+        <circle cx="20" cy="6" r="4" />
+        <path d="M20 10v32M12 18h16M5 30c2 8 8 12 15 12s13-4 15-12M5 30l-3 3M5 30l4 1M35 30l3 3M35 30l-4 1" />
+      </g>
     </svg>
   );
 }
@@ -24,121 +22,149 @@ export function Pin({ className }: { className?: string }) {
 export function Compass({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 100 100" aria-hidden focusable="false">
-      <circle cx="50" cy="50" r="40" />
-      <circle cx="50" cy="50" r="33" />
-      <path d="M50 4 L56 44 L96 50 L56 56 L50 96 L44 56 L4 50 L44 44Z M50 22 L53 47 L78 50 L53 53 L50 78 L47 53 L22 50 L47 47Z" />
-      <text x="47" y="15" fontSize="8" stroke="none" fill="currentColor">N</text>
+      <g fill="none" stroke="currentColor" strokeWidth="1">
+        <circle cx="50" cy="50" r="38" />
+        <circle cx="50" cy="50" r="31" strokeDasharray="1 3" />
+        <path d="M50 2 L55 45 L98 50 L55 55 L50 98 L45 55 L2 50 L45 45Z" />
+        <path d="M50 20 L52 48 L80 50 L52 52 L50 80 L48 52 L20 50 L48 48Z" fill="currentColor" fillOpacity=".25" />
+      </g>
+      <text x="47" y="12" fontSize="9" fill="currentColor">
+        N
+      </text>
     </svg>
   );
 }
 
-const fit = (t?: string | null) => (t && t.length <= 20 ? t : null);
+const ROUTE = "M188 676 C 250 600, 330 560, 380 520 S 470 470, 512 448";
+const fit = (t?: string | null, n = 22) => (t && t.length <= n ? t : null);
 
-/** A watercolour chart of the bay: islands, a dotted route from the ceremony to the reception and a little boat sailing it. */
-export function Chart({ from, to, label }: { from?: string | null; to?: string | null; label: string }) {
+/** The painted chart of the bay with the route drawn from the ceremony to the reception, a boat sailing it and two pins. */
+export function Chart({ from, to, labels, label }: { from?: string | null; to?: string | null; labels: { ceremony: string; reception: string; key: string }; label: string }) {
   const a = fit(from);
   const b = fit(to);
   return (
     <div className={s.chart}>
-      <svg viewBox="0 0 400 300" role="img" aria-label={label}>
-        <defs>
-          <filter id="ss-wc" x="-10%" y="-10%" width="120%" height="120%">
-            <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="4" />
-            <feDisplacementMap in="SourceGraphic" scale="9" />
-          </filter>
-          <filter id="ss-grain">
-            <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" result="n" />
-            <feColorMatrix in="n" values="0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .15 0 0 0 .18 0" result="g" />
-            <feComposite in="g" in2="SourceGraphic" operator="in" result="gg" />
-            <feMerge>
-              <feMergeNode in="SourceGraphic" />
-              <feMergeNode in="gg" />
-            </feMerge>
-          </filter>
-        </defs>
-        <rect width="400" height="300" className={s.sea} />
-        <rect width="400" height="300" className={s.grain} filter="url(#ss-grain)" />
-        <g filter="url(#ss-wc)">
-          <path className={s.sand} d="M-10 250 C 40 230, 60 260, 110 250 S 150 290, 140 320 L -10 320Z" />
-          <path className={s.land} d="M-10 260 C 40 240, 60 270, 110 262 S 140 296, 130 320 L -10 320Z" />
-          <path className={s.sand} d="M210 120 C 230 92, 290 96, 300 120 S 285 160, 250 158 S 196 150, 210 120Z" />
-          <path className={s.land} d="M218 122 C 236 100, 284 104, 292 124 S 276 152, 250 150 S 206 146, 218 122Z" />
-          <path className={s.sand} d="M300 40 C 330 20, 410 20, 420 60 L 420 110 C 380 120, 350 90, 330 92 S 290 70, 300 40Z" />
-          <path className={s.land} d="M308 44 C 334 28, 410 28, 420 64 L 420 102 C 384 110, 352 84, 334 86 S 300 66, 308 44Z" />
-          <path className={s.sand} d="M120 60 C 140 46, 170 52, 168 70 S 140 92, 126 84 S 108 72, 120 60Z" />
-          <path className={s.land} d="M126 62 C 142 52, 164 58, 162 70 S 140 86, 130 80 S 116 72, 126 62Z" />
-          <path className={s.sand} d="M40 120 C 54 108, 80 112, 78 128 S 56 146, 46 140 S 30 130, 40 120Z" />
-        </g>
-        <g className={s.waves}>
-          <path d="M10 40 q10 -6 20 0 t20 0" />
-          <path d="M190 230 q10 -6 20 0 t20 0" />
-          <path d="M260 200 q10 -6 20 0 t20 0" />
-          <path d="M60 180 q10 -6 20 0 t20 0" />
-          <path d="M330 250 q10 -6 20 0 t20 0" />
-        </g>
-        <path className={s.route} d="M78 238 C 140 200, 170 120, 250 128 S 330 86, 336 72" />
+      <img src="/templates/set-sail/chart.webp" alt="" className={s.chartImg} />
+      <svg className={s.chartSvg} viewBox="0 0 900 1100" role="img" aria-label={label}>
+        <mask id="ss-route">
+          <path className={s.routeMask} d={ROUTE} />
+        </mask>
+        <path className={s.route} mask="url(#ss-route)" d={ROUTE} />
         <g className={s.boat}>
-          <path d="M-9 2 h18 l-4 5 h-10z M0 1 v-14 l8 11z" />
+          <g transform="scale(1.6)">
+            <g className={s.boatRock}>
+              <path className={s.hull} d="M-14 4 h28 l-6 8 h-16z" />
+              <path className={s.sail} d="M0 2 v-26 l14 22z" />
+              <path className={s.sail} d="M-2 2 v-20 l-10 18z" />
+            </g>
+          </g>
         </g>
-        <g transform="translate(70 214)">
+        <g transform="translate(162 600) scale(1.6)">
           <g className={cn(s.pin, s.pin1)}>
-            <path d="M8 24 C 8 24 0 12 0 8 a8 8 0 0 1 16 0 c0 4 -8 16 -8 16z" />
-            <circle cx="8" cy="8" r="3" />
+            <path d="M16 46 C 16 46 0 24 0 16 a16 16 0 0 1 32 0 c0 8 -16 30 -16 30z" />
+            <svg x="7" y="5" width="18" height="21" viewBox="0 0 40 48" className={s.pinMark}>
+              <g fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                <circle cx="20" cy="6" r="4" />
+                <path d="M20 10v32M12 18h16M5 30c2 8 8 12 15 12s13-4 15-12" />
+              </g>
+            </svg>
           </g>
         </g>
-        <g transform="translate(328 48)">
+        <g transform="translate(486 374) scale(1.6)">
           <g className={cn(s.pin, s.pin2)}>
-            <path d="M8 24 C 8 24 0 12 0 8 a8 8 0 0 1 16 0 c0 4 -8 16 -8 16z" />
-            <circle cx="8" cy="8" r="3" />
+            <path d="M16 46 C 16 46 0 24 0 16 a16 16 0 0 1 32 0 c0 8 -16 30 -16 30z" />
+            <circle cx="16" cy="16" r="6" className={s.pinDot} />
           </g>
         </g>
+        <text className={s.labelCaps} x="80" y="772">
+          {labels.ceremony}
+        </text>
         {a ? (
-          <text x="40" y="282" className={s.chartLabel}>
+          <text className={s.chartLabel} x="80" y="818">
             {a}
           </text>
         ) : null}
+        <text className={s.labelCaps} x="560" y="300" textAnchor="middle">
+          {labels.reception}
+        </text>
         {b ? (
-          <text x="392" y="128" textAnchor="end" className={s.chartLabel}>
+          <text className={s.chartLabel} x="560" y="346" textAnchor="middle">
             {b}
           </text>
         ) : null}
-        <g transform="translate(352 250)" className={s.rose}>
-          <circle r="22" />
-          <path d="M0 -26 L4 -4 L26 0 L4 4 L0 26 L-4 4 L-26 0 L-4 -4Z" />
-        </g>
       </svg>
+      <div className={s.key} aria-hidden>
+        <b>{labels.key}</b>
+        <span>
+          <Anchor className={s.keyIcon} />
+          {labels.ceremony}
+        </span>
+        <span>
+          <i className={s.keyDot} />
+          {labels.reception}
+        </span>
+      </div>
     </div>
   );
 }
 
-/** A washing line with a straw hat, a linen shirt and a camera, swaying in the breeze. */
+/** A washing line with a sun hat, a linen shirt and a camera, sketched in ink, swaying. */
 export function WashingLine() {
   return (
-    <div className={s.line} aria-hidden>
-      <svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMin meet">
-        <path className={s.rope} d="M-10 22 Q 200 52, 410 22" />
-        <g transform="translate(70 30)">
-          <g className={s.item}>
-            <path className={s.hat} d="M-34 26 c10 -8 58 -8 68 0 c-10 6 -58 6 -68 0z M-16 22 c0 -20 32 -20 32 0" />
-            <path d="M-34 26 c10 -8 58 -8 68 0 c-10 6 -58 6 -68 0z M-16 22 c0 -20 32 -20 32 0 M-14 16 h28 M4 24 l4 26 M10 24 l10 22" />
-            <path d="M-4 0 v6 M4 0 v6" />
+    <div className={s.lineWrap} aria-hidden>
+      <svg viewBox="14 24 572 236">
+        <path className={s.rope} d="M-20 30 Q 300 74 620 30" />
+        <g className={cn(s.swing, s.swingA)}>
+          <rect className={s.peg} x="114" y="34" width="12" height="22" rx="2" />
+          <g className={s.ink} transform="translate(30 50)">
+            <path className={s.inkFill} d="M8 96 C 4 80 60 72 90 72 C 120 72 176 80 172 96 C 168 112 120 120 90 120 C 60 120 12 112 8 96Z" />
+            <path className={s.inkFill} d="M44 92 C 40 60 52 30 90 28 C 128 30 140 60 136 92 C 120 100 60 100 44 92Z" />
+            <path d="M56 36 Q 90 52 124 36" />
+            <path className={s.inkFill} d="M44 78 C 70 88 110 88 136 78 L 137 92 C 112 101 68 101 43 92Z" />
+            <path className={s.hatch} d="M50 81 v10 M56 83 v10 M62 84 v10 M68 85 v10 M74 85 v10 M80 86 v10 M86 86 v10 M92 86 v10 M98 86 v10 M104 86 v10 M110 85 v10 M116 85 v10 M122 84 v10 M128 82 v10" />
+            <path className={s.hatch} d="M50 70 C 48 56 54 44 64 38 M58 72 C 56 58 62 46 70 40 M122 72 C 124 58 118 46 110 40 M130 70 C 132 56 126 44 116 38" />
+            <path className={s.hatch} d="M20 104 C 50 116 130 116 160 104 M30 108 C 60 118 120 118 150 108 M44 112 C 70 120 110 120 136 112" />
+            <path d="M136 92 C 150 96 158 100 160 102" />
           </g>
         </g>
-        <g transform="translate(200 38)">
-          <g className={cn(s.item, s.itemB)}>
-            <path className={s.shirt} d="M-14 0 l-26 14 l8 20 l12 -6 v58 h40 v-58 l12 6 l8 -20 l-26 -14 q-14 10 -28 0z" />
-            <path d="M-14 0 l-26 14 l8 20 l12 -6 v58 h40 v-58 l12 6 l8 -20 l-26 -14 q-14 10 -28 0z M0 6 v76 M-6 22 h4 M-6 38 h4 M-6 54 h4 M14 34 h10 v12 h-10z" />
-            <path d="M-14 -4 v8 M14 -4 v8" />
+        <g className={cn(s.swing, s.swingB)}>
+          <rect className={s.peg} x="250" y="40" width="12" height="22" rx="2" />
+          <rect className={s.peg} x="338" y="40" width="12" height="22" rx="2" />
+          <g className={s.ink} transform="translate(200 46)">
+            <path className={s.inkFill} d="M60 8 L30 20 L6 64 L32 76 L44 58 L44 196 Q100 204 156 196 L156 58 L168 76 L194 64 L170 20 L140 8 Q120 20 100 20 Q80 20 60 8Z" />
+            <path className={s.inkFill} d="M60 8 L80 40 L100 22 L120 40 L140 8 Q120 18 100 18 Q80 18 60 8Z" />
+            <path d="M100 22 L100 198" />
+            <path className={s.hatch} d="M104 22 L104 198" />
+            <circle cx="108" cy="54" r="2.4" />
+            <circle cx="108" cy="86" r="2.4" />
+            <circle cx="108" cy="118" r="2.4" />
+            <circle cx="108" cy="150" r="2.4" />
+            <circle cx="108" cy="182" r="2.4" />
+            <path className={s.inkFill} d="M120 76 h28 v30 q-14 4 -28 0z" />
+            <path d="M120 82 h28" />
+            <path className={s.hatch} d="M50 70 C 54 110 50 150 54 190 M58 90 C 60 120 58 150 62 186 M150 74 C 146 110 150 150 146 190 M30 30 L14 62 M36 34 L22 66" />
+            <path className={s.hatch} d="M70 120 C 76 140 72 160 78 180 M132 130 C 128 150 132 170 128 186 M44 58 L44 70 M156 58 L156 70" />
           </g>
         </g>
-        <g transform="translate(320 30)">
-          <g className={cn(s.item, s.itemC)}>
-            <path d="M-16 -4 q16 20 32 0" />
-            <path className={s.cam} d="M-22 26 h44 v30 h-44z" />
-            <path d="M-22 26 h44 v30 h-44z M-8 26 l4 -6 h8 l4 6 M14 31 h4" />
-            <circle cx="0" cy="41" r="9" className={s.lens} />
-            <circle cx="0" cy="41" r="4.5" className={s.glass} />
-            <path d="M-16 -4 l-6 30 M16 -4 l6 30" />
+        <g className={cn(s.swing, s.swingC)}>
+          <rect className={s.peg} x="474" y="36" width="12" height="22" rx="2" />
+          <g className={s.ink} transform="translate(390 52)">
+            <path d="M40 46 Q 60 4 90 2 Q 120 4 140 46" />
+            <path className={s.inkFill} d="M26 50 L26 42 L60 42 L66 32 L114 32 L120 42 L154 42 L154 50Z" />
+            <rect className={s.inkFill} x="14" y="50" width="152" height="86" rx="9" />
+            <rect className={s.hatch} x="14" y="66" width="152" height="52" />
+            <path className={s.hatch} d="M20 70 l8 8 M20 82 l16 16 M20 94 l20 20 M30 70 l18 18 M44 70 l14 14 M126 70 l18 18 M140 70 l20 20 M154 72 l10 10 M126 96 l18 18 M140 98 l16 16" />
+            <rect className={s.inkFill} x="130" y="54" width="26" height="10" rx="2" />
+            <rect className={s.inkFill} x="24" y="54" width="18" height="10" rx="2" />
+            <circle className={s.inkFill} cx="140" cy="36" r="7" />
+            <path className={s.hatch} d="M135 33 l10 0 M135 36 l10 0 M135 39 l10 0" />
+            <circle className={s.inkFill} cx="90" cy="92" r="36" />
+            <circle cx="90" cy="92" r="29" />
+            <circle className={s.hatch} cx="90" cy="92" r="24" />
+            <circle className={s.lens} cx="90" cy="92" r="17" />
+            <circle className={s.glass} cx="90" cy="92" r="9" />
+            <path className={s.shine} d="M81 84 a12 12 0 0 1 9 -4" />
+            <path className={s.hatch} d="M58 74 l4 4 M54 92 h5 M58 110 l4 -4 M122 74 l-4 4 M126 92 h-5 M122 110 l-4 -4 M90 58 v5 M90 126 v-5" />
           </g>
         </g>
       </svg>

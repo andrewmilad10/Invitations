@@ -1,0 +1,123 @@
+<body style="margin:0"><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from "three";
+import { stage, srand, rnd } from "./paper.js";
+const q = new URLSearchParams(location.search), which = q.get("c");
+
+function canvas(w, h, draw) { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); draw(x, w, h); return c; }
+function tex(c, srgb = true, rep = [1, 1]) { const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(...rep); t.anisotropy = 8; return t; }
+function noise(x, w, h, a, b, n = 1) { const id = x.getImageData(0, 0, w, h); for (let i = 0; i < id.data.length; i += 4) { const v = (Math.random() - .5) * n; id.data[i] += v * a; id.data[i + 1] += v * a; id.data[i + 2] += v * b; } x.putImageData(id, 0, 0); }
+
+// parchment: warm paper with mottling, fibres and darker, slightly burnt edges along v
+const parchCanvas = (w = 1024, h = 512, burnU = true) => canvas(w, h, (x) => {
+  x.fillStyle = "#e2c998"; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 420; i++) { const r = rnd(20, 120); const g = x.createRadialGradient(0, 0, 0, 0, 0, r); const c = rnd() < .5 ? "rgba(160,112,52," : "rgba(250,236,205,"; g.addColorStop(0, c + rnd(.08, .28) + ")"); g.addColorStop(1, c + "0)"); x.save(); x.translate(rnd(0, w), rnd(0, h)); x.scale(1, rnd(.4, 1)); x.fillStyle = g; x.beginPath(); x.arc(0, 0, r, 0, 7); x.fill(); x.restore(); }
+  x.globalAlpha = .12; x.strokeStyle = "#7a5a2c"; for (let i = 0; i < 400; i++) { x.lineWidth = rnd(.3, 1); x.beginPath(); const sx = rnd(0, w), sy = rnd(0, h); x.moveTo(sx, sy); x.lineTo(sx + rnd(-30, 30), sy + rnd(-6, 6)); x.stroke(); }
+  x.globalAlpha = 1;
+  if (burnU) for (const side of [0, 1]) { const g = x.createLinearGradient(0, side ? h : 0, 0, side ? h - 60 : 60); g.addColorStop(0, "rgba(120,80,35,.55)"); g.addColorStop(.3, "rgba(150,105,55,.2)"); g.addColorStop(1, "rgba(150,105,55,0)"); x.fillStyle = g; x.fillRect(0, 0, w, h); }
+  noise(x, w, h, 26, 20);
+});
+const twineCanvas = () => canvas(256, 64, (x, w, h) => { x.fillStyle = "#b08a5a"; x.fillRect(0, 0, w, h); for (let i = -h; i < w; i += 7) { x.strokeStyle = i % 14 ? "#8a6638" : "#c9a676"; x.lineWidth = 3; x.beginPath(); x.moveTo(i, 0); x.lineTo(i + h * .9, h); x.stroke(); } noise(x, w, h, 40, 30); });
+const twineMatX = () => new THREE.MeshStandardMaterial({ map: tex(twineCanvas(), true, [6, 1]), roughness: .95, bumpMap: tex(twineCanvas(), false, [6, 1]), bumpScale: 2 });
+const mesh = (g, m) => { const o = new THREE.Mesh(g, m); o.castShadow = o.receiveShadow = true; return o; };
+
+// a rolled sheet: a cylinder of parchment with spiral ends; axis along X
+function rolled(len, r, o = {}) {
+  const grp = new THREE.Group();
+  const side = new THREE.MeshStandardMaterial({ map: tex(parchCanvas(), true, [1, 1]), roughness: .92, envMapIntensity: .25, bumpMap: tex(parchCanvas(), false), bumpScale: 1.2 });
+  const cyl = mesh(new THREE.CylinderGeometry(r, r, len, 96, 1, true), side); cyl.rotation.z = Math.PI / 2; grp.add(cyl);
+  // ends: spiral of paper layers
+  const endTex = tex(canvas(512, 512, (x, w, h) => {
+    x.fillStyle = "#d9c094"; x.fillRect(0, 0, w, h);
+    x.translate(w / 2, h / 2);
+    for (let k = 0; k < 2; k++) { x.strokeStyle = k ? "rgba(250,236,205,.8)" : "rgba(110,75,35,.85)"; x.lineWidth = k ? 3 : 4; x.beginPath(); for (let t = 0; t < 7 * 6.283; t += .02) { const rr = 30 + t * 5.0 + k * 3; x.lineTo(Math.cos(t) * rr, Math.sin(t) * rr); } x.stroke(); }
+    const g = x.createRadialGradient(0, 0, 0, 0, 0, 40); g.addColorStop(0, "rgba(60,40,20,.9)"); g.addColorStop(1, "rgba(60,40,20,0)"); x.fillStyle = g; x.beginPath(); x.arc(0, 0, 40, 0, 7); x.fill();
+  }));
+  for (const s of [-1, 1]) { const cap = mesh(new THREE.CircleGeometry(r, 96), new THREE.MeshStandardMaterial({ map: endTex, roughness: .95 })); cap.rotation.y = s * Math.PI / 2; cap.position.x = s * len / 2; grp.add(cap); }
+  return grp;
+}
+// twine wrapped round a cylinder (axis X) with a bow
+const twineMat = twineMatX;
+function tie(r, o = {}) {
+  const grp = new THREE.Group(); const m = twineMat(); const tr = o.thick ?? 4.6;
+  for (const dx of [-tr * 2.2, 0, tr * 2.2]) { const t = mesh(new THREE.TorusGeometry(r + tr * .6, tr, 16, 120), m); t.rotation.y = Math.PI / 2; t.position.x = dx; grp.add(t); }
+  const knotZ = r + tr;
+  const curve = (pts) => mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))), 80, tr, 12, false), m);
+  // loops
+  grp.add(curve([[0, 0, knotZ], [-18, 14, knotZ + 10], [-46, 26, knotZ + 8], [-58, 8, knotZ + 4], [-40, -4, knotZ + 6], [0, 0, knotZ + 2]]));
+  grp.add(curve([[0, 0, knotZ], [18, 16, knotZ + 10], [48, 30, knotZ + 6], [60, 10, knotZ + 2], [42, -4, knotZ + 6], [0, 0, knotZ + 2]]));
+  // tails
+  grp.add(curve([[0, 0, knotZ + 2], [-10, -22, knotZ + 8], [-26, -52, knotZ + 4], [-22, -86, knotZ + 1]]));
+  grp.add(curve([[0, 0, knotZ + 2], [12, -24, knotZ + 8], [30, -50, knotZ + 6], [44, -78, knotZ + 2]]));
+  const knot = mesh(new THREE.SphereGeometry(tr * 2.4, 24, 16), m); knot.position.set(0, 0, knotZ + 2); knot.scale.set(1.3, 1, .8); grp.add(knot);
+  return grp;
+}
+
+// glass bottle (lathe, axis Y) with cork and a rolled letter inside
+function bottle(o = {}) {
+  const grp = new THREE.Group();
+  const prof = [[0, -150], [44, -150], [50, -146], [52, -136], [52, 30], [50, 52], [40, 74], [24, 92], [17, 104], [16, 160], [19, 164], [20, 172], [17, 178]];
+  const pts = prof.map(([r, y]) => new THREE.Vector2(r, y));
+  const glass = new THREE.MeshPhysicalMaterial({ color: "#d8efe9", roughness: .04, metalness: 0, transparent: true, opacity: .22, clearcoat: 1, clearcoatRoughness: .02, envMapIntensity: 3, side: THREE.DoubleSide, depthWrite: false, specularIntensity: 1 });
+  const lathe = new THREE.LatheGeometry(pts, 128);
+  const outer = new THREE.Mesh(lathe, glass); grp.add(outer);
+  const streak = canvas(512, 64, (x, w, h) => { const st = (c, wd, a) => { const g = x.createLinearGradient(c - wd, 0, c + wd, 0); g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(.5, `rgba(255,255,255,${a})`); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(c - wd, 0, wd * 2, h); }; st(w * .1, 14, .95); st(w * .16, 5, .7); st(w * .42, 30, .25); st(w * .6, 8, .5); });
+  const hi = new THREE.Mesh(lathe, new THREE.MeshBasicMaterial({ map: tex(streak), transparent: true, depthWrite: false, side: THREE.FrontSide })); hi.scale.set(1.002, 1, 1.002); hi.rotation.y = o.hiRot ?? 0; grp.add(hi);
+  const rimM = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: {}, vertexShader: "varying vec3 n; varying vec3 v; void main(){ vec4 mv = modelViewMatrix*vec4(position,1.); n = normalize(normalMatrix*normal); v = normalize(-mv.xyz); gl_Position = projectionMatrix*mv; }", fragmentShader: "varying vec3 n; varying vec3 v; void main(){ float f = pow(1.-abs(dot(normalize(n),normalize(v))), 2.2); gl_FragColor = vec4(0.16,0.36,0.38, f*.75); }" });
+  grp.add(new THREE.Mesh(lathe, rimM));
+  // thick glass base and rim catch more colour
+  const baseM = new THREE.MeshPhysicalMaterial({ color: "#9fd0c8", roughness: .1, transparent: true, opacity: .5, envMapIntensity: 2.5, clearcoat: 1 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(48, 44, 10, 96), baseM); base.position.y = -144; grp.add(base);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(19, 3.4, 16, 64), baseM); rim.rotation.x = Math.PI / 2; rim.position.y = 166; grp.add(rim);
+  // water inside, lower part
+  if (o.water) { const w = new THREE.Mesh(new THREE.CylinderGeometry(49, 49, 70, 96), new THREE.MeshPhysicalMaterial({ color: "#5fa7b8", transparent: true, opacity: .32, roughness: .05, envMapIntensity: 1.5, depthWrite: false })); w.position.y = -112; grp.add(w); }
+  // letter inside
+  const letter = rolled(190, 22); letter.rotation.z = Math.PI / 2 + .06; letter.position.set(4, -40, 0); grp.add(letter);
+  const t = tie(22, { thick: 2 }); t.scale.set(.6, .6, .6); t.rotation.z = Math.PI / 2 + .06; t.position.set(4, -40, 0); grp.add(t);
+  // cork
+  const corkC = canvas(256, 256, (x, w, h) => { x.fillStyle = "#c49a63"; x.fillRect(0, 0, w, h); for (let i = 0; i < 1600; i++) { x.fillStyle = rnd() < .5 ? `rgba(110,72,35,${rnd(.2, .6)})` : `rgba(235,200,150,${rnd(.2, .5)})`; x.beginPath(); x.ellipse(rnd(0, w), rnd(0, h), rnd(1, 4), rnd(1, 3), rnd(0, 3), 0, 7); x.fill(); } });
+  const cork = mesh(new THREE.CylinderGeometry(19, 16, 50, 64), new THREE.MeshStandardMaterial({ map: tex(corkC), bumpMap: tex(corkC, false), bumpScale: 3, roughness: .9 })); cork.position.y = 180; grp.add(cork);
+  const corkTop = mesh(new THREE.CylinderGeometry(19.5, 19, 2, 64), new THREE.MeshStandardMaterial({ map: tex(corkC), roughness: .9 })); corkTop.position.y = 205; grp.add(corkTop);
+  return grp;
+}
+
+// wax seal from a height field: an irregular puddle, a pressed ring and an anchor in relief
+function seal(r, colour, o = {}) {
+  const N = 512;
+  const hc = canvas(N, N, (x, w, h) => {
+    x.fillStyle = "#000"; x.fillRect(0, 0, w, h); x.translate(w / 2, h / 2);
+    // puddle
+    x.fillStyle = "#fff"; x.filter = "blur(10px)"; x.beginPath();
+    for (let a = 0; a <= 6.3; a += .05) { const rr = 205 + 14 * Math.sin(a * 5 + 1) + 9 * Math.sin(a * 11) + 6 * Math.sin(a * 17 + 2); x.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+    x.fill();
+    // pressed face: a recessed disc
+    x.filter = "blur(3px)"; x.fillStyle = "#9a9a9a"; x.beginPath(); x.arc(0, 0, 160, 0, 7); x.fill();
+    x.strokeStyle = "#b8b8b8"; x.lineWidth = 6; x.beginPath(); x.arc(0, 0, 142, 0, 7); x.stroke();
+    // anchor in relief
+    x.filter = "blur(2px)"; x.strokeStyle = "#e6e6e6"; x.lineCap = "round"; x.lineWidth = 15;
+    x.beginPath(); x.arc(0, -86, 15, 0, 7); x.stroke();
+    x.beginPath(); x.moveTo(0, -70); x.lineTo(0, 92); x.moveTo(-42, -40); x.lineTo(42, -40); x.stroke();
+    x.beginPath(); x.moveTo(-82, 30); x.quadraticCurveTo(-70, 96, 0, 98); x.quadraticCurveTo(70, 96, 82, 30); x.stroke();
+    x.lineWidth = 12; x.beginPath(); x.moveTo(-82, 30); x.lineTo(-96, 46); x.moveTo(-82, 30); x.lineTo(-62, 36); x.moveTo(82, 30); x.lineTo(96, 46); x.moveTo(82, 30); x.lineTo(62, 36); x.stroke();
+  });
+  const hd = hc.getContext("2d").getImageData(0, 0, N, N).data;
+  const g = new THREE.PlaneGeometry(r * 2, r * 2, 255, 255); const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) { const u = (p.getX(i) / (r * 2) + .5), v = 1 - (p.getY(i) / (r * 2) + .5); const px = Math.min(N - 1, Math.round(u * (N - 1))), py = Math.min(N - 1, Math.round(v * (N - 1))); const hv = hd[(py * N + px) * 4] / 255; const base = Math.min(1, hd[(py * N + px) * 4] / 255 * 3); p.setZ(i, (Math.sqrt(base) * .55 + hv * .45) * r * .16 + (Math.random() - .5) * .25); }
+  g.computeVertexNormals();
+  const alpha = canvas(N, N, (x, w, h) => { x.drawImage(hc, 0, 0); const id = x.getImageData(0, 0, w, h); for (let i = 0; i < id.data.length; i += 4) { const v = id.data[i] > 30 ? 255 : 0; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; } x.putImageData(id, 0, 0); });
+  const col = canvas(N, N, (x, w, h) => { x.fillStyle = colour; x.fillRect(0, 0, w, h); x.globalCompositeOperation = "multiply"; x.globalAlpha = .35; x.drawImage(hc, 0, 0); x.globalCompositeOperation = "source-over"; x.globalAlpha = 1; noise(x, w, h, 14, 14); });
+  const m = new THREE.MeshPhysicalMaterial({ map: tex(col), alphaMap: tex(alpha, false), alphaTest: .5, roughness: .38, clearcoat: .5, clearcoatRoughness: .3, envMapIntensity: .9, sheen: .3, sheenColor: new THREE.Color(colour) });
+  const s = mesh(g, m); return s;
+}
+
+const C = {
+  bottle() { srand(3); const S = stage(900, 900, { map: 2048, exposure: 1, env: 1.2, shadow: 0 }); const b = bottle({ water: q.get("water") === "1" }); b.rotation.set(.18, .5, -1.02); S.put(b, 0, 10, 0, 0, 1.9); return S.render(); },
+  tied() { srand(5); const S = stage(1100, 700, { map: 2048, exposure: .98, shadow: .22 }); const grp = new THREE.Group(); grp.add(rolled(560, 62)); const t = tie(62); grp.add(t); grp.rotation.set(.32, -.38, .1); S.put(grp, 0, 0, 0, 0, 1.4); return S.render(); },
+  bare() { srand(5); const S = stage(1100, 700, { map: 2048, exposure: .98, shadow: .22 }); const grp = new THREE.Group(); grp.add(rolled(560, 62)); grp.rotation.set(.32, -.38, .1); S.put(grp, 0, 0, 0, 0, 1.4); return S.render(); },
+  tieonly() { srand(5); const S = stage(1100, 700, { map: 2048, exposure: .98, shadow: 0 }); const grp = new THREE.Group(); const r = rolled(560, 62); r.traverse((o) => { if (o.isMesh) { o.material = new THREE.MeshBasicMaterial({ colorWrite: false }); o.castShadow = false; } }); grp.add(r); grp.add(tie(62)); grp.rotation.set(.32, -.38, .1); S.put(grp, 0, 0, 0, 0, 1.4); return S.render(); },
+  roll() { srand(7); const S = stage(1400, 200, { map: 2048, exposure: 1, shadow: 0 }); const r = rolled(1240, 40); r.rotation.x = .3; S.put(r, 0, 0, 0, 0, 1.06); return S.render(); },
+  sealblue() { srand(9); const S = stage(600, 600, { map: 2048, exposure: 1, shadow: .3 }); S.renderer.toneMappingExposure = .82; S.put(seal(230, "#4a6680"), 0, 0, 0); return S.render(); },
+  sealbrown() { srand(9); const S = stage(600, 600, { map: 2048, exposure: 1, shadow: .3 }); S.renderer.toneMappingExposure = .82; S.put(seal(230, "#6e3020"), 0, 0, 0); return S.render(); },
+};
+window.__png = C[which]();
+</script></body>

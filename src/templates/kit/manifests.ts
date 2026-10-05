@@ -68,7 +68,7 @@ const P = {
   // Rose Marble
   roseMarble: { id: "marble-rose-gold", label: "Marble & rose gold", family: "pink", colors: c("#efebe7", "#fbf8f3", "#3a3030", "#84746e", "#b5735f", "#fbf8f3", "#e2d6cf") },
   // Something Blue
-  setSail: { id: "harbour-navy", label: "Harbour navy & sand", family: "blue", colors: c("#ece6da", "#f6f0e3", "#2c2a24", "#7a6a4c", "#1f3a5f", "#f3ead2", "#cdbf9f") },
+  setSail: { id: "sea-glass", label: "Sea glass & slate", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Villa Rosa
   villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
@@ -285,9 +285,9 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     {
       id: "set-sail",
       name: "Set Sail",
-      tagline: "A navy envelope, an anchor seal and a scroll for a wedding by the sea.",
+      tagline: "A message in a bottle: an anchor seal, a twine-tied scroll and a painted sea.",
       description:
-        "Opens on a navy cotton envelope sealed in blue wax stamped with an anchor: the seal cracks, the flap lifts and a parchment scroll rises out and unrolls into your names. Then sand-paper cards on navy linen: a countdown, a watercolour chart of the bay with the route from the ceremony to the reception, the day as a ship's log, questions, a wax seal to reply and a little washing line of holiday things.",
+        "Opens on a dusty-blue envelope sealed in slate wax stamped with an anchor: the seal cracks and breaks, the flap opens on a watercolour sea, a parchment scroll tied with twine slides out, slips its twine and unrolls over a painted sea where a glass bottle bobs. Then a countdown, a watercolour chart of the islands with the route from the ceremony to the reception, the day as a ship's log, numbered questions, a wax seal to reply and a washing line of sketched travel things.",
       categories: ["modern", "elegant", "romantic"],
       palettes: [P.setSail],
       fonts: { heading: "pinyon", body: "cormorant", accent: "marcellus" },

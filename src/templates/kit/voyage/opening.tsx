@@ -1,50 +1,70 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- transparent art layers that animate with the opening */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { cn } from "@/lib/utils";
 import { OPENED_EVENT } from "../../cinematic/opening/envelope-opening";
 import { KitIntro } from "../intro";
-import { Anchor } from "./art";
 import s from "./voyage.module.css";
 
 const CHIPS = [
-  ["-160%", "-180%"],
-  ["120%", "-210%"],
-  ["-220%", "60%"],
-  ["200%", "80%"],
-  ["-40%", "-260%"],
+  ["-210%", "-220%", "160deg"],
+  ["150%", "-260%", "-140deg"],
+  ["-280%", "90%", "120deg"],
+  ["240%", "110%", "-200deg"],
+  ["-40%", "260%", "90deg"],
 ];
+const CRACK = "M50 0 L46 14 L53 28 L45 42 L52 56 L47 70 L54 84 L49 100";
 
 /**
- * Set Sail's opening: a navy cotton envelope sealed in blue wax stamped with
- * an anchor. The seal cracks in two (with a few chips of wax), the flap lifts
- * and a parchment scroll rises out; the hero then unrolls (see UnrollHero).
+ * Set Sail's opening, one continuous scene once the seal is tapped (all timed
+ * in CSS from data-phase="opening"): a crack runs through the slate wax and the
+ * seal breaks in two; the flap swings open on a watercolour sea liner; a
+ * parchment scroll tied with twine slides out; the envelope drops away as the
+ * scroll comes forward; the twine slips off; then the overlay fades and the
+ * hero scroll unrolls over the sea (UnrollHero).
  */
 export function VoyageOpening({ model }: { model: InvitationModel }) {
   const ar = model.locale === "ar";
   return (
-    <KitIntro model={model} className={s.intro} timing={[2700, 1100]}>
+    <KitIntro model={model} className={s.intro} timing={[4100, 700]}>
       {({ open, skip }) => (
         <>
-          <div className={s.stage} onClick={open}>
-            <div className={s.envBack} aria-hidden />
-            <div className={s.scroll} aria-hidden />
-            <div className={s.pocket} aria-hidden />
-            <svg className={s.folds} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-              <path d="M0 100 L46 53 M100 100 L54 53" />
+          <div className={s.scene} onClick={open}>
+            <div className={cn(s.part, s.back)} aria-hidden />
+            <div className={s.scroll} aria-hidden>
+              <div className={s.scrollIn}>
+                <img src="/templates/set-sail/scroll.webp" alt="" />
+                <img src="/templates/set-sail/twine.webp" alt="" className={s.twine} />
+              </div>
+            </div>
+            <div className={cn(s.part, s.pocket)} aria-hidden />
+            <svg className={cn(s.part, s.folds)} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+              <path className={s.foldDark} d="M0 100 L45 54 Q50 50 55 54 L100 100" />
+              <path className={s.foldLight} d="M0 99 L45 53 Q50 49 55 53 L100 99" />
             </svg>
-            <div className={s.flap} aria-hidden />
-            <button type="button" className={s.seal} onClick={open} aria-label={model.strings.openInvitation}>
+            <div className={cn(s.part, s.flapShade)} aria-hidden />
+            <div className={cn(s.part, s.hinge)} aria-hidden>
+              <div className={s.flap}>
+                <i className={s.flapFront} />
+                <i className={s.flapInside} />
+              </div>
+            </div>
+            <button type="button" className={cn(s.part, s.seal)} onClick={open} aria-label={model.strings.openInvitation}>
               <span className={cn(s.half, s.halfL)} aria-hidden />
               <span className={cn(s.half, s.halfR)} aria-hidden />
-              <Anchor className={s.sealAnchor} />
-              {CHIPS.map(([x, y], i) => (
-                <span key={i} className={s.chip} style={{ "--cx": x, "--cy": y } as React.CSSProperties} aria-hidden />
+              <svg className={s.crack} viewBox="0 0 100 100" aria-hidden>
+                <path className={s.crackDark} pathLength={1} d={CRACK} />
+                <path className={s.crackLight} pathLength={1} d={CRACK} />
+                <path className={s.crackBranch} pathLength={1} d="M53 28 L64 24 L72 30 M45 42 L34 46 L27 42 M47 70 L38 76 M52 56 L62 62" />
+              </svg>
+              {CHIPS.map(([x, y, r], i) => (
+                <span key={i} className={s.chip} style={{ "--x": x, "--y": y, "--r": r } as React.CSSProperties} aria-hidden />
               ))}
             </button>
           </div>
-          <p className={s.introTap}>{ar ? "اكسروا الختم للفتح" : "Tap the seal to open"}</p>
+          <p className={s.tap}>{ar ? "اكسروا الختم للفتح" : "Tap the seal to open"}</p>
           {skip}
         </>
       )}
@@ -58,7 +78,7 @@ export function VoyageOpening({ model }: { model: InvitationModel }) {
  * again. Without script, in the editor and in exports it is simply open.
  */
 export function UnrollHero({ model, className, children }: { model: InvitationModel; className?: string; children: ReactNode }) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [rolled, setRolled] = useState(false);
   const [h, setH] = useState<number | null>(null);
 
@@ -76,7 +96,7 @@ export function UnrollHero({ model, className, children }: { model: InvitationMo
     };
     const unroll = () => {
       clearTimeout(t);
-      t = window.setTimeout(() => setRolled(false), 150);
+      t = window.setTimeout(() => setRolled(false), 80);
     };
     if (model.mode === "live" || model.mode === "sample") roll();
     window.addEventListener(OPENED_EVENT, unroll);
@@ -90,15 +110,8 @@ export function UnrollHero({ model, className, children }: { model: InvitationMo
   }, [model.mode]);
 
   return (
-    <header
-      ref={ref}
-      id="hero"
-      data-section="hero"
-      data-rolled={rolled ? "" : undefined}
-      className={className}
-      style={h ? ({ "--h": `${h}px` } as React.CSSProperties) : undefined}
-    >
+    <div ref={ref} data-rolled={rolled ? "" : undefined} className={className} style={h ? ({ "--h": `${h}px` } as React.CSSProperties) : undefined}>
       {children}
-    </header>
+    </div>
   );
 }
