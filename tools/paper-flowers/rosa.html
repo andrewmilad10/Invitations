@@ -28,6 +28,28 @@ const C = {
     for(let i=0;i<=24;i++){ const t=i/24, [x,y]=along(t,180); const l=leaf(34,...LC,{fold:.3}); l.rotation.z=(t<.5?-.8:-2.35)+rnd(-.3,.3); S.put(l,x,y,4); }
     srand(9); S.put(rose(70,...LC,{petals:22}),0,apexY+105,14);
     return S.render(); },
+  // Landscape envelope flap (1080 x 500): the V runs from the top corners to a scalloped tip, edged in a wide band of lace.
+  flapL(){ srand(5); const W=1080,H=500, S=stage(W,H,{map:2048,soft:3,shadow:.22,exposure:.86,hemi:.3,sun:3.8,env:.35});
+    const top=H/2+6, apexY=-H/2+34;
+    const L=[-W/2-6,top-6], A=[0,apexY], R=[W/2+6,top-6];
+    const edge=[]; const seg=(p,q,n)=>{ const dx=q[0]-p[0], dy=q[1]-p[1], len=Math.hypot(dx,dy); let nx=dy/len, ny=-dx/len; if(ny>0){nx=-nx;ny=-ny;}
+      const per=len/n; for(let i=0;i<=n*12;i++){ const t=i/(n*12), d=t*len, o=24*Math.abs(Math.sin(Math.PI*d/per)); edge.push([p[0]+dx*t+nx*o, p[1]+dy*t+ny*o]); } };
+    seg(L,A,8); seg(A,R,8);
+    const s=new THREE.Shape(); s.moveTo(-W/2-20,top+10); s.lineTo(W/2+20,top+10); for(let i=edge.length-1;i>=0;i--) s.lineTo(edge[i][0],edge[i][1]); s.closePath();
+    const pm=new THREE.MeshStandardMaterial({color:"#dcb3b4",roughness:.92}); const plane=new THREE.Mesh(new THREE.ShapeGeometry(s,8),pm); plane.castShadow=plane.receiveShadow=true; S.put(plane,0,0,0);
+    const along=(t,inset)=>{ const p=t<.5?L:A, q=t<.5?A:R, u=t<.5?t/.5:(t-.5)/.5; return [p[0]+(q[0]-p[0])*u, p[1]+(q[1]-p[1])*u+inset]; };
+    const LC=["#c8979a","#e9c9c9"];
+    for(let i=0;i<=16;i++){ const t=i/16, [x,y]=along(t,44); S.put(rose(rnd(32,38),...LC,{petals:16}),x,y,8,rnd(0,6));
+      if(i<16){ const [x2,y2]=along(t+1/32,30); const l=leaf(42,...LC,{fold:.3}); l.rotation.z=(t<.5?-2.2:-0.95)+rnd(-.25,.25); S.put(l,x2,y2-16,6); }
+      const [px,py]=along(t,-4); S.put(pearl(4.5,"#f6e6e2"),px,py-12,4); }
+    for(let i=0;i<=32;i++){ const t=i/32, [x,y]=along(t,108+rnd(-6,6)); S.put(blossom(rnd(14,18),...LC),x,y,6,rnd(0,6)); }
+    for(let i=0;i<=22;i++){ const t=i/22, [x,y]=along(t,150); if(y>top-20) continue; const l=leaf(30,...LC,{fold:.3}); l.rotation.z=(t<.5?-.9:-2.25)+rnd(-.3,.3); S.put(l,x,y,4); }
+    for(let i=0;i<=16;i++){ const t=i/16, [x,y]=along(t,190); if(y>top-30) continue; S.put(blossom(rnd(10,13),...LC),x,y,4,rnd(0,6)); }
+    // a central medallion above the tip
+    srand(9); S.put(rose(58,...LC,{petals:22}),0,apexY+104,14);
+    pair(S,12,64,apexY+120,6,()=>sp(130,2.6,{colour:LC[0],edge:LC[1]},{bend:-.3,leaves:4,leaf:.28}));
+    pair(S,13,40,apexY+176,8,()=>blossom(18,...LC));
+    return S.render(); },
   // Crown of roses over the names (900 x 1400): a full arch on top, a smaller cluster at the base.
   crown(){ srand(21); const S=stage(900,1400,{map:2048,exposure:.84,hemi:.3,sun:3.6,env:.35});
     const RX=360, RY=600, P=(a)=>[Math.cos(a)*RX, Math.sin(a)*RY];
