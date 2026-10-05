@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import type { TemplateManifest } from "@/core/template/manifest";
@@ -6,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { MiniSite } from "../gallery/website-thumb";
 import { FirstScreen } from "./first-screen";
 import { ScaledScreen } from "./scaled-screen";
+import { SCREENS, screenSrc } from "./screens";
 
 /** Designs that open on their own scene (doors, lanterns, a book) rather than an envelope. */
 const SCENE_OPENINGS = new Set(["gate", "nile", "herbarium"]);
@@ -49,7 +51,9 @@ export function WebsiteCard({
           <div className="w-[46%] shrink-0 transition-transform duration-700 ease-out group-hover:-translate-y-[2%] group-hover:-rotate-1">
             <div className="overflow-hidden rounded-[7cqw] border-[1.6cqw] border-neutral-900 bg-neutral-900 shadow-[0_6cqw_8cqw_-4cqw_rgb(0_0_0/0.5)]">
               <div className="relative aspect-[9/19] overflow-hidden rounded-[5cqw] [container-type:inline-size]">
-                {scene ? (
+                {SCREENS.has(template.id) ? (
+                  <Image src={screenSrc(template.id, "hero")} alt="" fill sizes="(min-width: 1024px) 140px, 22vw" className="object-cover object-top" />
+                ) : scene ? (
                   <ScaledScreen>
                     <FirstScreen templateId={template.id} />
                   </ScaledScreen>
@@ -170,7 +174,11 @@ function Envelope({ template }: { template: TemplateManifest }) {
 function OpeningScene({ template }: { template: TemplateManifest }) {
   return (
     <div className="relative aspect-[10/17] w-[40%] shrink-0 overflow-hidden rounded-[1.4cqw] shadow-[0_5cqw_7cqw_-4cqw_rgb(0_0_0/0.45)] ring-1 ring-black/10 transition-transform duration-700 ease-out [container-type:inline-size] group-hover:translate-y-[1.5%] group-hover:rotate-1">
-      <MiniSite template={template} {...SAMPLE} device="phone" openingOnly />
+      {SCREENS.has(template.id) ? (
+        <Image src={screenSrc(template.id, "opening")} alt="" fill sizes="(min-width: 1024px) 120px, 20vw" className="object-cover object-top" />
+      ) : (
+        <MiniSite template={template} {...SAMPLE} device="phone" openingOnly />
+      )}
     </div>
   );
 }

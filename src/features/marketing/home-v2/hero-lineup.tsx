@@ -1,24 +1,22 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FirstScreen } from "../home/first-screen";
-import { ScaledScreen } from "../home/scaled-screen";
+import Image from "next/image";
+import { screenSrc } from "../home/screens";
 
 /** The line-up: five real designs on phones, fanned out, the centre one in front. */
 const LINEUP = [
   { id: "moonlit-nile", x: -86, r: -9, s: 0.78, z: 1, d: 260 },
-  { id: "villa-rosa", x: -46, r: -4.5, s: 0.9, z: 2, d: 140 },
+  { id: "something-blue", x: -46, r: -4.5, s: 0.9, z: 2, d: 140 },
   { id: "swan-lake", x: 0, r: 0, s: 1, z: 3, d: 0 },
   { id: "cotton-press", x: 46, r: 4.5, s: 0.9, z: 2, d: 140 },
-  { id: "the-gate", x: 86, r: 9, s: 0.78, z: 1, d: 260 },
+  { id: "burgundy-envelope", x: 86, r: 9, s: 0.78, z: 1, d: 260 },
 ];
 
 function Phone({ id }: { id: string }) {
   return (
     <div className="overflow-hidden rounded-[2.4rem] border-[7px] border-neutral-950 bg-neutral-950 shadow-[0_50px_80px_-30px_rgb(0_0_0/0.75),0_0_0_1px_rgb(255_255_255/0.08)]">
       <div className="relative aspect-[9/19] overflow-hidden rounded-[1.9rem]">
-        <ScaledScreen>
-          <FirstScreen templateId={id} />
-        </ScaledScreen>
+        <Image src={screenSrc(id, "hero")} alt="" fill priority sizes="300px" className="object-cover object-top" />
         <span className="absolute left-1/2 top-[1.6%] h-[3.2%] w-[30%] -translate-x-1/2 rounded-full bg-neutral-950" />
       </div>
     </div>
