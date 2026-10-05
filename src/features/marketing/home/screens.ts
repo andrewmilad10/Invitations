@@ -6,6 +6,6 @@
  */
 export const SCREENS = new Set([
   "swan-lake", "villa-rosa", "something-blue", "cotton-press", "rose-marble",
-  "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden",
+  "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden", "swan-pond",
 ]);
 export const screenSrc = (id: string, kind: "hero" | "opening") => `/marketing/screens/${id}-${kind}.webp`;

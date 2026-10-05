@@ -14,6 +14,7 @@ import { NamesProvider } from "./names";
 const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
   "swan-lake": { ar: "بحيرة البجع", mood: "floral" },
   "villa-rosa": { ar: "فيلا روزا", mood: "floral" },
+  "swan-pond": { ar: "بحيرة البجع الصغيرة", mood: "floral" },
   "something-blue": { ar: "لمسة زرقاء", mood: "floral" },
   "pressed-garden": { ar: "حديقة الزهور المجففة", mood: "floral" },
   "cotton-press": { ar: "حبر وقطن", mood: "classic" },

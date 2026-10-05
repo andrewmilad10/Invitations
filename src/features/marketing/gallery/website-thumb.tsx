@@ -565,6 +565,16 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Swan Pond: the names card on the table with a flower bunch.
+  pond: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg">
+      <div className={cn("relative -rotate-3 bg-inv-accent text-center text-inv-accent-fg shadow-[0_10px_18px_-8px_rgb(0_0_0/0.4)]", phone ? "w-[70%] px-[6%] py-[14%]" : "h-[80%] aspect-[4/4.7] px-[4%] py-[8%]")}>
+        <p className={cn("font-inv-heading leading-[0.95]", phone ? "text-[12cqw]" : "text-[4.4cqw]")}>{partnerOne}<br /><span className="text-[0.6em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[8%] font-inv-accent tracking-[0.18em]", phone ? "text-[3cqw]" : "text-[1.2cqw]")}>{dateLabel}</p>
+      </div>
+      <span className={cn("absolute aspect-square bg-[url(/templates/swan-pond/bunch-a.webp)] bg-contain bg-no-repeat", phone ? "right-[2%] top-[14%] w-[48%]" : "right-[18%] top-[6%] w-[22%]")} />
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">
