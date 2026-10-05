@@ -75,6 +75,7 @@ function Envelope({ template }: { template: TemplateManifest }) {
   const burgundy = template.renderer === "burgundy";
   const cotton = template.renderer === "cotton";
   const marble = template.renderer === "marble";
+  const blue = template.renderer === "blue";
   const paper: CSSProperties = swan
     ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" }
     : cotton
@@ -86,6 +87,17 @@ function Envelope({ template }: { template: TemplateManifest }) {
     <div className="relative aspect-[10/17] w-[40%] shrink-0 overflow-hidden rounded-[1.4cqw] shadow-[0_5cqw_7cqw_-4cqw_rgb(0_0_0/0.45)] transition-transform duration-700 ease-out group-hover:translate-y-[1.5%] group-hover:rotate-1">
       {burgundy ? (
         <div className="absolute inset-0 bg-[url(/templates/burgundy-envelope/opening-poster.webp)] bg-cover bg-center" />
+      ) : blue ? (
+        <>
+          <div className="absolute inset-0 bg-[url(/templates/something-blue/envelope.webp)] bg-cover bg-center" />
+          <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+            <path d="M0 100 L50 50 L100 100 M0 1.6 L50 53 L100 1.6" fill="none" stroke="rgb(0 0 0 / 0.16)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d="M0 0.8 L50 52.2 L100 0.8" fill="none" stroke="rgb(255 255 255 / 0.9)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <span className="absolute left-1/2 top-[53%] grid aspect-square w-[28%] -translate-x-1/2 -translate-y-1/2 place-items-center bg-[url(/templates/something-blue/seal.webp)] bg-contain bg-center bg-no-repeat font-inv-heading text-[3.6cqw] text-[#8fa9d6]">
+            {SAMPLE.partnerOne[0]}&amp;{SAMPLE.partnerTwo[0]}
+          </span>
+        </>
       ) : (
         <>
           <div className="absolute inset-0 bg-inv-accent" style={paper} />

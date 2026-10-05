@@ -67,6 +67,8 @@ const P = {
   cottonSage: { id: "sage-gold", label: "Sage linen & gold", family: "green", colors: c("#a7ad9f", "#f6f1e6", "#2c2a25", "#5e594f", "#9a7430", "#f6f1e6", "#d8d0bf") },
   // Rose Marble
   roseMarble: { id: "marble-rose-gold", label: "Marble & rose gold", family: "pink", colors: c("#efebe7", "#fbf8f3", "#3a3030", "#84746e", "#b5735f", "#fbf8f3", "#e2d6cf") },
+  // Something Blue
+  somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
 } satisfies Record<string, Palette>;
@@ -254,6 +256,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["modern", "luxury", "elegant", "romantic"],
       palettes: [P.roseMarble],
       fonts: { heading: "allura", body: "garamond", accent: "marcellus" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "blue",
+    {
+      id: "something-blue",
+      name: "Something Blue",
+      tagline: "Paper hydrangeas and roses in powder blue and blush.",
+      description:
+        "Opens on a white envelope with paper flowers pressed into it and a powder-blue wax seal; petals drift down as it opens. Your names bloom inside a wreath of paper hydrangeas, roses and eucalyptus, a pearl scratch card reveals your photo, scalloped cards hold little posies, and pearls mark the order of the day.",
+      categories: ["romantic", "botanical", "elegant", "modern"],
+      palettes: [P.somethingBlue],
+      fonts: { heading: "greatvibes", body: "cormorant", accent: "italiana" },
       card: { layout: "classic" },
     },
     { opening: true },
