@@ -26,6 +26,21 @@ any page, card, colour, font or animation.
 - Colours taken from a couple's photo are softened: paper pushed towards
   light, ink towards dark, so the card stays readable.
 
+## House colour pairs
+
+New designs start from one of these pairs: a calm paper colour with one deep
+signature colour (`src/templates/shared/house-palettes.ts`, contrast-tested).
+Use the signature colour for names, ornaments, seals and buttons; keep body
+text in the ink.
+
+| Pair | Page | Card | Ink | Soft ink | Signature |
+| --- | --- | --- | --- | --- | --- |
+| Greige & deep teal | #e8e3dc | #f4f1ec | #1d3436 | #5f6f6c | #1f5c5f |
+| Soft grey & dusty blue | #e6e7e9 | #f3f4f5 | #26303c | #626e7f | #55728f |
+| Off-white & terracotta | #f8f5f0 | #fffdf9 | #3a2a24 | #80665a | #a8542f |
+| Cream & chocolate brown | #f5ecdc | #fbf6ec | #3b2a20 | #745c4b | #5c3a28 |
+| Warm beige & olive green | #ece2d0 | #f6efe3 | #2f3324 | #656a50 | #5a6637 |
+
 ## Fonts
 
 - Themes refer to fonts by key (`src/core/theme/fonts.ts`), never by family
