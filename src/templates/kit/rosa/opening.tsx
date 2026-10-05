@@ -53,6 +53,9 @@ export function RosaOpening({ model }: { model: InvitationModel }) {
             </svg>
             <div className={s.envFlap}>
               <div className={s.envFlapFace} aria-hidden />
+              <svg className={s.envFlapEdge} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+                <path d="M1 1 L46 86 Q50 92 54 86 L99 1" />
+              </svg>
               <button type="button" className={s.envSeal} onClick={open} aria-label={model.strings.openInvitation}>
                 <span className={s.envMono} aria-hidden>
                   {a}&amp;{b}

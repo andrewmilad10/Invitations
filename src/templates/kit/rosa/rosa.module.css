@@ -157,8 +157,82 @@
 .intro:not([data-phase="closed"]) .envCard { transform: translateY(-64%); }
 .intro:not([data-phase="closed"]) .introTap { opacity: 0; }
 
+
+/* ══ Layout v2 ══ */
+/* Hero: names in script, "forever begins soon", the couple's photo in an arch with a heart badge */
+.hero { display: grid; justify-items: center; gap: 1.6rem; padding: clamp(3rem, 12vw, 4.6rem) 20px 2rem; text-align: center; }
+.heroHead { display: grid; gap: .5rem; }
+.heroNames { margin: 0; font: 400 clamp(3rem, 14vw, 4.6rem)/1.05 var(--inv-font-heading); color: var(--inv-fg); text-wrap: balance; }
+.archWrap { position: relative; width: min(82%, 360px); }
+.arch { position: relative; aspect-ratio: 4 / 5.4; overflow: hidden; border-radius: 999px 999px 6px 6px; border: 7px solid var(--inv-surface); box-shadow: 0 0 0 1px var(--inv-border), 0 28px 50px -26px rgb(var(--shade) / .55); }
+.archPhoto { position: absolute !important; inset: 0; }
+.archEmpty { position: absolute; inset: 0; background: url("/templates/villa-rosa/crown.webp") center / cover, var(--blush); }
+.heartBadge { position: absolute; z-index: 3; left: 50%; bottom: 0; width: 3.4rem; aspect-ratio: 1; translate: -50% 50%; display: grid; place-items: center; border-radius: 50%; background: var(--inv-surface); box-shadow: 0 6px 16px -6px rgb(var(--shade) / .5); animation: beat 2.8s ease-in-out infinite; }
+.heartBadge svg { width: 46%; fill: var(--inv-accent); }
+.archPosyL, .archPosyR { width: 58%; }
+.archPosyL { left: -26%; top: -8%; rotate: 170deg; }
+.archPosyR { right: -26%; bottom: 4%; }
+.root:has(.intro:is([data-phase="closed"], [data-phase="opening"])) .heroHead { opacity: 0; transform: translateY(16px); }
+.root:has(.intro:is([data-phase="closed"], [data-phase="opening"])) .archWrap { opacity: 0; transform: scale(.94); }
+.heroHead { transition: opacity 1.4s ease .2s, transform 1.6s var(--k-ease) .2s; }
+.archWrap { transition: opacity 1.6s ease .6s, transform 2s var(--k-ease) .6s; }
+
+/* Countdown: a frosted rose card with numbers in little panes */
+.glass { position: relative; overflow: hidden; padding: 2rem 1.1rem 1.6rem; border-radius: 14px; color: var(--on-band);
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgb(255 255 255 / .14), transparent 70%), linear-gradient(160deg, color-mix(in oklab, var(--rose-band) 82%, black), color-mix(in oklab, var(--rose-band) 92%, white));
+  box-shadow: 0 1px 0 rgb(255 255 255 / .2) inset, 0 26px 44px -22px rgb(var(--shade) / .6); }
+.glassCrown { position: absolute; inset: -40% -20% auto; height: 120%; background: url("/templates/villa-rosa/crown.webp") center top / 70% auto no-repeat; opacity: .14; pointer-events: none; }
+.glass .clock { gap: .5rem; margin-top: 1rem; }
+.glass .unit { padding: .8rem .2rem .6rem; border-radius: 8px; background: rgb(255 255 255 / .1); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); backdrop-filter: blur(4px); }
+.glass .unit + .unit::before { content: none; }
+.glass .value { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+.glass .label { font: 400 clamp(.5rem, 2.2vw, .62rem)/1.4 var(--inv-font-accent); letter-spacing: .18em; text-transform: uppercase; }
+.glassDate { margin: 1.2rem 0 0; font: 400 clamp(1.5rem, 6.6vw, 1.9rem)/1.2 var(--inv-font-heading); }
+
+/* Ceremony + reception card: corner brackets, a diamond between, times on hairlines */
+.card { padding: clamp(2.8rem, 11vw, 3.6rem) clamp(1.4rem, 7vw, 2.6rem); border-radius: 4px; }
+.card::before, .card::after { content: none; }
+.bracket { position: absolute; width: 22px; height: 22px; border: 0 solid var(--inv-accent); }
+.bTL { top: 12px; left: 12px; border-top-width: 1.5px; border-left-width: 1.5px; }
+.bTR { top: 12px; right: 12px; border-top-width: 1.5px; border-right-width: 1.5px; }
+.bBL { bottom: 12px; left: 12px; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+.bBR { bottom: 12px; right: 12px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+.eventBody { display: grid; justify-items: center; }
+.eventText { margin: .9rem auto 0; max-width: 24rem; font-size: 1.12rem; line-height: 1.6; }
+.timeRule { display: flex; align-items: center; gap: .8rem; width: min(100%, 18rem); margin: 1rem 0 0; font: 400 .74rem/1.4 var(--inv-font-accent); letter-spacing: .18em; text-transform: uppercase; color: var(--inv-accent); }
+.timeRule::before, .timeRule::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .5; }
+.diamond { display: block; width: 9px; aspect-ratio: 1; margin: 2.2rem auto; rotate: 45deg; background: var(--inv-accent); box-shadow: -22px 22px 0 -3.5px var(--inv-accent), 22px -22px 0 -3.5px var(--inv-accent); }
+
+/* Timeline: times on the left, a dot on a line, title and detail on the right; small line drawings */
+.icon { display: block; width: 3.4rem; margin: 1.2rem auto .6rem; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
+.iconSm { display: block; width: 2.4rem; margin: 0 auto; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+.timeline { gap: 0; margin-top: 1rem; }
+.timeline li { display: grid; grid-template-columns: 5.8rem 1.4rem 1fr; align-items: center; gap: .6rem; padding: .9rem 0; text-align: start; }
+.timeline li + li::before { content: none; }
+.timeline time { justify-self: end; white-space: nowrap; font: 400 clamp(1.15rem, 4.8vw, 1.4rem)/1 var(--inv-font-accent); }
+.dot { justify-self: center; width: 11px; aspect-ratio: 1; border-radius: 50%; background: var(--on-band); box-shadow: 0 0 0 4px rgb(255 255 255 / .18); }
+.what { display: grid; gap: .1rem; }
+.what b { font: 500 clamp(.74rem, 3.2vw, .86rem)/1.4 var(--inv-font-accent); letter-spacing: .16em; text-transform: uppercase; }
+.what small { font: italic 400 1rem/1.3 var(--inv-font-body); opacity: .85; }
+.between { grid-column: 1 / -1; padding-top: 1rem; }
+
+/* Reply */
+.deadline { margin: .4rem 0 0; font: 400 clamp(1.1rem, 4.8vw, 1.3rem)/1.4 var(--inv-font-accent); letter-spacing: .14em; text-transform: uppercase; }
+.heartBtn { width: clamp(7.6rem, 34vw, 9.6rem); border-radius: 22px; background: url("/templates/villa-rosa/heart.webp") center / 84% no-repeat, var(--inv-surface); box-shadow: 0 1px 2px rgb(var(--shade) / .2), 0 20px 34px -18px rgb(var(--shade) / .6); }
+
+/* Opening v2: a plain blush envelope (no lace), a fine light edge on the flap and a rose-gold ring seal */
+.envFlapFace { background: rgb(236 189 185) url("/templates/villa-rosa/paper.webp") 0 0 / 240px; background-blend-mode: multiply; clip-path: polygon(0 0, 100% 0, 54% 86%, 52% 89%, 50% 90%, 48% 89%, 46% 86%); }
+.envFlapFace::after { content: ""; position: absolute; inset: 0; background: linear-gradient(175deg, rgb(255 255 255 / .16), rgb(0 0 0 / .04)); }
+.envFlapEdge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.envFlapEdge path { fill: none; stroke: rgb(255 255 255 / .85); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.envFlap { filter: drop-shadow(0 3px 4px rgb(var(--shade) / .25)); }
+.envFlap .envSeal { top: 88%; width: 15%; }
+.envSeal::before { inset: 0; border-radius: 50%; background: radial-gradient(circle, transparent 52%, rgb(200 140 122) 54%, rgb(240 200 180) 62%, rgb(183 118 100) 72%, rgb(226 172 150) 80%, transparent 82%); filter: drop-shadow(0 2px 2px rgb(0 0 0 / .3)); }
+.envMono { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
-  .crownArt, .heroText { transition-duration: .01s; transition-delay: 0s; animation: none; }
+  .crownArt, .heroText, .heroHead, .archWrap { transition-duration: .01s; transition-delay: 0s; animation: none; }
+  .heartBadge { animation: none; }
   .heartBtn { animation: none; }
   .envFlap, .envCard { transition-duration: .01s; transition-delay: 0s; }
 }

@@ -3,6 +3,7 @@ import type { InvitationModel } from "@/core/invitation/model";
 import { cn } from "@/lib/utils";
 import { Sections } from "../../shared/invitation-root";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../../types";
+import { getSection } from "@/core/invitation/model";
 import { eventDate, faqItems, heroPhoto, kitCopy, mappedEvents, photos, scheduleItems } from "../data";
 import { Clock, Directions, fx, KitMap, KitRoot, Paragraphs, Pic, ReplyLink, Sec } from "../pieces";
 import { RosaOpening } from "./opening";
@@ -33,23 +34,50 @@ function Band({ id, children, className }: { id: string; children: ReactNode; cl
   );
 }
 
+/** Small line drawings for the timeline (thin strokes in the band's text colour). */
+function Chapel() {
+  return (
+    <svg className={s.icon} viewBox="0 0 60 70" aria-hidden>
+      <path d="M30 2v8M26 6h8M30 10l-9 12h18L30 10zM21 22v12M39 22v12M14 34l16-10 16 10M14 34v34h32V34M25 68V54a5 5 0 0110 0v14M20 44h4M36 44h4M28 30a2 2 0 104 0 2 2 0 10-4 0" />
+    </svg>
+  );
+}
+function Glasses() {
+  return (
+    <svg className={s.iconSm} viewBox="0 0 60 60" aria-hidden>
+      <path d="M14 8l8 2-3 16a6 6 0 01-7 4l-2-0.5M19 30l-4 16M10 46l9 2M46 8l-8 2 3 16a6 6 0 007 4l2-0.5M41 30l4 16M50 46l-9 2M30 4v6M24 6l3 4M36 6l-3 4" />
+    </svg>
+  );
+}
+function Rings() {
+  return (
+    <svg className={s.iconSm} viewBox="0 0 60 60" aria-hidden>
+      <path d="M24 22a12 12 0 100 24 12 12 0 100-24zM36 18a12 12 0 100 24 12 12 0 100-24zM33 12l3-4 3 4-3 3z" />
+    </svg>
+  );
+}
+const ICONS = [Chapel, Glasses, Rings];
+
 function Hero({ model, content }: SectionProps<"hero">) {
   const { wedding } = model;
-  const place = model.events.ceremony ?? model.events.reception;
+  const photo = heroPhoto(model);
   return (
     <header id="hero" data-section="hero" className={s.hero}>
-      <div className={s.crown}>
-        <span className={s.crownArt} role="img" aria-label="A crown of paper roses and eucalyptus" />
-        <div className={s.heroText}>
-          <h1 className={s.names}>
-            <span>{wedding.partnerOne}</span>
-            <span className={s.amp}>{ar(model) ? "و" : "&"}</span>
-            <span>{wedding.partnerTwo}</span>
-          </h1>
-          <p className={s.married}>{content.tagline || (ar(model) ? "سيتزوّجان" : "are getting married")}</p>
-          {wedding.date ? <p className={s.heroDate}>{wedding.date.short}</p> : null}
-          {place?.venueName ? <p className={s.heroPlace}>{place.venueName}</p> : null}
+      <div className={s.heroHead}>
+        <h1 className={s.heroNames}>
+          {wedding.partnerOne} <span className={s.amp}>{ar(model) ? "و" : "&"}</span> {wedding.partnerTwo}
+        </h1>
+        <p className={cn(s.caps, s.soft)}>{content.tagline || (ar(model) ? "الأبد يبدأ قريبًا" : "Forever begins soon")}</p>
+      </div>
+      <div className={s.archWrap}>
+        <span className={cn(s.posy, s.archPosyL)} aria-hidden />
+        <div className={s.arch}>
+          {photo ? <Pic asset={photo} priority sizes="(min-width: 640px) 340px, 80vw" className={s.archPhoto} /> : <span className={s.archEmpty} />}
         </div>
+        <span className={s.heartBadge} aria-hidden>
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.6 1.2 5.3 3.2 1.7-2 3.1-3.2 5.3-3.2 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" /></svg>
+        </span>
+        <span className={cn(s.posy, s.archPosyR)} aria-hidden />
       </div>
     </header>
   );
@@ -85,14 +113,16 @@ function DateBlock({ model, content }: SectionProps<"date">) {
 
 function CountdownBlock({ model, content }: SectionProps<"countdown">) {
   if (!model.countdownTarget) return null;
+  const place = model.events.ceremony ?? model.events.reception;
   return (
-    <Band id="countdown">
-      <div {...fx("fade")}>
-        <h2 className={s.scriptSm}>{content.heading || kitCopy(model).countdown}</h2>
+    <Sec id="countdown" className={s.sec}>
+      <div className={s.glass} {...fx("rise")}>
+        <span className={s.glassCrown} aria-hidden />
+        <p className={s.caps}>{content.heading || kitCopy(model).countdown}</p>
         <Clock model={model} className={s.clock} unit={s.unit} value={s.value} label={s.label} />
-        {model.wedding.date ? <p className={s.untilDate}>{model.wedding.date.long}</p> : null}
+        <p className={s.glassDate}>{[model.wedding.date?.long, place?.venueName].filter(Boolean).join(" · ")}</p>
       </div>
-    </Band>
+    </Sec>
   );
 }
 
@@ -124,20 +154,51 @@ function Story({ model, content }: SectionProps<"story">) {
   );
 }
 
-function Event({ id, model, content }: { id: "ceremony" | "reception"; model: InvitationModel; content: { heading: string; note: string } }) {
+type EventId = "ceremony" | "reception";
+
+function EventBody({ id, model, heading, note }: { id: EventId; model: InvitationModel; heading: string; note: string }) {
+  const e = model.events[id]!;
+  const t = kitCopy(model);
+  return (
+    <div className={s.eventBody}>
+      <h2 className={s.scriptSm}>{heading || e.title || (id === "ceremony" ? t.ceremony : t.reception)}</h2>
+      {note ? <p className={s.eventText}>{note}</p> : null}
+      {e.venueName ? <p className={s.venue}>{e.venueName}</p> : null}
+      {e.address ? <p className={s.when}>{e.address}</p> : null}
+      <p className={s.timeRule}>
+        <span>{[eventDate(model, e), e.timeLabel].filter(Boolean).join(" · ")}</span>
+      </p>
+      <Directions model={model} event={e} className={s.link} />
+    </div>
+  );
+}
+
+/** The ceremony and reception share one card (corner brackets, a diamond between them). */
+function Event({ id, model, content }: { id: EventId; model: InvitationModel; content: { heading: string; note: string } }) {
   const e = model.events[id];
   if (!e) return null;
-  const t = kitCopy(model);
+  const other: EventId = id === "ceremony" ? "reception" : "ceremony";
+  const otherSection = getSection(model, other);
+  const together = Boolean(otherSection && model.events[other]);
+  if (together && id === "reception") return null; // drawn inside the ceremony's card
+  const first = { id, ...content };
+  const second = together && otherSection ? { id: other, heading: otherSection.content.heading, note: otherSection.content.note } : null;
   return (
     <Sec id={id} className={s.sec}>
       <div className={s.card} {...fx("rise")}>
-        {id === "ceremony" ? <span className={cn(s.posy, s.cornerTL)} aria-hidden /> : <span className={cn(s.posy, s.cornerBR)} aria-hidden />}
-        <h2 className={s.scriptSm}>{content.heading || e.title || (id === "ceremony" ? t.ceremony : t.reception)}</h2>
-        {content.note ? <p className={s.italic}>{content.note}</p> : null}
-        {e.venueName ? <p className={s.venue}>{e.venueName}</p> : null}
-        {e.address ? <p className={s.when}>{e.address}</p> : null}
-        <p className={s.when}>{[eventDate(model, e), e.timeLabel].filter(Boolean).join(" · ")}</p>
-        <Directions model={model} event={e} className={s.link} />
+        <span className={cn(s.bracket, s.bTL)} aria-hidden />
+        <span className={cn(s.bracket, s.bTR)} aria-hidden />
+        <span className={cn(s.bracket, s.bBL)} aria-hidden />
+        <span className={cn(s.bracket, s.bBR)} aria-hidden />
+        <EventBody id={first.id} model={model} heading={first.heading} note={first.note} />
+        {second ? (
+          <>
+            <span className={s.diamond} aria-hidden />
+            <div id={second.id} data-section={second.id}>
+              <EventBody id={second.id} model={model} heading={second.heading} note={second.note} />
+            </div>
+          </>
+        ) : null}
       </div>
     </Sec>
   );
@@ -168,13 +229,28 @@ function Schedule({ model, content }: SectionProps<"schedule">) {
   return (
     <Band id="schedule">
       <h2 className={s.script} {...fx("blur")}>{content.heading || kitCopy(model).schedule}</h2>
+      <div {...fx("fade")}>
+        <Chapel />
+      </div>
       <ol className={s.timeline}>
-        {items.map((it, i) => (
-          <li key={i} {...fx("rise", 80)}>
-            <time>{it.time}</time>
-            <span>{it.title}</span>
-          </li>
-        ))}
+        {items.map((it, i) => {
+          const Icon = i === 1 ? ICONS[1] : i === 3 ? ICONS[2] : undefined;
+          return (
+            <li key={i} {...fx("rise", 60)}>
+              <time>{it.time}</time>
+              <span className={s.dot} aria-hidden />
+              <span className={s.what}>
+                <b>{it.title}</b>
+                {it.note ? <small>{it.note}</small> : null}
+              </span>
+              {Icon && i < items.length - 1 ? (
+                <span className={s.between}>
+                  <Icon />
+                </span>
+              ) : null}
+            </li>
+          );
+        })}
       </ol>
     </Band>
   );
@@ -206,8 +282,8 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
       <div className={s.sec}>
         <h2 className={s.script} {...fx("blur")}>{content.heading || kitCopy(model).rsvp}</h2>
         {content.message ? <p className={s.italic}>{content.message}</p> : null}
-        {content.deadline ? <p className={s.italic}>{content.deadline}</p> : null}
-        {content.linkUrl ? <p className={s.tapHeart}>{a ? "اضغطوا على القلب للرد" : "Tap the heart to reply"}</p> : null}
+        {content.deadline ? <p className={s.deadline}>{content.deadline}</p> : null}
+        {content.linkUrl ? <p className={s.tapHeart}>{a ? "اضغطوا على القلب للرد" : "Tap the heart below to reply"}</p> : null}
       </div>
       <div className={s.vee}>
         {content.linkUrl ? (
