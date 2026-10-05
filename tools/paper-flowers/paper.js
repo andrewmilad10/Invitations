@@ -52,7 +52,7 @@ function colourFor(kind, base, edge) {
 }
 
 const mats = {};
-function paperMat(kind, base, edge, o = {}) {
+export function paperMat(kind, base, edge, o = {}) {
   const key = [kind, base, edge, o.rough].join();
   if (mats[key]) return mats[key];
   const m = new THREE.MeshStandardMaterial({ map: colourFor(kind, base, edge), alphaMap: alphaFor(kind), alphaTest: .5, side: THREE.DoubleSide, roughness: o.rough ?? .92, metalness: 0, bumpMap: paperTex, bumpScale: o.bump ?? 1.2, envMapIntensity: .35 });
@@ -79,7 +79,7 @@ function petalGeo(w, l, o = {}) {
   g.computeVertexNormals();
   return g;
 }
-function mesh(geo, mat) {
+export function mesh(geo, mat) {
   const m = new THREE.Mesh(geo, mat);
   m.castShadow = m.receiveShadow = true;
   if (mat.userData.depth) m.customDepthMaterial = mat.userData.depth;
@@ -178,12 +178,12 @@ export function stage(w, h, o = {}) {
   renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = o.exposure ?? .9;
   document.body.appendChild(renderer.domElement);
   const scene = new THREE.Scene();
-  const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture;
+  const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture; scene.environmentIntensity = o.env ?? 1;
   const dist = (h / 2) / Math.tan(THREE.MathUtils.degToRad((o.fov ?? 18) / 2));
   const cam = new THREE.PerspectiveCamera(o.fov ?? 18, w / h, 10, dist * 2);
   cam.position.set(0, 0, dist); cam.lookAt(0, 0, 0);
-  const hemi = new THREE.HemisphereLight("#ffffff", "#d9c9bd", .45); scene.add(hemi);
-  const sun = new THREE.DirectionalLight("#fff5ea", 3.1);
+  const hemi = new THREE.HemisphereLight("#ffffff", "#d9c9bd", o.hemi ?? .45); scene.add(hemi);
+  const sun = new THREE.DirectionalLight("#fff5ea", o.sun ?? 3.1);
   sun.position.set(-w * .55, h * .65, Math.max(w, h) * .75); sun.castShadow = true;
   const S = Math.max(w, h) * .65; Object.assign(sun.shadow.camera, { left: -S, right: S, top: S, bottom: -S, near: 10, far: Math.max(w, h) * 3 });
   sun.shadow.mapSize.set(o.map ?? 1024, o.map ?? 1024); sun.shadow.radius = o.soft ?? 6; sun.shadow.blurSamples = 8; sun.shadow.bias = -0.0004;
@@ -191,19 +191,25 @@ export function stage(w, h, o = {}) {
   const catcher = new THREE.Mesh(new THREE.PlaneGeometry(w * 3, h * 3), new THREE.ShadowMaterial({ opacity: o.shadow ?? .2 }));
   catcher.receiveShadow = true; catcher.position.z = -2; scene.add(catcher);
   // flat coordinate helper: pixels from the canvas centre, y up
-  const put = (obj, x, y, z = 0, rz = 0, s = 1) => { obj.position.set(x, y, z); obj.rotation.z += rz; obj.scale.setScalar(s); scene.add(obj); return obj; };
+  const put = (obj, x, y, z = 0, rz = 0, s = 1) => { obj.position.set(x, y, z); obj.rotation.z += rz; if (s !== 1) obj.scale.multiplyScalar(s); scene.add(obj); return obj; };
   // blind emboss: everything white paper, pressed flat into a paper sheet
-  const emboss = (paperColour = "#fbf9f6", depth = .4) => {
-    hemi.intensity = .7; scene.environmentIntensity = .3; renderer.toneMappingExposure = .97;
+  const emboss = (paperColour = "#fbf9f6", depth = .4, o2 = {}) => {
+    hemi.intensity = o2.hemi ?? .7; scene.environmentIntensity = .3; renderer.toneMappingExposure = o2.exposure ?? .97;
     catcher.visible = false;
     const sheet = new THREE.Mesh(new THREE.PlaneGeometry(w * 3, h * 3), new THREE.MeshStandardMaterial({ color: paperColour, roughness: .95, bumpMap: paperTex, bumpScale: .5 }));
-    sheet.receiveShadow = true; sheet.position.z = -1; scene.add(sheet);
+    sheet.receiveShadow = true; sheet.position.z = -1; scene.add(sheet); if (o2.bump) sheet.material.bumpScale = o2.bump;
     paperTex.repeat.set(1, 1);
     scene.traverse((o) => { if (o.isMesh && o !== sheet && o !== catcher) { const m = o.material.clone(); m.map = null; m.color = new THREE.Color(paperColour); if ("clearcoat" in m) { m.clearcoat = 0; m.iridescence = 0; m.roughness = .9; } o.material = m; } });
     scene.children.forEach((o) => { if (o.isGroup || (o.isMesh && o !== sheet && o !== catcher)) o.scale.z *= depth; });
     sun.position.set(-w * .8, h * .9, Math.max(w, h) * .7);
-    sun.intensity = 3.3; sun.shadow.radius = 5;
+    sun.intensity = o2.sun ?? 3.3; sun.shadow.radius = o2.soft ?? 5;
+  };
+  // foil: everything turns to polished metal of one colour
+  const metal = (colour, rough = .3) => {
+    catcher.visible = true;
+    scene.traverse((o) => { if (o.isMesh && o !== catcher) { const old = o.material; const m = new THREE.MeshStandardMaterial({ color: colour, metalness: 1, roughness: rough, alphaMap: old.alphaMap ?? null, alphaTest: old.alphaTest ?? 0, side: THREE.DoubleSide, bumpMap: paperTex, bumpScale: .15, envMapIntensity: 1.5 }); o.material = m; } });
+    scene.environmentIntensity = 1.2; renderer.toneMappingExposure = 1.05; hemi.intensity = .3; sun.intensity = 2.2;
   };
   const render = () => { renderer.render(scene, cam); return renderer.domElement.toDataURL("image/png"); };
-  return { scene, put, render, emboss, THREE };
+  return { scene, put, render, emboss, metal, sun, hemi, renderer, THREE };
 }

@@ -21,6 +21,7 @@ import SwanRenderer from "./kit/swan/Renderer";
 import CottonRenderer from "./kit/cotton/Renderer";
 import MarbleRenderer from "./kit/marble/Renderer";
 import BlueRenderer from "./kit/blue/Renderer";
+import RosaRenderer from "./kit/rosa/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -67,6 +68,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   cotton: CottonRenderer,
   marble: MarbleRenderer,
   blue: BlueRenderer,
+  rosa: RosaRenderer,
   burgundy: BurgundyRenderer,
 };
 

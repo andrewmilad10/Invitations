@@ -69,6 +69,8 @@ const P = {
   roseMarble: { id: "marble-rose-gold", label: "Marble & rose gold", family: "pink", colors: c("#efebe7", "#fbf8f3", "#3a3030", "#84746e", "#b5735f", "#fbf8f3", "#e2d6cf") },
   // Something Blue
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
+  // Villa Rosa
+  villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
 } satisfies Record<string, Palette>;
@@ -271,6 +273,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["romantic", "botanical", "elegant", "modern"],
       palettes: [P.somethingBlue],
       fonts: { heading: "greatvibes", body: "cormorant", accent: "italiana" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "rosa",
+    {
+      id: "villa-rosa",
+      name: "Villa Rosa",
+      tagline: "Blush lace, a crown of roses and dusty-rose script.",
+      description:
+        "Opens on a blush envelope with a die-cut lace flap and a rose-gold seal; petals fall as it opens. Your names bloom inside a crown of paper roses, then big copperplate script, a countdown on a dusty-rose band edged in lace, your photo held in a posy, framed cards for the ceremony and reception, a timeline and a lace heart to reply.",
+      categories: ["romantic", "botanical", "elegant", "luxury"],
+      palettes: [P.villaRosa],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "bodoni" },
       card: { layout: "classic" },
     },
     { opening: true },

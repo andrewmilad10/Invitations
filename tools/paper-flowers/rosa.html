@@ -1,0 +1,76 @@
+<body style="margin:0"><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from "three";
+import { stage, rose, blossom, sprig, pearl, leaf, srand, rnd, paperMat, mesh } from "./paper.js";
+const q = new URLSearchParams(location.search), which = q.get("c");
+const PINK=["#d77d89","#f2c4c8"], BLUSH=["#e3a39e","#f7d8d2"], CREAM=["#e8d2b6","#fbf1e3"], PEACH=["#e39e80","#f7d3c0"], DUSTY=["#b9727b","#e8bfc1"];
+const G1={colour:"#6f8463",edge:"#a9bb98"}, G2={colour:"#7f9170",edge:"#bccab0"}, EU={colour:"#7d9690",edge:"#b5c9c3",round:true,leaf:.2,spread:1.1};
+const LACE=["#dcb6b0","#f2dcd7"];   // blush die-cut paper lace
+const sp=(len,ang,g,o={})=>sprig(len,ang,{...g,...o});
+const pair=(S,k,x,y,z,make)=>{ srand(k); S.put(make(1),-x,y,z); srand(k); const r=S.put(make(-1),x,y,z); r.scale.x*=-1; };
+const C = {
+  // The envelope flap (1080 x 1366, shape of the kit envelope) with a die-cut lace border along its V edge.
+  flap(){ srand(3); const W=1080,H=1366, S=stage(W,H,{map:2048,soft:3,shadow:.22,exposure:.86,hemi:.3,sun:3.8,env:.35});
+    const top=H/2, sideY=top-H*.5654, apexY=-H/2+30;
+    // scalloped V: points along each edge, pushed outwards in half-circles
+    const L=[-W/2-10,sideY+8], A=[0,apexY], R=[W/2+10,sideY+8];
+    const edge=[]; const seg=(p,q,n,flip)=>{ const dx=q[0]-p[0], dy=q[1]-p[1], len=Math.hypot(dx,dy); let nx=dy/len, ny=-dx/len; if(ny>0){nx=-nx;ny=-ny;}
+      const per=len/n; for(let i=0;i<=n*12;i++){ const t=i/(n*12), d=t*len, o=26*Math.abs(Math.sin(Math.PI*d/per)); edge.push([p[0]+dx*t+nx*o, p[1]+dy*t+ny*o, Math.round(t*n*12)%12===6]); } };
+    seg(L,A,9); seg(A,R,9);
+    const s=new THREE.Shape(); s.moveTo(-W/2-20,top+10); s.lineTo(W/2+20,top+10); s.lineTo(W/2+20,R[1]); for(let i=edge.length-1;i>=0;i--) s.lineTo(edge[i][0],edge[i][1]); s.lineTo(-W/2-20,L[1]); s.closePath();
+    const pm=new THREE.MeshStandardMaterial({color:"#dcb3b4",roughness:.92}); const plane=new THREE.Mesh(new THREE.ShapeGeometry(s,8),pm); plane.castShadow=plane.receiveShadow=true; S.put(plane,0,0,0);
+    const along=(t,inset)=>{ const p=t<.5?L:A, q=t<.5?A:R, u=t<.5?t/.5:(t-.5)/.5; const x=p[0]+(q[0]-p[0])*u, y=p[1]+(q[1]-p[1])*u; return [x, y+inset]; };
+    const LC=["#c8979a","#e9c9c9"];
+    for(let i=0;i<=18;i++){ const t=i/18, [x,y]=along(t,52); S.put(rose(rnd(34,40),...LC,{petals:16}),x,y,8,rnd(0,6));
+      const [x2,y2]=along(t+1/36,40); if(t<1){ const l=leaf(46,...LC,{fold:.3}); l.rotation.z=(t<.5?-2.35:-0.8)+rnd(-.25,.25); S.put(l,x2,y2-20,6); }
+      const [px,py]=along(t,-4); S.put(pearl(5,"#f6e6e2"),px,py-14,4); }
+    for(let i=0;i<=36;i++){ const t=i/36, [x,y]=along(t,128+rnd(-8,8)); S.put(blossom(rnd(15,19),...LC),x,y,6,rnd(0,6)); }
+    for(let i=0;i<=24;i++){ const t=i/24, [x,y]=along(t,180); const l=leaf(34,...LC,{fold:.3}); l.rotation.z=(t<.5?-.8:-2.35)+rnd(-.3,.3); S.put(l,x,y,4); }
+    srand(9); S.put(rose(70,...LC,{petals:22}),0,apexY+105,14);
+    return S.render(); },
+  // Crown of roses over the names (900 x 1400): a full arch on top, a smaller cluster at the base.
+  crown(){ srand(21); const S=stage(900,1400,{map:2048,exposure:.84,hemi:.3,sun:3.6,env:.35});
+    const RX=360, RY=600, P=(a)=>[Math.cos(a)*RX, Math.sin(a)*RY];
+    for(let i=0;i<40;i++){ const a=Math.PI*(0.04+0.92*i/39); const [x,y]=P(a); const tan=a+Math.PI/2*(i%2?1:-1);
+      S.put(sp(rnd(170,230),tan+rnd(-.3,.3),[G1,G2,EU][i%3],{bend:rnd(-.3,.3),leaves:6}),x*rnd(.97,1.03),y*rnd(.98,1.02)-20,0); }
+    S.put(rose(110,...PINK),0,RY-30,60); S.put(rose(92,...BLUSH,{petals:24}),-190,RY-80,55); S.put(rose(88,...CREAM,{petals:24}),190,RY-85,55);
+    S.put(rose(72,...PEACH,{petals:20}),-320,RY-240,45); S.put(rose(70,...DUSTY,{petals:20}),320,RY-245,45);
+    S.put(rose(56,...PINK,{petals:18}),-365,RY-420,35); S.put(rose(54,...CREAM,{petals:18}),365,RY-425,35);
+    pair(S,23,100,RY-150,30,()=>blossom(34,...CREAM)); pair(S,25,270,RY-90,25,()=>blossom(28,...BLUSH)); pair(S,27,345,RY-560,20,()=>rose(46,...BLUSH,{petals:16})); pair(S,28,300,RY-700,18,()=>blossom(28,...CREAM)); pair(S,29,250,RY-330,30,()=>blossom(30,...PEACH));
+    // base
+    S.put(rose(78,...BLUSH,{petals:22}),-70,-RY+40,45); S.put(rose(64,...PINK,{petals:20}),75,-RY+30,40); S.put(blossom(30,...CREAM),0,-RY+110,30);
+    pair(S,31,140,-RY+60,0,()=>sp(230,0.25,G1,{bend:.3,leaves:6})); pair(S,33,100,-RY+20,0,()=>sp(180,-.35,EU,{bend:-.2,leaves:5}));
+    for(let i=0;i<10;i++) S.put(pearl(rnd(4,7)),rnd(-380,380),rnd(-640,660),0);
+    return S.render(); },
+  posy(){ srand(41); const S=stage(720,540,{map:2048,exposure:.84,hemi:.3,sun:3.6,env:.35});
+    S.put(sp(300,.15,G1,{bend:-.3,leaves:7}),-40,-30,0); S.put(sp(260,-1.4,EU,{bend:.25,leaves:6}),-80,40,0); S.put(sp(240,2.4,G2,{bend:-.2,leaves:6}),-60,20,0);
+    S.put(rose(92,...PINK),-60,40,45); S.put(rose(70,...CREAM,{petals:22}),90,-10,40); S.put(rose(52,...PEACH,{petals:18}),-150,-100,30);
+    S.put(blossom(30,...BLUSH),150,90,25,.3); S.put(blossom(24,...CREAM),-210,60,20,.9); for(let i=0;i<5;i++) S.put(pearl(rnd(4,7)),rnd(-300,300),rnd(-220,220),0);
+    return S.render(); },
+  spray(){ srand(51); const S=stage(900,300,{map:2048,exposure:.84,hemi:.3,sun:3.6,env:.35});
+    S.put(sp(380,.08,G1,{bend:-.12,leaves:9,leaf:.17}),20,-10,0); S.put(sp(380,3.06,EU,{bend:.12,leaves:9,leaf:.14}),-20,-10,0);
+    S.put(rose(56,...PINK,{petals:20}),0,0,35); S.put(rose(40,...CREAM,{petals:16}),-80,8,25); S.put(blossom(24,...BLUSH),78,10,20,.4);
+    pair(S,53,175,0,15,()=>blossom(18,...CREAM)); for(let i=0;i<6;i++) S.put(pearl(rnd(4,6)),rnd(-260,260),rnd(-60,60),0);
+    return S.render(); },
+  // Lace trim strip (1600 x 260): scalloped blush lace for section edges.
+  lace(){ srand(61); const S=stage(1600,280,{map:2048,soft:3,shadow:.2,exposure:.86,hemi:.3,sun:3.8,env:.35});
+    const s=new THREE.Shape(); s.moveTo(-820,150); s.lineTo(820,150); s.lineTo(820,-20); for(let x=800;x>=-800;x-=4){ const o=30*Math.abs(Math.sin(Math.PI*(x+800)/100)); s.lineTo(x,-20-o); } s.lineTo(-820,-20); s.closePath();
+    const plane=new THREE.Mesh(new THREE.ShapeGeometry(s,4),new THREE.MeshStandardMaterial({color:"#dcb3b4",roughness:.92})); plane.castShadow=plane.receiveShadow=true; S.put(plane,0,0,0);
+    const LC=["#c8979a","#e9c9c9"];
+    for(let i=0;i<=16;i++){ const x=-800+i*100+50; S.put(i%2?rose(30,...LC,{petals:14}):blossom(26,...LC),x,8,6,rnd(0,6)); S.put(pearl(4.5,"#f6e6e2"),x,-40,3);
+      const l=leaf(40,...LC,{fold:.3}); l.rotation.z=Math.PI/2+rnd(-.6,.6); S.put(l,x-50,40,4); S.put(blossom(13,...LC),x-50,95,3,rnd(0,6)); S.put(blossom(11,...LC),x,120,3,rnd(0,6)); }
+    return S.render(); },
+  // The RSVP heart: a padded heart with a lace edge of pearls, little paper blossoms and a pearl drop (600 x 600).
+  heart(){ srand(71); const S=stage(600,600,{map:2048,soft:4,shadow:.3,exposure:.84,hemi:.28,sun:3.8,env:.35});
+    const h=new THREE.Shape(); const k=10.5; h.moveTo(0,-20*k);
+    h.bezierCurveTo(-4*k,-16*k,-22*k,-6*k,-22*k,8*k); h.bezierCurveTo(-22*k,20*k,-8*k,24*k,0,13*k); h.bezierCurveTo(8*k,24*k,22*k,20*k,22*k,8*k); h.bezierCurveTo(22*k,-6*k,4*k,-16*k,0,-20*k);
+    const g=new THREE.ExtrudeGeometry(h,{depth:14,bevelEnabled:true,bevelThickness:22,bevelSize:16,bevelSegments:10,curveSegments:48});
+    const m=new THREE.MeshStandardMaterial({color:"#f5ebe6",roughness:.75});
+    const hm=new THREE.Mesh(g,m); hm.castShadow=hm.receiveShadow=true; S.put(hm,0,-10,0);
+    const pts=h.getSpacedPoints(64); pts.forEach((p,i)=>{ S.put(pearl(i%2?6:8,"#f8efe9"),p.x*1.08,p.y*1.08-10,30); });
+    for(let i=0;i<34;i++){ const a=rnd(0,6.28), r=Math.sqrt(rnd(0,1))*165; S.put(blossom(rnd(18,26),"#ead8d0","#fffaf6"),Math.cos(a)*r,Math.sin(a)*r*.9+20,42,rnd(0,6)); }
+    S.put(rose(40,"#efe0da","#fffaf6",{petals:16}),0,90,48); S.put(pearl(14,"#fbf4f0"),0,40,56);
+    return S.render(); },
+};
+window.__png = C[which]();
+</script></body>

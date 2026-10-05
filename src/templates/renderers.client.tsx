@@ -32,6 +32,7 @@ const Swan = dynamic(() => import("./kit/swan/Renderer"));
 const Cotton = dynamic(() => import("./kit/cotton/Renderer"));
 const Marble = dynamic(() => import("./kit/marble/Renderer"));
 const Blue = dynamic(() => import("./kit/blue/Renderer"));
+const Rosa = dynamic(() => import("./kit/rosa/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
@@ -76,6 +77,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   cotton: Cotton,
   marble: Marble,
   blue: Blue,
+  rosa: Rosa,
   burgundy: Burgundy,
 };
 
