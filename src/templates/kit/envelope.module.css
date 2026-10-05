@@ -1,0 +1,51 @@
+/* The kit's envelope: one shape, size and opening for every envelope template.
+   Full screen on phones (a tall card on desktop), zoomed in so the top corners sit off-screen:
+   the flap's edges meet the sides a third of the way down and slope to a wide rounded tip at 58%,
+   the bottom flap's edges start two-thirds down and rise beneath it. Tapping swings the flap up and
+   away with the seal while the envelope eases closer; the page fades in. No card pops out.
+
+   Each template dresses it through variables on its own class:
+   --env-paper   background of the envelope panels (shorthand)
+   --env-flap    background of the flap (defaults to --env-paper)
+   --env-blend   background-blend-mode for paper + texture
+   --env-inside  what shows inside once the flap lifts (--env-inside-blend)
+   --env-backdrop  desktop background around the card (--env-backdrop-blend)
+   --env-seal-w  seal width; --env-crease / --env-edge  fold line strength
+   --env-tap / --env-what  label colours; --env-tap-font / --env-what-font  label fonts */
+
+.intro { --flapH: 58.37%; display: grid; place-items: center; background: var(--env-backdrop, rgb(30 26 24)); background-blend-mode: var(--env-backdrop-blend, normal); }
+.intro[data-phase="leaving"] { transition-duration: 1.2s; }
+.env { position: absolute; inset: 0; perspective: 1100px; perspective-origin: 50% -15%; cursor: pointer; }
+@media (min-width: 600px) {
+  .env { position: relative; inset: auto; height: min(88svh, 900px); aspect-ratio: 1080 / 2340; overflow: hidden; border-radius: 8px; box-shadow: 0 50px 80px -40px rgb(0 0 0 / .55), 0 14px 24px -14px rgb(0 0 0 / .35); }
+}
+.stage { position: absolute; inset: 0; transition: transform 2.8s cubic-bezier(.45, .05, .25, 1); }
+.stage > * { position: absolute; inset: 0; }
+.inside { background: var(--env-inside, rgb(40 36 34)); background-blend-mode: var(--env-inside-blend, normal); }
+.inside::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgb(0 0 0 / .35), rgb(0 0 0 / 0) 60%); }
+.paper { background: var(--env-paper); background-blend-mode: var(--env-blend, normal); }
+.sideL { clip-path: polygon(0 0, 50% 47%, 0 100%); filter: brightness(.94); }
+.sideR { clip-path: polygon(100% 0, 50% 47%, 100% 100%); filter: brightness(.9); }
+.bottomWrap { filter: drop-shadow(0 -2px 3px rgb(0 0 0 / .25)); }
+.bottom { position: absolute; inset: 0; clip-path: polygon(0 100%, 0 63%, 50% 49%, 100% 63%, 100% 100%); }
+.lines { width: 100%; height: 100%; pointer-events: none; }
+.lines path, .flapEdge path { fill: none; vector-effect: non-scaling-stroke; stroke-width: 1; }
+.dk { stroke: rgb(0 0 0 / var(--env-crease, .35)); }
+.lt { stroke: rgb(255 255 255 / var(--env-edge, .25)); }
+.flapShadow { bottom: auto !important; height: var(--flapH); opacity: .5; filter: blur(6px); transform: translateY(5px); transition: opacity .9s ease; }
+.flapShadow::before { content: ""; position: absolute; inset: 0; background: rgb(0 0 0); clip-path: var(--flapClip); }
+.flap { bottom: auto !important; height: var(--flapH); transform-origin: 50% 0; transform-style: preserve-3d; transition: transform 2.6s cubic-bezier(.55, .05, .35, 1); }
+.flapFace { position: absolute; inset: 0; clip-path: var(--flapClip); background: var(--env-flap, var(--env-paper)); background-blend-mode: var(--env-blend, normal); backface-visibility: hidden; }
+.flapFace::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(255 255 255 / .06), rgb(0 0 0 / .08)); }
+.flapEdge { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.flapEdge path { stroke: rgb(255 255 255 / var(--env-edge, .25)); }
+.seal { position: absolute; left: 50%; top: 100%; width: var(--env-seal-w, clamp(5.6rem, 28vw, 7.5rem)); aspect-ratio: 1; translate: -50% -72%; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
+.seal:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; border-radius: 50%; }
+.label { position: absolute; inset: auto 0 9% 0; display: grid; justify-items: center; gap: .5rem; padding-inline: 16px; text-align: center; transition: opacity .6s; pointer-events: none; }
+.tap { font: 400 clamp(2rem, 9vw, 2.6rem)/1.1 var(--env-tap-font, var(--inv-font-heading)); color: var(--env-tap, rgb(255 255 255)); }
+.what { font: 500 clamp(.6rem, 2.7vw, .72rem)/1.4 var(--env-what-font, var(--inv-font-accent)); letter-spacing: .32em; text-transform: uppercase; color: var(--env-what, rgb(255 255 255 / .8)); }
+.intro:not([data-phase="closed"]) .flap { transform: rotateX(172deg); }
+.intro:not([data-phase="closed"]) .stage { transform: scale(1.07); }
+.intro:not([data-phase="closed"]) :is(.flapShadow, .label) { opacity: 0; }
+.root { --flapClip: polygon(0% 0%, 100% 0%, 100% 56.54%, 61% 94.63%, 59.17% 96.27%, 57.33% 97.61%, 55.5% 98.66%, 53.67% 99.4%, 51.83% 99.85%, 50% 100%, 48.17% 99.85%, 46.33% 99.4%, 44.5% 98.66%, 42.67% 97.61%, 40.83% 96.27%, 39% 94.63%, 0% 56.54%); }
+@media (prefers-reduced-motion: reduce) { .flap, .stage { transition-duration: .01s; } }

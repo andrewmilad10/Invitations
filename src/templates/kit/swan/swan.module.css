@@ -106,45 +106,9 @@
 .footer { padding: 1.4rem 1rem 2.6rem; text-align: center; font-size: .7rem; font-weight: 600; letter-spacing: .34em; text-transform: uppercase; color: var(--inv-muted); }
 
 /* ═════ The envelope opening ═════ */
-.intro { --flapH: 59%; --meet: 54%; --bottom: 51%; background: var(--inv-bg) url("/templates/swan-lake/linen.webp") 0 0 / 420px; color: var(--inv-fg); font-family: var(--inv-font-body); }
-.intro[data-phase="leaving"] { transition-duration: 1.8s; }
-@media (min-width: 561px) { .intro { display: grid; place-items: center; background-image: radial-gradient(ellipse 75% 65% at 50% 42%, rgb(255 255 255 / .06), rgb(10 16 30 / .5)), url("/templates/swan-lake/linen.webp"); background-size: auto, 420px; --flapH: 62%; --meet: 57%; --bottom: 53%; } }
-.envelope { position: absolute; inset: 0; perspective: 1100px; perspective-origin: 50% 0; cursor: pointer; }
-@media (min-width: 561px) { .envelope { position: relative; inset: auto; width: min(80vw, 50svh, 480px); aspect-ratio: 10 / 14; border-radius: 5px; box-shadow: 0 60px 90px -40px rgb(6 10 22 / .7), 0 18px 30px -18px rgb(6 10 22 / .45); } }
-.envelope > span, .envelope > div:not(.note) { position: absolute; inset: 0; border-radius: inherit; }
-.interior, .sideL, .sideR, .bottom, .flapFace { background: var(--inv-bg) url("/templates/swan-lake/linen.webp") 0 0 / 420px; }
-.interior { filter: brightness(.7); }
-.sideL { clip-path: polygon(0 0, 50.5% var(--meet), 0 100%); }
-.sideR { clip-path: polygon(100% 0, 49.5% var(--meet), 100% 100%); }
-.sideR::after { content: ""; position: absolute; inset: 0; background: linear-gradient(260deg, rgb(6 10 22 / .1), rgb(6 10 22 / 0) 50%); }
-.bottom { clip-path: polygon(0 100%, 0 99.4%, 50% var(--bottom), 100% 99.4%, 100% 100%); filter: drop-shadow(0 -2px 3px rgb(6 10 22 / .2)); }
-.flapShadow { transform: translateY(6px); filter: blur(10px); opacity: .42; }
-.flapShadow::before { content: ""; position: absolute; inset: 0; background: rgb(6 10 22); clip-path: polygon(0 0, 100% 0, 100% 1.5%, 54.5% calc(var(--flapH) - 4%), 50% var(--flapH), 45.5% calc(var(--flapH) - 4%), 0 1.5%); }
-.flap { bottom: auto !important; height: var(--flapH); transform-origin: 50% 0; transform-style: preserve-3d; }
-.flapFace { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 100% 2.6%, 54.5% 93.5%, 52.6% 97.8%, 50% 100%, 47.4% 97.8%, 45.5% 93.5%, 0 2.6%); }
-.flapFace::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 50% 18%, rgb(255 255 255 / .12), transparent 70%); transition: background-color 2.4s ease; }
-.flapArt { position: absolute; left: 50%; top: 5%; width: min(72%, 42svh); aspect-ratio: 1; translate: -50% 0; background: url("/templates/swan-lake/wreath.webp") center / contain no-repeat; -webkit-mask: radial-gradient(circle closest-side, #000 80%, transparent 100%); mask: radial-gradient(circle closest-side, #000 80%, transparent 100%); }
-.hem { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-/* Crisp fold lines: a dark crease with a light edge beside it, as on real paper. */
-.creases { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.creases .dark { fill: none; stroke: rgb(6 10 22 / .32); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.creases .light { fill: none; stroke: rgb(255 255 255 / .28); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.hem .flapEdge { stroke-dasharray: none; fill: none; stroke: rgb(255 255 255 / .4); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.hem path { fill: none; stroke: rgb(247 244 238 / .78); stroke-width: 1.4; stroke-dasharray: 5 4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.seal { position: absolute; z-index: 3; left: 50%; top: 100%; width: clamp(5.4rem, 24vw, 6.9rem); aspect-ratio: 1; translate: -50% -58%; padding: 0; border: 0; cursor: pointer; background: url("/templates/swan-lake/seal.webp") center / contain no-repeat; filter: drop-shadow(0 5px 5px rgb(6 10 22 / .4)) drop-shadow(0 1px 1px rgb(6 10 22 / .35)); }
-.seal::after { content: ""; position: absolute; inset: -14%; border-radius: 50%; box-shadow: 0 0 0 1px rgb(255 255 255 / .5); animation: breathe 3.4s ease-out infinite; pointer-events: none; }
-@keyframes breathe { from { transform: scale(.85); opacity: .8; } to { transform: scale(1.25); opacity: 0; } }
-.mono { display: grid; place-items: center; height: 100%; font: 400 clamp(1.8rem, 8vw, 2.3rem)/1 var(--inv-font-heading); color: rgb(128 112 86 / .62); text-shadow: -.6px -.6px 0 rgb(255 255 255 / .9), .8px .8px 1px rgb(70 56 36 / .42); }
+/* ── Opening: the shared envelope (kit/envelope.module.css), dressed in linen with the pearl seal ── */
+.intro { --env-paper: var(--inv-bg) url("/templates/swan-lake/linen.webp") 0 0 / 420px; --env-inside: color-mix(in oklab, var(--inv-fg) 85%, var(--inv-bg)); --env-backdrop: radial-gradient(ellipse 75% 65% at 50% 42%, rgb(255 255 255 / .06), rgb(10 16 30 / .5)), var(--inv-bg) url("/templates/swan-lake/linen.webp") 0 0 / 420px; --env-tap: var(--inv-fg); --env-what: var(--inv-muted); --env-edge: .4; --env-crease: .32; --env-seal-w: clamp(6rem, 30vw, 8rem); }
+.flapArt { position: absolute; left: 50%; top: 9%; width: min(64%, 36svh); aspect-ratio: 1; translate: -50% 0; background: url("/templates/swan-lake/wreath.webp") center / contain no-repeat; -webkit-mask: radial-gradient(circle closest-side, #000 80%, transparent 100%); mask: radial-gradient(circle closest-side, #000 80%, transparent 100%); }
+.envSeal { position: absolute; inset: 0; display: grid; place-items: center; background: url("/templates/swan-lake/seal.webp") center / contain no-repeat; filter: drop-shadow(0 5px 5px rgb(6 10 22 / .4)) drop-shadow(0 1px 1px rgb(6 10 22 / .35)); }
+.mono { display: grid; place-items: center; font: 400 clamp(1.8rem, 8vw, 2.3rem)/1 var(--inv-font-heading); color: rgb(128 112 86 / .62); text-shadow: -.6px -.6px 0 rgb(255 255 255 / .9), .8px .8px 1px rgb(70 56 36 / .42); }
 .mono small { font-size: .5em; }
-.note { position: absolute; z-index: 5; inset: auto 6% 7% 6%; display: grid; gap: .9rem; justify-items: center; text-align: center; pointer-events: none; transition: opacity .9s ease; }
-.note p { margin: 0; max-width: 16ch; font: 400 clamp(1.9rem, 8.4vw, 2.5rem)/1.12 var(--inv-font-heading); }
-.note small { font-size: .64rem; font-weight: 600; letter-spacing: .42em; text-transform: uppercase; color: var(--inv-muted); }
-
-/* The flap, seal and all, lifts part-way on its crease while the page dissolves in. */
-.intro:is([data-phase="opening"], [data-phase="leaving"]) .flap { animation: lift 2.4s cubic-bezier(.45, .05, .25, 1) forwards; }
-.intro:is([data-phase="opening"], [data-phase="leaving"]) .flapFace::after { background-color: rgb(6 10 22 / .22); }
-.intro:is([data-phase="opening"], [data-phase="leaving"]) .flapShadow { animation: shadowGrow 2.4s ease forwards; }
-.intro:is([data-phase="opening"], [data-phase="leaving"]) .seal::after { animation: none; opacity: 0; }
-.intro:is([data-phase="opening"], [data-phase="leaving"]) .note { opacity: 0; }
-@keyframes lift { to { transform: rotateX(-62deg); } }
-@keyframes shadowGrow { to { opacity: .7; transform: translateY(26px); filter: blur(18px); } }

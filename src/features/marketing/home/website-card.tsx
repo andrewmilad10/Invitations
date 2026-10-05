@@ -61,9 +61,9 @@ export function WebsiteCard({ template, className }: { template: TemplateManifes
   );
 }
 
-/** The flap's outline: from the top corners down to a softly rounded point at 62%. */
-const FLAP = "polygon(0 0, 100% 0, 100% 1.6%, 54.5% 58%, 52.6% 60.6%, 50% 61.8%, 47.4% 60.6%, 45.5% 58%, 0 1.6%)";
-const FLAP_PATH = "M0 1.6 L45.5 58 Q50 64.6 54.5 58 L100 1.6";
+/** The flap's outline (the kit envelope's shape): edges meet the sides a third of the way down and slope to a wide rounded tip at 58%. */
+const FLAP = "polygon(0% 0%, 100% 0%, 100% 33%, 61% 55.24%, 59.17% 56.19%, 57.33% 56.97%, 55.5% 57.59%, 53.67% 58.02%, 51.83% 58.28%, 50% 58.37%, 48.17% 58.28%, 46.33% 58.02%, 44.5% 57.59%, 42.67% 56.97%, 40.83% 56.19%, 39% 55.24%, 0% 33%)";
+const FLAP_PATH = "M0 33 L39 55.27 Q50 61.5 61 55.27 L100 33";
 
 /**
  * The envelope beside the phone, drawn with crisp fold lines: a pointed top
@@ -91,10 +91,10 @@ function Envelope({ template }: { template: TemplateManifest }) {
         <>
           <div className="absolute inset-0 bg-[url(/templates/something-blue/envelope.webp)] bg-cover bg-center" />
           <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-            <path d="M0 100 L50 50 L100 100 M0 1.6 L50 53 L100 1.6" fill="none" stroke="rgb(0 0 0 / 0.16)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-            <path d="M0 0.8 L50 52.2 L100 0.8" fill="none" stroke="rgb(255 255 255 / 0.9)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d="M0 63 L50 49 L100 63 M0 33 L39 55.27 Q50 61.5 61 55.27 L100 33" fill="none" stroke="rgb(0 0 0 / 0.16)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d="M0 32.4 L39 54.67 Q50 60.9 61 54.67 L100 32.4" fill="none" stroke="rgb(255 255 255 / 0.9)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
           </svg>
-          <span className="absolute left-1/2 top-[53%] grid aspect-square w-[28%] -translate-x-1/2 -translate-y-1/2 place-items-center bg-[url(/templates/something-blue/seal.webp)] bg-contain bg-center bg-no-repeat font-inv-heading text-[3.6cqw] text-[#8fa9d6]">
+          <span className="absolute left-1/2 top-[55%] grid aspect-square w-[28%] -translate-x-1/2 -translate-y-1/2 place-items-center bg-[url(/templates/something-blue/seal.webp)] bg-contain bg-center bg-no-repeat font-inv-heading text-[3.6cqw] text-[#8fa9d6]">
             {SAMPLE.partnerOne[0]}&amp;{SAMPLE.partnerTwo[0]}
           </span>
         </>
@@ -104,20 +104,20 @@ function Envelope({ template }: { template: TemplateManifest }) {
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.08),rgb(0_0_0/0)_45%,rgb(255_255_255/0.06))]" />
           {/* fold lines of the bottom and side flaps: a dark crease with a light edge beside it */}
           <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-            <path d="M0 100 L50 55 L100 100 M0 0 L50 55 L100 0" fill="none" stroke="rgb(0 0 0 / 0.28)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-            <path d="M0 99.2 L50 54.2 L100 99.2" fill="none" stroke="rgb(255 255 255 / 0.22)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d="M0 63 L50 49 L100 63" fill="none" stroke="rgb(0 0 0 / 0.28)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d="M0 62.4 L50 48.4 L100 62.4" fill="none" stroke="rgb(255 255 255 / 0.22)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* the top flap, its shadow and its edge */}
           <div className="absolute inset-0 translate-y-[0.9cqw] bg-black/35 blur-[1.4cqw]" style={{ clipPath: FLAP }} />
           <div className="absolute inset-0 bg-inv-accent" style={{ clipPath: FLAP, ...paper }}>
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(255_255_255/0.1),rgb(255_255_255/0)_40%,rgb(0_0_0/0.06))]" />
-            {swan ? <span className="absolute left-1/2 top-[6%] aspect-square w-[74%] -translate-x-1/2 bg-[url(/templates/swan-lake/wreath.webp)] bg-contain bg-center bg-no-repeat [mask:radial-gradient(circle_closest-side,#000_78%,transparent)]" /> : null}
+            {swan ? <span className="absolute left-1/2 top-[5%] aspect-square w-[64%] -translate-x-1/2 bg-[url(/templates/swan-lake/wreath.webp)] bg-contain bg-center bg-no-repeat [mask:radial-gradient(circle_closest-side,#000_78%,transparent)]" /> : null}
           </div>
           <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
             <path d={FLAP_PATH} fill="none" stroke="rgb(255 255 255 / 0.35)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
           </svg>
           <span
-            className={cn("absolute left-1/2 top-[61.8%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-inv-heading text-[3.4cqw] shadow-[0_1cqw_1.4cqw_rgb(0_0_0/0.35)]", swan ? "bg-[url(/templates/swan-lake/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7d6f58]" : cotton ? "bg-[url(/templates/cotton-press/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7a5a20] shadow-none" : marble ? "bg-[url(/templates/rose-marble/seal.webp)] bg-contain bg-center bg-no-repeat text-[#8a4f40] shadow-none" : "bg-[radial-gradient(circle_at_38%_32%,#fbf8f2,#e7e0d3_55%,#c9bfae)] text-[#8a7c64]")}
+            className={cn("absolute left-1/2 top-[55%] grid aspect-square w-[28%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-inv-heading text-[3.4cqw] shadow-[0_1cqw_1.4cqw_rgb(0_0_0/0.35)]", swan ? "bg-[url(/templates/swan-lake/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7d6f58]" : cotton ? "bg-[url(/templates/cotton-press/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7a5a20] shadow-none" : marble ? "bg-[url(/templates/rose-marble/seal.webp)] bg-contain bg-center bg-no-repeat text-[#8a4f40] shadow-none" : "bg-[radial-gradient(circle_at_38%_32%,#fbf8f2,#e7e0d3_55%,#c9bfae)] text-[#8a7c64]")}
           >
             {SAMPLE.partnerOne[0]}&amp;{SAMPLE.partnerTwo[0]}
           </span>

@@ -72,9 +72,13 @@ like real printed stationery, never flat graphics. Apply all four:
    ornaments, rules, seal rims) with a metallic gradient and a soft sheen,
    used sparingly.
 
-Envelopes follow one shape: a pointed top flap with a softly rounded tip
-carrying the seal, side and bottom flaps meeting beneath it, every fold a
-fine dark crease with a thin light edge beside it.
+Envelopes follow one shape, size and opening: the shared kit envelope
+(`src/templates/kit/envelope.tsx`). Full screen on phones (a tall card on
+desktop), zoomed in so the top corners sit off-screen; the flap's edges meet
+the sides a third of the way down and slope to a wide rounded tip at 58% that
+carries the seal; the bottom flap's edges start two-thirds down. Tapping swings
+the flap up and away and the page fades in; no card pops out. Each template
+keeps its own paper, seal and inside through the envelope's CSS variables.
 
 ## Motion
 
