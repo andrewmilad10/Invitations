@@ -43,7 +43,7 @@ const ALL: TemplateManifest[] = [
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
-  "swan-lake", "burgundy-envelope",
+  "swan-lake", "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden",
   "editorial-romance", "old-money", "modern-minimal", "italian-summer", "black-tie", "french-garden", "luxury-magazine", "vintage-paper",
   "the-arch", "film-story", "botanical-glasshouse", "monogram-house",
   "bon-voyage", "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
@@ -63,9 +63,20 @@ const rank = (id: string) => {
   return i === -1 ? FEATURED.length + ALL.findIndex((t) => t.id === id) : i;
 };
 
-export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [...ALL].sort((a, b) => rank(a.id) - rank(b.id));
+/**
+ * The website designs on sale right now. Every other website design stays
+ * registered (so weddings already made with one keep rendering) but is
+ * hidden from the gallery and the wizard.
+ */
+const LIVE_WEBSITES = new Set(["the-gate", "moonlit-nile", "pressed-garden", "swan-lake", "burgundy-envelope"]);
+const isWebsite = (t: TemplateManifest) => (t.features.hero ?? "photo") !== "card";
+const withVisibility = (t: TemplateManifest): TemplateManifest => (isWebsite(t) && !LIVE_WEBSITES.has(t.id) ? { ...t, status: "hidden" } : t);
+
+export const TEMPLATE_MANIFESTS: readonly TemplateManifest[] = [...ALL].map(withVisibility).sort((a, b) => rank(a.id) - rank(b.id));
 
 export const DEFAULT_TEMPLATE_ID = cinematicManifest.id;
+/** The design the "new wedding" wizard starts on. */
+export const DEFAULT_NEW_TEMPLATE_ID = "swan-lake";
 
 const byId = new Map(TEMPLATE_MANIFESTS.map((t) => [t.id, t]));
 

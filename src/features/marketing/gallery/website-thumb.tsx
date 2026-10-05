@@ -522,4 +522,14 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Burgundy Envelope: the candle-lit hero with the names in script.
+  burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">
+      <div className="absolute inset-0 bg-[linear-gradient(rgb(0_0_0/0.15),rgb(0_0_0/0.45))]" />
+      <div className="relative">
+        <p className={cn("font-inv-heading leading-[1.1]", phone ? "text-[13cqw]" : "text-[6cqw]")}>{partnerOne}<br /><span className="text-[0.5em] text-[#d9bb69]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[6%] uppercase tracking-[0.25em]", phone ? "text-[3cqw]" : "text-[1.3cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
 };

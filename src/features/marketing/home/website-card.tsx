@@ -49,30 +49,49 @@ export function WebsiteCard({ template, className }: { template: TemplateManifes
   );
 }
 
-/** The envelope beside the phone: the design's own envelope when it has one, otherwise one in its colours. */
+/** The flap's outline: from the top corners down to a softly rounded point at 62%. */
+const FLAP = "polygon(0 0, 100% 0, 100% 1.6%, 54.5% 58%, 52.6% 60.6%, 50% 61.8%, 47.4% 60.6%, 45.5% 58%, 0 1.6%)";
+const FLAP_PATH = "M0 1.6 L45.5 58 Q50 64.6 54.5 58 L100 1.6";
+
+/**
+ * The envelope beside the phone, drawn with crisp fold lines: a pointed top
+ * flap with a rounded tip and the seal on it, the bottom flap rising to meet
+ * it. The design's own envelope art when it has one, its colours otherwise.
+ */
 function Envelope({ template }: { template: TemplateManifest }) {
   const swan = template.renderer === "swan";
+  const burgundy = template.renderer === "burgundy";
+  const paper: CSSProperties = swan ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" } : {};
   return (
     <div className="relative aspect-[10/17] w-[40%] shrink-0 overflow-hidden rounded-[1.4cqw] shadow-[0_5cqw_7cqw_-4cqw_rgb(0_0_0/0.45)] transition-transform duration-700 ease-out group-hover:translate-y-[1.5%] group-hover:rotate-1">
-      <div
-        className="absolute inset-0 bg-inv-accent"
-        style={swan ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" } : { backgroundImage: "radial-gradient(120% 80% at 50% 0%, rgb(255 255 255 / 0.12), transparent 60%)" }}
-      />
-      {/* the top flap and its shadow */}
-      <div className="absolute inset-x-0 top-0 h-[54%] translate-y-[1.2cqw] bg-black/30 blur-[1.6cqw] [clip-path:polygon(0_0,100%_0,100%_3%,50%_100%,0_3%)]" />
-      <div
-        className="absolute inset-x-0 top-0 h-[54%] bg-inv-accent [clip-path:polygon(0_0,100%_0,100%_3%,50%_100%,0_3%)]"
-        style={swan ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" } : { backgroundImage: "linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(0 0 0 / 0.08))" }}
-      >
-        {swan ? <span className="absolute left-1/2 top-[8%] aspect-square w-[60%] -translate-x-1/2 bg-[url(/templates/swan-lake/wreath.webp)] bg-contain bg-center bg-no-repeat [mask:radial-gradient(circle_closest-side,#000_78%,transparent)]" /> : null}
-      </div>
-      {/* the seal on the flap's tip */}
-      <span
-        className={cn("absolute left-1/2 top-[54%] grid aspect-square w-[24%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-inv-heading text-[3.4cqw] shadow-[0_1cqw_1.4cqw_rgb(0_0_0/0.35)]", swan ? "bg-[url(/templates/swan-lake/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7d6f58]" : "bg-[radial-gradient(circle_at_38%_32%,#fbf8f2,#e7e0d3_55%,#c9bfae)] text-[#8a7c64]")}
-      >
-        {SAMPLE.partnerOne[0]}&amp;{SAMPLE.partnerTwo[0]}
-      </span>
-      <p className="absolute inset-x-0 bottom-[8%] text-center font-inv-heading text-[2.6cqw] italic text-inv-accent-fg opacity-80">Click to open</p>
+      {burgundy ? (
+        <div className="absolute inset-0 bg-[url(/templates/burgundy-envelope/opening-poster.webp)] bg-cover bg-center" />
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-inv-accent" style={paper} />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_0_0/0.08),rgb(0_0_0/0)_45%,rgb(255_255_255/0.06))]" />
+          {/* fold lines of the bottom and side flaps: a dark crease with a light edge beside it */}
+          <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+            <path d="M0 100 L50 55 L100 100 M0 0 L50 55 L100 0" fill="none" stroke="rgb(0 0 0 / 0.28)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d="M0 99.2 L50 54.2 L100 99.2" fill="none" stroke="rgb(255 255 255 / 0.22)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+          </svg>
+          {/* the top flap, its shadow and its edge */}
+          <div className="absolute inset-0 translate-y-[0.9cqw] bg-black/35 blur-[1.4cqw]" style={{ clipPath: FLAP }} />
+          <div className="absolute inset-0 bg-inv-accent" style={{ clipPath: FLAP, ...paper }}>
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(255_255_255/0.1),rgb(255_255_255/0)_40%,rgb(0_0_0/0.06))]" />
+            {swan ? <span className="absolute left-1/2 top-[6%] aspect-square w-[74%] -translate-x-1/2 bg-[url(/templates/swan-lake/wreath.webp)] bg-contain bg-center bg-no-repeat [mask:radial-gradient(circle_closest-side,#000_78%,transparent)]" /> : null}
+          </div>
+          <svg className="absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+            <path d={FLAP_PATH} fill="none" stroke="rgb(255 255 255 / 0.35)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <span
+            className={cn("absolute left-1/2 top-[61.8%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-inv-heading text-[3.4cqw] shadow-[0_1cqw_1.4cqw_rgb(0_0_0/0.35)]", swan ? "bg-[url(/templates/swan-lake/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7d6f58]" : "bg-[radial-gradient(circle_at_38%_32%,#fbf8f2,#e7e0d3_55%,#c9bfae)] text-[#8a7c64]")}
+          >
+            {SAMPLE.partnerOne[0]}&amp;{SAMPLE.partnerTwo[0]}
+          </span>
+          <p className="absolute inset-x-0 bottom-[9%] text-center font-inv-heading text-[2.8cqw] italic text-inv-accent-fg opacity-85">This invitation is for you</p>
+        </>
+      )}
     </div>
   );
 }

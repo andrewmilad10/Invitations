@@ -67,8 +67,8 @@ test("wedding websites gallery and a design opened as a website", async ({ page 
   await expect(page.getByRole("heading", { name: "Wedding websites", level: 1 })).toBeVisible();
   // Only websites here — card designs live in their own collection.
   await expect(page.getByRole("link", { name: "Marlowe", exact: true })).toHaveCount(0);
-  await page.getByRole("link", { name: "Cinematic", exact: true }).click();
-  await expect(page).toHaveURL(/\/websites\/cinematic/);
+  await page.getByRole("link", { name: "The Gate", exact: true }).click();
+  await expect(page).toHaveURL(/\/websites\/the-gate/);
   await expect(page.frameLocator("iframe").first().locator("[data-section=hero]")).toBeAttached();
 });
 

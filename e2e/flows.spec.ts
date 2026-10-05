@@ -61,7 +61,7 @@ test("home: carousel, make-it-yours and the live demo", async ({ page }) => {
 
   await page.goto("/");
   await page.getByRole("link", { name: "Preview the template" }).click();
-  await expect(page).toHaveURL(/\/websites\/cinematic$/);
+  await expect(page).toHaveURL(/\/websites\/swan-lake$/);
 });
 
 // Paused with the invitation card gallery (coming soon).
@@ -124,21 +124,21 @@ test("card page: a shared link opens in its colour; views, share and variants wo
 });
 
 test("website page: colours and views change the live preview", async ({ page }) => {
-  await page.goto("/websites/giza-at-dusk?palette=sunset");
+  await page.goto("/websites/the-gate?palette=midnight");
   const frame = page.locator("iframe").first();
-  await expect(page.getByRole("radio", { name: "Sunset terracotta" }).first()).toHaveAttribute("aria-checked", "true");
-  await expect(frame).toHaveAttribute("src", /\/templates\/giza-at-dusk\/preview\/sunset$/);
-  await page.getByRole("radio", { name: "Night & sand" }).first().click();
-  await expect(frame).toHaveAttribute("src", /\/preview\/night-sand$/);
-  await expect(page).toHaveURL(/palette=night-sand/);
+  await expect(page.getByRole("radio", { name: "Midnight & champagne" }).first()).toHaveAttribute("aria-checked", "true");
+  await expect(frame).toHaveAttribute("src", /\/templates\/the-gate\/preview\/midnight$/);
+  await page.getByRole("radio", { name: "Bordeaux & rose gold" }).first().click();
+  await expect(frame).toHaveAttribute("src", /\/preview\/bordeaux$/);
+  await expect(page).toHaveURL(/palette=bordeaux/);
   await page.getByRole("tab", { name: "Phone" }).click();
   await expect(page).toHaveURL(/view=phone/);
   await page.getByRole("link", { name: "Customize", exact: true }).first().click();
-  await expect(page).toHaveURL(/\/create\/giza-at-dusk\?palette=night-sand/);
+  await expect(page).toHaveURL(/\/create\/the-gate\?palette=bordeaux/);
   // The full-screen preview renders the sample wedding.
-  const res = await page.request.get("/templates/giza-at-dusk/preview/night-sand");
+  const res = await page.request.get("/templates/the-gate/preview/bordeaux");
   expect(res.status()).toBe(200);
-  expect((await page.request.get("/templates/giza-at-dusk/preview/not-a-palette")).status()).toBe(404);
+  expect((await page.request.get("/templates/the-gate/preview/not-a-palette")).status()).toBe(404);
 });
 
 test("card studio: words, colour, turn over and send", async ({ page }) => {
@@ -153,7 +153,7 @@ test("card studio: words, colour, turn over and send", async ({ page }) => {
 });
 
 test("try flow: details reach the preview, and saving asks for an account", async ({ page }) => {
-  await page.goto("/create/giza-at-dusk");
+  await page.goto("/create/the-gate");
   await page.getByLabel("First name").fill("Nour");
   await page.getByLabel("Second name").fill("Karim");
   const preview = page.frameLocator('iframe[title="Invitation preview"]');

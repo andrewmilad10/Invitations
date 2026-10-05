@@ -11,7 +11,7 @@ const { saveDraftAsWedding } = await import("./actions");
 import type { DraftToCreate } from "./answers";
 
 const valid: DraftToCreate = {
-  templateId: "romantic",
+  templateId: "swan-lake",
   partnerOne: "Mariam",
   partnerTwo: "Andrew",
   weddingDate: "2027-05-20",

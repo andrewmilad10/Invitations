@@ -73,7 +73,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
               Log in
             </Link>
             <Button asChild className={cn("h-10 rounded-full px-5", light && "bg-white text-foreground hover:bg-white/90")}>
-              <Link href="/invitations">Create invitation</Link>
+              <Link href="/websites">Create invitation</Link>
             </Button>
           </div>
 
@@ -106,7 +106,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           </nav>
           <div className="mt-auto grid gap-3">
             <Button asChild size="lg" className="rounded-full">
-              <Link href="/invitations" onClick={() => setOpen(false)}>
+              <Link href="/websites" onClick={() => setOpen(false)}>
                 Create invitation
               </Link>
             </Button>

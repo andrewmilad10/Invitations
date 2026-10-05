@@ -43,12 +43,12 @@ export function LiveDemo() {
         <Reveal variant="left" delay={250} duration={1000} className="max-w-xl">
           <h2 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">What your guests will see</h2>
           <p className="mt-6 text-lg leading-relaxed text-forest-foreground/75">
-            This is the Cinematic template, running for real. Tap the wax seal: the envelope opens, the card rises and becomes the first page of the wedding website.
+            This is the Swan Lake template, running for real. Tap the pearl seal: the flap lifts slowly and the envelope opens into the wedding website.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-forest-foreground/75">Most guests will open it on a phone, so every design is made for the phone first: easy to read, quick to load, and one tap from directions to the venue.</p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Button asChild size="lg" className="rounded-full bg-forest-foreground px-7 text-forest hover:bg-forest-foreground/90">
-              <Link href="/websites/cinematic">Preview the template</Link>
+              <Link href="/websites/swan-lake">Preview the template</Link>
             </Button>
             <Button asChild size="lg" variant="ghost" className="rounded-full px-6 text-forest-foreground hover:bg-white/10 hover:text-forest-foreground">
               <Link href="/websites">See all wedding websites</Link>
@@ -56,7 +56,7 @@ export function LiveDemo() {
           </div>
         </Reveal>
         <Reveal variant="scale" delay={500} duration={1200} className="flex justify-center">
-          <PhoneFrame src="/templates/cinematic/preview" title="Cinematic template demo" scale={0.78} />
+          <PhoneFrame src="/templates/swan-lake/preview" title="Swan Lake template demo" scale={0.78} />
         </Reveal>
       </div>
     </section>

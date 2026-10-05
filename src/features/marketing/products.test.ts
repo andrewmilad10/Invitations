@@ -10,13 +10,13 @@ describe("product collections", () => {
     expect(cards.length + sites.length).toBe(all.length);
     expect(cards.some((t) => sites.includes(t))).toBe(false);
     expect(cards.length).toBeGreaterThan(30);
-    expect(sites.length).toBeGreaterThan(10);
+    expect(sites.map((t) => t.id).sort()).toEqual(["burgundy-envelope", "moonlit-nile", "pressed-garden", "swan-lake", "the-gate"]);
   });
 
   it("links each design to its own collection's page", () => {
     const marlowe = selectableTemplates().find((t) => t.id === "marlowe")!;
-    const maison = selectableTemplates().find((t) => t.id === "maison")!;
+    const swan = selectableTemplates().find((t) => t.id === "swan-lake")!;
     expect(productHref(productOf(marlowe), marlowe.id)).toBe("/invitations/marlowe");
-    expect(productHref(productOf(maison), maison.id, "palette=noir")).toBe("/websites/maison?palette=noir");
+    expect(productHref(productOf(swan), swan.id, "palette=x")).toBe("/websites/swan-lake?palette=x");
   });
 });

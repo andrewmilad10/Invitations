@@ -20,12 +20,19 @@ export function SwanOpening({ model }: { model: InvitationModel }) {
           <span className={s.sideL} aria-hidden />
           <span className={s.sideR} aria-hidden />
           <span className={s.bottom} aria-hidden />
+          <svg className={s.creases} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+            <path className={s.dark} d="M0 100 L50 51 L100 100 M0 0 L50 54 L100 0" />
+            <path className={s.light} d="M0 99.2 L50 50.2 L100 99.2" />
+          </svg>
           <span className={s.flapShadow} aria-hidden />
           <div className={s.flap}>
             <span className={s.flapFace} aria-hidden>
               <span className={s.flapArt} />
               <svg className={s.hem} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-                <path d="M3 4.5 L50 94 L97 4.5" />
+                <path d="M3 4.5 L45.8 89 Q50 97 54.2 89 L97 4.5" />
+              </svg>
+              <svg className={s.hem} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
+                <path className={s.flapEdge} d="M0 2.6 L45.5 93.5 Q50 103 54.5 93.5 L100 2.6" />
               </svg>
             </span>
             <button type="button" className={s.seal} onClick={open} aria-label={model.strings.openInvitation}>

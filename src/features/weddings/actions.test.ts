@@ -25,7 +25,7 @@ vi.mock("@/lib/supabase/server", () => ({
 
 const { createWedding } = await import("./actions");
 
-const valid = { partnerOne: "Andrew", partnerTwo: "Mariam", weddingDate: "2027-06-12", templateId: "cinematic" };
+const valid = { partnerOne: "Andrew", partnerTwo: "Mariam", weddingDate: "2027-06-12", templateId: "swan-lake" };
 
 beforeEach(() => {
   getCurrentUser.mockResolvedValue({ id: "user-1" });
@@ -43,7 +43,7 @@ describe("createWedding", () => {
       partner_one_name: "Andrew",
       partner_two_name: "Mariam",
       wedding_date: "2027-06-12",
-      template_id: "cinematic",
+      template_id: "swan-lake",
     });
     // status/published_at are never sent by the client (DB also forbids it)
     expect(inserted[0]).not.toHaveProperty("status");
