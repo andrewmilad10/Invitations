@@ -522,6 +522,16 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Cotton Press: the letterpress invitation on a linen tablecloth, names in gold foil.
+  cotton: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg bg-blend-multiply" style={{ backgroundImage: "url(/templates/cotton-press/linen.webp)", backgroundSize: "130px" }}>
+      <div className={cn("-rotate-1 bg-inv-surface bg-blend-multiply text-center text-inv-fg shadow-[0_1px_1px_rgb(0_0_0/0.25),0_10px_18px_-8px_rgb(0_0_0/0.35)]", phone ? "w-[80%] px-[6%] py-[14%]" : "h-[86%] aspect-[3/4] px-[4%] py-[8%]")} style={{ backgroundImage: "url(/templates/cotton-press/paper.webp)", backgroundSize: "120px" }}>
+        <p className={cn("font-inv-accent uppercase tracking-[0.3em]", phone ? "text-[2.2cqw]" : "text-[0.9cqw]")}>Together with their families</p>
+        <p className={cn("mt-[8%] bg-[linear-gradient(104deg,color-mix(in_oklab,var(--inv-accent)_70%,black),var(--inv-accent)_25%,color-mix(in_oklab,var(--inv-accent)_30%,white)_45%,var(--inv-accent)_65%,color-mix(in_oklab,var(--inv-accent)_70%,black))] bg-clip-text font-inv-heading leading-[1] text-transparent", phone ? "text-[12cqw]" : "text-[4.4cqw]")}>{partnerOne}<br /><span className="text-[0.6em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[8%] tracking-[0.18em]", phone ? "text-[3cqw]" : "text-[1.2cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

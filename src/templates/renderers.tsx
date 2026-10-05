@@ -18,6 +18,7 @@ import LimoneRenderer from "./kit/limone/Renderer";
 import MinimalRenderer from "./kit/minimal/Renderer";
 import RomanceRenderer from "./kit/romance/Renderer";
 import SwanRenderer from "./kit/swan/Renderer";
+import CottonRenderer from "./kit/cotton/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -61,6 +62,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   glasshouse: GlasshouseRenderer,
   house: HouseRenderer,
   swan: SwanRenderer,
+  cotton: CottonRenderer,
   burgundy: BurgundyRenderer,
 };
 

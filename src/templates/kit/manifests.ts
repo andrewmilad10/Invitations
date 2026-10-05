@@ -63,6 +63,8 @@ const P = {
   bordeaux: { id: "bordeaux", label: "Bordeaux", family: "red", colors: c("#f7f1ee", "#fffbf9", "#22141a", "#a8939a", "#5b1a28", "#ecd9c6", "#eadfdb") },
   // Swan Lake: one palette, matched to its embroidered linen artwork
   swanLinen: { id: "swan-linen", label: "Blue-grey linen", family: "blue", colors: c("#969fa8", "#f6f3ee", "#1d2a42", "#27354f", "#1d2a42", "#f6f3ee", "#d9d3c8") },
+  // Cotton Press
+  cottonSage: { id: "sage-gold", label: "Sage linen & gold", family: "green", colors: c("#a7ad9f", "#f6f1e6", "#2c2a25", "#5e594f", "#9a7430", "#f6f1e6", "#d8d0bf") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
 } satisfies Record<string, Palette>;
@@ -221,6 +223,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       palettes: [P.swanLinen],
       fonts: { heading: "pinyon", body: "cormorant", accent: "pinyon" },
       card: { layout: "arch-panel" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "cotton",
+    {
+      id: "cotton-press",
+      name: "Cotton Press",
+      tagline: "Letterpress and gold foil on deckled cotton paper.",
+      description:
+        "Opens on a cotton envelope sealed in gold wax; the flap lifts to show a foil liner. Inside, a stationery suite on a linen tablecloth: the invitation on deckled cotton with a blind-embossed monogram and your names in gold foil, an edge-painted countdown card, letterpress event cards, the evening on vellum, photo prints in foil corners and a reply card.",
+      categories: ["luxury", "classic", "elegant", "typography"],
+      palettes: [P.cottonSage],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "bodoni" },
+      card: { layout: "classic" },
     },
     { opening: true },
   ),
