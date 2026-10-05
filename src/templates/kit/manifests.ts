@@ -65,6 +65,8 @@ const P = {
   swanLinen: { id: "swan-linen", label: "Blue-grey linen", family: "blue", colors: c("#969fa8", "#f6f3ee", "#1d2a42", "#27354f", "#1d2a42", "#f6f3ee", "#d9d3c8") },
   // Cotton Press
   cottonSage: { id: "sage-gold", label: "Sage linen & gold", family: "green", colors: c("#a7ad9f", "#f6f1e6", "#2c2a25", "#5e594f", "#9a7430", "#f6f1e6", "#d8d0bf") },
+  // Rose Marble
+  roseMarble: { id: "marble-rose-gold", label: "Marble & rose gold", family: "pink", colors: c("#efebe7", "#fbf8f3", "#3a3030", "#84746e", "#b5735f", "#fbf8f3", "#e2d6cf") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
 } satisfies Record<string, Palette>;
@@ -237,6 +239,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["luxury", "classic", "elegant", "typography"],
       palettes: [P.cottonSage],
       fonts: { heading: "pinyon", body: "cormorant", accent: "bodoni" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "marble",
+    {
+      id: "rose-marble",
+      name: "Rose Marble",
+      tagline: "Clear acrylic and rose-gold foil on white marble.",
+      description:
+        "Opens on a blush envelope sealed in rose-gold wax, with a marbled foil liner. Inside, a modern suite on white marble: the invitation on clear acrylic held by rose-gold standoffs, ivory cards with pressed frames and rose-gold foil, photos under acrylic blocks, the order of the day on a tag hanging from a silk ribbon and a note sealed in wax.",
+      categories: ["modern", "luxury", "elegant", "romantic"],
+      palettes: [P.roseMarble],
+      fonts: { heading: "allura", body: "garamond", accent: "marcellus" },
       card: { layout: "classic" },
     },
     { opening: true },

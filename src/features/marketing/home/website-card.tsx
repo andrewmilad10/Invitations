@@ -74,11 +74,14 @@ function Envelope({ template }: { template: TemplateManifest }) {
   const swan = template.renderer === "swan";
   const burgundy = template.renderer === "burgundy";
   const cotton = template.renderer === "cotton";
+  const marble = template.renderer === "marble";
   const paper: CSSProperties = swan
     ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" }
     : cotton
       ? { backgroundColor: "var(--inv-fg)", backgroundImage: "url(/templates/cotton-press/paper.webp)", backgroundSize: "120px", backgroundBlendMode: "soft-light" }
-      : {};
+      : marble
+        ? { backgroundColor: "color-mix(in oklab, var(--inv-accent) 28%, var(--inv-surface))", backgroundImage: "url(/templates/rose-marble/paper.webp)", backgroundSize: "120px", backgroundBlendMode: "multiply" }
+        : {};
   return (
     <div className="relative aspect-[10/17] w-[40%] shrink-0 overflow-hidden rounded-[1.4cqw] shadow-[0_5cqw_7cqw_-4cqw_rgb(0_0_0/0.45)] transition-transform duration-700 ease-out group-hover:translate-y-[1.5%] group-hover:rotate-1">
       {burgundy ? (
@@ -102,11 +105,11 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <path d={FLAP_PATH} fill="none" stroke="rgb(255 255 255 / 0.35)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
           </svg>
           <span
-            className={cn("absolute left-1/2 top-[61.8%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-inv-heading text-[3.4cqw] shadow-[0_1cqw_1.4cqw_rgb(0_0_0/0.35)]", swan ? "bg-[url(/templates/swan-lake/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7d6f58]" : cotton ? "bg-[url(/templates/cotton-press/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7a5a20] shadow-none" : "bg-[radial-gradient(circle_at_38%_32%,#fbf8f2,#e7e0d3_55%,#c9bfae)] text-[#8a7c64]")}
+            className={cn("absolute left-1/2 top-[61.8%] grid aspect-square w-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-inv-heading text-[3.4cqw] shadow-[0_1cqw_1.4cqw_rgb(0_0_0/0.35)]", swan ? "bg-[url(/templates/swan-lake/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7d6f58]" : cotton ? "bg-[url(/templates/cotton-press/seal.webp)] bg-contain bg-center bg-no-repeat text-[#7a5a20] shadow-none" : marble ? "bg-[url(/templates/rose-marble/seal.webp)] bg-contain bg-center bg-no-repeat text-[#8a4f40] shadow-none" : "bg-[radial-gradient(circle_at_38%_32%,#fbf8f2,#e7e0d3_55%,#c9bfae)] text-[#8a7c64]")}
           >
             {SAMPLE.partnerOne[0]}&amp;{SAMPLE.partnerTwo[0]}
           </span>
-          <p className={cn("absolute inset-x-0 bottom-[9%] text-center font-inv-heading text-[2.8cqw] italic opacity-85", cotton ? "text-inv-accent" : "text-inv-accent-fg")}>This invitation is for you</p>
+          <p className={cn("absolute inset-x-0 bottom-[9%] text-center font-inv-heading text-[2.8cqw] italic opacity-85", cotton || marble ? "text-inv-accent" : "text-inv-accent-fg")}>This invitation is for you</p>
         </>
       )}
     </div>

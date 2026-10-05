@@ -10,7 +10,7 @@ describe("product collections", () => {
     expect(cards.length + sites.length).toBe(all.length);
     expect(cards.some((t) => sites.includes(t))).toBe(false);
     expect(cards.length).toBeGreaterThan(30);
-    expect(sites.map((t) => t.id).sort()).toEqual(["burgundy-envelope", "cotton-press", "moonlit-nile", "pressed-garden", "swan-lake", "the-gate"]);
+    expect(sites.map((t) => t.id).sort()).toEqual(["burgundy-envelope", "cotton-press", "moonlit-nile", "pressed-garden", "rose-marble", "swan-lake", "the-gate"]);
   });
 
   it("links each design to its own collection's page", () => {

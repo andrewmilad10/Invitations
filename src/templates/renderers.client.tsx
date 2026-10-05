@@ -30,6 +30,7 @@ const Glasshouse = dynamic(() => import("./kit/glasshouse/Renderer"));
 const House = dynamic(() => import("./kit/house/Renderer"));
 const Swan = dynamic(() => import("./kit/swan/Renderer"));
 const Cotton = dynamic(() => import("./kit/cotton/Renderer"));
+const Marble = dynamic(() => import("./kit/marble/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
@@ -72,6 +73,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   house: House,
   swan: Swan,
   cotton: Cotton,
+  marble: Marble,
   burgundy: Burgundy,
 };
 

@@ -532,6 +532,16 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Rose Marble: the acrylic invitation on marble, names in rose-gold foil.
+  marble: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg bg-blend-multiply" style={{ backgroundImage: "url(/templates/rose-marble/marble.webp)", backgroundSize: "260px" }}>
+      <div className={cn("-rotate-1 rounded-[3%] bg-white/25 text-center text-inv-fg shadow-[inset_0_0_0_1px_rgb(255_255_255/0.85),3px_5px_0_-1px_rgb(255_255_255/0.5),6px_14px_18px_rgb(0_0_0/0.14)] backdrop-blur-[1px]", phone ? "w-[80%] px-[6%] py-[16%]" : "h-[86%] aspect-[3/4] px-[4%] py-[8%]")}>
+        <p className={cn("font-inv-accent uppercase tracking-[0.3em]", phone ? "text-[2.2cqw]" : "text-[0.9cqw]")}>Together with their families</p>
+        <p className={cn("mt-[8%] bg-[linear-gradient(104deg,color-mix(in_oklab,var(--inv-accent)_66%,black),var(--inv-accent)_25%,color-mix(in_oklab,var(--inv-accent)_45%,white)_45%,var(--inv-accent)_65%,color-mix(in_oklab,var(--inv-accent)_66%,black))] bg-clip-text font-inv-heading leading-[1] text-transparent", phone ? "text-[13cqw]" : "text-[4.8cqw]")}>{partnerOne}<br /><span className="font-inv-accent text-[0.3em] uppercase tracking-[0.2em]">and</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[8%] font-inv-accent tracking-[0.18em]", phone ? "text-[3cqw]" : "text-[1.2cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">
