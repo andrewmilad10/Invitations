@@ -85,6 +85,7 @@ function Envelope({ template }: { template: TemplateManifest }) {
   const cotton = template.renderer === "cotton";
   const marble = template.renderer === "marble";
   const blue = template.renderer === "blue";
+  const rosa = template.renderer === "rosa";
   const paper: CSSProperties = swan
     ? { backgroundImage: "url(/templates/swan-lake/linen.webp)", backgroundSize: "90px" }
     : cotton
@@ -96,6 +97,13 @@ function Envelope({ template }: { template: TemplateManifest }) {
     <div className="relative aspect-[10/17] w-[40%] shrink-0 overflow-hidden rounded-[1.4cqw] shadow-[0_5cqw_7cqw_-4cqw_rgb(0_0_0/0.45)] transition-transform duration-700 ease-out group-hover:translate-y-[1.5%] group-hover:rotate-1">
       {burgundy ? (
         <div className="absolute inset-0 bg-[url(/templates/burgundy-envelope/opening-poster.webp)] bg-cover bg-center" />
+      ) : rosa ? (
+        <div className="absolute inset-0 grid place-items-center bg-inv-bg">
+          <div className="relative aspect-[1080/760] w-[92%] rounded-[1cqw] bg-[rgb(236_189_185)] shadow-[0_2cqw_4cqw_-2cqw_rgb(94_52_56/0.45)]">
+            <span className="absolute inset-x-0 top-0 h-[66%] bg-[rgb(231_180_176)] [clip-path:polygon(0_0,100%_0,54%_86%,50%_90%,46%_86%)]" />
+            <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
+          </div>
+        </div>
       ) : blue ? (
         <>
           <div className="absolute inset-0 bg-[url(/templates/something-blue/envelope.webp)] bg-cover bg-center" />

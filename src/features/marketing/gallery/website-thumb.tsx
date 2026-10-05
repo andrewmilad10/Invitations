@@ -554,6 +554,17 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Villa Rosa: the names in script inside a crown of paper roses.
+  rosa: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg">
+      <div className={cn("relative bg-[url(/templates/villa-rosa/crown.webp)] bg-contain bg-center bg-no-repeat", phone ? "h-[94%] aspect-[900/1400]" : "h-[96%] aspect-[900/1400]")}>
+        <div className="absolute inset-x-[16%] top-[30%] text-center text-inv-fg">
+          <p className={cn("font-inv-heading leading-[0.95]", phone ? "text-[12cqw]" : "text-[4.4cqw]")}>{partnerOne}<br /><span className="text-[0.55em] text-inv-accent">&amp;</span><br />{partnerTwo}</p>
+          <p className={cn("mt-[6%] font-inv-accent tracking-[0.12em]", phone ? "text-[3.6cqw]" : "text-[1.4cqw]")}>{dateLabel}</p>
+        </div>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

@@ -282,9 +282,9 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     {
       id: "villa-rosa",
       name: "Villa Rosa",
-      tagline: "Blush lace, a crown of roses and dusty-rose script.",
+      tagline: "A blush envelope, roses and dusty-rose script.",
       description:
-        "Opens on a blush envelope with a die-cut lace flap and a rose-gold seal; petals fall as it opens. Your names bloom inside a crown of paper roses, then big copperplate script, a countdown on a dusty-rose band edged in lace, your photo held in a posy, framed cards for the ceremony and reception, a timeline and a lace heart to reply.",
+        "Opens on a blush envelope with a rose-gold seal: the flap lifts, the invitation card slides out and petals fall. Your names in script above your photo in a rose-framed arch, a frosted countdown, the ceremony and reception on one card, a line-drawn timeline on a lace-edged band and a heart to reply.",
       categories: ["romantic", "botanical", "elegant", "luxury"],
       palettes: [P.villaRosa],
       fonts: { heading: "pinyon", body: "cormorant", accent: "bodoni" },
