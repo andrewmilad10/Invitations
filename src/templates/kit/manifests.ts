@@ -71,6 +71,8 @@ const P = {
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Villa Rosa
   villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
+  // Swan Pond
+  swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
 } satisfies Record<string, Palette>;
@@ -287,6 +289,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
         "Opens on a blush envelope with a rose-gold seal: the flap lifts, the invitation card slides out and petals fall. Your names in script above your photo in a rose-framed arch, a frosted countdown, the ceremony and reception on one card, a line-drawn timeline on a lace-edged band and a heart to reply.",
       categories: ["romantic", "botanical", "elegant", "luxury"],
       palettes: [P.villaRosa],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "bodoni" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "pond",
+    {
+      id: "swan-pond",
+      name: "Swan Pond",
+      tagline: "A flat lay of cards, polaroids and flowers in olive and burgundy.",
+      description:
+        "Opens on an olive felt envelope with a painted lake inside and a burgundy seal. Then your stationery lies on the table: your names card, the date, a details sticker, a reply card, black-and-white polaroids and flower bunches. Guests tap a piece to open it.",
+      categories: ["romantic", "modern", "elegant", "luxury"],
+      palettes: [P.swanPond],
       fonts: { heading: "pinyon", body: "cormorant", accent: "bodoni" },
       card: { layout: "classic" },
     },
