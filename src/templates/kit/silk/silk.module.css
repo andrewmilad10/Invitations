@@ -1,0 +1,167 @@
+/* 14 · Romantic Silk. Colours only from --inv-*; neutral rgb() for shadows and pearl light. */
+
+.root {
+  --k-dur: 1.8s;
+  --k-ease: cubic-bezier(.22, .9, .3, 1);
+  --k-dist: 16px;
+  --k-step: 140ms;
+  --pad: clamp(1.25rem, 5vw, 3.5rem);
+  --sheen: var(--inv-muted);
+  --ribbon: var(--inv-accent);
+  --fold: color-mix(in oklab, var(--inv-bg) 84%, var(--inv-accent));
+  --soft: color-mix(in oklab, var(--inv-fg) 68%, var(--inv-bg));
+  position: relative;
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font: 300 1.04rem/1.75 var(--inv-font-body);
+}
+.root [data-grade] { filter: brightness(1.04) saturate(.9) contrast(.96); }
+
+.center { text-align: center; }
+.kicker { margin: 0; font-size: .74rem; letter-spacing: .34em; text-transform: uppercase; color: var(--soft); }
+.script { margin: 0; font: 400 clamp(1.8rem, 4.4vw, 2.6rem)/1.15 var(--inv-font-accent); color: var(--ribbon); }
+.h2 { margin: .3rem 0 0; font: italic 300 clamp(2.2rem, 6vw, 3.8rem)/1.08 var(--inv-font-heading); text-wrap: balance; }
+.h3 { margin: .3rem 0 0; font: italic 300 clamp(1.9rem, 4.6vw, 2.6rem)/1.1 var(--inv-font-heading); }
+.small { margin: .3rem 0 0; font-size: .92rem; color: var(--soft); }
+.lead { max-width: 32rem; margin: 1.2rem auto 0; font-size: 1.1rem; }
+.sign { margin: 1.4rem 0 0; font: 400 2.2rem/1.1 var(--inv-font-accent); color: var(--ribbon); }
+.sec { position: relative; max-width: 70rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.prose { margin-top: 1.2rem; }
+.prose > p + p { margin-top: .9rem; }
+
+/* Silk: soft folds with a moving sheen */
+.silk {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(112deg, transparent 8%, color-mix(in oklab, var(--sheen) 55%, transparent) 20%, transparent 33%, transparent 46%, color-mix(in oklab, var(--sheen) 42%, transparent) 58%, transparent 70%, transparent 82%, color-mix(in oklab, var(--sheen) 35%, transparent) 92%, transparent),
+    linear-gradient(68deg, var(--fold) 0%, var(--inv-bg) 22%, var(--fold) 40%, var(--inv-bg) 62%, var(--fold) 80%, var(--inv-bg));
+  background-size: 220% 100%, 160% 100%;
+  animation: sheen 22s ease-in-out infinite alternate;
+}
+@keyframes sheen { from { background-position: 0% 0, 0% 0; } to { background-position: 100% 0, 60% 0; } }
+
+/* Pearls */
+.pearls { display: flex; justify-content: center; gap: .1rem; }
+.pearls > span {
+  display: block; width: calc(var(--s) * 1rem); aspect-ratio: 1; border-radius: 50%; translate: 0 calc(var(--y) * 1.4rem);
+  background: radial-gradient(circle at 34% 30%, rgb(255 255 255), color-mix(in oklab, var(--sheen) 70%, rgb(255 255 255)) 38%, color-mix(in oklab, var(--sheen) 80%, var(--inv-fg)) 100%);
+  box-shadow: 0 2px 4px rgb(0 0 0 / .14);
+}
+
+/* Ribbon */
+.ribbon { display: block; width: 100%; height: clamp(4rem, 9vw, 7rem); overflow: visible; }
+.ribbonBack { fill: none; stroke: color-mix(in oklab, var(--ribbon) 70%, black); stroke-width: 17; stroke-linecap: round; opacity: .35; }
+.ribbonFront { fill: none; stroke: var(--ribbon); stroke-width: 12; stroke-linecap: round; }
+.bow { display: block; width: 6rem; overflow: visible; filter: drop-shadow(0 6px 8px rgb(0 0 0 / .15)); }
+.bowLoop { fill: var(--ribbon); }
+.bowTail { fill: color-mix(in oklab, var(--ribbon) 85%, black); }
+.bowKnot { fill: color-mix(in oklab, var(--ribbon) 80%, rgb(255 255 255)); }
+
+/* ── Hero ── */
+.hero { position: relative; display: grid; place-items: center; min-height: 100svh; padding: clamp(3rem, 7vw, 5rem) var(--pad) 7rem; overflow: hidden; text-align: center; }
+.heroInner { position: relative; display: grid; justify-items: center; }
+.heroPearls { width: min(80vw, 20rem); margin-bottom: 2.6rem; }
+.portrait { width: min(62vw, 17rem); }
+.portraitPhoto { aspect-ratio: 4 / 5; border-radius: 50% 50% 46% 46% / 40% 40% 60% 60%; -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 50%, black 70%, transparent 100%); mask: radial-gradient(ellipse 50% 50% at 50% 50%, black 70%, transparent 100%); }
+.hero .kicker { margin-top: 1.6rem; }
+.names { display: grid; margin: .6rem 0 0; font: italic 300 clamp(3.2rem, 10vw, 6.6rem)/.98 var(--inv-font-heading); }
+.names i { font: normal 400 .6em/1.2 var(--inv-font-accent); color: var(--ribbon); }
+.meta { margin: 1.2rem 0 0; font-size: .8rem; letter-spacing: .28em; text-transform: uppercase; }
+.tagline { max-width: 28rem; margin: 1rem auto 0; font-style: italic; color: var(--soft); }
+.heroRibbon { position: absolute; inset-inline: 0; bottom: 1.4rem; }
+
+/* ── Couple: a satin card with a pearl string ── */
+.satinCard { position: relative; max-width: 36rem; margin: 0 auto; padding: 3.4rem clamp(1.4rem, 5vw, 3rem) 2.8rem; text-align: center; border-radius: 28px; background: linear-gradient(150deg, var(--inv-surface), color-mix(in oklab, var(--inv-surface) 80%, var(--sheen)) 50%, var(--inv-surface)); box-shadow: 0 30px 60px -36px rgb(0 0 0 / .3), inset 0 1px 0 rgb(255 255 255 / .6); }
+.cardPearls { position: absolute; top: -.6rem; left: 50%; width: 60%; translate: -50% 0; }
+
+/* ── Date: a card tied with ribbon ── */
+.tied { position: relative; width: min(100%, 22rem); margin: 0 auto; padding: 3.4rem 1.6rem 2.4rem; text-align: center; border-radius: 24px; overflow: hidden; background: var(--inv-surface); box-shadow: 0 30px 60px -36px rgb(0 0 0 / .3); }
+.band { position: absolute; inset: 0 auto 0 50%; width: 2.2rem; translate: -50% 0; background: linear-gradient(90deg, var(--ribbon), color-mix(in oklab, var(--ribbon) 70%, rgb(255 255 255)) 50%, var(--ribbon)); opacity: .9; }
+.dateBow { position: absolute; top: -.6rem; left: 50%; translate: -50% 0; z-index: 1; }
+.tied > p { position: relative; z-index: 1; display: table; margin-inline: auto; padding-inline: .6rem; background: var(--inv-surface); }
+.tied .script { margin-top: 2.2rem; }
+.dateDay { margin: .2rem auto 0; font: italic 300 5.4rem/1 var(--inv-font-heading); }
+.dateMonth { margin: 0 auto; font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; }
+
+/* ── Countdown: in pearls ── */
+.pearlClock { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(.6rem, 3vw, 1.6rem); margin-top: 2.4rem; }
+.bigPearl {
+  display: grid; place-content: center; justify-items: center; width: clamp(5.4rem, 20vw, 8.4rem); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, rgb(255 255 255), color-mix(in oklab, var(--sheen) 45%, rgb(255 255 255)) 40%, color-mix(in oklab, var(--sheen) 85%, var(--inv-fg)) 100%);
+  box-shadow: 0 16px 26px -14px rgb(0 0 0 / .35), inset -6px -10px 18px rgb(0 0 0 / .08);
+  color: var(--inv-fg);
+}
+.pearlValue { font: italic 300 clamp(2rem, 6vw, 3rem)/1 var(--inv-font-heading); font-variant-numeric: tabular-nums; }
+.pearlLabel { font-size: .6rem; letter-spacing: .24em; text-transform: uppercase; }
+
+/* ── Story ── */
+.story { display: grid; gap: 3rem; align-items: center; max-width: 70rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+@media (min-width: 900px) { .story { grid-template-columns: 1fr 1fr; gap: 4rem; } }
+.feather { width: min(100%, 28rem); margin-inline: auto; aspect-ratio: 4 / 5; -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 50%, black 62%, transparent 100%); mask: radial-gradient(ellipse 50% 50% at 50% 50%, black 62%, transparent 100%); }
+.quote { margin: 2rem 0 0; font: italic 300 clamp(1.4rem, 3.2vw, 1.8rem)/1.4 var(--inv-font-heading); color: var(--ribbon); }
+.quote cite { display: block; margin-top: .5rem; font: normal .74rem var(--inv-font-body); letter-spacing: .26em; text-transform: uppercase; color: var(--soft); }
+
+/* ── Ceremony / reception: satin cards with a ribbon tab ── */
+.eventSec { padding: clamp(2.4rem, 5vw, 3.4rem) var(--pad); }
+.eventCard { position: relative; max-width: 30rem; margin: 0 auto; padding: 3.2rem 1.8rem 2.4rem; text-align: center; border-radius: 22px; background: var(--inv-surface); box-shadow: 0 30px 60px -36px rgb(0 0 0 / .3); }
+.eventAlt { background: linear-gradient(160deg, var(--inv-surface), color-mix(in oklab, var(--inv-surface) 82%, var(--sheen))); }
+@media (min-width: 900px) { .eventCard { margin-inline-start: 14%; } .eventAlt { margin-inline: auto 14%; } }
+.tab { position: absolute; top: -1rem; left: 50%; width: 3rem; height: 3.4rem; translate: -50% 0; background: var(--ribbon); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%); }
+.time { margin: .5rem 0 0; font: italic 300 2.4rem/1 var(--inv-font-heading); color: var(--ribbon); }
+.divider { width: 10rem; margin: 1.4rem auto .8rem; }
+.divider > span { translate: 0 calc(var(--y) * .5rem); }
+.venue { margin: 0; font-size: .82rem; letter-spacing: .26em; text-transform: uppercase; }
+.note { max-width: 22rem; margin: .9rem auto 0; font-style: italic; }
+.link { display: inline-block; margin-top: 1.3rem; padding-bottom: .2rem; border-bottom: 1px solid var(--ribbon); color: var(--inv-fg); font-size: .76rem; letter-spacing: .24em; text-decoration: none; text-transform: uppercase; }
+
+/* ── Venue ── */
+.maps { display: grid; gap: 2rem; margin-top: 2.4rem; }
+@media (min-width: 800px) { .maps { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); } }
+.mapFig { margin: 0; padding: 10px; text-align: center; border-radius: 22px; background: var(--inv-surface); box-shadow: 0 0 0 4px var(--inv-bg), 0 0 0 5px var(--sheen); }
+.map { display: block; width: 100%; aspect-ratio: 4 / 3; border: 0; border-radius: 14px; filter: saturate(.7) brightness(1.04); }
+.mapFig figcaption { display: grid; padding: .9rem 0 .4rem; }
+.mapFig b { font: italic 300 1.4rem var(--inv-font-heading); }
+.mapFig span { font-size: .9rem; color: var(--soft); }
+
+/* ── Schedule: knots along a ribbon ── */
+.flow { position: relative; max-width: 30rem; margin: 2.6rem auto 0; padding: 0; list-style: none; text-align: center; }
+.flow::before { content: ""; position: absolute; inset-block: 0; left: 50%; width: 10px; translate: -50% 0; border-radius: 10px; background: linear-gradient(90deg, var(--ribbon), color-mix(in oklab, var(--ribbon) 70%, rgb(255 255 255)) 50%, var(--ribbon)); opacity: .35; }
+.flow li { position: relative; margin-bottom: 1.8rem; padding: 1.4rem 1rem 1.2rem; border-radius: 18px; background: var(--inv-surface); box-shadow: 0 20px 30px -24px rgb(0 0 0 / .3); }
+.knot { position: absolute; top: -.7rem; left: 50%; width: 1.4rem; aspect-ratio: 1; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle at 34% 30%, rgb(255 255 255), var(--sheen) 60%, color-mix(in oklab, var(--sheen) 80%, var(--inv-fg))); box-shadow: 0 2px 4px rgb(0 0 0 / .2); }
+.flow time { font: 400 1.9rem/1 var(--inv-font-accent); color: var(--ribbon); }
+.flowTitle { margin: .3rem 0 0; font: italic 300 1.4rem var(--inv-font-heading); }
+
+/* ── Gallery: a soft cloud of photos ── */
+.gallery { max-width: 76rem; margin-inline: auto; padding: clamp(4.5rem, 10vw, 7rem) var(--pad); }
+.cloud { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 2rem; }
+@media (min-width: 900px) { .cloud { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.cloudPhoto { aspect-ratio: 4 / 5; margin: -1rem; -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 50%, black 55%, transparent 100%); mask: radial-gradient(ellipse 50% 50% at 50% 50%, black 55%, transparent 100%); }
+.cloudPhoto:nth-child(even) { translate: 0 2.4rem; }
+@media (min-width: 900px) { .cloudPhoto:nth-child(even) { translate: none; } .cloudPhoto:nth-child(3n + 2) { translate: 0 3rem; } }
+
+/* ── RSVP: a satin pillow ── */
+.rsvpSec { position: relative; padding: clamp(5rem, 11vw, 8rem) var(--pad); overflow: hidden; }
+.pillow { position: relative; max-width: 32rem; margin: 0 auto; padding: 3.6rem clamp(1.4rem, 5vw, 3rem) 3rem; text-align: center; border-radius: 40px; background: radial-gradient(ellipse at 50% 35%, var(--inv-surface), color-mix(in oklab, var(--inv-surface) 82%, var(--sheen))); box-shadow: 0 40px 70px -40px rgb(0 0 0 / .4), inset 0 2px 0 rgb(255 255 255 / .6), inset 0 -10px 30px rgb(0 0 0 / .05); }
+.rsvpBow { position: absolute; top: -1.6rem; left: 50%; translate: -50% 0; }
+.button { display: inline-block; margin-top: 1.6rem; padding: .95rem 2.2rem; border-radius: 999px; background: var(--ribbon); color: var(--inv-accent-fg); font-size: .78rem; letter-spacing: .24em; text-decoration: none; text-transform: uppercase; box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 10px 20px -12px rgb(0 0 0 / .4); transition: transform .4s var(--k-ease); }
+.button:hover { transform: translateY(-2px); }
+
+/* ── FAQ ── */
+.faqList { max-width: 42rem; margin: 2.4rem auto 0; }
+.qa { border-bottom: 1px solid var(--inv-border); }
+.qa summary { display: flex; align-items: center; gap: .9rem; padding: 1.1rem 0; cursor: pointer; list-style: none; font: italic 300 1.35rem var(--inv-font-heading); }
+.qa summary::-webkit-details-marker { display: none; }
+.pearlDot { flex: none; width: .9rem; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 34% 30%, rgb(255 255 255), var(--sheen) 60%, color-mix(in oklab, var(--sheen) 80%, var(--inv-fg))); transition: scale .4s var(--k-ease); }
+.qa[open] .pearlDot { scale: 1.4; }
+.qa p { margin: 0 0 1.2rem 1.8rem; color: var(--soft); white-space: pre-line; }
+.qa p:dir(rtl) { margin: 0 1.8rem 1.2rem 0; }
+
+/* ── Closing ── */
+.closing { padding: clamp(5rem, 12vw, 8rem) var(--pad); text-align: center; }
+.closingBow { margin: 0 auto 1.6rem; }
+.closingTitle { margin: 0; font: italic 300 clamp(2.4rem, 7vw, 4.6rem)/1.05 var(--inv-font-heading); }
+.closingPearls { width: min(80vw, 20rem); margin: 2.6rem auto 0; }
+
+/* ── Footer ── */
+.footer { padding: 2.4rem var(--pad) 3rem; text-align: center; border-top: 1px solid var(--inv-border); }
+.footNames { margin: 0; font: 400 2rem var(--inv-font-accent); color: var(--ribbon); }
