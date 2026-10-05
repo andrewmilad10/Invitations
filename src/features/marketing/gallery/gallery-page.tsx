@@ -5,6 +5,7 @@ import { selectableTemplates } from "@/templates/registry";
 import { PRODUCTS, templatesFor, websiteOrder, type Product } from "../products";
 import { SiteFooter } from "../site-footer";
 import { SiteHeader } from "../site-header";
+import { WebsiteCard } from "../home/website-card";
 import { DesignGallery } from "./design-gallery";
 import { NO_FILTERS } from "./filters";
 
@@ -47,7 +48,16 @@ export function GalleryPage({ product }: { product: Product }) {
               <h1 className="font-serif text-5xl font-light leading-[1.02] sm:text-6xl">{info.title}</h1>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{info.intro}</p>
             </Stagger>
-            <DesignGallery templates={templates} initialFilters={NO_FILTERS} product={product} />
+            {product === "websites" ? (
+              // Websites: the same cards as the home page (phone + envelope or opening scene).
+              <div className="mx-auto mt-12 grid max-w-7xl grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+                {templates.map((t) => (
+                  <WebsiteCard key={t.id} template={t} href={`/websites/${t.id}`} />
+                ))}
+              </div>
+            ) : (
+              <DesignGallery templates={templates} initialFilters={NO_FILTERS} product={product} />
+            )}
           </div>
         </main>
       </PageTransition>

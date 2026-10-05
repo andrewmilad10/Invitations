@@ -17,9 +17,10 @@ const SAMPLE = { partnerOne: "Nour", partnerTwo: "Adam", dateLabel: "12 · 06 ·
  * opening screen and, beside it, the envelope it arrives in (in the design's
  * own colours). Name, a short description and a "Try demo" button below.
  */
-export function WebsiteCard({ template, className }: { template: TemplateManifest; className?: string }) {
+export function WebsiteCard({ template, className, href }: { template: TemplateManifest; className?: string; /** Where the picture and name lead (the demo by default). */ href?: string }) {
   const vars = themeToCssVars(resolveTheme(template.themeDefaults, {})) as CSSProperties;
   const demo = `/templates/${template.id}/preview`;
+  const main = href ?? demo;
   const scene = SCENE_OPENINGS.has(template.renderer);
   return (
     <article
@@ -28,7 +29,7 @@ export function WebsiteCard({ template, className }: { template: TemplateManifes
         className,
       )}
     >
-      <Link href={demo} aria-label={`Try the ${template.name} demo`} className="block overflow-hidden rounded-[1.1rem]">
+      <Link href={main} aria-label={href ? `${template.name}: see the design` : `Try the ${template.name} demo`} tabIndex={href ? -1 : undefined} className="block overflow-hidden rounded-[1.1rem]">
         <div aria-hidden className="relative flex aspect-square items-center justify-center gap-[4%] bg-[#ead9c8] px-[5%] [container-type:inline-size]" style={vars}>
           <div className="w-[46%] shrink-0 transition-transform duration-700 ease-out group-hover:-translate-y-[2%] group-hover:-rotate-1">
             <div className="overflow-hidden rounded-[7cqw] border-[1.6cqw] border-neutral-900 bg-neutral-900 shadow-[0_6cqw_8cqw_-4cqw_rgb(0_0_0/0.5)]">
@@ -48,7 +49,15 @@ export function WebsiteCard({ template, className }: { template: TemplateManifes
         </div>
       </Link>
       <div className="flex flex-1 flex-col px-2 pb-1 pt-4 sm:px-3">
-        <h3 className="font-serif text-xl italic leading-tight sm:text-2xl">{template.name}</h3>
+        <h3 className="font-serif text-xl italic leading-tight sm:text-2xl">
+          {href ? (
+            <Link href={href} className="hover:underline hover:underline-offset-4">
+              {template.name}
+            </Link>
+          ) : (
+            template.name
+          )}
+        </h3>
         <p className="mt-2 line-clamp-3 flex-1 text-[0.82rem] leading-relaxed text-muted-foreground sm:line-clamp-4 sm:text-sm">{template.tagline}</p>
         <Link
           href={demo}
