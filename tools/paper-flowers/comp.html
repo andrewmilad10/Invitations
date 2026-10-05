@@ -1,0 +1,60 @@
+<body style="margin:0"><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import { stage, rose, hydrangea, blossom, sprig, pearl, srand, rnd } from "./paper.js";
+const q = new URLSearchParams(location.search), which = q.get("c"), layer = q.get("layer");
+const BLUE=[["#7f9fd6","#c9daf3"],["#9a9fdc","#d9d6f4"],["#6f93cf","#bcd2f0"],["#a9c0e8","#e3ecfa"],["#8fb0e2","#d6e4f8"],["#b7a8dc","#e6dcf5"]];
+const LILAC=[["#b39ad6","#e5d8f3"],["#c7b0e0","#efe6f8"],["#a99bd8","#ded8f4"],["#d1bfe6","#f3edfa"]];
+const PINK=["#e58d9b","#f9d6da"], PEACH=["#f0b29f","#fde3d8"], CREAM=["#f1e4d3","#fffaf2"], BLUSH=["#eeb3bd","#fde8eb"];
+const G1={colour:"#4c6b4f",edge:"#7f9a78"}, G2={colour:"#5a7655",edge:"#8ca486"}, G3={colour:"#557370",edge:"#89a6a1"}, EU={colour:"#6a8987",edge:"#a3bdb9",round:true,leaf:.2,spread:1.1};
+const sp=(len,ang,g,o={})=>{const s=sprig(len,ang,{...g,...o}); s.userData.green=true; return s;};
+const pearls=(S,n,x0,x1,y0,y1)=>{for(let i=0;i<n;i++)S.put(pearl(rnd(4,8)),rnd(x0,x1),rnd(y0,y1),0);};
+const C = {
+  arch(){ srand(11); const S=stage(900,1400,{map:2048}); if(layer){ const put=S.put; S.put=(o,...a)=>{ const g=!!(o.userData.green || o.isMesh); return (layer==='green')===g ? put(o,...a) : o; }; }
+    const RX=330, RY=560, P=(a)=>[Math.cos(a)*RX, Math.sin(a)*RY];
+    // greenery tangent to the arch, all the way round
+    for (let i=0;i<40;i++){ const a=Math.PI/2 - i/40*Math.PI*2; const [x,y]=P(a); const tan=a - Math.PI/2*(i%2?1:-1);
+      S.put(sp(rnd(150,210),tan+rnd(-.35,.35),[G1,G2,EU,G3][i%4],{bend:rnd(-.3,.3),leaves:6}),x*rnd(.96,1.04),y*rnd(.98,1.02),0); }
+    // crown and base clusters
+    S.put(hydrangea(130,BLUE),0,RY-10,55);
+    S.put(rose(88,...PINK),-170,RY-55,50); S.put(rose(76,...BLUSH,{petals:22}),165,RY-60,45);
+    S.put(hydrangea(80,LILAC,{florets:28}),-285,RY-190,35); S.put(rose(58,...PEACH,{petals:20}),280,RY-200,35);
+    S.put(blossom(32,...CREAM),88,RY-120,32,.4); S.put(blossom(26,...CREAM),-80,RY-125,28,1.1);
+    S.put(hydrangea(110,BLUE,{florets:38}),60,-RY+20,55); S.put(rose(84,...PINK),-130,-RY+50,50);
+    S.put(rose(56,...PEACH,{petals:18}),215,-RY+80,35); S.put(hydrangea(66,LILAC,{florets:24}),-275,-RY+170,30);
+    S.put(blossom(30,...CREAM),-20,-RY+150,32,.5);
+    // smaller blooms down the sides
+    const side=[[.66,()=>hydrangea(62,BLUE,{florets:22})],[.52,()=>blossom(28,...CREAM)],[.4,()=>rose(46,...BLUSH,{petals:16})],[.28,()=>hydrangea(48,LILAC,{florets:16})],[.16,()=>blossom(26,...CREAM)],[.04,()=>rose(40,...PEACH,{petals:16})],[-.08,()=>hydrangea(50,BLUE,{florets:18})],[-.2,()=>blossom(26,...CREAM)],[-.32,()=>rose(44,...PINK,{petals:16})],[-.44,()=>hydrangea(48,LILAC,{florets:16})],[-.56,()=>blossom(24,...CREAM)],[-.68,()=>rose(42,...BLUSH,{petals:16})]];
+    for (const s of [-1,1]) side.forEach(([t,f],k)=>{ const a=t*Math.PI/2; const [x,y]=P(a); S.put(f(), s*x*1.0, y, 30, rnd(0,3)); });
+    pearls(S,16,-400,400,-660,660);
+    console.log('children', S.scene.children.length, S.scene.children.map(o=>o.type).join(','));
+    return S.render(); },
+  corner(){ srand(5); const S=stage(720,540,{map:2048});
+    S.put(sp(300,.15,G1,{bend:-.3,leaves:7}),-40,-30,0); S.put(sp(260,-1.4,EU,{bend:.25,leaves:6}),-80,40,0); S.put(sp(240,2.4,G3,{bend:-.2,leaves:6}),-60,20,0); S.put(sp(220,.9,EU,{bend:-.2,leaves:5}),-60,20,0);
+    S.put(hydrangea(100,BLUE,{florets:34}),-120,60,40); S.put(rose(80,...PINK),40,10,40); S.put(rose(48,...PEACH,{petals:18}),-20,-110,25);
+    S.put(blossom(30,...CREAM),130,90,25,.3); S.put(blossom(24,...CREAM),-200,-60,20,.9); pearls(S,6,-300,300,-220,220);
+    return S.render(); },
+  posy(){ srand(21); const S=stage(820,820,{map:2048});
+    for(let i=0;i<12;i++){const a=i/12*6.283+rnd(-.2,.2); S.put(sp(rnd(150,190),a,[G1,EU,G2,G3][i%4],{bend:rnd(-.3,.3),leaves:6}),Math.cos(a)*130,Math.sin(a)*130,0);}
+    S.put(rose(95,...PINK),0,0,55);
+    const ring=[()=>hydrangea(80,BLUE,{florets:28}),()=>rose(62,...BLUSH,{petals:20}),()=>hydrangea(72,LILAC,{florets:24}),()=>rose(58,...PEACH,{petals:18}),()=>hydrangea(78,BLUE,{florets:26}),()=>blossom(34,...CREAM)];
+    ring.forEach((f,i)=>{const a=i/ring.length*6.283+.3; S.put(f(),Math.cos(a)*150,Math.sin(a)*150,40,rnd(0,3));});
+    for(let i=0;i<5;i++){const a=i/5*6.283+.9; S.put(blossom(rnd(22,28),...CREAM),Math.cos(a)*245,Math.sin(a)*245,25,rnd(0,3));}
+    pearls(S,8,-330,330,-330,330);
+    return S.render(); },
+  spray(){ srand(31); const S=stage(900,300,{map:2048});
+    S.put(sp(380,.08,G1,{bend:-.12,leaves:9,leaf:.17}),20,-10,0); S.put(sp(380,3.06,EU,{bend:.12,leaves:9,leaf:.14}),-20,-10,0);
+    S.put(rose(54,...PINK,{petals:20}),0,0,35); S.put(hydrangea(48,BLUE,{florets:18}),-85,8,25); S.put(blossom(24,...CREAM),78,10,20,.4);
+    S.put(blossom(18,...CREAM),-170,-20,15,.2); S.put(blossom(18,...CREAM),175,15,15,1); pearls(S,6,-260,260,-60,60);
+    return S.render(); },
+  envelope(){ srand(41); const S=stage(1080,2340,{map:2048,soft:3,exposure:.95});
+    const corner=(cx,cy,flip)=>{ const f=flip?-1:1;
+      S.put(sp(420,f>0?-.35:2.8,G1,{bend:-.25,leaves:8}),cx,cy,0); S.put(sp(380,f>0?-1.25:1.9,EU,{bend:.25,leaves:7}),cx,cy,0); S.put(sp(320,f>0?.45:3.6,G2,{bend:-.2,leaves:6}),cx,cy,0);
+      S.put(hydrangea(150,BLUE,{florets:44}),cx+f*40,cy-f*20,40); S.put(rose(105,...PINK),cx+f*230,cy+f*30,40); S.put(rose(70,...PEACH,{petals:20}),cx-f*10,cy-f*200,30);
+      S.put(blossom(42,...CREAM),cx+f*200,cy-f*160,25,.3); S.put(blossom(34,...CREAM),cx+f*340,cy-f*60,20,1); S.put(hydrangea(80,LILAC,{florets:24}),cx+f*360,cy+f*160,30);
+    };
+    corner(-400,880,false); corner(400,-880,true);
+    for(let i=0;i<7;i++) S.put(blossom(rnd(22,30),...CREAM),rnd(-420,420),rnd(-380,380),15,rnd(0,3));
+    S.emboss(); return S.render(); },
+};
+window.__png = C[which]();
+</script></body>
