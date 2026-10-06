@@ -19,6 +19,7 @@ const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
   "pressed-garden": { ar: "حديقة الزهور المجففة", mood: "floral" },
   "lemon-terrace": { ar: "شرفة الليمون", mood: "floral" },
   "linen-meadow": { ar: "مرج الكتان", mood: "floral" },
+  "opening-night": { ar: "ليلة الافتتاح", mood: "nights" },
   "garden-gate": { ar: "بوابة الحديقة", mood: "floral" },
   "message-in-a-bottle": { ar: "رسالة في زجاجة", mood: "classic" },
   "set-sail": { ar: "نُبحر معاً", mood: "classic" },

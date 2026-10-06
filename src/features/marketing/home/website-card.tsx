@@ -133,6 +133,8 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
           </div>
         </div>
+      ) : template.renderer === "theatre" ? (
+        <div className="absolute inset-0 bg-[url(/templates/opening-night/curtain.webp)] bg-cover bg-bottom" />
       ) : template.renderer === "meadow" ? (
         <div className="absolute inset-0 grid place-items-center bg-inv-bg bg-[url(/templates/linen-meadow/linen.webp)] bg-[length:60cqw]">
           <div className="relative aspect-[1066/898] w-[94%] bg-[url(/templates/linen-meadow/closed.webp)] bg-[length:100%_100%] drop-shadow-[0_2cqw_3cqw_rgb(80_55_25/0.4)]" />

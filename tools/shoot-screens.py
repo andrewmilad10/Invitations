@@ -2,7 +2,7 @@
 import asyncio, glob, zlib, io
 from PIL import Image
 from playwright.async_api import async_playwright
-IDS=["swan-lake","villa-rosa","something-blue","cotton-press","rose-marble","burgundy-envelope","the-gate","moonlit-nile","pressed-garden","set-sail","message-in-a-bottle","garden-gate","lemon-terrace","linen-meadow"]
+IDS=["swan-lake","villa-rosa","something-blue","cotton-press","rose-marble","burgundy-envelope","the-gate","moonlit-nile","pressed-garden","set-sail","message-in-a-bottle","garden-gate","lemon-terrace","linen-meadow","opening-night"]
 OUT="public/marketing/screens/"  # run from the repo root with the site running on :3100
 imgs=sorted(glob.glob("public/samples/*.jpg"))
 async def shot(b,id):

@@ -628,6 +628,18 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       <p className={cn("font-inv-accent tracking-[0.25em]", phone ? "text-[3cqw]" : "text-[1.1cqw]")}>{dateLabel}</p>
     </div>
   ),
+  // Opening Night: the names on the lit stage under the velvet swag.
+  theatre: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 bg-[#0b1d1d] text-center">
+      <div className="absolute inset-y-0 left-1/2 aspect-[941/1672] -translate-x-1/2 bg-[url(/templates/opening-night/stage.webp)] bg-cover bg-center">
+        <span className="absolute inset-x-0 top-0 aspect-[934/600] bg-[url(/templates/opening-night/swag.webp)] bg-[length:100%_100%]" />
+      </div>
+      <div className={cn("relative grid h-full content-center justify-items-center text-[#e6cb8f] [text-shadow:0_2px_12px_rgb(0_0_0/0.7)]", phone ? "pt-[6%]" : "pt-[3%]")}>
+        <p className={cn("font-inv-heading leading-[1]", phone ? "text-[13cqw]" : "text-[5cqw]")}>{partnerOne}<br /><span className="text-[0.55em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[4%] font-inv-accent tracking-[0.25em]", phone ? "text-[3.2cqw]" : "text-[1.2cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">
