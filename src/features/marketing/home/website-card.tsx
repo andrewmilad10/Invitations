@@ -133,6 +133,14 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
           </div>
         </div>
+      ) : template.renderer === "garden" ? (
+        <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(ellipse_at_center,#fbf4ec,#e3cfbe)]">
+          <div className="relative aspect-[900/904] w-[96%] bg-[url(/templates/garden-gate/under.webp)] bg-[length:100%_100%] shadow-[0_2cqw_4cqw_-2cqw_rgb(90_50_30/0.45)]">
+            <span className="absolute inset-0 bg-[url(/templates/garden-gate/front.webp)] bg-[length:100%_100%]" />
+            <span className="absolute inset-x-0 top-0 h-[62.7%] bg-[url(/templates/garden-gate/flap.webp)] bg-[length:100%_100%]" />
+            <span className="absolute left-1/2 top-[60%] aspect-[360/390] w-[26%] -translate-x-1/2 -translate-y-1/2 bg-[url(/templates/garden-gate/seal.webp)] bg-contain bg-no-repeat" />
+          </div>
+        </div>
       ) : blue ? (
         <>
           <div className="absolute inset-0 bg-[url(/templates/something-blue/envelope.webp)] bg-cover bg-center" />

@@ -70,6 +70,7 @@ const P = {
   // Something Blue
   setSail: { id: "sea-glass", label: "Sea glass & slate", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   bottle: { id: "open-sea", label: "Open sea & parchment", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
+  gardenGate: { id: "blush-garden", label: "Blush garden", family: "pink", colors: c("#faf6ef", "#ffffff", "#4a2f2c", "#7d6658", "#9c4f57", "#ffffff", "#e8dccb") },
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Villa Rosa
   villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
@@ -277,6 +278,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["romantic", "botanical", "elegant", "modern"],
       palettes: [P.somethingBlue],
       fonts: { heading: "greatvibes", body: "cormorant", accent: "italiana" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "garden",
+    {
+      id: "garden-gate",
+      name: "Garden Gate",
+      tagline: "A painted floral envelope that opens onto a golden-hour garden.",
+      description:
+        "Opens on a cream envelope painted with peonies, roses and lavender, sealed in blush wax: the seal lifts, the flap opens slowly on a flowered lining and the view drifts in. Your names fade in over a garden gate at golden hour, with light through the door and gold butterflies. Then a countdown, your photo in a carved rose frame, the day along a growing vine with watercolour icons, the venue under a painted seaside town, a gallery and a wax seal to reply.",
+      categories: ["romantic", "botanical", "elegant", "luxury"],
+      palettes: [P.gardenGate],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "cinzel" },
       card: { layout: "classic" },
     },
     { opening: true },
