@@ -39,6 +39,7 @@ const Lemon = dynamic(() => import("./kit/lemon/Renderer"));
 const Meadow = dynamic(() => import("./kit/meadow/Renderer"));
 const Theatre = dynamic(() => import("./kit/theatre/Renderer"));
 const Fan = dynamic(() => import("./kit/fan/Renderer"));
+const Olive = dynamic(() => import("./kit/olive/Renderer"));
 const Rosa = dynamic(() => import("./kit/rosa/Renderer"));
 const Pond = dynamic(() => import("./kit/pond/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
@@ -92,6 +93,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   meadow: Meadow,
   theatre: Theatre,
   fan: Fan,
+  olive: Olive,
   rosa: Rosa,
   pond: Pond,
   burgundy: Burgundy,

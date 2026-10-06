@@ -28,6 +28,7 @@ import LemonRenderer from "./kit/lemon/Renderer";
 import MeadowRenderer from "./kit/meadow/Renderer";
 import TheatreRenderer from "./kit/theatre/Renderer";
 import FanRenderer from "./kit/fan/Renderer";
+import OliveRenderer from "./kit/olive/Renderer";
 import RosaRenderer from "./kit/rosa/Renderer";
 import PondRenderer from "./kit/pond/Renderer";
 import MaisonRenderer from "./maison/Renderer";
@@ -83,6 +84,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   meadow: MeadowRenderer,
   theatre: TheatreRenderer,
   fan: FanRenderer,
+  olive: OliveRenderer,
   rosa: RosaRenderer,
   pond: PondRenderer,
   burgundy: BurgundyRenderer,

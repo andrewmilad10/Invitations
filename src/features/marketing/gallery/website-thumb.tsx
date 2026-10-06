@@ -653,6 +653,15 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Olive Courtyard: the names over the courtyard by day.
+  olive: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-start justify-center bg-[url(/templates/olive-courtyard/day.webp)] bg-cover bg-bottom text-center text-inv-fg">
+      <div className={cn("relative", phone ? "mt-[12%]" : "mt-[4%]")}>
+        <p className={cn("font-inv-heading leading-[1]", phone ? "text-[13cqw]" : "text-[5cqw]")}>{partnerOne}<br /><span className="text-[0.55em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[6%] font-inv-accent tracking-[0.25em]", phone ? "text-[3cqw]" : "text-[1.1cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

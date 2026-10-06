@@ -43,7 +43,7 @@ const ALL: TemplateManifest[] = [
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
-  "opening-night", "linen-meadow", "lemon-terrace", "garden-gate", "paper-fan", "swan-lake", "swan-pond", "set-sail", "villa-rosa", "something-blue", "cotton-press", "rose-marble", "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden",
+  "olive-courtyard", "opening-night", "linen-meadow", "lemon-terrace", "garden-gate", "paper-fan", "swan-lake", "swan-pond", "set-sail", "villa-rosa", "something-blue", "cotton-press", "rose-marble", "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden",
   "editorial-romance", "old-money", "modern-minimal", "italian-summer", "black-tie", "french-garden", "luxury-magazine", "vintage-paper",
   "the-arch", "film-story", "botanical-glasshouse", "monogram-house",
   "bon-voyage", "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
@@ -68,7 +68,7 @@ const rank = (id: string) => {
  * registered (so weddings already made with one keep rendering) but is
  * hidden from the gallery and the wizard.
  */
-const LIVE_WEBSITES = new Set(["the-gate", "moonlit-nile", "pressed-garden", "swan-lake", "burgundy-envelope", "cotton-press", "rose-marble", "something-blue", "villa-rosa", "swan-pond", "set-sail", "paper-fan", "garden-gate", "lemon-terrace", "linen-meadow", "opening-night"]);
+const LIVE_WEBSITES = new Set(["the-gate", "moonlit-nile", "pressed-garden", "swan-lake", "burgundy-envelope", "cotton-press", "rose-marble", "something-blue", "villa-rosa", "swan-pond", "set-sail", "paper-fan", "garden-gate", "lemon-terrace", "linen-meadow", "opening-night", "olive-courtyard"]);
 const isWebsite = (t: TemplateManifest) => (t.features.hero ?? "photo") !== "card";
 const withVisibility = (t: TemplateManifest): TemplateManifest => (isWebsite(t) && !LIVE_WEBSITES.has(t.id) ? { ...t, status: "hidden" } : t);
 
