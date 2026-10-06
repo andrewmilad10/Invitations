@@ -133,6 +133,10 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
           </div>
         </div>
+      ) : template.renderer === "fan" ? (
+        <div className="absolute inset-0 bg-[url(/templates/paper-fan/meadow.webp)] bg-cover bg-bottom">
+          <span className="absolute left-1/2 top-[38%] aspect-[243/1431] h-[46%] -translate-x-1/2 bg-[url(/templates/paper-fan/closed.webp)] bg-[length:100%_100%] drop-shadow-[0_1cqw_1.5cqw_rgb(60_40_70/0.35)]" />
+        </div>
       ) : template.renderer === "theatre" ? (
         <div className="absolute inset-0 bg-[url(/templates/opening-night/curtain.webp)] bg-cover bg-bottom" />
       ) : template.renderer === "meadow" ? (

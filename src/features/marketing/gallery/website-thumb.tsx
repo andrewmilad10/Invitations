@@ -640,6 +640,19 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Paper Fan: the names inside the paper-cut arch window.
+  fan: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg">
+      <div className="relative h-full aspect-[941/1672] bg-[url(/templates/paper-fan/sky.webp)] bg-[length:100%_100%]">
+        <span className="absolute inset-0 bg-[url(/templates/paper-fan/branches.webp)] bg-[length:100%_100%]" />
+        <span className="absolute inset-0 bg-[url(/templates/paper-fan/arch.webp)] bg-[length:100%_100%]" />
+        <div className="absolute inset-x-[16%] top-[48%] text-center text-inv-fg">
+          <p className={cn("font-inv-heading leading-[1]", phone ? "text-[11cqw]" : "text-[4.4cqw]")}>{partnerOne}<br /><span className="text-[0.55em]">&amp;</span><br />{partnerTwo}</p>
+          <p className={cn("mt-[6%] font-inv-accent tracking-[0.2em]", phone ? "text-[2.6cqw]" : "text-[1cqw]")}>{dateLabel}</p>
+        </div>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

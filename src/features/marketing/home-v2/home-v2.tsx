@@ -22,6 +22,7 @@ const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
   "opening-night": { ar: "ليلة الافتتاح", mood: "nights" },
   "garden-gate": { ar: "بوابة الحديقة", mood: "floral" },
   "message-in-a-bottle": { ar: "رسالة في زجاجة", mood: "classic" },
+  "paper-fan": { ar: "المروحة الورقية", mood: "floral" },
   "set-sail": { ar: "نُبحر معاً", mood: "classic" },
   "cotton-press": { ar: "حبر وقطن", mood: "classic" },
   "rose-marble": { ar: "رخام وردي", mood: "classic" },
