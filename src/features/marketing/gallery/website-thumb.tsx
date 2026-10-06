@@ -611,6 +611,15 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Lemon Terrace: the names over the terrace behind blue shutters.
+  lemon: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-start justify-center bg-[url(/templates/lemon-terrace/terrace-tall.webp)] bg-cover bg-bottom text-center text-white">
+      <div className={cn("relative", phone ? "mt-[14%]" : "mt-[5%]")}>
+        <p className={cn("font-inv-heading leading-[1] [text-shadow:0_2px_12px_rgb(10_40_90/0.5)]", phone ? "text-[13cqw]" : "text-[5cqw]")}>{partnerOne}<br /><span className="text-[0.55em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[6%] font-inv-accent tracking-[0.25em] [text-shadow:0_1px_8px_rgb(10_40_90/0.5)]", phone ? "text-[3.2cqw]" : "text-[1.2cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">

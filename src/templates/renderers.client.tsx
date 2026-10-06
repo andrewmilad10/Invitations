@@ -35,6 +35,7 @@ const Blue = dynamic(() => import("./kit/blue/Renderer"));
 const Voyage = dynamic(() => import("./kit/voyage/Renderer"));
 const Bottle = dynamic(() => import("./kit/bottle/Renderer"));
 const Garden = dynamic(() => import("./kit/garden/Renderer"));
+const Lemon = dynamic(() => import("./kit/lemon/Renderer"));
 const Rosa = dynamic(() => import("./kit/rosa/Renderer"));
 const Pond = dynamic(() => import("./kit/pond/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
@@ -84,6 +85,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   voyage: Voyage,
   bottle: Bottle,
   garden: Garden,
+  lemon: Lemon,
   rosa: Rosa,
   pond: Pond,
   burgundy: Burgundy,

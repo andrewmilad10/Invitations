@@ -71,6 +71,7 @@ const P = {
   setSail: { id: "sea-glass", label: "Sea glass & slate", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   bottle: { id: "open-sea", label: "Open sea & parchment", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   gardenGate: { id: "blush-garden", label: "Blush garden", family: "pink", colors: c("#faf6ef", "#ffffff", "#4a2f2c", "#7d6658", "#9c4f57", "#ffffff", "#e8dccb") },
+  lemonTerrace: { id: "lemon-sea", label: "Lemon & sea blue", family: "blue", colors: c("#eef4fa", "#ffffff", "#1d3462", "#4f6182", "#2c58a6", "#ffffff", "#d2dcec") },
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Villa Rosa
   villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
@@ -278,6 +279,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["romantic", "botanical", "elegant", "modern"],
       palettes: [P.somethingBlue],
       fonts: { heading: "greatvibes", body: "cormorant", accent: "italiana" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "lemon",
+    {
+      id: "lemon-terrace",
+      name: "Lemon Terrace",
+      tagline: "A powder-blue envelope that lights up in gold and opens onto a sea terrace.",
+      description:
+        "Opens on a powder-blue envelope with an embossed frame: gold light flows slowly along the embossing, the flap lifts on a blossom lining and the screen fades into a sunlit terrace behind blue shutters, looking out to sea. Then lemon branches over every section, your photo in a lemon wreath, the day along a gold line with watercolour icons, a painted orangery for the venue, a dress-code card, a gallery that turns in 3D, a wax seal to reply and string lights to close.",
+      categories: ["romantic", "botanical", "elegant", "luxury"],
+      palettes: [P.lemonTerrace],
+      fonts: { heading: "pinyon", body: "cormorant", accent: "cinzel" },
       card: { layout: "classic" },
     },
     { opening: true },

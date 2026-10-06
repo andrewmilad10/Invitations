@@ -24,6 +24,7 @@ import BlueRenderer from "./kit/blue/Renderer";
 import VoyageRenderer from "./kit/voyage/Renderer";
 import BottleRenderer from "./kit/bottle/Renderer";
 import GardenRenderer from "./kit/garden/Renderer";
+import LemonRenderer from "./kit/lemon/Renderer";
 import RosaRenderer from "./kit/rosa/Renderer";
 import PondRenderer from "./kit/pond/Renderer";
 import MaisonRenderer from "./maison/Renderer";
@@ -75,6 +76,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   voyage: VoyageRenderer,
   bottle: BottleRenderer,
   garden: GardenRenderer,
+  lemon: LemonRenderer,
   rosa: RosaRenderer,
   pond: PondRenderer,
   burgundy: BurgundyRenderer,

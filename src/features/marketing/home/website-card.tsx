@@ -133,6 +133,13 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
           </div>
         </div>
+      ) : template.renderer === "lemon" ? (
+        <div className="absolute inset-0 grid place-items-center bg-[url(/templates/lemon-terrace/sea.webp)] bg-cover bg-bottom">
+          <div className="relative aspect-[655/1179] h-[92%] bg-[url(/templates/lemon-terrace/under.webp)] bg-[length:100%_100%] shadow-[0_2cqw_4cqw_-2cqw_rgb(30_50_90/0.45)]">
+            <span className="absolute inset-0 bg-[url(/templates/lemon-terrace/front.webp)] bg-[length:100%_100%]" />
+            <span className="absolute inset-x-0 top-0 h-[53.94%] bg-[url(/templates/lemon-terrace/flap.webp)] bg-[length:100%_100%]" />
+          </div>
+        </div>
       ) : template.renderer === "garden" ? (
         <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(ellipse_at_center,#fbf4ec,#e3cfbe)]">
           <div className="relative aspect-[900/904] w-[96%] bg-[url(/templates/garden-gate/under.webp)] bg-[length:100%_100%] shadow-[0_2cqw_4cqw_-2cqw_rgb(90_50_30/0.45)]">
