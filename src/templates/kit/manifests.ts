@@ -71,6 +71,7 @@ const P = {
   setSail: { id: "sea-glass", label: "Sea glass & slate", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   bottle: { id: "open-sea", label: "Open sea & parchment", family: "blue", colors: c("#f5f2eb", "#fbf9f4", "#3a362f", "#74664f", "#2f4557", "#fbf9f4", "#ddd5c6") },
   gardenGate: { id: "blush-garden", label: "Blush garden", family: "pink", colors: c("#faf6ef", "#ffffff", "#4a2f2c", "#7d6658", "#9c4f57", "#ffffff", "#e8dccb") },
+  linenMeadow: { id: "linen-meadow", label: "Oat linen & poppy", family: "red", colors: c("#e9dfcc", "#f8f3e8", "#24324f", "#5f5646", "#b23a26", "#ffffff", "#d6c8ad") },
   lemonTerrace: { id: "lemon-sea", label: "Lemon & sea blue", family: "blue", colors: c("#eef4fa", "#ffffff", "#1d3462", "#4f6182", "#2c58a6", "#ffffff", "#d2dcec") },
   somethingBlue: { id: "powder-blue", label: "Powder blue & blush", family: "blue", colors: c("#fbf9f6", "#fdfbf8", "#2c3a5e", "#66749a", "#6a89c4", "#ffffff", "#cfdcf1") },
   // Villa Rosa
@@ -294,6 +295,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       categories: ["romantic", "botanical", "elegant", "luxury"],
       palettes: [P.lemonTerrace],
       fonts: { heading: "pinyon", body: "cormorant", accent: "cinzel" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
+  kitTemplate(
+    "meadow",
+    {
+      id: "linen-meadow",
+      name: "Linen Meadow",
+      tagline: "Hand embroidery on oat linen: poppies, chamomile and wheat in red and navy thread.",
+      description:
+        "Opens on a stitched linen envelope closed with a red fabric button: the flap lifts slowly on an olive-sprig lining and the screen eases into the meadow. Your names are sewn in, a navy running stitch first and then red satin, under an embroidery hoop of a long table beneath an olive tree. The countdown sits in four flower hoops, two threads rise from their spools for your story, a needle sews down the day, the dress code hangs on a rail, photos change inside a stitched frame and guests reply at the pincushion.",
+      categories: ["romantic", "botanical", "rustic", "modern"],
+      palettes: [P.linenMeadow],
+      fonts: { heading: "greatvibes", body: "garamond", accent: "fraunces" },
       card: { layout: "classic" },
     },
     { opening: true },

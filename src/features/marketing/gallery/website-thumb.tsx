@@ -620,6 +620,14 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Linen Meadow: the names under the embroidered hoop, on linen.
+  meadow: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid content-center justify-items-center gap-[3%] bg-inv-bg bg-[url(/templates/linen-meadow/linen.webp)] bg-[length:40cqw] text-center text-inv-fg">
+      <span className={cn("aspect-[941/1037] bg-[url(/templates/linen-meadow/hero.webp)] bg-contain bg-no-repeat", phone ? "w-[78%]" : "w-[34%]")} />
+      <p className={cn("font-inv-heading leading-[1] text-inv-accent", phone ? "text-[10cqw]" : "text-[4cqw]")}>{partnerOne} &amp; {partnerTwo}</p>
+      <p className={cn("font-inv-accent tracking-[0.25em]", phone ? "text-[3cqw]" : "text-[1.1cqw]")}>{dateLabel}</p>
+    </div>
+  ),
   // Burgundy Envelope: the candle-lit hero with the names in script.
   burgundy: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-[url(/templates/burgundy-envelope/hero-poster.webp)] bg-cover bg-center text-center text-white">
