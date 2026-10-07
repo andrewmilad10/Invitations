@@ -1,6 +1,6 @@
 /* Olive Courtyard. Day colours from --inv-*; night (data-night, from the sun-and-moon switch) uses its own navy
    and gold, matched to the night painting. Final states are the defaults; "before" states only exist with motion on
-   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the flap folds back (3.4s) → the
+   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the flap lifts and slides straight up (3.2s) → the
    courtyard settles from 1.5s → the envelope fades from 2.2s (2s). */
 
 .root {
@@ -31,13 +31,12 @@
 .env > * { position: absolute; left: 0; width: 100%; }
 .under { top: 0; height: 100%; background: url("/templates/olive-courtyard/under.webp") center / 100% 100%; }
 .still { top: 0; height: 100%; z-index: 6; background: url("/templates/olive-courtyard/closed.webp") center / 100% 100%; transition: opacity .1s linear; }
-.hinge { top: 0; height: 62.08%; z-index: 5; transform-origin: 50% 0; transform-style: preserve-3d; transition: transform 3.4s cubic-bezier(.45, .05, .25, 1) .05s; }
-.hinge > i { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.front { background: url("/templates/olive-courtyard/flap.webp") center / 100% 100%; filter: drop-shadow(0 6px 8px rgb(30 34 20 / .35)); }
-.back { transform: rotateX(180deg); background: url("/templates/olive-courtyard/liner.webp") 50% 100% / 118% auto, #e8e6d9;
-  -webkit-mask: url("/templates/olive-courtyard/flap.webp") center / 100% 100%; mask: url("/templates/olive-courtyard/flap.webp") center / 100% 100%; filter: brightness(.94); }
+.hinge { top: 0; height: 62.08%; z-index: 5; transform-origin: 50% 0; transform: translateZ(2px); transition: transform 3.2s cubic-bezier(.5, .05, .3, 1) .05s; }
+.hinge > i { position: absolute; inset: 0; }
+.front { background: url("/templates/olive-courtyard/flap.webp") center / 100% 100%; filter: drop-shadow(0 6px 8px rgb(30 34 20 / .35)); transition: filter 3.2s ease .05s; }
 .intro:not([data-phase="closed"]) .still { opacity: 0; }
-.intro:not([data-phase="closed"]) .hinge { transform: rotateX(172deg); }
+.intro:not([data-phase="closed"]) .hinge { transform: translateZ(2px) translateY(-104%) rotateX(14deg); }
+.intro:not([data-phase="closed"]) .front { filter: drop-shadow(0 34px 30px rgb(20 24 12 / .55)); }
 .mono { position: absolute; left: 0; right: 0; top: 73%; translate: 0 -50%; text-align: center; font: 400 calc(var(--envW, 400px) * .2)/1.2 var(--inv-font-heading); }
 .mono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 2px 2px rgb(40 30 10 / .55)); }
 @keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
@@ -153,7 +152,7 @@
 .qa p { margin: 0 0 1rem; color: var(--soft); }
 
 /* reply */
-.rings { width: 110px; margin: 1.4rem auto 0; filter: drop-shadow(0 8px 10px rgb(30 34 20 / .35)); transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.3, 1.3, .5, 1); }
+.rings { width: 170px; margin: 1.4rem auto 0; filter: drop-shadow(0 8px 10px rgb(30 34 20 / .35)); transition: opacity 1.2s ease, transform 1.2s cubic-bezier(.3, 1.3, .5, 1); }
 .root[data-fx="on"] .rings:not([data-in]) { opacity: 0; transform: translateY(-30px) rotate(-20deg) scale(.8); }
 
 /* the end */
