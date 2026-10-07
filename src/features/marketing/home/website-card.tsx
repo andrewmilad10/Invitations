@@ -141,6 +141,13 @@ function Envelope({ template }: { template: TemplateManifest }) {
         </div>
       ) : template.renderer === "theatre" ? (
         <div className="absolute inset-0 bg-[url(/templates/opening-night/curtain.webp)] bg-cover bg-bottom" />
+      ) : template.renderer === "henna" ? (
+        <div className="absolute inset-0 flex">
+          <span className="h-full w-1/2 bg-[url(/templates/henna-tent/curtain-l.webp)] bg-cover bg-right" />
+          <span className="h-full w-1/2 bg-[url(/templates/henna-tent/curtain-r.webp)] bg-cover bg-left" />
+          <span className="absolute inset-x-0 top-0 h-[18%] bg-[url(/templates/henna-tent/valance.webp)] bg-cover bg-bottom" />
+          <span className="absolute left-1/2 top-[54%] aspect-[240/430] w-[16%] -translate-x-1/2 -translate-y-1/2 bg-[url(/templates/henna-tent/hand.webp)] bg-contain bg-no-repeat [filter:brightness(0)_invert(88%)_sepia(30%)_saturate(500%)_hue-rotate(350deg)]" />
+        </div>
       ) : template.renderer === "meadow" ? (
         <div className="absolute inset-0 grid place-items-center bg-inv-bg bg-[url(/templates/linen-meadow/linen.webp)] bg-[length:60cqw]">
           <div className="relative aspect-[1066/898] w-[94%] bg-[url(/templates/linen-meadow/closed.webp)] bg-[length:100%_100%] drop-shadow-[0_2cqw_3cqw_rgb(80_55_25/0.4)]" />

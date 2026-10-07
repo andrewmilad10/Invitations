@@ -620,6 +620,18 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
       </div>
     </div>
   ),
+  // Henna Tent: the names between the gathered velvet curtains.
+  henna: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid place-items-center bg-inv-bg bg-[url(/templates/henna-tent/paper.webp)] bg-[length:50cqw] text-center">
+      <span className="absolute inset-y-0 left-0 w-[24%] bg-[url(/templates/henna-tent/curtain-l.webp)] bg-cover bg-right [clip-path:polygon(0_0,100%_0,40%_58%,80%_100%,0_100%)]" />
+      <span className="absolute inset-y-0 right-0 w-[24%] bg-[url(/templates/henna-tent/curtain-r.webp)] bg-cover bg-left [clip-path:polygon(0_0,100%_0,100%_100%,20%_100%,60%_58%)]" />
+      <span className="absolute inset-x-0 top-0 h-[16%] bg-[url(/templates/henna-tent/valance.webp)] bg-cover bg-bottom" />
+      <div className="relative">
+        <p className={cn("font-inv-heading font-bold leading-[1.15] text-inv-accent", phone ? "text-[11cqw]" : "text-[4.4cqw]")}>{partnerOne}<br /><span className="text-[0.5em]">&amp;</span><br />{partnerTwo}</p>
+        <p className={cn("mt-[6%] font-inv-body font-bold text-inv-fg", phone ? "text-[3.4cqw]" : "text-[1.3cqw]")}>{dateLabel}</p>
+      </div>
+    </div>
+  ),
   // Linen Meadow: the names under the embroidered hoop, on linen.
   meadow: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid content-center justify-items-center gap-[3%] bg-inv-bg bg-[url(/templates/linen-meadow/linen.webp)] bg-[length:40cqw] text-center text-inv-fg">
