@@ -17,6 +17,25 @@
       });
     });
 
+    // ── demo window: the live design, full size, with its opening ──
+    var dlg = document.querySelector("[data-v-dialog]");
+    if (dlg && typeof dlg.showModal === "function") {
+      var dframe = dlg.querySelector("[data-v-dframe]"); var dbuy = dlg.querySelector("[data-v-dbuy]");
+      document.addEventListener("click", function (e) {
+        var t = e.target.closest("[data-v-demo]"); if (!t) return;
+        dlg.querySelector("[data-v-dname]").textContent = t.getAttribute("data-name") || "";
+        var buy = t.getAttribute("data-buy"); dbuy.hidden = !buy; if (buy) dbuy.href = buy;
+        dframe.src = t.getAttribute("data-v-demo");
+        dlg.showModal(); document.documentElement.style.overflow = "hidden";
+      });
+      function shut() { dlg.close(); }
+      dlg.querySelector("[data-v-dclose]").addEventListener("click", shut);
+      dlg.addEventListener("click", function (e) { if (e.target === dlg || e.target.classList.contains("v-demo__in")) shut(); });
+      dlg.addEventListener("close", function () { dframe.src = "about:blank"; document.documentElement.style.overflow = ""; });
+    } else {
+      document.addEventListener("click", function (e) { var t = e.target.closest("[data-v-demo]"); if (t) window.open(t.getAttribute("data-v-demo"), "_blank", "noopener"); });
+    }
+
     // ── product page ──
     var root = document.querySelector("[data-v-product]"); if (!root) return;
     var form = root.querySelector("form"); var frame = root.querySelector("[data-v-frame]");

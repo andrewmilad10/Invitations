@@ -8,7 +8,7 @@
       <p class="v-lead">{{ section.settings.lead | escape }}</p>
     </div>
     <div class="v-chips" role="group" aria-label="Filter designs" data-v-chips>
-      <button type="button" class="v-chip" data-mood="all" aria-pressed="true">All</button>
+      <button type="button" class="v-chip" data-mood="all" aria-pressed="true">All designs</button>
       <button type="button" class="v-chip" data-mood="floral" aria-pressed="false">Floral &amp; romantic</button>
       <button type="button" class="v-chip" data-mood="classic" aria-pressed="false">Classic &amp; foil</button>
       <button type="button" class="v-chip" data-mood="nights" aria-pressed="false">Egyptian nights</button>
@@ -18,25 +18,34 @@
         {%- liquid
           assign id = block.settings.template_id | strip
           assign p = all_products[id]
-          if p.id
-            assign href = p.url
-          else
-            assign href = '/products/' | append: id
-          endif
+          assign card = 'card-' | append: id | append: '.webp'
+          assign demo = base | append: '/embed/' | append: id
         -%}
-        <a class="v-card" href="{{ href }}" data-mood="{{ block.settings.mood }}" {{ block.shopify_attributes }}>
-          <div class="v-phone"><div>
-            <img src="{{ base }}/marketing/screens/{{ id }}-opening.webp" alt="{{ block.settings.name | escape }} — the opening" width="390" height="823" loading="lazy">
-            <img src="{{ base }}/marketing/screens/{{ id }}-hero.webp" alt="" width="390" height="823" loading="lazy">
-          </div></div>
-          <h3 class="v-card__name">{{ block.settings.name | escape }}</h3>
-          <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
-          <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
-          {%- if p.id -%}<p class="v-card__price">{{ p.price | money }}</p>{%- endif -%}
-        </a>
+        <article class="v-card" data-mood="{{ block.settings.mood }}" {{ block.shopify_attributes }}>
+          <button type="button" class="v-card__pic" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}" data-buy="{% if p.id %}{{ p.url }}{% endif %}" aria-label="Try the {{ block.settings.name | escape }} demo">
+            <img src="{{ card | asset_url }}" alt="" width="640" height="640" loading="lazy">
+          </button>
+          <div class="v-card__body">
+            <h3 class="v-card__name">{% if p.id %}<a href="{{ p.url }}">{{ block.settings.name | escape }}</a>{% else %}{{ block.settings.name | escape }}{% endif %}</h3>
+            <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
+            <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
+            {%- if p.id -%}<p class="v-card__price">{{ p.price | money }}</p>{%- endif -%}
+            <button type="button" class="v-card__try" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}" data-buy="{% if p.id %}{{ p.url }}{% endif %}">Try demo</button>
+          </div>
+        </article>
       {%- endfor -%}
     </div>
   </div>
+  <dialog class="v-demo" data-v-dialog aria-label="Design demo">
+    <div class="v-demo__in">
+      <div class="v-demo__bar">
+        <p class="v-demo__name" data-v-dname></p>
+        <a class="v-btn v-btn--light v-demo__buy" data-v-dbuy hidden>Choose this design</a>
+        <button type="button" class="v-demo__x" data-v-dclose aria-label="Close">✕</button>
+      </div>
+      <div class="v-demo__phone"><iframe data-v-dframe title="Design demo" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe></div>
+    </div>
+  </dialog>
 </section>
 <script src="{{ 'vellum.js' | asset_url }}" defer></script>
 
