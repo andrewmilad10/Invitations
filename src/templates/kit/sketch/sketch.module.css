@@ -1,0 +1,162 @@
+/* The Sketchbook. Colours from --inv-*; the paintings and paper carry their own colour. Final states are the
+   defaults; "before" states only exist with motion on (data-fx="on" from KitMotion), so the editor, exports
+   and no-script visitors see everything in place. Opening: tap → the band slides off → the cover swings open
+   (3s) while the view widens → paint soaks into the right page → the screen fades into the page (from 3.6s). */
+
+.root {
+  --k-dur: 1.3s;
+  --k-ease: cubic-bezier(.22, .8, .24, 1);
+  --k-dist: 18px;
+  --ease: cubic-bezier(.22, .8, .24, 1);
+  --graphite: color-mix(in oklab, var(--inv-muted) 80%, var(--inv-bg));
+  background: var(--inv-bg) url("/templates/sketchbook/paper.webp") 0 0 / 640px;
+  color: var(--inv-fg);
+  font: 400 1.2rem/1.65 var(--inv-font-body);
+  overflow-x: clip;
+}
+
+/* ═════ The sketchbook ═════ */
+.intro { display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, rgb(120 100 70 / .2)), #f3ede2 url("/templates/sketchbook/paper.webp") 0 0 / 640px; }
+.intro[data-phase="leaving"] { opacity: 0; transition: opacity 1.9s cubic-bezier(.45, 0, .2, 1) !important; }
+.who { position: absolute; top: max(7svh, 40px); left: 0; right: 0; margin: 0; padding: 0 16px; text-align: center; font: 400 clamp(2.6rem, 11vw, 3.6rem)/1.1 var(--inv-font-heading); color: #3c3a33; animation: up 1.4s cubic-bezier(.22, .8, .24, 1) .4s both; transition: opacity .6s; }
+.hint { position: absolute; bottom: max(7svh, 36px); left: 0; right: 0; margin: 0; text-align: center; font: 400 1.35rem/1 var(--inv-font-accent); color: #6c675f; animation: up 1s cubic-bezier(.22, .8, .24, 1) 1.3s both, breathe 3s ease-in-out 2.4s infinite; transition: opacity .6s; }
+.gone { animation: none; opacity: 0; }
+@keyframes up { from { opacity: 0; transform: translateY(10px); } }
+@keyframes breathe { 50% { opacity: .45; } }
+
+.scene { --k: 1.45; position: relative; width: min(94vw, 900px, calc(70svh * 1.6)); aspect-ratio: 1228 / 768; padding: 0; border: 0; background: none; perspective: 2200px; perspective-origin: 70% 40%; cursor: pointer;
+  transform: scale(var(--k)) translateX(-25.8%); transition: transform 3.3s cubic-bezier(.5, 0, .25, 1) .45s; animation: arrive 1.5s cubic-bezier(.22, .8, .24, 1) both; -webkit-tap-highlight-color: transparent; }
+.scene:focus-visible { outline: 2px solid #b0674a; outline-offset: 8px; }
+@keyframes arrive { from { opacity: 0; translate: 0 24px; } }
+@media (min-width: 700px) { .scene { --k: 1; } }
+.scene > * { position: absolute; top: 0; height: 100%; pointer-events: none; }
+.half { left: 51.71%; width: 48.29%; }
+.shadow { left: 51.71%; width: 48.29%; top: 1.5%; height: 100%; border-radius: 6px; background: rgb(70 55 35 / .5); filter: blur(18px); translate: 8px 14px; transition: left 3s cubic-bezier(.45, 0, .2, 1) .6s, width 3s cubic-bezier(.45, 0, .2, 1) .6s; }
+.right { background: url("/templates/sketchbook/page-right.webp") center / 100% 100% no-repeat; }
+.hinge { z-index: 3; transform-origin: 0 50%; transform-style: preserve-3d; transition: transform 3s cubic-bezier(.55, 0, .2, 1) .7s; }
+.hinge > i { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: center / 100% 100% no-repeat; }
+.hinge > .front { background-image: url("/templates/sketchbook/cover.webp"); filter: drop-shadow(-2px 3px 4px rgb(40 30 20 / .25)); }
+.hinge > .back { width: 107.08%; background-image: url("/templates/sketchbook/page-left.webp"); transform: rotateY(180deg); transform-origin: 46.69% 50%; }
+.hinge > .back::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(0 0 0 / .25), transparent 40%); transition: opacity 1.4s ease 2.6s; }
+.elastic { z-index: 4; background: url("/templates/sketchbook/elastic.webp") center / 100% 100% no-repeat; transition: transform .8s cubic-bezier(.22, .8, .24, 1) .05s, opacity .6s ease .2s; }
+.paint { z-index: 2; left: 56%; width: 40%; top: 18% !important; height: 64% !important; background: url("/templates/sketchbook/chapel.webp") center / contain no-repeat; mix-blend-mode: multiply;
+  -webkit-mask: radial-gradient(circle at 45% 55%, #000 45%, transparent 70%) 45% 55% / 0% 0% no-repeat; mask: radial-gradient(circle at 45% 55%, #000 45%, transparent 70%) 45% 55% / 0% 0% no-repeat;
+  transition: -webkit-mask-size 2.6s cubic-bezier(.3, 0, .3, 1) 1.9s, mask-size 2.6s cubic-bezier(.3, 0, .3, 1) 1.9s; }
+.leftText { z-index: 4; left: 4%; width: 44%; display: grid; place-content: center; padding: 0 4%; text-align: center; color: #3c3a33; opacity: 0; transition: opacity 1.4s ease 2.7s; }
+.leftText b { font: 400 clamp(1.3rem, 5vw, 3.2rem)/1.05 var(--inv-font-heading); }
+.leftText small { margin-top: .5em; font: 400 clamp(.75rem, 2.3vw, 1.35rem)/1.2 var(--inv-font-accent); color: #6c675f; }
+.go { transform: none; }
+.go .shadow { left: 1%; width: 98%; }
+.go .hinge { transform: rotateY(-180deg); }
+.go .back::after { opacity: 0; }
+.go .elastic { transform: translateX(14%); opacity: 0; }
+.go .paint { -webkit-mask-size: 260% 260%; mask-size: 260% 260%; }
+.go .leftText { opacity: 1; }
+
+/* ═════ The page ═════ */
+.note { margin: 0; font: 400 1.35rem/1.25 var(--inv-font-accent); color: var(--graphite); }
+.h { margin: .25rem 0 0; font: 400 clamp(2.8rem, 12vw, 3.8rem)/1.1 var(--inv-font-heading); color: var(--inv-fg); text-wrap: balance; }
+.lead { margin: .9rem auto 0; max-width: 31rem; color: var(--inv-muted); text-wrap: pretty; }
+.lead p { margin: 0 0 .8rem; }
+.quote { margin: .8rem auto 0; max-width: 30rem; font-style: italic; color: var(--inv-muted); }
+.wash { display: block; height: auto; mix-blend-mode: multiply; }
+/* paint soaking into the paper: the default is fully painted */
+.root [data-k="bleed"], .heroPaint { -webkit-mask: radial-gradient(circle, #000 45%, transparent 70%) 50% 55% / 300% 300% no-repeat; mask: radial-gradient(circle, #000 45%, transparent 70%) 50% 55% / 300% 300% no-repeat; }
+.root[data-fx="on"] [data-k="bleed"] { transition: -webkit-mask-size 2.8s cubic-bezier(.3, 0, .3, 1), mask-size 2.8s cubic-bezier(.3, 0, .3, 1), filter 2.2s ease; }
+.root[data-fx="on"] [data-k="bleed"]:not([data-in]) { -webkit-mask-size: 0% 0%; mask-size: 0% 0%; filter: blur(4px); }
+.root[data-fx="on"] .heroPaint { transition: -webkit-mask-size 2.8s cubic-bezier(.3, 0, .3, 1) .2s, mask-size 2.8s cubic-bezier(.3, 0, .3, 1) .2s, filter 2.2s ease .2s; }
+.root[data-fx="on"]:not([data-ready]) .heroPaint { -webkit-mask-size: 0% 0%; mask-size: 0% 0%; filter: blur(4px); transition: none; }
+/* the vine painted in one stroke */
+.root[data-fx="on"] [data-k="stroke"] { transition: clip-path 2.6s cubic-bezier(.5, 0, .3, 1); }
+.root[data-fx="on"] [data-k="stroke"]:not([data-in]) { clip-path: inset(0 100% 0 0); }
+.root[data-fx="on"]:dir(rtl) [data-k="stroke"]:not([data-in]) { clip-path: inset(0 0 0 100%); }
+
+.sec { position: relative; padding: 5.5rem 16px 0; text-align: center; scroll-margin-top: 1rem; }
+.sec > * { max-width: 640px; margin-inline: auto; }
+.secTight { padding-top: 1.4rem; }
+
+/* hero */
+.hero { position: relative; display: grid; justify-items: center; padding: 9svh 16px 1rem; text-align: center; }
+.pin { position: relative; width: min(96vw, 620px); }
+.heroPaint { width: 100%; }
+.pinNote { position: absolute; inset-inline-end: 4%; bottom: -2%; transform: rotate(-4deg); transition: opacity 1s ease 2s; }
+.root[data-fx="on"]:not([data-ready]) .pinNote { opacity: 0; transition: none; }
+.names { margin: .6rem 0 0; font: 400 clamp(3.4rem, 15vw, 5.6rem)/1.05 var(--inv-font-heading); }
+.names span { display: inline-block; margin: 0 .1em; font-size: .6em; color: var(--inv-accent); }
+.date { margin: .8rem 0 0; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; font-size: 1rem; }
+.place { margin: .2rem 0 0; font-style: italic; color: var(--inv-muted); }
+.heroIn { transition: opacity 1.3s var(--ease), transform 1.4s var(--ease); transition-delay: calc(var(--i, 0) * 140ms + .8s); }
+.root[data-fx="on"]:not([data-ready]) .heroIn { opacity: 0; transform: translateY(14px); transition: none; }
+.vine { width: min(88vw, 520px); margin: 1.4rem auto 0; }
+
+/* countdown on torn paper */
+.count { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.5rem, 3vw, 1.4rem); margin: 2rem auto 0; max-width: 620px; }
+.unit { aspect-ratio: 1; display: grid; place-content: center; background: url("/templates/sketchbook/torn.webp") center / contain no-repeat; }
+.unit:nth-child(1) { rotate: -3deg; } .unit:nth-child(2) { rotate: 2deg; translate: 0 6px; } .unit:nth-child(3) { rotate: -1.5deg; } .unit:nth-child(4) { rotate: 3deg; translate: 0 4px; }
+.value { display: block; font: 500 clamp(1.6rem, 7vw, 2.6rem)/1 var(--inv-font-body); font-variant-numeric: lining-nums tabular-nums; }
+.label { display: block; font: 400 clamp(.85rem, 3.4vw, 1.15rem)/1.1 var(--inv-font-accent); color: var(--graphite); }
+
+/* story */
+.story { display: grid; gap: 1rem; align-items: center; max-width: 960px !important; }
+.bouquet { width: min(74vw, 380px); margin: 0 auto; }
+@media (min-width: 860px) { .story { grid-template-columns: 1fr 1.1fr; text-align: start; } .story .lead, .story .quote { margin-inline: 0; } }
+
+/* the day: torn sketches laid on the page */
+.day { display: grid; gap: 2.4rem; max-width: 760px !important; margin: 2.2rem auto 0; padding: 0; list-style: none; }
+.ev { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 1.4rem; text-align: start; }
+.ev img { width: 100%; max-width: 280px; height: auto; justify-self: center; rotate: -3deg; transition: transform 1.2s var(--ease), opacity 1s ease; }
+.ev:nth-child(even) img { rotate: 2.5deg; order: 2; }
+.ev:nth-child(even) .tx { text-align: end; }
+.tx { display: grid; transition: opacity 1s ease .25s, transform 1.2s var(--ease) .25s; }
+.tx time { font: 400 1.5rem/1 var(--inv-font-accent); color: var(--inv-accent); }
+.tx b { margin-top: .15rem; font: 400 clamp(2rem, 8vw, 2.4rem)/1.05 var(--inv-font-heading); }
+.tx span { margin-top: .3rem; font-size: 1.05rem; line-height: 1.4; color: var(--inv-muted); }
+.root[data-fx="on"] .ev[data-k="drop"]:not([data-in]) { opacity: 1; transform: none; }
+.root[data-fx="on"] .ev:not([data-in]) img { opacity: 0; transform: translateY(30px) rotate(-6deg); }
+.root[data-fx="on"] .ev:not([data-in]) .tx { opacity: 0; transform: translateY(10px); }
+
+/* cards on torn paper */
+.card { position: relative; margin-top: 1.6rem; padding: clamp(2.4rem, 10vw, 3.6rem) clamp(1.6rem, 9vw, 3.2rem); background: url("/templates/sketchbook/torn.webp") center / 100% 100% no-repeat; }
+.card > .lead:first-child { margin-top: 0; }
+.kind { margin: 0; font: 400 1.25rem/1.2 var(--inv-font-accent); color: var(--graphite); }
+.vName { margin: .2rem 0 0; font: 400 2.6rem/1.1 var(--inv-font-heading); }
+.addr { margin: .4rem 0 0; color: var(--inv-muted); }
+.when { margin: .3rem 0 0; color: var(--inv-accent); }
+.btn { display: inline-flex; align-items: center; gap: .55rem; margin-top: 1.2rem; padding: .7rem 1.4rem; border: 1px solid var(--inv-fg); border-radius: 999px; color: var(--inv-fg); font: 500 .9rem/1 var(--inv-font-body); letter-spacing: .2em; text-transform: uppercase; text-decoration: none; transition: background .4s, color .4s; }
+.btn:hover { background: var(--inv-fg); color: var(--inv-bg); }
+.btn:focus-visible { outline: 2px solid var(--inv-accent); outline-offset: 4px; }
+.mapFig { margin: 1.4rem 0 0; }
+.map { display: block; width: 100%; aspect-ratio: 4 / 3; border: 8px solid #fbf8f2; box-shadow: 0 14px 22px -14px rgb(60 45 30 / .45); }
+.mapFig figcaption { margin-top: .5rem; font: 400 1.2rem/1.2 var(--inv-font-accent); color: var(--graphite); }
+
+/* good to know */
+.outfits { width: min(70vw, 340px); margin: 1.6rem auto 0; }
+.faq { text-align: start; }
+.qa { border-top: 1px dashed color-mix(in oklab, var(--inv-muted) 40%, transparent); }
+.qa:first-child { border-top: 0; }
+.qa summary { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; cursor: pointer; list-style: none; font-weight: 500; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary::after { content: "+"; font-family: var(--inv-font-accent); color: var(--inv-accent); transition: rotate .35s var(--ease); }
+.qa[open] summary::after { rotate: 45deg; }
+.qa p { margin: 0 0 .9rem; color: var(--inv-muted); }
+
+/* gallery: prints laid on the page, tied with string */
+.gal { display: flex; gap: 1.2rem; margin: 2rem -16px 0 !important; padding: 1.8rem calc(50% - min(33vw, 150px)) 2rem; max-width: none !important; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.gal::-webkit-scrollbar { display: none; }
+.ph { position: relative; flex: none; width: min(66vw, 300px); margin: 0; padding: 10px 10px 30px; scroll-snap-align: center; background: #fbf8f2; box-shadow: 0 1px 2px rgb(60 45 30 / .2), 0 14px 22px -14px rgb(60 45 30 / .45); rotate: -2deg; }
+.ph:nth-child(even) { rotate: 1.6deg; }
+.phImg { aspect-ratio: 4 / 5; }
+.phImg img { filter: sepia(.12) saturate(.9); }
+.bow { position: absolute; z-index: 1; left: 50%; top: -26px; width: 110px; height: auto; translate: -50% 0; rotate: -6deg; }
+
+/* the end */
+.end { padding: 5rem 16px 2rem; text-align: center; }
+.endBouquet { width: min(56vw, 260px); margin: 0 auto; }
+.end .h { font-size: clamp(3rem, 13vw, 4.4rem); }
+.end .note { margin-top: .6rem; }
+.footer { padding: 1rem 16px 3rem; text-align: center; font: 400 1.1rem/1.4 var(--inv-font-accent); color: var(--graphite); }
+
+@media (prefers-reduced-motion: reduce) {
+  .root *, .intro * { animation: none !important; transition-duration: .01s !important; transition-delay: 0s !important; }
+}

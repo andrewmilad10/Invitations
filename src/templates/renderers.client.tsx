@@ -38,6 +38,7 @@ const Garden = dynamic(() => import("./kit/garden/Renderer"));
 const Lemon = dynamic(() => import("./kit/lemon/Renderer"));
 const Meadow = dynamic(() => import("./kit/meadow/Renderer"));
 const Henna = dynamic(() => import("./kit/henna/Renderer"));
+const Sketch = dynamic(() => import("./kit/sketch/Renderer"));
 const Theatre = dynamic(() => import("./kit/theatre/Renderer"));
 const Fan = dynamic(() => import("./kit/fan/Renderer"));
 const Olive = dynamic(() => import("./kit/olive/Renderer"));
@@ -93,6 +94,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   lemon: Lemon,
   meadow: Meadow,
   henna: Henna,
+  sketch: Sketch,
   theatre: Theatre,
   fan: Fan,
   olive: Olive,

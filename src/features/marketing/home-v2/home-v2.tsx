@@ -20,6 +20,7 @@ const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
   "lemon-terrace": { ar: "شرفة الليمون", mood: "floral" },
   "linen-meadow": { ar: "مرج الكتان", mood: "floral" },
   "henna-tent": { ar: "خيمة الحنة", mood: "nights" },
+  "sketchbook": { ar: "كراسة الرسم", mood: "floral" },
   "opening-night": { ar: "ليلة الافتتاح", mood: "nights" },
   "garden-gate": { ar: "بوابة الحديقة", mood: "floral" },
   "message-in-a-bottle": { ar: "رسالة في زجاجة", mood: "classic" },

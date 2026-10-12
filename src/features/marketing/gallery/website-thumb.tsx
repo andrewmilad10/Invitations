@@ -621,6 +621,14 @@ const LAYOUT_HEROES: Record<string, (p: HeroProps) => ReactNode> = {
     </div>
   ),
   // Henna Tent: the names between the gathered velvet curtains.
+  // The Sketchbook: the names under the painted chapel, on watercolour paper.
+  sketch: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
+    <div className="absolute inset-0 grid content-center justify-items-center gap-[2%] bg-inv-bg bg-[url(/templates/sketchbook/paper.webp)] bg-[length:60cqw] text-center text-inv-fg">
+      <span className={cn("aspect-[1200/771] bg-[url(/templates/sketchbook/chapel.webp)] bg-contain bg-no-repeat mix-blend-multiply", phone ? "w-[86%]" : "w-[40%]")} />
+      <p className={cn("font-inv-heading leading-[1.1]", phone ? "text-[11cqw]" : "text-[4.4cqw]")}>{partnerOne} <span className="text-inv-accent">&amp;</span> {partnerTwo}</p>
+      <p className={cn("font-inv-body uppercase tracking-[0.22em]", phone ? "text-[3cqw]" : "text-[1.1cqw]")}>{dateLabel}</p>
+    </div>
+  ),
   henna: ({ partnerOne, partnerTwo, dateLabel, phone }) => (
     <div className="absolute inset-0 grid place-items-center bg-inv-bg bg-[url(/templates/henna-tent/paper.webp)] bg-[length:50cqw] text-center">
       <span className="absolute inset-y-0 left-0 w-[24%] bg-[url(/templates/henna-tent/curtain-l.webp)] bg-cover bg-right [clip-path:polygon(0_0,100%_0,40%_58%,80%_100%,0_100%)]" />

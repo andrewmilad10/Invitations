@@ -141,6 +141,12 @@ function Envelope({ template }: { template: TemplateManifest }) {
         </div>
       ) : template.renderer === "theatre" ? (
         <div className="absolute inset-0 bg-[url(/templates/opening-night/curtain.webp)] bg-cover bg-bottom" />
+      ) : template.renderer === "sketch" ? (
+        <div className="absolute inset-0 grid place-items-center bg-[url(/templates/sketchbook/paper.webp)] bg-[length:70cqw]">
+          <div className="relative aspect-[593/768] w-[84%] bg-[url(/templates/sketchbook/cover.webp)] bg-[length:100%_100%] drop-shadow-[0_2cqw_3cqw_rgb(70_55_35/0.45)]">
+            <span className="absolute inset-0 bg-[url(/templates/sketchbook/elastic.webp)] bg-[length:100%_100%]" />
+          </div>
+        </div>
       ) : template.renderer === "henna" ? (
         <div className="absolute inset-0 flex">
           <span className="h-full w-1/2 bg-[url(/templates/henna-tent/curtain-l.webp)] bg-cover bg-right" />
