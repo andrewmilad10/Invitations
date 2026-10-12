@@ -6,29 +6,29 @@
     "fact1": {
      "type": "fact",
      "settings": {
-      "value": "19",
-      "label": "original designs"
+      "value": "Secure",
+      "label": "card payment at checkout"
      }
     },
     "fact2": {
-     "type": "fact",
-     "settings": {
-      "value": "EN · ع",
-      "label": "English & Arabic"
-     }
-    },
-    "fact3": {
      "type": "fact",
      "settings": {
       "value": "24h",
       "label": "ready after your photos"
      }
     },
+    "fact3": {
+     "type": "fact",
+     "settings": {
+      "value": "19",
+      "label": "original designs"
+     }
+    },
     "fact4": {
      "type": "fact",
      "settings": {
-      "value": "1 month",
-      "label": "online for your guests"
+      "value": "WhatsApp",
+      "label": "help when you need it"
      }
     }
    },
@@ -38,7 +38,9 @@
     "fact3",
     "fact4"
    ],
-   "settings": {}
+   "settings": {
+    "heading_ar": ""
+   }
   },
   "designs": {
    "type": "vellum-designs",
@@ -288,8 +290,8 @@
     "tile4": {
      "type": "tile",
      "settings": {
-      "title": "English & Arabic",
-      "text": "Every design reads beautifully both ways."
+      "title": "Nothing to download",
+      "text": "No app and no account for guests. Just your link."
      }
     }
    },
@@ -299,7 +301,9 @@
     "tile3",
     "tile4"
    ],
-   "settings": {}
+   "settings": {
+    "reply": "It opened like a real envelope. Congratulations!"
+   }
   },
   "steps": {
    "type": "vellum-steps",
@@ -343,7 +347,9 @@
   },
   "cta": {
    "type": "vellum-cta",
-   "settings": {}
+   "settings": {
+    "heading_ar": ""
+   }
   }
  },
  "order": [

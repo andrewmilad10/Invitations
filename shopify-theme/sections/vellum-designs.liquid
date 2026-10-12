@@ -33,7 +33,6 @@
           </a>
           <div class="v-card__body">
             <h3 class="v-card__name"><a href="{{ p.url }}">{{ block.settings.name | escape }}</a></h3>
-            <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
             <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
             <p class="v-card__price">{{ p.price | money }}</p>
             <a class="v-card__try" href="{{ p.url }}">Choose this design</a>
@@ -46,7 +45,6 @@
           </button>
           <div class="v-card__body">
             <h3 class="v-card__name">{{ block.settings.name | escape }}</h3>
-            <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
             <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
             <button type="button" class="v-card__try" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}">Try demo</button>
           </div>

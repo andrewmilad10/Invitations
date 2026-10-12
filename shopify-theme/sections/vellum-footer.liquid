@@ -1,0 +1,62 @@
+{%- liquid
+  assign wa = section.settings.whatsapp | remove: '+' | remove: ' ' | remove: '-'
+  assign wa_text = section.settings.whatsapp_message | url_encode
+-%}
+<footer class="v v-foot">
+  <div class="v-wrap v-foot__grid">
+    <div class="v-foot__brand">
+      <a class="v-foot__logo" href="{{ routes.root_url }}">{{ section.settings.logo_text | default: shop.name | escape }}</a>
+      <p>{{ section.settings.blurb | escape }}</p>
+    </div>
+    <div>
+      <h2>Shop</h2>
+      <ul>
+        <li><a href="/collections/all">All designs</a></li>
+        <li><a href="/#how">How it works</a></li>
+        <li><a href="/#features">Features</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Help</h2>
+      <ul>
+        {%- if wa != blank -%}<li><a href="https://wa.me/{{ wa }}?text={{ wa_text }}" target="_blank" rel="noopener">WhatsApp us</a></li>{%- endif -%}
+        {%- if section.settings.email != blank -%}<li><a href="mailto:{{ section.settings.email }}">{{ section.settings.email | escape }}</a></li>{%- endif -%}
+        {%- if section.settings.instagram != blank -%}<li><a href="{{ section.settings.instagram }}" target="_blank" rel="noopener">Instagram</a></li>{%- endif -%}
+        {%- if section.settings.tiktok != blank -%}<li><a href="{{ section.settings.tiktok }}" target="_blank" rel="noopener">TikTok</a></li>{%- endif -%}
+      </ul>
+    </div>
+    <div>
+      <h2>Policies</h2>
+      <ul>
+        {%- for policy in shop.policies -%}<li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>{%- endfor -%}
+        {%- if shop.policies.size == 0 -%}<li><span class="v-foot__muted">Policies coming soon</span></li>{%- endif -%}
+      </ul>
+    </div>
+  </div>
+  <div class="v-wrap v-foot__base">
+    <span>© {{ 'now' | date: '%Y' }} {{ section.settings.logo_text | default: shop.name | escape }}</span>
+    <span>Secure checkout by Shopify</span>
+  </div>
+</footer>
+{%- if wa != blank -%}
+  <a class="v-wa-float" href="https://wa.me/{{ wa }}?text={{ wa_text }}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+  </a>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vellum footer",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "Vellum" },
+    { "type": "textarea", "id": "blurb", "label": "Line under the logo", "default": "Wedding websites that open like real stationery, on every phone." },
+    { "type": "text", "id": "whatsapp", "label": "WhatsApp number (with country code, e.g. 201001234567)", "info": "Shows the WhatsApp button on every page when filled in." },
+    { "type": "text", "id": "whatsapp_message", "label": "WhatsApp first message", "default": "Hi, I have a question about Vellum." },
+    { "type": "text", "id": "email", "label": "Email" },
+    { "type": "url", "id": "instagram", "label": "Instagram link" },
+    { "type": "url", "id": "tiktok", "label": "TikTok link" }
+  ],
+  "presets": [{ "name": "Vellum footer" }]
+}
+{% endschema %}

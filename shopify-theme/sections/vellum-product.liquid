@@ -1,7 +1,6 @@
 {%- liquid
   assign base = section.settings.preview_base
   assign variant = product.selected_or_first_available_variant
-  assign name_ar = product.metafields.custom.name_ar.value
 -%}
 <section class="v v-prod" data-v-product data-handle="{{ product.handle | escape }}" data-base="{{ base | escape }}">
   <div class="v-wrap v-prod__in">
@@ -15,7 +14,6 @@
       </div>
       <div class="v-prev__bar">
         <button type="button" data-v-replay>▶ Play the opening</button>
-        <button type="button" data-v-lang>عربي / English</button>
       </div>
       <p class="v-prev__note">{{ section.settings.preview_note | escape }}</p>
     </div>
@@ -23,7 +21,6 @@
     <div>
       <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
       <h1>{{ product.title | escape }}</h1>
-      {%- if name_ar != blank -%}<p class="v-prod__ar v-ar" lang="ar">{{ name_ar | escape }}</p>{%- endif -%}
       <p class="v-price">{{ variant.price | money }}</p>
       <div class="v-desc">{{ product.description }}</div>
       <ul class="v-incl">
@@ -35,34 +32,21 @@
         <input type="hidden" name="quantity" value="1">
         <input type="hidden" name="return_to" value="/checkout">
 
-        <fieldset class="v-step">
-          <legend><span>Step 1</span>The two of you</legend>
-          <div class="v-row v-row--2">
-            <div class="v-field"><label for="v-n1">First name</label><input id="v-n1" name="properties[Partner 1]" maxlength="40" required autocomplete="off" data-v-q="n1"></div>
-            <div class="v-field"><label for="v-n2">Second name</label><input id="v-n2" name="properties[Partner 2]" maxlength="40" required autocomplete="off" data-v-q="n2"></div>
-          </div>
-          <div class="v-row v-row--2">
-            <div class="v-field"><label for="v-n1ar">First name in Arabic <small>(optional)</small></label><input id="v-n1ar" name="properties[Partner 1 (Arabic)]" maxlength="40" dir="rtl" autocomplete="off"></div>
-            <div class="v-field"><label for="v-n2ar">Second name in Arabic <small>(optional)</small></label><input id="v-n2ar" name="properties[Partner 2 (Arabic)]" maxlength="40" dir="rtl" autocomplete="off"></div>
-          </div>
-        </fieldset>
+        <ol class="v-progress" aria-label="Order steps">
+          <li data-v-dot="1" aria-current="step"><i>1</i><span>Names</span></li>
+          <li data-v-dot="2"><i>2</i><span>The day</span></li>
+          <li data-v-dot="3"><i>3</i><span>Sections</span></li>
+          <li data-v-dot="4"><i>4</i><span>Review</span></li>
+        </ol>
 
-        <fieldset class="v-step">
-          <legend><span>Step 2</span>The day</legend>
+        <fieldset class="v-step" data-v-step="1">
+          <legend><span>Step 1 of 4</span>The two of you</legend>
           <div class="v-row v-row--2">
-            <div class="v-field"><label for="v-date">Date</label><input id="v-date" type="date" name="properties[Date]" required data-v-q="d"></div>
-            <div class="v-field"><label for="v-time">Time</label><input id="v-time" type="time" name="properties[Time]"></div>
+            <div class="v-field"><label for="v-n1">First name</label><input id="v-n1" name="properties[Partner 1]" maxlength="40" required autocomplete="off" data-v-q="n1" data-v-label="first name"><em class="v-err" hidden></em></div>
+            <div class="v-field"><label for="v-n2">Second name</label><input id="v-n2" name="properties[Partner 2]" maxlength="40" required autocomplete="off" data-v-q="n2" data-v-label="second name"><em class="v-err" hidden></em></div>
           </div>
-          <div class="v-row">
-            <div class="v-field"><label for="v-venue">Venue</label><input id="v-venue" name="properties[Venue]" maxlength="80" autocomplete="off" data-v-q="venue"></div>
-            <div class="v-field"><label for="v-map">Google Maps link <small>(optional)</small></label><input id="v-map" type="url" name="properties[Map link]" maxlength="300" placeholder="https://maps.app.goo.gl/…"></div>
-          </div>
-        </fieldset>
-
-        <fieldset class="v-step">
-          <legend><span>Step 3</span>Language &amp; colour</legend>
           <div class="v-row v-row--2">
-            <div class="v-field"><label for="v-lang">Language</label>
+            <div class="v-field"><label for="v-lang">Invitation language</label>
               <select id="v-lang" name="properties[Language]" data-v-q="lang">
                 <option value="English">English</option>
                 <option value="Arabic">Arabic</option>
@@ -77,10 +61,27 @@
             </div>
           </div>
           <div class="v-row v-texts"><div class="v-field" data-v-colour-note hidden><label for="v-colour-note">Which colour?</label><input id="v-colour-note" name="properties[Colour note]" maxlength="120" disabled></div></div>
+          <div class="v-row v-row--2" data-v-arnames hidden>
+            <div class="v-field"><label for="v-n1ar">First name, as written in Arabic</label><input id="v-n1ar" name="properties[Partner 1 (Arabic)]" maxlength="40" dir="rtl" autocomplete="off" disabled></div>
+            <div class="v-field"><label for="v-n2ar">Second name, as written in Arabic</label><input id="v-n2ar" name="properties[Partner 2 (Arabic)]" maxlength="40" dir="rtl" autocomplete="off" disabled></div>
+          </div>
         </fieldset>
 
-        <fieldset class="v-step">
-          <legend><span>Step 4</span>What's on your site</legend>
+        <fieldset class="v-step" data-v-step="2">
+          <legend><span>Step 2 of 4</span>The day</legend>
+          <div class="v-row v-row--2">
+            <div class="v-field"><label for="v-date">Date</label><input id="v-date" type="date" name="properties[Date]" required data-v-q="d" data-v-label="date"><em class="v-err" hidden></em></div>
+            <div class="v-field"><label for="v-time">Time <small>(optional)</small></label><input id="v-time" type="time" name="properties[Time]"></div>
+          </div>
+          <div class="v-row">
+            <div class="v-field"><label for="v-venue">Venue</label><input id="v-venue" name="properties[Venue]" maxlength="80" required autocomplete="off" data-v-q="venue" data-v-label="venue"><em class="v-err" hidden></em></div>
+            <div class="v-field"><label for="v-map">Google Maps link <small>(optional)</small></label><input id="v-map" type="url" name="properties[Map link]" maxlength="300" placeholder="https://maps.app.goo.gl/…" data-v-label="map link"><em class="v-err" hidden></em></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="v-step" data-v-step="3">
+          <legend><span>Step 3 of 4</span>What's on your site</legend>
+          <p class="v-hint">Untick anything you don't need. The preview updates as you go.</p>
           <input type="hidden" name="properties[Sections]" data-v-sections>
           <div class="v-checks">
             {%- assign optional = 'couple:About the two of you,date:The date,countdown:Countdown,story:Our story,ceremony:Ceremony,reception:Reception,venue:Venue & map,gallery:Photo gallery,schedule:Schedule of the day,rsvp:RSVP,faq:Questions & answers,closing:Closing message' | split: ',' -%}
@@ -100,10 +101,20 @@
           </div>
         </fieldset>
 
-        <p class="v-after">{{ section.settings.after_note | escape }}</p>
-        <button type="submit" class="v-btn v-submit" {% unless variant.available %}disabled{% endunless %}>
-          {%- if variant.available -%}{{ section.settings.button | escape }} · {{ variant.price | money }}{%- else -%}Sold out{%- endif -%}
-        </button>
+        <fieldset class="v-step" data-v-step="4">
+          <legend><span>Step 4 of 4</span>Check your details</legend>
+          <dl class="v-summary" data-v-summary></dl>
+          <p class="v-after">{{ section.settings.after_note | escape }}</p>
+        </fieldset>
+
+        <div class="v-stepnav">
+          <div class="v-stepnav__price"><b>{{ variant.price | money }}</b><span data-v-steplabel>Step 1 of 4</span></div>
+          <button type="button" class="v-btn v-btn--line v-back" data-v-back hidden>Back</button>
+          <button type="button" class="v-btn v-next" data-v-next>Next: the day</button>
+          <button type="submit" class="v-btn v-submit" data-v-pay {% unless variant.available %}disabled{% endunless %}>
+            {%- if variant.available -%}{{ section.settings.button | escape }}{%- else -%}Sold out{%- endif -%}
+          </button>
+        </div>
         <p class="v-saved" data-v-saved>Your details are kept on this device until you check out.</p>
       {%- endform -%}
     </div>

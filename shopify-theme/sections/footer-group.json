@@ -1,0 +1,18 @@
+{
+ "type": "footer",
+ "name": "t:names.footer",
+ "sections": {
+  "vellum_footer": {
+   "type": "vellum-footer",
+   "settings": {
+    "logo_text": "Vellum",
+    "blurb": "Wedding websites that open like real stationery, on every phone.",
+    "whatsapp": "",
+    "whatsapp_message": "Hi, I have a question about Vellum."
+   }
+  }
+ },
+ "order": [
+  "vellum_footer"
+ ]
+}
