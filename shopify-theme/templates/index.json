@@ -350,12 +350,17 @@
    "settings": {
     "heading_ar": ""
    }
+  },
+  "reviews": {
+   "type": "vellum-reviews",
+   "settings": {}
   }
  },
  "order": [
   "hero",
   "designs",
   "chat",
+  "reviews",
   "steps",
   "cta"
  ]

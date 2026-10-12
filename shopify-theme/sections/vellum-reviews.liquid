@@ -1,0 +1,45 @@
+{%- if section.blocks.size > 0 -%}
+<section class="v v-reviews" id="reviews">
+  <div class="v-wrap">
+    <div class="v-reviews__head">
+      <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
+      <h2 class="v-h">{{ section.settings.heading | escape }}</h2>
+    </div>
+    <div class="v-reviews__grid">
+      {%- for block in section.blocks -%}
+        <figure class="v-review" {{ block.shopify_attributes }}>
+          {%- if block.settings.photo != blank -%}
+            {{ block.settings.photo | image_url: width: 640 | image_tag: loading: 'lazy', class: 'v-review__photo', alt: block.settings.names, widths: '320, 640' }}
+          {%- endif -%}
+          <div class="v-review__stars" aria-label="{{ block.settings.stars }} out of 5 stars">
+            {%- for i in (1..5) -%}<span{% if i > block.settings.stars %} class="is-off"{% endif %}>★</span>{%- endfor -%}
+          </div>
+          <blockquote dir="auto">{{ block.settings.text | escape | newline_to_br }}</blockquote>
+          <figcaption><b dir="auto">{{ block.settings.names | escape }}</b>{%- if block.settings.design != blank -%}<span>{{ block.settings.design | escape }}</span>{%- endif -%}</figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vellum reviews",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "From our couples" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Opened twice, as promised" },
+    { "type": "paragraph", "content": "Add only real reviews from real couples, with their permission. The section stays hidden until the first review is added." }
+  ],
+  "blocks": [
+    { "type": "review", "name": "Review", "settings": [
+      { "type": "textarea", "id": "text", "label": "What they wrote (English, Arabic or Franko)" },
+      { "type": "text", "id": "names", "label": "First names, e.g. Salma & Youssef" },
+      { "type": "text", "id": "design", "label": "Design they chose" },
+      { "type": "range", "id": "stars", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 },
+      { "type": "image_picker", "id": "photo", "label": "Screenshot (optional, with permission)" }
+    ] }
+  ],
+  "presets": [{ "name": "Vellum reviews" }]
+}
+{% endschema %}
