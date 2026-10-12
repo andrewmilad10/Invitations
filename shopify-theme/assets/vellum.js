@@ -20,11 +20,10 @@
     // ── demo window: the live design, full size, with its opening ──
     var dlg = document.querySelector("[data-v-dialog]");
     if (dlg && typeof dlg.showModal === "function") {
-      var dframe = dlg.querySelector("[data-v-dframe]"); var dbuy = dlg.querySelector("[data-v-dbuy]");
+      var dframe = dlg.querySelector("[data-v-dframe]");
       document.addEventListener("click", function (e) {
         var t = e.target.closest("[data-v-demo]"); if (!t) return;
         dlg.querySelector("[data-v-dname]").textContent = t.getAttribute("data-name") || "";
-        var buy = t.getAttribute("data-buy"); dbuy.hidden = !buy; if (buy) dbuy.href = buy;
         dframe.src = t.getAttribute("data-v-demo");
         dlg.showModal(); document.documentElement.style.overflow = "hidden";
       });

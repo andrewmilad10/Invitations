@@ -21,18 +21,32 @@
           assign card = 'card-' | append: id | append: '.webp'
           assign demo = base | append: '/embed/' | append: id
         -%}
+        {%- if p.id -%}
         <article class="v-card" data-mood="{{ block.settings.mood }}" {{ block.shopify_attributes }}>
-          <button type="button" class="v-card__pic" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}" data-buy="{% if p.id %}{{ p.url }}{% endif %}" aria-label="Try the {{ block.settings.name | escape }} demo">
+          <a class="v-card__pic" href="{{ p.url }}" tabindex="-1" aria-hidden="true">
+            <img src="{{ card | asset_url }}" alt="" width="640" height="640" loading="lazy">
+          </a>
+          <div class="v-card__body">
+            <h3 class="v-card__name"><a href="{{ p.url }}">{{ block.settings.name | escape }}</a></h3>
+            <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
+            <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
+            <p class="v-card__price">{{ p.price | money }}</p>
+            <a class="v-card__try" href="{{ p.url }}">Choose this design</a>
+          </div>
+        </article>
+        {%- else -%}
+        <article class="v-card" data-mood="{{ block.settings.mood }}" {{ block.shopify_attributes }}>
+          <button type="button" class="v-card__pic" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}" aria-label="Try the {{ block.settings.name | escape }} demo">
             <img src="{{ card | asset_url }}" alt="" width="640" height="640" loading="lazy">
           </button>
           <div class="v-card__body">
-            <h3 class="v-card__name">{% if p.id %}<a href="{{ p.url }}">{{ block.settings.name | escape }}</a>{% else %}{{ block.settings.name | escape }}{% endif %}</h3>
+            <h3 class="v-card__name">{{ block.settings.name | escape }}</h3>
             <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
             <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
-            {%- if p.id -%}<p class="v-card__price">{{ p.price | money }}</p>{%- endif -%}
-            <button type="button" class="v-card__try" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}" data-buy="{% if p.id %}{{ p.url }}{% endif %}">Try demo</button>
+            <button type="button" class="v-card__try" data-v-demo="{{ demo }}" data-name="{{ block.settings.name | escape }}">Try demo</button>
           </div>
         </article>
+        {%- endif -%}
       {%- endfor -%}
     </div>
   </div>
@@ -40,7 +54,6 @@
     <div class="v-demo__in">
       <div class="v-demo__bar">
         <p class="v-demo__name" data-v-dname></p>
-        <a class="v-btn v-btn--light v-demo__buy" data-v-dbuy hidden>Choose this design</a>
         <button type="button" class="v-demo__x" data-v-dclose aria-label="Close">✕</button>
       </div>
       <div class="v-demo__phone"><iframe data-v-dframe title="Design demo" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe></div>
