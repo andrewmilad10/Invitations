@@ -1,4 +1,3 @@
-{{ 'vellum.css' | asset_url | stylesheet_tag }}
 <section class="v v-cta">
   <h2 class="v-h">{{ section.settings.heading | escape }}</h2>
   {%- if section.settings.heading_ar != blank -%}<p class="v-ar" lang="ar">{{ section.settings.heading_ar | escape }}</p>{%- endif -%}

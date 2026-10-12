@@ -1,4 +1,3 @@
-{{ 'vellum.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign base = section.settings.screens_base
   assign lineup = section.settings.lineup | split: ','
@@ -48,7 +47,7 @@
           endcase
         -%}
         <div class="v-phone" style="--x:{{ x }};--r:{{ r }};--s:{{ s }};--d:{{ forloop.index0 | times: 0.12 }}s;z-index:{{ z }}">
-          <div><img src="{{ base }}/marketing/screens/{{ id }}-hero.webp" alt="" width="390" height="823" loading="{% if forloop.index == 3 %}eager{% else %}lazy{% endif %}"></div>
+          <div>{%- assign shot = 'screen-' | append: id | append: '.webp' -%}<img src="{{ shot | asset_url }}" alt="" width="540" height="1140" decoding="async" {% if forloop.index == 3 %}fetchpriority="high"{% else %}loading="lazy"{% endif %}></div>
         </div>
       {%- endfor -%}
     </div>

@@ -1,5 +1,4 @@
 /* Vellum for Shopify. The same paper, ink and gold as the Vellum site. Every class starts with v- so nothing clashes with the base theme. */
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Amiri:wght@400;700&family=Jost:wght@400;500&display=swap");
 
 :root {
   --v-bg: #f6f2ec; --v-card: #fbf9f5; --v-ink: #221d1a; --v-muted: #756a61; --v-line: #e4dcd0;
@@ -173,3 +172,30 @@
 .v-submit { width: 100%; min-height: 58px; font-size: 1.05rem; }
 .v-saved { margin: .7rem 0 0; text-align: center; font-size: .82rem; color: var(--v-muted); }
 @media (prefers-reduced-motion: reduce) { .v *, .v *::before, .v *::after { animation: none !important; transition: none !important; } }
+
+/* smoother scrolling: skip painting sections until they come near the screen */
+.v-chat, .v-steps, .v-cta { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ═══ header ═══ */
+.v-head { position: sticky; top: 0; z-index: 50; background: rgb(246 242 236 / .88); -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px); border-bottom: 1px solid var(--v-line); }
+.v-head__in { display: flex; align-items: center; gap: 1.5rem; min-height: 76px; }
+.v-head__logo { flex: none; font: 400 2.1rem/1 var(--v-serif); color: var(--v-ink); text-decoration: none; letter-spacing: .005em; }
+.v-head__nav { display: flex; flex: 1; justify-content: center; gap: 2.4rem; }
+.v-head__nav a { color: #4a423c; font-size: 1.02rem; text-decoration: none; transition: color .25s; }
+.v-head__nav a:hover, .v-head__nav a[aria-current] { color: var(--v-ink); }
+.v-head__cta { flex: none; min-height: 50px; padding: 0 1.6rem; font-size: 1rem; }
+.v-head__menu { display: none; position: relative; }
+.v-head__menu summary { display: grid; place-items: center; width: 44px; height: 44px; list-style: none; cursor: pointer; border-radius: 50%; }
+.v-head__menu summary::-webkit-details-marker { display: none; }
+.v-head__menu nav { position: absolute; right: 0; top: calc(100% + 10px); display: grid; min-width: 220px; padding: .5rem; border: 1px solid var(--v-line); border-radius: .9rem; background: var(--v-card); box-shadow: 0 24px 40px -24px rgb(40 30 20 / .4); }
+.v-head__menu nav a { padding: .8rem 1rem; border-radius: .6rem; color: var(--v-ink); text-decoration: none; }
+.v-head__menu nav a:hover { background: var(--v-bg); }
+@media (max-width: 989px) {
+  .v-head__nav { display: none; }
+  .v-head__menu { display: block; }
+  .v-head__in { justify-content: space-between; min-height: 64px; gap: .6rem; }
+  .v-head__logo { font-size: 1.8rem; margin-inline-end: auto; }
+  .v-head__cta { min-height: 44px; padding: 0 1.1rem; font-size: .92rem; }
+}

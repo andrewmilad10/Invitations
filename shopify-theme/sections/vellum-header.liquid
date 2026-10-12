@@ -1,0 +1,42 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Amiri:wght@400;700&family=Jost:wght@400;500&display=swap">
+{{ 'vellum.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'vellum.js' | asset_url }}" defer></script>
+<header class="v v-head">
+  <div class="v-wrap v-head__in">
+    <a class="v-head__logo" href="{{ routes.root_url }}">{{ section.settings.logo_text | default: shop.name | escape }}</a>
+    <nav class="v-head__nav" aria-label="Main">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link }}" {{ block.shopify_attributes }}{% if block.settings.link == request.path %} aria-current="page"{% endif %}>{{ block.settings.label | escape }}</a>
+      {%- endfor -%}
+    </nav>
+    <a class="v-btn v-head__cta" href="{{ section.settings.cta_link | default: '/collections/all' }}">{{ section.settings.cta_label | escape }}</a>
+    <details class="v-head__menu">
+      <summary aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+      <nav aria-label="Main">
+        {%- for block in section.blocks -%}<a href="{{ block.settings.link }}">{{ block.settings.label | escape }}</a>{%- endfor -%}
+      </nav>
+    </details>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Vellum header",
+  "class": "v-head-section",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "Vellum" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Create invitation" },
+    { "type": "url", "id": "cta_link", "label": "Button link" }
+  ],
+  "blocks": [
+    { "type": "link", "name": "Link", "settings": [
+      { "type": "text", "id": "label", "label": "Label" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ] }
+  ],
+  "presets": [{ "name": "Vellum header" }]
+}
+{% endschema %}

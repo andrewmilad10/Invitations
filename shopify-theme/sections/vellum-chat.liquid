@@ -1,5 +1,4 @@
-{{ 'vellum.css' | asset_url | stylesheet_tag }}
-<section class="v v-chat">
+<section class="v v-chat" id="features">
   <div class="v-wrap v-chat__in">
     <div>
       <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
@@ -16,7 +15,7 @@
       <div class="v-wa__body">
         <div class="v-wa__me">
           <div class="v-wa__card">
-            <div class="v-wa__img" style="background-image:url({{ section.settings.screens_base }}/marketing/screens/{{ section.settings.preview_id | strip }}-hero.webp)"></div>
+            <div class="v-wa__img" style="background-image:url({{ 'screen-' | append: section.settings.preview_id | strip | append: '.webp' | asset_url }})"></div>
             <p><b>{{ section.settings.card_title | escape }}</b>{{ section.settings.card_text | escape }}</p>
           </div>
           <small>9:41 ✓✓</small>

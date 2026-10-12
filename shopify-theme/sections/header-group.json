@@ -1,0 +1,53 @@
+{
+ "type": "header",
+ "name": "t:names.header",
+ "sections": {
+  "vellum_header": {
+   "type": "vellum-header",
+   "blocks": {
+    "link1": {
+     "type": "link",
+     "settings": {
+      "label": "Invitation cards",
+      "link": "/#designs"
+     }
+    },
+    "link2": {
+     "type": "link",
+     "settings": {
+      "label": "Wedding websites",
+      "link": "/collections/all"
+     }
+    },
+    "link3": {
+     "type": "link",
+     "settings": {
+      "label": "Features",
+      "link": "/#features"
+     }
+    },
+    "link4": {
+     "type": "link",
+     "settings": {
+      "label": "How it works",
+      "link": "/#how"
+     }
+    }
+   },
+   "block_order": [
+    "link1",
+    "link2",
+    "link3",
+    "link4"
+   ],
+   "settings": {
+    "logo_text": "Vellum",
+    "cta_label": "Create invitation",
+    "cta_link": "/collections/all"
+   }
+  }
+ },
+ "order": [
+  "vellum_header"
+ ]
+}
