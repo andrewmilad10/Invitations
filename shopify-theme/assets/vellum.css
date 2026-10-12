@@ -272,3 +272,5 @@ body:has([data-v-product]) .v-wa-float { bottom: calc(96px + env(safe-area-inset
 .v-review figcaption b { font-weight: 500; }
 .v-review figcaption span { color: var(--v-muted); }
 .v-review figcaption span::before { content: "· "; }
+
+@media (max-width: 639px) { .v-card__more { display: none; } .v-card__try { letter-spacing: .16em; } }

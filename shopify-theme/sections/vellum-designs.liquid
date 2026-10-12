@@ -35,7 +35,7 @@
             <h3 class="v-card__name"><a href="{{ p.url }}">{{ block.settings.name | escape }}</a></h3>
             <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
             <p class="v-card__price">{{ p.price | money }}</p>
-            <a class="v-card__try" href="{{ p.url }}">Choose this design</a>
+            <a class="v-card__try" href="{{ p.url }}" aria-label="Choose {{ block.settings.name | escape }}">Choose<span class="v-card__more"> this design</span></a>
           </div>
         </article>
         {%- else -%}
