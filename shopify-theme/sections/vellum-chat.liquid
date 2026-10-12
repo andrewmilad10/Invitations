@@ -1,0 +1,52 @@
+{{ 'vellum.css' | asset_url | stylesheet_tag }}
+<section class="v v-chat">
+  <div class="v-wrap v-chat__in">
+    <div>
+      <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
+      <h2 class="v-h">{{ section.settings.heading | escape }}</h2>
+      <p class="v-lead">{{ section.settings.lead | escape }}</p>
+      <ul class="v-tiles">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}><b>{{ block.settings.title | escape }}</b><span>{{ block.settings.text | escape }}</span></li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <div class="v-wa" aria-hidden="true">
+      <div class="v-wa__top"><i>V</i><div><b>{{ section.settings.chat_name | escape }}</b><br><span style="opacity:.75">online</span></div></div>
+      <div class="v-wa__body">
+        <div class="v-wa__me">
+          <div class="v-wa__card">
+            <div class="v-wa__img" style="background-image:url({{ section.settings.screens_base }}/marketing/screens/{{ section.settings.preview_id | strip }}-hero.webp)"></div>
+            <p><b>{{ section.settings.card_title | escape }}</b>{{ section.settings.card_text | escape }}</p>
+          </div>
+          <small>9:41 ✓✓</small>
+        </div>
+        <div class="v-wa__them">{{ section.settings.reply | escape }}<small>9:43</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vellum family chat",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Sharing" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "One link in the family chat" },
+    { "type": "textarea", "id": "lead", "label": "Lead", "default": "Send it on WhatsApp and everyone has the day, the place and the map in one tap, in English or Arabic." },
+    { "type": "text", "id": "chat_name", "label": "Chat name", "default": "Family" },
+    { "type": "text", "id": "preview_id", "label": "Design in the chat (template id)", "default": "moonlit-nile" },
+    { "type": "text", "id": "card_title", "label": "Link title", "default": "You're invited" },
+    { "type": "text", "id": "card_text", "label": "Link text", "default": "Tap to open your invitation" },
+    { "type": "text", "id": "reply", "label": "Reply", "default": "It opened like a real envelope 😍 مبروك!" },
+    { "type": "text", "id": "screens_base", "label": "Vellum address", "default": "https://invitations-sooty.vercel.app" }
+  ],
+  "blocks": [
+    { "type": "tile", "name": "Tile", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "text", "id": "text", "label": "Text" }
+    ] }
+  ],
+  "presets": [{ "name": "Vellum family chat" }]
+}
+{% endschema %}

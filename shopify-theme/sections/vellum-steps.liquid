@@ -1,0 +1,29 @@
+{{ 'vellum.css' | asset_url | stylesheet_tag }}
+<section class="v v-steps" id="how">
+  <div class="v-wrap">
+    <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
+    <h2 class="v-h">{{ section.settings.heading | escape }}</h2>
+    <ol>
+      {%- for block in section.blocks -%}
+        <li {{ block.shopify_attributes }}><h3>{{ block.settings.title | escape }}</h3><p>{{ block.settings.text | escape }}</p></li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Vellum steps",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "How it works" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "From your names to their phones" }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "text", "label": "Text" }
+    ] }
+  ],
+  "presets": [{ "name": "Vellum steps" }]
+}
+{% endschema %}

@@ -1,0 +1,67 @@
+{{ 'vellum.css' | asset_url | stylesheet_tag }}
+{%- assign base = section.settings.screens_base -%}
+<section class="v v-designs" id="designs">
+  <div class="v-wrap">
+    <div class="v-designs__head">
+      <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
+      <h2 class="v-h">{{ section.settings.heading | escape }}</h2>
+      <p class="v-lead">{{ section.settings.lead | escape }}</p>
+    </div>
+    <div class="v-chips" role="group" aria-label="Filter designs" data-v-chips>
+      <button type="button" class="v-chip" data-mood="all" aria-pressed="true">All</button>
+      <button type="button" class="v-chip" data-mood="floral" aria-pressed="false">Floral &amp; romantic</button>
+      <button type="button" class="v-chip" data-mood="classic" aria-pressed="false">Classic &amp; foil</button>
+      <button type="button" class="v-chip" data-mood="nights" aria-pressed="false">Egyptian nights</button>
+    </div>
+    <div class="v-grid" data-v-grid>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign id = block.settings.template_id | strip
+          assign p = all_products[id]
+          if p.id
+            assign href = p.url
+          else
+            assign href = '/products/' | append: id
+          endif
+        -%}
+        <a class="v-card" href="{{ href }}" data-mood="{{ block.settings.mood }}" {{ block.shopify_attributes }}>
+          <div class="v-phone"><div>
+            <img src="{{ base }}/marketing/screens/{{ id }}-opening.webp" alt="{{ block.settings.name | escape }} — the opening" width="390" height="823" loading="lazy">
+            <img src="{{ base }}/marketing/screens/{{ id }}-hero.webp" alt="" width="390" height="823" loading="lazy">
+          </div></div>
+          <h3 class="v-card__name">{{ block.settings.name | escape }}</h3>
+          <p class="v-card__ar v-ar" lang="ar">{{ block.settings.name_ar | escape }}</p>
+          <p class="v-card__tag">{{ block.settings.tagline | escape }}</p>
+          {%- if p.id -%}<p class="v-card__price">{{ p.price | money }}</p>{%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+<script src="{{ 'vellum.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Vellum designs",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "The collection" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Choose your design" },
+    { "type": "textarea", "id": "lead", "label": "Lead", "default": "Every design opens like real stationery. Tap one to see it with your own names." },
+    { "type": "text", "id": "screens_base", "label": "Vellum address", "default": "https://invitations-sooty.vercel.app" }
+  ],
+  "blocks": [
+    { "type": "design", "name": "Design", "settings": [
+      { "type": "text", "id": "template_id", "label": "Template id (same as the product handle)" },
+      { "type": "text", "id": "name", "label": "Name" },
+      { "type": "text", "id": "name_ar", "label": "Arabic name" },
+      { "type": "select", "id": "mood", "label": "Mood", "default": "floral", "options": [
+        { "value": "floral", "label": "Floral & romantic" },
+        { "value": "classic", "label": "Classic & foil" },
+        { "value": "nights", "label": "Egyptian nights" }
+      ] },
+      { "type": "textarea", "id": "tagline", "label": "Tagline" }
+    ] }
+  ],
+  "presets": [{ "name": "Vellum designs" }]
+}
+{% endschema %}

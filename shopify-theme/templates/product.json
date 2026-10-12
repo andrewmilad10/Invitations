@@ -1,0 +1,50 @@
+{
+ "sections": {
+  "main": {
+   "type": "vellum-product",
+   "blocks": {
+    "inc1": {
+     "type": "included",
+     "settings": {
+      "text": "Your own link, opening with this design"
+     }
+    },
+    "inc2": {
+     "type": "included",
+     "settings": {
+      "text": "English or Arabic, your names and date"
+     }
+    },
+    "inc3": {
+     "type": "included",
+     "settings": {
+      "text": "Map, countdown and the sections you choose"
+     }
+    },
+    "inc4": {
+     "type": "included",
+     "settings": {
+      "text": "Your photos and song, added after payment"
+     }
+    },
+    "inc5": {
+     "type": "included",
+     "settings": {
+      "text": "Online for one month"
+     }
+    }
+   },
+   "block_order": [
+    "inc1",
+    "inc2",
+    "inc3",
+    "inc4",
+    "inc5"
+   ],
+   "settings": {}
+  }
+ },
+ "order": [
+  "main"
+ ]
+}

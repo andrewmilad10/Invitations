@@ -1,0 +1,130 @@
+{{ 'vellum.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign base = section.settings.preview_base
+  assign variant = product.selected_or_first_available_variant
+  assign name_ar = product.metafields.custom.name_ar.value
+-%}
+<section class="v v-prod" data-v-product data-handle="{{ product.handle | escape }}" data-base="{{ base | escape }}">
+  <div class="v-wrap v-prod__in">
+
+    <div class="v-prev">
+      <div class="v-live">
+        <div class="v-phone"><div>
+          <img class="v-live__fallback" src="{{ base }}/marketing/screens/{{ product.handle }}-hero.webp" alt="" width="390" height="823">
+          <iframe data-v-frame title="Live preview of {{ product.title | escape }}" src="{{ base }}/embed/{{ product.handle }}" loading="eager" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div></div>
+      </div>
+      <div class="v-prev__bar">
+        <button type="button" data-v-replay>▶ Play the opening</button>
+        <button type="button" data-v-lang>عربي / English</button>
+      </div>
+      <p class="v-prev__note">{{ section.settings.preview_note | escape }}</p>
+    </div>
+
+    <div>
+      <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
+      <h1>{{ product.title | escape }}</h1>
+      {%- if name_ar != blank -%}<p class="v-prod__ar v-ar" lang="ar">{{ name_ar | escape }}</p>{%- endif -%}
+      <p class="v-price">{{ variant.price | money }}</p>
+      <div class="v-desc">{{ product.description }}</div>
+      <ul class="v-incl">
+        {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>{%- endfor -%}
+      </ul>
+
+      {%- form 'product', product, class: 'v-form', id: 'v-order' -%}
+        <input type="hidden" name="id" value="{{ variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <input type="hidden" name="return_to" value="/checkout">
+
+        <fieldset class="v-step">
+          <legend><span>Step 1</span>The two of you</legend>
+          <div class="v-row v-row--2">
+            <div class="v-field"><label for="v-n1">First name</label><input id="v-n1" name="properties[Partner 1]" maxlength="40" required autocomplete="off" data-v-q="n1"></div>
+            <div class="v-field"><label for="v-n2">Second name</label><input id="v-n2" name="properties[Partner 2]" maxlength="40" required autocomplete="off" data-v-q="n2"></div>
+          </div>
+          <div class="v-row v-row--2">
+            <div class="v-field"><label for="v-n1ar">First name in Arabic <small>(optional)</small></label><input id="v-n1ar" name="properties[Partner 1 (Arabic)]" maxlength="40" dir="rtl" autocomplete="off"></div>
+            <div class="v-field"><label for="v-n2ar">Second name in Arabic <small>(optional)</small></label><input id="v-n2ar" name="properties[Partner 2 (Arabic)]" maxlength="40" dir="rtl" autocomplete="off"></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="v-step">
+          <legend><span>Step 2</span>The day</legend>
+          <div class="v-row v-row--2">
+            <div class="v-field"><label for="v-date">Date</label><input id="v-date" type="date" name="properties[Date]" required data-v-q="d"></div>
+            <div class="v-field"><label for="v-time">Time</label><input id="v-time" type="time" name="properties[Time]"></div>
+          </div>
+          <div class="v-row">
+            <div class="v-field"><label for="v-venue">Venue</label><input id="v-venue" name="properties[Venue]" maxlength="80" autocomplete="off" data-v-q="venue"></div>
+            <div class="v-field"><label for="v-map">Google Maps link <small>(optional)</small></label><input id="v-map" type="url" name="properties[Map link]" maxlength="300" placeholder="https://maps.app.goo.gl/…"></div>
+          </div>
+        </fieldset>
+
+        <fieldset class="v-step">
+          <legend><span>Step 3</span>Language &amp; colour</legend>
+          <div class="v-row v-row--2">
+            <div class="v-field"><label for="v-lang">Language</label>
+              <select id="v-lang" name="properties[Language]" data-v-q="lang">
+                <option value="English">English</option>
+                <option value="Arabic">Arabic</option>
+                <option value="English + Arabic">English + Arabic</option>
+              </select>
+            </div>
+            <div class="v-field"><label for="v-colour">Colour</label>
+              <select id="v-colour" name="properties[Colour]" data-v-colour>
+                <option value="As shown">As shown</option>
+                <option value="Other">Something else…</option>
+              </select>
+            </div>
+          </div>
+          <div class="v-row v-texts"><div class="v-field" data-v-colour-note hidden><label for="v-colour-note">Which colour?</label><input id="v-colour-note" name="properties[Colour note]" maxlength="120" disabled></div></div>
+        </fieldset>
+
+        <fieldset class="v-step">
+          <legend><span>Step 4</span>What's on your site</legend>
+          <input type="hidden" name="properties[Sections]" data-v-sections>
+          <div class="v-checks">
+            {%- assign optional = 'couple:About the two of you,date:The date,countdown:Countdown,story:Our story,ceremony:Ceremony,reception:Reception,venue:Venue & map,gallery:Photo gallery,schedule:Schedule of the day,rsvp:RSVP,faq:Questions & answers,closing:Closing message' | split: ',' -%}
+            {%- for pair in optional -%}
+              {%- assign kv = pair | split: ':' -%}
+              <label class="v-check"><input type="checkbox" value="{{ kv[0] }}" data-label="{{ kv[1] | escape }}" checked data-v-sec><span>{{ kv[1] | escape }}</span></label>
+            {%- endfor -%}
+          </div>
+          <div class="v-texts">
+            <div class="v-field" data-for="couple"><label for="v-t-couple">About the two of you</label><textarea id="v-t-couple" name="properties[About us]" maxlength="600" placeholder="A few lines about each of you."></textarea></div>
+            <div class="v-field" data-for="story"><label for="v-t-story">Our story</label><textarea id="v-t-story" name="properties[Our story]" maxlength="1200" placeholder="How you met, the proposal… a few moments."></textarea></div>
+            <div class="v-field" data-for="schedule"><label for="v-t-schedule">Schedule of the day</label><textarea id="v-t-schedule" name="properties[Schedule]" maxlength="800" placeholder="7:00 pm Katb el-ketab&#10;8:30 pm Zaffa&#10;9:00 pm Dinner"></textarea></div>
+            <div class="v-field" data-for="rsvp"><label for="v-t-rsvp">RSVP</label><textarea id="v-t-rsvp" name="properties[RSVP]" maxlength="300" placeholder="Reply by which date? A WhatsApp number for questions?"></textarea></div>
+            <div class="v-field" data-for="faq"><label for="v-t-faq">Questions &amp; answers</label><textarea id="v-t-faq" name="properties[Q&A]" maxlength="1200" placeholder="Dress code? Parking? Kids?"></textarea></div>
+            <div class="v-field" data-for="closing"><label for="v-t-closing">Closing message</label><textarea id="v-t-closing" name="properties[Closing message]" maxlength="400" placeholder="A last line for your guests."></textarea></div>
+            <div class="v-field"><label for="v-t-notes">Anything else? <small>(optional)</small></label><textarea id="v-t-notes" name="properties[Notes]" maxlength="800"></textarea></div>
+          </div>
+        </fieldset>
+
+        <p class="v-after">{{ section.settings.after_note | escape }}</p>
+        <button type="submit" class="v-btn v-submit" {% unless variant.available %}disabled{% endunless %}>
+          {%- if variant.available -%}{{ section.settings.button | escape }} · {{ variant.price | money }}{%- else -%}Sold out{%- endif -%}
+        </button>
+        <p class="v-saved" data-v-saved>Your details are kept on this device until you check out.</p>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+<script src="{{ 'vellum.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Vellum product",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Wedding website" },
+    { "type": "text", "id": "preview_note", "label": "Preview note", "default": "This is your design, live. It changes as you type." },
+    { "type": "textarea", "id": "after_note", "label": "Note before paying", "default": "After you pay, we email you to collect your photos and your song. Your site is ready within a day of receiving them, and stays online for a month." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Continue to payment" },
+    { "type": "text", "id": "preview_base", "label": "Vellum address", "default": "https://invitations-sooty.vercel.app" }
+  ],
+  "blocks": [
+    { "type": "included", "name": "Included", "settings": [{ "type": "text", "id": "text", "label": "Text" }] }
+  ],
+  "presets": [{ "name": "Vellum product" }]
+}
+{% endschema %}

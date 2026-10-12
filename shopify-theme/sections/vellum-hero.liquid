@@ -1,0 +1,87 @@
+{{ 'vellum.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign base = section.settings.screens_base
+  assign lineup = section.settings.lineup | split: ','
+-%}
+<section class="v v-hero">
+  <div class="v-hero__in">
+    <div class="v-wrap v-rise">
+      <p class="v-kicker">{{ section.settings.kicker | escape }}</p>
+      <h1>{{ section.settings.heading | escape }}</h1>
+      {%- if section.settings.heading_ar != blank -%}<p class="v-hero__ar v-ar" lang="ar">{{ section.settings.heading_ar | escape }}</p>{%- endif -%}
+      <p class="v-lead">{{ section.settings.lead | escape }}</p>
+      <div class="v-hero__cta">
+        <a class="v-btn v-btn--light" href="{{ section.settings.cta_link | default: '#designs' }}">{{ section.settings.cta_label | escape }}</a>
+        {%- if section.settings.cta2_label != blank -%}<a class="v-btn v-btn--ghost" href="{{ section.settings.cta2_link | default: '#how' }}">{{ section.settings.cta2_label | escape }}</a>{%- endif -%}
+      </div>
+    </div>
+    <div class="v-lineup" aria-hidden="true">
+      {%- for id in lineup -%}
+        {%- liquid
+          assign id = id | strip
+          case forloop.index
+            when 1
+              assign x = '-118%'
+              assign r = '-9deg'
+              assign s = '.82'
+              assign z = 1
+            when 2
+              assign x = '-62%'
+              assign r = '-4deg'
+              assign s = '.9'
+              assign z = 2
+            when 3
+              assign x = '0%'
+              assign r = '0deg'
+              assign s = '1'
+              assign z = 4
+            when 4
+              assign x = '62%'
+              assign r = '4deg'
+              assign s = '.9'
+              assign z = 2
+            else
+              assign x = '118%'
+              assign r = '9deg'
+              assign s = '.82'
+              assign z = 1
+          endcase
+        -%}
+        <div class="v-phone" style="--x:{{ x }};--r:{{ r }};--s:{{ s }};--d:{{ forloop.index0 | times: 0.12 }}s;z-index:{{ z }}">
+          <div><img src="{{ base }}/marketing/screens/{{ id }}-hero.webp" alt="" width="390" height="823" loading="{% if forloop.index == 3 %}eager{% else %}lazy{% endif %}"></div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  <dl class="v-facts v-wrap" style="width:auto">
+    {%- for block in section.blocks -%}
+      <div {{ block.shopify_attributes }}><dt>{{ block.settings.value | escape }}</dt><dd>{{ block.settings.label | escape }}</dd></div>
+    {%- endfor -%}
+  </dl>
+</section>
+
+{% schema %}
+{
+  "name": "Vellum hero",
+  "class": "v-section",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Wedding websites · English & Arabic" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The invitation they'll open twice." },
+    { "type": "text", "id": "heading_ar", "label": "Arabic line", "default": "دعوة يفتحونها مرتين" },
+    { "type": "textarea", "id": "lead", "label": "Lead", "default": "A wedding website that opens like real stationery on every phone. Pick a design, see it with your names, and we build it for you." },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "Choose your design" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "text", "id": "cta2_label", "label": "Second button", "default": "How it works" },
+    { "type": "url", "id": "cta2_link", "label": "Second button link" },
+    { "type": "text", "id": "lineup", "label": "Phones (template ids, comma separated)", "default": "moonlit-nile,something-blue,swan-lake,cotton-press,burgundy-envelope" },
+    { "type": "text", "id": "screens_base", "label": "Vellum address", "default": "https://invitations-sooty.vercel.app" }
+  ],
+  "blocks": [
+    { "type": "fact", "name": "Fact", "settings": [
+      { "type": "text", "id": "value", "label": "Value", "default": "19" },
+      { "type": "text", "id": "label", "label": "Label", "default": "original designs" }
+    ] }
+  ],
+  "presets": [{ "name": "Vellum hero" }]
+}
+{% endschema %}
