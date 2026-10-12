@@ -1,0 +1,229 @@
+{
+ "sections": {
+  "designs": {
+   "type": "vellum-designs",
+   "blocks": {
+    "design1": {
+     "type": "design",
+     "settings": {
+      "template_id": "henna-tent",
+      "name": "Henna Tent",
+      "name_ar": "خيمة الحنة",
+      "mood": "nights",
+      "tagline": "An Egyptian henna night behind red velvet curtains stitched with gold henna."
+     }
+    },
+    "design2": {
+     "type": "design",
+     "settings": {
+      "template_id": "sketchbook",
+      "name": "The Sketchbook",
+      "name_ar": "كراسة الرسم",
+      "mood": "floral",
+      "tagline": "A green linen watercolour sketchbook that opens onto hand-painted pages."
+     }
+    },
+    "design3": {
+     "type": "design",
+     "settings": {
+      "template_id": "olive-courtyard",
+      "name": "Olive Courtyard",
+      "name_ar": "فناء الزيتون",
+      "mood": "classic",
+      "tagline": "A sage envelope with gold initials opens onto a courtyard that turns from day to night."
+     }
+    },
+    "design4": {
+     "type": "design",
+     "settings": {
+      "template_id": "opening-night",
+      "name": "Opening Night",
+      "name_ar": "ليلة الافتتاح",
+      "mood": "nights",
+      "tagline": "A teal velvet curtain rises on your wedding, like the opening night of an old theatre."
+     }
+    },
+    "design5": {
+     "type": "design",
+     "settings": {
+      "template_id": "linen-meadow",
+      "name": "Linen Meadow",
+      "name_ar": "مرج الكتان",
+      "mood": "floral",
+      "tagline": "Hand embroidery on oat linen: poppies, chamomile and wheat in red and navy thread."
+     }
+    },
+    "design6": {
+     "type": "design",
+     "settings": {
+      "template_id": "lemon-terrace",
+      "name": "Lemon Terrace",
+      "name_ar": "شرفة الليمون",
+      "mood": "floral",
+      "tagline": "A powder-blue envelope that lights up in gold and opens onto a sea terrace."
+     }
+    },
+    "design7": {
+     "type": "design",
+     "settings": {
+      "template_id": "garden-gate",
+      "name": "Garden Gate",
+      "name_ar": "بوابة الحديقة",
+      "mood": "floral",
+      "tagline": "A painted floral envelope that opens onto a golden-hour garden."
+     }
+    },
+    "design8": {
+     "type": "design",
+     "settings": {
+      "template_id": "paper-fan",
+      "name": "Paper Fan",
+      "name_ar": "المروحة الورقية",
+      "mood": "floral",
+      "tagline": "A paper-cut fan opens on a lavender meadow, into a moonlit arch window."
+     }
+    },
+    "design9": {
+     "type": "design",
+     "settings": {
+      "template_id": "swan-lake",
+      "name": "Swan Lake",
+      "name_ar": "بحيرة البجع",
+      "mood": "floral",
+      "tagline": "Hand embroidery on linen, swans and a moonlit lake."
+     }
+    },
+    "design10": {
+     "type": "design",
+     "settings": {
+      "template_id": "swan-pond",
+      "name": "Swan Pond",
+      "name_ar": "بحيرة البجع الصغيرة",
+      "mood": "floral",
+      "tagline": "A flat lay of cards, polaroids and flowers in olive and burgundy."
+     }
+    },
+    "design11": {
+     "type": "design",
+     "settings": {
+      "template_id": "set-sail",
+      "name": "Set Sail",
+      "name_ar": "نُبحر معاً",
+      "mood": "classic",
+      "tagline": "A message in a bottle: an anchor seal, a twine-tied scroll and a painted sea."
+     }
+    },
+    "design12": {
+     "type": "design",
+     "settings": {
+      "template_id": "villa-rosa",
+      "name": "Villa Rosa",
+      "name_ar": "فيلا روزا",
+      "mood": "floral",
+      "tagline": "A blush envelope, roses and dusty-rose script."
+     }
+    },
+    "design13": {
+     "type": "design",
+     "settings": {
+      "template_id": "something-blue",
+      "name": "Something Blue",
+      "name_ar": "لمسة زرقاء",
+      "mood": "floral",
+      "tagline": "Paper hydrangeas and roses in powder blue and blush."
+     }
+    },
+    "design14": {
+     "type": "design",
+     "settings": {
+      "template_id": "cotton-press",
+      "name": "Cotton Press",
+      "name_ar": "حبر وقطن",
+      "mood": "classic",
+      "tagline": "Letterpress and gold foil on deckled cotton paper."
+     }
+    },
+    "design15": {
+     "type": "design",
+     "settings": {
+      "template_id": "rose-marble",
+      "name": "Rose Marble",
+      "name_ar": "رخام وردي",
+      "mood": "classic",
+      "tagline": "Clear acrylic and rose-gold foil on white marble."
+     }
+    },
+    "design16": {
+     "type": "design",
+     "settings": {
+      "template_id": "burgundy-envelope",
+      "name": "Burgundy Envelope",
+      "name_ar": "الظرف العنابي",
+      "mood": "classic",
+      "tagline": "A candle-lit evening that opens from an embossed envelope."
+     }
+    },
+    "design17": {
+     "type": "design",
+     "settings": {
+      "template_id": "the-gate",
+      "name": "The Gate",
+      "name_ar": "البوابة",
+      "mood": "nights",
+      "tagline": "Palace doors that open on your names."
+     }
+    },
+    "design18": {
+     "type": "design",
+     "settings": {
+      "template_id": "moonlit-nile",
+      "name": "Moonlit Nile",
+      "name_ar": "ليلة على النيل",
+      "mood": "nights",
+      "tagline": "An evening on the river, lit by lanterns."
+     }
+    },
+    "design19": {
+     "type": "design",
+     "settings": {
+      "template_id": "pressed-garden",
+      "name": "Pressed Garden",
+      "name_ar": "حديقة الزهور المجففة",
+      "mood": "floral",
+      "tagline": "A herbarium of two hearts."
+     }
+    }
+   },
+   "block_order": [
+    "design1",
+    "design2",
+    "design3",
+    "design4",
+    "design5",
+    "design6",
+    "design7",
+    "design8",
+    "design9",
+    "design10",
+    "design11",
+    "design12",
+    "design13",
+    "design14",
+    "design15",
+    "design16",
+    "design17",
+    "design18",
+    "design19"
+   ],
+   "settings": {
+    "kicker": "The collection",
+    "heading": "All designs",
+    "lead": "Every design opens like real stationery and reads beautifully in English and Arabic. Choose one to see it with your names.",
+    "limit": 0
+   }
+  }
+ },
+ "order": [
+  "designs"
+ ]
+}

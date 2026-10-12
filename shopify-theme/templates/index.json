@@ -255,7 +255,11 @@
     "design18",
     "design19"
    ],
-   "settings": {}
+   "settings": {
+    "limit": 9,
+    "more_label": "See all 19 designs",
+    "more_link": "/collections/all"
+   }
   },
   "chat": {
    "type": "vellum-chat",

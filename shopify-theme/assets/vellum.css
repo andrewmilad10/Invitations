@@ -78,7 +78,11 @@
 @media (min-width: 640px) { .v-card__tag { font-size: .875rem; -webkit-line-clamp: 4; } }
 .v-card__price { margin: .5rem 0 0; font-weight: 500; }
 .v-card__try { display: grid; place-items: center; margin-top: 1rem; height: 40px; text-decoration: none; border: 0; border-radius: .75rem; background: #1f2620; color: #fff; font: 600 .7rem/1 var(--v-sans); letter-spacing: .22em; text-transform: uppercase; cursor: pointer; transition: background .3s; }
+.v .v-card__try, .v .v-card__try:hover { color: #fff; }
 .v-card__try:hover { background: #2c372e; }
+.v-more { display: flex; justify-content: center; margin: 3rem 0 0; }
+.v-btn--line { background: transparent; border-color: var(--v-ink); color: var(--v-ink) !important; }
+.v-btn--line:hover { background: var(--v-ink); color: #fff !important; }
 @media (min-width: 640px) { .v-card__try { height: 48px; font-size: .75rem; } }
 
 /* demo window */
