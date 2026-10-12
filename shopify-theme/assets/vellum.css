@@ -274,3 +274,8 @@ body:has([data-v-product]) .v-wa-float { bottom: calc(96px + env(safe-area-inset
 .v-review figcaption span::before { content: "· "; }
 
 @media (max-width: 639px) { .v-card__more { display: none; } .v-card__try { letter-spacing: .16em; } }
+
+/* the live preview fades in only once it has painted */
+.v-live iframe { opacity: 0; transition: opacity .45s ease; }
+.v-live iframe.is-ready { opacity: 1; }
+.v-live iframe { pointer-events: none; } .v-live iframe.is-ready { pointer-events: auto; }

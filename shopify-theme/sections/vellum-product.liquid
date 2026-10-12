@@ -8,8 +8,8 @@
     <div class="v-prev">
       <div class="v-live">
         <div class="v-phone"><div>
-          {%- assign shot = 'screen-' | append: product.handle | append: '.webp' -%}<img class="v-live__fallback" src="{{ shot | asset_url }}" fetchpriority="high" alt="" width="390" height="823">
-          <iframe data-v-frame title="Live preview of {{ product.title | escape }}" src="{{ base }}/embed/{{ product.handle }}" loading="eager" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe>
+          {%- assign shot = 'open-' | append: product.handle | append: '.webp' -%}<img class="v-live__fallback" src="{{ shot | asset_url }}" fetchpriority="high" alt="" width="390" height="823">
+          <iframe data-v-frame title="Live preview of {{ product.title | escape }}" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe>
         </div></div>
       </div>
       <div class="v-prev__bar">

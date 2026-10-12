@@ -78,7 +78,27 @@
       if (quiet) q.set("quiet", "1");
       return base + "/embed/" + encodeURIComponent(handle) + "?" + q.toString();
     }
-    function refresh(quiet) { frame.src = previewUrl(quiet); }
+    // two frames: the new preview loads out of sight and only replaces the old one once it has painted,
+    // so a half-loaded page never shows (the opening picture underneath covers the very first load)
+    var frames = [frame, frame.cloneNode(false)]; frame.parentNode.appendChild(frames[1]);
+    var front = -1, loads = 0;
+    frames.forEach(function (f) {
+      f.addEventListener("load", function () {
+        if (!f.getAttribute("src")) return;
+        var token = f.getAttribute("data-token");
+        setTimeout(function () {
+          if (f.getAttribute("data-token") !== token) return;
+          f.classList.add("is-ready");
+          frames.forEach(function (o) { if (o !== f) o.classList.remove("is-ready"); });
+          front = frames.indexOf(f);
+        }, loads++ === 0 ? 1100 : 350);
+      });
+    });
+    function refresh(quiet) {
+      var back = frames[front === 0 ? 1 : 0];
+      back.setAttribute("data-token", String(Date.now()));
+      back.src = previewUrl(quiet);
+    }
     function later() { clearTimeout(timer); timer = setTimeout(function () { refresh(true); }, 700); }
 
     function save() {
@@ -177,8 +197,8 @@
       });
     });
 
-    var had = restore(); syncTexts();
-    if (had) refresh(false);
+    restore(); syncTexts();
+    refresh(false);
     show(1, false);
 
     form.addEventListener("input", function (e) {
