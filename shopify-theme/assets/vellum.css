@@ -279,3 +279,13 @@ body:has([data-v-product]) .v-wa-float { bottom: calc(96px + env(safe-area-inset
 .v-live iframe { opacity: 0; transition: opacity .45s ease; }
 .v-live iframe.is-ready { opacity: 1; }
 .v-live iframe { pointer-events: none; } .v-live iframe.is-ready { pointer-events: auto; }
+
+/* full-screen preview: edge to edge on phones, a large phone on wider screens */
+.v-full .v-demo__phone iframe { background: transparent; }
+@media (max-width: 599px) {
+  .v-full .v-demo__in { grid-template-rows: 1fr; }
+  .v-full .v-demo__bar { position: fixed; top: 0; left: 0; z-index: 2; width: auto; padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 0; }
+  .v-full .v-demo__name { display: none; }
+  .v-full .v-demo__x { background: rgb(0 0 0 / .45); border-color: rgb(255 255 255 / .5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .v-full .v-demo__phone { --h: 100dvh; width: 100vw; height: 100dvh; }
+}

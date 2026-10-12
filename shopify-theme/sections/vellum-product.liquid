@@ -14,6 +14,7 @@
       </div>
       <div class="v-prev__bar">
         <button type="button" data-v-replay>▶ Play the opening</button>
+        <button type="button" data-v-full>⤢ See it full screen</button>
       </div>
       <p class="v-prev__note">{{ section.settings.preview_note | escape }}</p>
     </div>
@@ -119,6 +120,15 @@
       {%- endform -%}
     </div>
   </div>
+  <dialog class="v-demo v-full" data-v-full-dialog aria-label="{{ product.title | escape }}, full screen">
+    <div class="v-demo__in">
+      <div class="v-demo__bar">
+        <p class="v-demo__name">{{ product.title | escape }}</p>
+        <button type="button" class="v-demo__x" data-v-full-close aria-label="Close">✕</button>
+      </div>
+      <div class="v-demo__phone" style="background: #000 url({{ shot | asset_url }}) center top / cover no-repeat"><iframe data-v-full-frame title="{{ product.title | escape }}, full screen" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe></div>
+    </div>
+  </dialog>
 </section>
 
 {% schema %}

@@ -211,6 +211,18 @@
       if (e.target.hasAttribute("data-v-sec") || e.target.hasAttribute("data-v-q")) later();
     });
     root.querySelector("[data-v-replay]").addEventListener("click", function () { clearTimeout(timer); refresh(false); });
+    // full screen: the same design with their names, filling the phone, opening included
+    var full = root.querySelector("[data-v-full-dialog]"), fullBtn = root.querySelector("[data-v-full]");
+    if (full && fullBtn) {
+      var fullFrame = full.querySelector("[data-v-full-frame]");
+      fullBtn.addEventListener("click", function () {
+        var url = previewUrl(false);
+        if (typeof full.showModal !== "function") { window.open(url, "_blank", "noopener"); return; }
+        fullFrame.src = url; full.showModal(); document.documentElement.style.overflow = "hidden";
+      });
+      full.querySelector("[data-v-full-close]").addEventListener("click", function () { full.close(); });
+      full.addEventListener("close", function () { fullFrame.src = "about:blank"; document.documentElement.style.overflow = ""; });
+    }
     form.addEventListener("submit", function (e) {
       syncTexts();
       for (var n = 1; n <= 3; n++) { if (!validStep(n)) { e.preventDefault(); show(n, false); validStep(n); return; } }
