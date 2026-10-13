@@ -45,6 +45,7 @@ const Olive = dynamic(() => import("./kit/olive/Renderer"));
 const Rosa = dynamic(() => import("./kit/rosa/Renderer"));
 const Pond = dynamic(() => import("./kit/pond/Renderer"));
 const Posy = dynamic(() => import("./kit/posy/Renderer"));
+const Ribbon = dynamic(() => import("./kit/ribbon/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
@@ -102,6 +103,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   rosa: Rosa,
   pond: Pond,
   posy: Posy,
+  ribbon: Ribbon,
   burgundy: Burgundy,
 };
 

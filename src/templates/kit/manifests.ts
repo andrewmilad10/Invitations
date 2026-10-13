@@ -86,6 +86,8 @@ const P = {
   wildPosy: { id: "paper-wildflower", label: "Warm paper & wildflowers", family: "neutral", colors: c("#f7f4ef", "#fbf9f5", "#3d3a36", "#5f5a53", "#3d3a36", "#fbf9f5", "#ddd5ca") },
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
+  // Ribbon & Pearls: ivory paper and dusty rose
+  ribbonPearls: { id: "ivory-copper", label: "Ivory, pearl & copper", family: "neutral", colors: c("#f6f2e7", "#fbf8f1", "#3a302a", "#665a52", "#87543c", "#fbf7f0", "#e3d7c8") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
@@ -493,6 +495,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     categories: ["romantic", "botanical", "elegant", "classic"],
     palettes: [P.peonyBlush],
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }),
+  kitTemplate("ribbon", {
+    id: "ribbon-pearls",
+    name: "Ribbon & Pearls",
+    tagline: "A satin ribbon tied in a bow runs down the page, with pearls at every section.",
+    description:
+      "No envelope: the first screen is your names in large, light dusty-rose letters beside an ivory satin bow. The ribbon then runs down the side of the whole page as guests scroll, with a small cluster of pearls where it crosses each section: your story with a tilted snapshot, the ceremony and party, the evening on a rose timeline, framed photos, questions marked with pearls and the reply.",
+    categories: ["romantic", "elegant", "modern", "luxury"],
+    palettes: [P.ribbonPearls],
+    fonts: { heading: "cormorant", body: "jost", accent: "cormorant" },
     card: { layout: "classic" },
   }),
   {
