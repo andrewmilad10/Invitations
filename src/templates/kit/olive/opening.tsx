@@ -9,9 +9,9 @@ import s from "./olive.module.css";
 /**
  * Olive Courtyard's opening. A close-up sage envelope fills the screen with
  * the couple's initials in gold foil on the flap; it leans a little with the
- * pointer or the phone. Tap: the flap lifts off the pocket and slides straight up, slowly,
- * like the burgundy envelope; the olive liner and the card slot appear, and while it is still opening
- * the screen eases into the courtyard.
+ * pointer or the phone. Tap: the flap turns over on its fold towards the reader, showing the olive
+ * liner on its inner side while its shadow stretches and fades on the pocket; while it is still
+ * opening the screen eases into the courtyard.
  */
 export function OliveOpening({ model }: { model: InvitationModel }) {
   const mono = initials(model);
@@ -60,17 +60,14 @@ function Envelope({ phase, mono }: { phase: IntroPhase; mono: string }) {
   return (
     <div ref={ref} className={s.env} aria-hidden>
       <span className={s.under} />
+      <span className={s.shade} />
       <span className={s.hinge}>
         <i className={s.front}>
           <span className={s.mono}>
             <span className={s.gold}>{mono}</span>
           </span>
         </i>
-      </span>
-      <span className={s.still}>
-        <span className={s.mono} style={{ top: "45.3%" }}>
-          <span className={s.gold}>{mono}</span>
-        </span>
+        <i className={s.back} />
       </span>
     </div>
   );
