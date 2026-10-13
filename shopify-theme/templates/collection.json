@@ -3,6 +3,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "ribbon-pearls": {
+     "type": "design",
+     "settings": {
+      "template_id": "ribbon-pearls",
+      "name": "Ribbon & Pearls",
+      "name_ar": "شريطة ولؤلؤ",
+      "mood": "floral",
+      "tagline": "A satin ribbon tied in a bow, with pearls, copper frames and a wax seal."
+     }
+    },
     "peony-blush": {
      "type": "design",
      "settings": {
@@ -215,6 +225,7 @@
     }
    },
    "block_order": [
+    "ribbon-pearls",
     "peony-blush",
     "wild-posy",
     "design1",
