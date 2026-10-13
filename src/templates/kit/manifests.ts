@@ -82,6 +82,8 @@ const P = {
   // Villa Rosa
   villaRosa: { id: "blush-rose", label: "Blush & dusty rose", family: "pink", colors: c("#f7f2ec", "#fcf9f5", "#5a3236", "#86625f", "#9e5c63", "#fdf6f2", "#e8d6cf") },
   // Swan Pond
+  // Wild Posy: one palette, matched to its painted wildflowers
+  wildPosy: { id: "paper-wildflower", label: "Warm paper & wildflowers", family: "neutral", colors: c("#f7f4ef", "#fbf9f5", "#3d3a36", "#5f5a53", "#3d3a36", "#fbf9f5", "#ddd5ca") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
@@ -469,6 +471,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     },
     { opening: true },
   ),
+  kitTemplate("posy", {
+    id: "wild-posy",
+    name: "Wild Posy",
+    tagline: "A printed card with painted wildflowers in the corners.",
+    description:
+      "No opening and no effects: the first screen is the invitation itself, with hand-painted watercolour wildflowers in the four corners (pale hydrangeas, small pink flowers, daisies, fern and grasses) and your words in one classic serif, names in spaced capitals. Every section below sits under the same painted sprig and fades in gently: the countdown, your story, the ceremony and party, the day, photos, questions and the reply.",
+    categories: ["romantic", "botanical", "elegant", "classic"],
+    palettes: [P.wildPosy],
+    fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }),
   {
     // Its media are placeholders from a third-party demo: see public/templates/burgundy-envelope/MEDIA-NOTICE.md
     ...kitTemplate(

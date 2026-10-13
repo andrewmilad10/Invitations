@@ -20,7 +20,7 @@
     "fact3": {
      "type": "fact",
      "settings": {
-      "value": "19",
+      "value": "20",
       "label": "original designs"
      }
     },
@@ -45,6 +45,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "wild-posy": {
+     "type": "design",
+     "settings": {
+      "template_id": "wild-posy",
+      "name": "Wild Posy",
+      "name_ar": "باقة برية",
+      "mood": "floral",
+      "tagline": "A printed card with painted wildflowers in the corners."
+     }
+    },
     "design1": {
      "type": "design",
      "settings": {
@@ -237,6 +247,7 @@
     }
    },
    "block_order": [
+    "wild-posy",
     "design1",
     "design2",
     "design3",
@@ -259,7 +270,7 @@
    ],
    "settings": {
     "limit": 9,
-    "more_label": "See all 19 designs",
+    "more_label": "See all 20 designs",
     "more_link": "/collections/all"
    }
   },

@@ -3,6 +3,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "wild-posy": {
+     "type": "design",
+     "settings": {
+      "template_id": "wild-posy",
+      "name": "Wild Posy",
+      "name_ar": "باقة برية",
+      "mood": "floral",
+      "tagline": "A printed card with painted wildflowers in the corners."
+     }
+    },
     "design1": {
      "type": "design",
      "settings": {
@@ -195,6 +205,7 @@
     }
    },
    "block_order": [
+    "wild-posy",
     "design1",
     "design2",
     "design3",

@@ -44,6 +44,7 @@ const Fan = dynamic(() => import("./kit/fan/Renderer"));
 const Olive = dynamic(() => import("./kit/olive/Renderer"));
 const Rosa = dynamic(() => import("./kit/rosa/Renderer"));
 const Pond = dynamic(() => import("./kit/pond/Renderer"));
+const Posy = dynamic(() => import("./kit/posy/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
@@ -100,6 +101,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   olive: Olive,
   rosa: Rosa,
   pond: Pond,
+  posy: Posy,
   burgundy: Burgundy,
 };
 
