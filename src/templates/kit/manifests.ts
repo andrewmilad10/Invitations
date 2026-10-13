@@ -84,6 +84,8 @@ const P = {
   // Swan Pond
   // Wild Posy: one palette, matched to its painted wildflowers
   wildPosy: { id: "paper-wildflower", label: "Warm paper & wildflowers", family: "neutral", colors: c("#f7f4ef", "#fbf9f5", "#3d3a36", "#5f5a53", "#3d3a36", "#fbf9f5", "#ddd5ca") },
+  // Peony Blush: one palette, matched to its painted paper
+  peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
@@ -479,6 +481,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
       "No opening and no effects: the first screen is the invitation itself, with hand-painted watercolour wildflowers in the four corners (pale hydrangeas, small pink flowers, daisies, fern and grasses) and your words in one classic serif, names in spaced capitals. Every section below sits under the same painted sprig and fades in gently: the countdown, your story, the ceremony and party, the day, photos, questions and the reply.",
     categories: ["romantic", "botanical", "elegant", "classic"],
     palettes: [P.wildPosy],
+    fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }),
+  kitTemplate("posy", {
+    id: "peony-blush",
+    name: "Peony Blush",
+    tagline: "Blush peonies painted in watercolour around a quiet card.",
+    description:
+      "No opening and no effects: the first screen is the invitation itself, framed by hand-painted blush and ivory peonies with buds, small white blossoms and soft green leaves in the corners, on warm blush paper. Your words sit in the middle in one classic serif, names in spaced capitals. Every section below sits under a painted peony sprig and fades in gently.",
+    categories: ["romantic", "botanical", "elegant", "classic"],
+    palettes: [P.peonyBlush],
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
   }),

@@ -20,7 +20,7 @@
     "fact3": {
      "type": "fact",
      "settings": {
-      "value": "20",
+      "value": "21",
       "label": "original designs"
      }
     },
@@ -45,6 +45,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "peony-blush": {
+     "type": "design",
+     "settings": {
+      "template_id": "peony-blush",
+      "name": "Peony Blush",
+      "name_ar": "زهور الفاوانيا",
+      "mood": "floral",
+      "tagline": "Blush peonies painted in watercolour around a quiet card."
+     }
+    },
     "wild-posy": {
      "type": "design",
      "settings": {
@@ -247,6 +257,7 @@
     }
    },
    "block_order": [
+    "peony-blush",
     "wild-posy",
     "design1",
     "design2",
@@ -270,7 +281,7 @@
    ],
    "settings": {
     "limit": 9,
-    "more_label": "See all 20 designs",
+    "more_label": "See all 21 designs",
     "more_link": "/collections/all"
    }
   },

@@ -18,6 +18,7 @@ const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
   "something-blue": { ar: "لمسة زرقاء", mood: "floral" },
   "pressed-garden": { ar: "حديقة الزهور المجففة", mood: "floral" },
   "wild-posy": { ar: "باقة برية", mood: "floral" },
+  "peony-blush": { ar: "زهور الفاوانيا", mood: "floral" },
   "lemon-terrace": { ar: "شرفة الليمون", mood: "floral" },
   "linen-meadow": { ar: "مرج الكتان", mood: "floral" },
   "henna-tent": { ar: "خيمة الحنة", mood: "nights" },

@@ -13,13 +13,15 @@ import s from "./posy.module.css";
  * the middle in one serif family: names in spaced capitals, small words in italic.
  * Every section below sits under the same painted sprig. No opening and no
  * effects; sections only fade in gently.
- * The paintings live in public/templates/wild-posy (made for Vellum).
+ * The paintings live in public/templates/<template id> (made for Vellum), so every
+ * flower set (Wild Posy, Peony Blush, …) shares this layout.
  *
  * Colours: bg = paper, surface = a lighter card, fg = ink, muted = soft lines of
  * text, accent = ink for buttons, accent-fg = paper, border = hairlines.
  */
 
-const ART = "/templates/wild-posy";
+/** Each design in this family keeps its own painted set in public/templates/<id>: corner-big, corner-small, sprig. */
+const art = (m: InvitationModel) => `/templates/${m.templateId}`;
 
 const T = {
   en: { together: "Together", families: "with their families", and: "and", request: "request the pleasure of your company at the celebration of their marriage", at: "at", count: "Until the day", photos: "Moments" },
@@ -27,14 +29,14 @@ const T = {
 };
 const tr = (m: InvitationModel) => (m.locale === "ar" ? T.ar : T.en);
 
-function Sprig() {
-  return <img src={`${ART}/sprig.webp`} alt="" className={s.sprig} loading="lazy" width={1200} height={136} />;
+function Sprig({ model }: { model: InvitationModel }) {
+  return <img src={`${art(model)}/sprig.webp`} alt="" className={s.sprig} loading="lazy" width={1200} height={136} />;
 }
 
-function Title({ children }: { children: React.ReactNode }) {
+function Title({ model, children }: { model: InvitationModel; children: React.ReactNode }) {
   return (
     <>
-      <Sprig />
+      <Sprig model={model} />
       <h2 className={s.h2}>{children}</h2>
     </>
   );
@@ -47,10 +49,10 @@ function Hero({ model, content }: SectionProps<"hero">) {
   const first = model.events.ceremony ?? model.events.reception ?? model.events.all[0] ?? null;
   return (
     <header id="hero" data-section="hero" className={s.hero}>
-      <img src={`${ART}/corner-big.webp`} alt="" className={`${s.corner} ${s.tl}`} width={900} height={891} fetchPriority="high" />
-      <img src={`${ART}/corner-small.webp`} alt="" className={`${s.corner} ${s.tr}`} width={772} height={930} />
-      <img src={`${ART}/corner-small.webp`} alt="" className={`${s.corner} ${s.bl}`} width={772} height={930} />
-      <img src={`${ART}/corner-big.webp`} alt="" className={`${s.corner} ${s.br}`} width={900} height={891} />
+      <img src={`${art(model)}/corner-big.webp`} alt="" className={`${s.corner} ${s.tl}`} width={900} height={891} fetchPriority="high" />
+      <img src={`${art(model)}/corner-small.webp`} alt="" className={`${s.corner} ${s.tr}`} width={772} height={930} />
+      <img src={`${art(model)}/corner-small.webp`} alt="" className={`${s.corner} ${s.bl}`} width={772} height={930} />
+      <img src={`${art(model)}/corner-big.webp`} alt="" className={`${s.corner} ${s.br}`} width={900} height={891} />
       <div className={s.card} data-k-stagger="" {...fx("fade")}>
         <p className={s.together}>{t.together}</p>
         <p className={s.small}>{t.families}</p>
@@ -74,12 +76,12 @@ function Hero({ model, content }: SectionProps<"hero">) {
   );
 }
 
-function Couple({ content }: SectionProps<"couple">) {
+function Couple({ model, content }: SectionProps<"couple">) {
   if (!content.message && !content.heading) return null;
   return (
     <Sec id="couple" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading}</Title>
+        <Title model={model}>{content.heading}</Title>
         {content.message ? <p className={s.prose}>{content.message}</p> : null}
       </div>
     </Sec>
@@ -92,7 +94,7 @@ function DateBlock({ model, content }: SectionProps<"date">) {
   return (
     <Sec id="date" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).date}</Title>
+        <Title model={model}>{content.heading || kitCopy(model).date}</Title>
         <p className={s.caps}>{d.long}</p>
         {content.note ? <p className={s.prose}>{content.note}</p> : null}
       </div>
@@ -104,7 +106,7 @@ function CountdownBlock({ model, content }: SectionProps<"countdown">) {
   return (
     <Sec id="countdown" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || tr(model).count}</Title>
+        <Title model={model}>{content.heading || tr(model).count}</Title>
         <Clock model={model} className={s.clock} unit={s.unit} value={s.value} label={s.unitLabel} />
       </div>
     </Sec>
@@ -116,7 +118,7 @@ function Story({ model, content }: SectionProps<"story">) {
   return (
     <Sec id="story" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).ourStory}</Title>
+        <Title model={model}>{content.heading || kitCopy(model).ourStory}</Title>
         {p ? <Pic asset={p} sizes="(min-width: 600px) 300px, 70vw" className={s.arch} /> : null}
         {content.body ? <div className={s.prose}><Paragraphs text={content.body} /></div> : null}
         {content.quote ? (
@@ -137,7 +139,7 @@ function EventBlock({ id, model, content }: { id: "ceremony" | "reception"; mode
   return (
     <Sec id={id} className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || e.title || (id === "ceremony" ? t.ceremony : t.reception)}</Title>
+        <Title model={model}>{content.heading || e.title || (id === "ceremony" ? t.ceremony : t.reception)}</Title>
         {e.timeLabel ? <p className={s.caps}>{e.timeLabel}</p> : null}
         <p className={s.line}>{eventDate(model, e)}</p>
         {e.venueName ? <p className={s.venue}>{e.venueName}</p> : null}
@@ -155,7 +157,7 @@ function Venue({ model, content }: SectionProps<"venue">) {
   return (
     <Sec id="venue" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).venue}</Title>
+        <Title model={model}>{content.heading || kitCopy(model).venue}</Title>
         {content.note ? <p className={s.prose}>{content.note}</p> : null}
         {mapped.map((e) => (
           <figure key={e.id} className={s.mapFig}>
@@ -174,7 +176,7 @@ function Schedule({ model, content }: SectionProps<"schedule">) {
   return (
     <Sec id="schedule" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).schedule}</Title>
+        <Title model={model}>{content.heading || kitCopy(model).schedule}</Title>
         <ol className={s.list}>
           {items.map((it, i) => (
             <li key={i}>
@@ -197,7 +199,7 @@ function Gallery({ model, content }: SectionProps<"gallery">) {
   return (
     <Sec id="gallery" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || tr(model).photos}</Title>
+        <Title model={model}>{content.heading || tr(model).photos}</Title>
         {content.caption ? <p className={s.small}>{content.caption}</p> : null}
         <div className={s.grid}>
           {list.map((p) => (
@@ -213,7 +215,7 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
   return (
     <Sec id="rsvp" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).rsvp}</Title>
+        <Title model={model}>{content.heading || kitCopy(model).rsvp}</Title>
         {content.deadline ? <p className={s.small}>{content.deadline}</p> : null}
         {content.message ? <p className={s.prose}>{content.message}</p> : null}
         <ReplyLink content={content} className={s.button} />
@@ -228,7 +230,7 @@ function Faq({ model, content }: SectionProps<"faq">) {
   return (
     <Sec id="faq" className={s.sec}>
       <div {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).faq}</Title>
+        <Title model={model}>{content.heading || kitCopy(model).faq}</Title>
         <div className={s.faq}>
           {items.map((it, i) => (
             <details key={i}>
@@ -242,11 +244,11 @@ function Faq({ model, content }: SectionProps<"faq">) {
   );
 }
 
-function Closing({ content }: SectionProps<"closing">) {
+function Closing({ model, content }: SectionProps<"closing">) {
   return (
     <Sec id="closing" className={`${s.sec} ${s.closing}`}>
       <div {...fx("rise")}>
-        <Sprig />
+        <Sprig model={model} />
         {content.heading ? <p className={s.small}>{content.heading}</p> : null}
         {content.message ? <p className={s.prose}>{content.message}</p> : null}
         {content.signature ? <p className={s.signature}>{content.signature}</p> : null}
