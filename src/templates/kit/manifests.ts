@@ -87,6 +87,7 @@ const P = {
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   // Ribbon & Pearls: ivory paper and dusty rose
+  gounaLagoon: { id: "lagoon-sand", label: "Sand, turquoise & coral", family: "neutral", colors: c("#f9f6eb", "#fffdf8", "#4a3a2c", "#6b5948", "#b9543d", "#fffdf8", "#e4d9c6") },
   ribbonPearls: { id: "ivory-copper", label: "Ivory, pearl & copper", family: "neutral", colors: c("#f6f2e7", "#fbf8f1", "#3a302a", "#665a52", "#87543c", "#fbf7f0", "#e3d7c8") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
@@ -495,6 +496,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     categories: ["romantic", "botanical", "elegant", "classic"],
     palettes: [P.peonyBlush],
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }),
+  kitTemplate("lagoon", {
+    id: "gouna-lagoon",
+    name: "Gouna Lagoon",
+    tagline: "A Red Sea lagoon painted in watercolour, from sunset to lanterns on the water.",
+    description:
+      "No envelope: the first screen is a watercolour painting of a turquoise lagoon with sand-coloured domed houses, palms and a little boat at sunset, with your names written in the sky. Below, warm cotton paper with painted waves and shells between sections and palm leaves leaning in: your story in a pointed arch, the ceremony beside a small domed chapel and the party beside two glowing lanterns, a painted lagoon map, the evening from sun to moon, arched photos, questions and the reply. It ends at night among lanterns floating on the water.",
+    categories: ["outdoor", "egyptian", "romantic", "elegant"],
+    palettes: [P.gounaLagoon],
+    fonts: { heading: "cormorant", body: "jost", accent: "cormorant" },
     card: { layout: "classic" },
   }),
   kitTemplate("ribbon", {
