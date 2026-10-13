@@ -29,14 +29,31 @@
 .env { position: absolute; left: 50%; top: 50%; height: max(100svh, calc(100vw * 1672 / 941)); aspect-ratio: 941 / 1672; translate: -50% -50%;
   transform-style: preserve-3d; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transition: transform .6s ease-out; box-shadow: 0 0 0 100vmax #667052; }
 .env > * { position: absolute; left: 0; width: 100%; }
-.under { top: 0; height: 100%; background: url("/templates/olive-courtyard/under.webp") center / 100% 100%; }
-.still { top: 0; height: 100%; z-index: 6; background: url("/templates/olive-courtyard/closed.webp") center / 100% 100%; transition: opacity .1s linear; }
-.hinge { top: 0; height: 62.08%; z-index: 5; transform-origin: 50% 0; transform: translateZ(2px); transition: transform 3.2s cubic-bezier(.5, .05, .3, 1) .05s; }
-.hinge > i { position: absolute; inset: 0; }
-.front { background: url("/templates/olive-courtyard/flap.webp") center / 100% 100%; filter: drop-shadow(0 6px 8px rgb(30 34 20 / .35)); transition: filter 3.2s ease .05s; }
-.intro:not([data-phase="closed"]) .still { opacity: 0; }
-.intro:not([data-phase="closed"]) .hinge { transform: translateZ(2px) translateY(-104%) rotateX(14deg); }
-.intro:not([data-phase="closed"]) .front { filter: drop-shadow(0 34px 30px rgb(20 24 12 / .55)); }
+.under { top: 0; height: 100%; background: url("/templates/olive-courtyard/body.webp") center / 100% 100%; }
+/* The flap is cut from the very same photograph as the envelope, so nothing changes at the tap: it simply turns over
+   on its fold, towards the reader, with the olive liner on its inner side; its shadow stretches and fades on the pocket. */
+.hinge { top: 0; height: 62.08%; z-index: 5; transform-origin: 50% 0; transform-style: preserve-3d; transform: translateZ(1px) rotateX(0deg);
+  transition: transform 2.6s cubic-bezier(.62, .02, .3, 1) .06s; }
+.hinge > i { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.hinge > i::after { content: ""; position: absolute; inset: 0; opacity: 0; pointer-events: none; -webkit-mask: var(--m) center / 100% 100%; mask: var(--m) center / 100% 100%; }
+.front { --m: url("/templates/olive-courtyard/flap-front.webp"); background: var(--m) center / 100% 100%; }
+.front::after { background: linear-gradient(180deg, rgb(28 32 18 / .05), rgb(28 32 18 / .5)); }
+.back { --m: url("/templates/olive-courtyard/flap-back.webp"); background: var(--m) center / 100% 100%; transform: rotateX(180deg); }
+.back::after { background: linear-gradient(0deg, rgb(28 32 18 / .55), rgb(28 32 18 / .15)); opacity: 1; }
+.shade { top: 0; height: 62.08%; z-index: 4; pointer-events: none; opacity: 0; background: rgb(22 26 12 / .55);
+  -webkit-mask: url("/templates/olive-courtyard/flap-front.webp") center / 100% 100%; mask: url("/templates/olive-courtyard/flap-front.webp") center / 100% 100%; }
+.intro:not([data-phase="closed"]) .hinge { transform: translateZ(1px) rotateX(176deg); }
+.intro:not([data-phase="closed"]) .front::after { animation: dim 1.5s cubic-bezier(.5, 0, .5, 1) .06s both; }
+.intro:not([data-phase="closed"]) .back::after { animation: lit 1.6s cubic-bezier(.3, 0, .3, 1) 1.15s both; }
+.intro:not([data-phase="closed"]) .shade { animation: cast 2.3s cubic-bezier(.4, 0, .3, 1) .06s both; }
+@keyframes dim { to { opacity: 1; } }
+@keyframes lit { from { opacity: 1; } to { opacity: 0; } }
+@keyframes cast {
+  0% { opacity: .5; transform: translateY(.6%) scaleY(1); filter: blur(2px); }
+  30% { opacity: .42; transform: translateY(4%) scaleY(.92); filter: blur(12px); }
+  65% { opacity: .12; transform: translateY(2%) scaleY(.55); filter: blur(26px); }
+  100% { opacity: 0; transform: translateY(0) scaleY(.4); filter: blur(30px); }
+}
 .mono { position: absolute; left: 0; right: 0; top: 73%; translate: 0 -50%; text-align: center; font: 400 calc(var(--envW, 400px) * .2)/1.2 var(--inv-font-heading); }
 .mono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 2px 2px rgb(40 30 10 / .55)); }
 @keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
