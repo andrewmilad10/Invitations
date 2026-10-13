@@ -86,6 +86,8 @@ const P = {
   wildPosy: { id: "paper-wildflower", label: "Warm paper & wildflowers", family: "neutral", colors: c("#f7f4ef", "#fbf9f5", "#3d3a36", "#5f5a53", "#3d3a36", "#fbf9f5", "#ddd5ca") },
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
+  // Ivory Folio: ivory paper, ink and antique gold
+  ivoryFolio: { id: "ivory-gold", label: "Ivory & antique gold", family: "neutral", colors: c("#fbf9f5", "#f0eee9", "#1b1c1a", "#4c4547", "#725b27", "#fbf9f5", "#d9d1cc") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
@@ -493,6 +495,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     categories: ["romantic", "botanical", "elegant", "classic"],
     palettes: [P.peonyBlush],
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }),
+  kitTemplate("folio", {
+    id: "ivory-folio",
+    name: "Ivory Folio",
+    tagline: "A letterpress suite on ivory paper, framed in fine gold lines.",
+    description:
+      "No opening and no pictures of its own: the invitation reads like a printed suite. A dotted monogram ring and your names in Garamond on the first screen, then a framed welcome, a countdown band, your story with a matted photo, the ceremony and party in one gold-framed folio, a ruled timeline, a matted gallery with roman numerals, questions and a double-matted reply card. Ivory, ink and antique gold; sections fade in gently.",
+    categories: ["classic", "elegant", "luxury", "romantic"],
+    palettes: [P.ivoryFolio],
+    fonts: { heading: "garamond", body: "garamond", accent: "jost" },
     card: { layout: "classic" },
   }),
   {

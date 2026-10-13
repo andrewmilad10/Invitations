@@ -34,6 +34,7 @@ import OliveRenderer from "./kit/olive/Renderer";
 import RosaRenderer from "./kit/rosa/Renderer";
 import PondRenderer from "./kit/pond/Renderer";
 import PosyRenderer from "./kit/posy/Renderer";
+import FolioRenderer from "./kit/folio/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -93,6 +94,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   rosa: RosaRenderer,
   pond: PondRenderer,
   posy: PosyRenderer,
+  folio: FolioRenderer,
   burgundy: BurgundyRenderer,
 };
 
