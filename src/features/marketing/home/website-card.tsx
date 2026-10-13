@@ -38,7 +38,8 @@ export function WebsiteCard({
   const vars = themeToCssVars(resolveTheme(template.themeDefaults, {})) as CSSProperties;
   const demo = `/templates/${template.id}/preview`;
   const main = href ?? demo;
-  const scene = SCENE_OPENINGS.has(template.renderer);
+  // Designs with no opening show their first page beside the phone instead of an envelope.
+  const scene = SCENE_OPENINGS.has(template.renderer) || template.features.opening === "none";
   return (
     <article
       className={cn(
