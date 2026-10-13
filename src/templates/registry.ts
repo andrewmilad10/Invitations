@@ -68,7 +68,7 @@ const rank = (id: string) => {
  * registered (so weddings already made with one keep rendering) but is
  * hidden from the gallery and the wizard.
  */
-const LIVE_WEBSITES = new Set(["gouna-lagoon", "ribbon-pearls", "peony-blush", "wild-posy", "the-gate", "moonlit-nile", "pressed-garden", "swan-lake", "burgundy-envelope", "cotton-press", "rose-marble", "something-blue", "villa-rosa", "swan-pond", "set-sail", "paper-fan", "garden-gate", "lemon-terrace", "linen-meadow", "opening-night", "olive-courtyard", "henna-tent", "sketchbook"]);
+const LIVE_WEBSITES = new Set(["wedding-passport", "gouna-lagoon", "ribbon-pearls", "peony-blush", "wild-posy", "the-gate", "moonlit-nile", "pressed-garden", "swan-lake", "burgundy-envelope", "cotton-press", "rose-marble", "something-blue", "villa-rosa", "swan-pond", "set-sail", "paper-fan", "garden-gate", "lemon-terrace", "linen-meadow", "opening-night", "olive-courtyard", "henna-tent", "sketchbook"]);
 const isWebsite = (t: TemplateManifest) => (t.features.hero ?? "photo") !== "card";
 const withVisibility = (t: TemplateManifest): TemplateManifest => (isWebsite(t) && !LIVE_WEBSITES.has(t.id) ? { ...t, status: "hidden" } : t);
 

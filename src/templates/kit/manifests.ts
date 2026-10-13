@@ -87,6 +87,7 @@ const P = {
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   // Ribbon & Pearls: ivory paper and dusty rose
+  weddingPassport: { id: "navy-gold", label: "Navy leather, gold & security blue", family: "blue", colors: c("#f2ece0", "#eef3f4", "#1b2a4a", "#4a5670", "#1b2a4a", "#f6f1e4", "#cdd8de") },
   gounaLagoon: { id: "lagoon-sand", label: "Sand, turquoise & coral", family: "neutral", colors: c("#f9f6eb", "#fffdf8", "#4a3a2c", "#6b5948", "#b9543d", "#fffdf8", "#e4d9c6") },
   ribbonPearls: { id: "ivory-copper", label: "Ivory, pearl & copper", family: "neutral", colors: c("#f6f2e7", "#fbf8f1", "#3a302a", "#665a52", "#87543c", "#fbf7f0", "#e3d7c8") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
@@ -498,6 +499,21 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
   }),
+  kitTemplate(
+    "passport",
+    {
+      id: "wedding-passport",
+      name: "Wedding Passport",
+      tagline: "Your wedding as a journey, in a navy leather passport with gold foil.",
+      description:
+        "Opens on a closed navy leather passport with your names in gold under a crest of rings and laurel; guests tap and the cover swings open. Each section is then a page of pale security paper: a data page with your photo under a holographic seal, rubber stamps that land on the page for the ceremony and the celebration, a world map with a gold plane, the itinerary, snapshots in instant photos held by gold clips, travel information on a luggage tag, a boarding pass to reply and a last stamp before the back cover closes the book.",
+      categories: ["modern", "elegant", "whimsical", "typography"],
+      palettes: [P.weddingPassport],
+      fonts: { heading: "playfair", body: "garamond", accent: "spacemono" },
+      card: { layout: "classic" },
+    },
+    { opening: true },
+  ),
   kitTemplate("lagoon", {
     id: "gouna-lagoon",
     name: "Gouna Lagoon",
