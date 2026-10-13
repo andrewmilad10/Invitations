@@ -3,6 +3,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "gouna-lagoon": {
+     "type": "design",
+     "settings": {
+      "template_id": "gouna-lagoon",
+      "name": "Gouna Lagoon",
+      "name_ar": "بحيرة الجونة",
+      "mood": "nights",
+      "tagline": "A Red Sea lagoon painted in watercolour, from sunset to lanterns on the water."
+     }
+    },
     "ribbon-pearls": {
      "type": "design",
      "settings": {
@@ -225,6 +235,7 @@
     }
    },
    "block_order": [
+    "gouna-lagoon",
     "ribbon-pearls",
     "peony-blush",
     "wild-posy",

@@ -43,7 +43,7 @@ const ALL: TemplateManifest[] = [
 
 /** Gallery "Featured" order; anything not listed follows in registry order. */
 const FEATURED = [
-  "ribbon-pearls", "peony-blush", "wild-posy", "sketchbook", "henna-tent", "olive-courtyard", "opening-night", "linen-meadow", "lemon-terrace", "garden-gate", "paper-fan", "swan-lake", "swan-pond", "set-sail", "villa-rosa", "something-blue", "cotton-press", "rose-marble", "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden",
+  "gouna-lagoon", "ribbon-pearls", "peony-blush", "wild-posy", "sketchbook", "henna-tent", "olive-courtyard", "opening-night", "linen-meadow", "lemon-terrace", "garden-gate", "paper-fan", "swan-lake", "swan-pond", "set-sail", "villa-rosa", "something-blue", "cotton-press", "rose-marble", "burgundy-envelope", "the-gate", "moonlit-nile", "pressed-garden",
   "editorial-romance", "old-money", "modern-minimal", "italian-summer", "black-tie", "french-garden", "luxury-magazine", "vintage-paper",
   "the-arch", "film-story", "botanical-glasshouse", "monogram-house",
   "bon-voyage", "velvet-tulips", "botanical-line", "joyride", "rose-arch", "golden-fronds", "twilight-arch", "pressed-keepsake", "gardenia",
