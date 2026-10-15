@@ -16,7 +16,7 @@ import s from "./olive.module.css";
 export function OliveOpening({ model }: { model: InvitationModel }) {
   const mono = initials(model);
   return (
-    <KitIntro model={model} className={s.intro} timing={[3400, 1800]}>
+    <KitIntro model={model} className={s.intro} timing={[4100, 1800]}>
       {({ phase, open, skip }) => (
         <>
           <Envelope phase={phase} mono={mono} />
@@ -82,7 +82,7 @@ function ReadyMark({ phase }: { phase: IntroPhase }) {
       root.removeAttribute("data-ready");
       return;
     }
-    const t = window.setTimeout(() => root.setAttribute("data-ready", ""), 2800);
+    const t = window.setTimeout(() => root.setAttribute("data-ready", ""), 3500);
     return () => clearTimeout(t);
   }, [phase]);
   return null;
