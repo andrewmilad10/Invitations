@@ -7,16 +7,16 @@ import { initials } from "./util";
 import s from "./olive.module.css";
 
 /**
- * Olive Courtyard's opening: a short film of hands opening the sage envelope,
- * on plain sage. The first frame waits, with
- * the couple's initials in gold foil on the flap; a tap fades the initials and
- * plays the film (the flap is lifted by its point and turned over, showing
- * the olive liner), then the screen eases into the courtyard.
+ * Olive Courtyard's opening: a short film of the sage envelope on olive-printed
+ * paper. The first frame waits, with the couple's initials in gold foil on the
+ * flap; a tap fades the initials and plays the film: the flap opens by itself
+ * to its olive liner, a card with the courtyard painted on it rises out, and
+ * the camera moves into the painting; then the courtyard page takes over.
  */
 export function OliveOpening({ model }: { model: InvitationModel }) {
   const mono = initials(model);
   return (
-    <KitIntro model={model} className={s.intro} timing={[3700, 1600]}>
+    <KitIntro model={model} className={s.intro} timing={[7300, 1300]}>
       {({ phase, open, skip }) => (
         <>
           <Film phase={phase} mono={mono} />
@@ -68,7 +68,7 @@ function ReadyMark({ phase }: { phase: IntroPhase }) {
       root.removeAttribute("data-ready");
       return;
     }
-    const t = window.setTimeout(() => root.setAttribute("data-ready", ""), 3000);
+    const t = window.setTimeout(() => root.setAttribute("data-ready", ""), 6600);
     return () => clearTimeout(t);
   }, [phase]);
   return null;

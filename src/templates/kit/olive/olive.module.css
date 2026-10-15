@@ -1,7 +1,7 @@
 /* Olive Courtyard. Day colours from --inv-*; night (data-night, from the sun-and-moon switch) uses its own navy
    and gold, matched to the night painting. Final states are the defaults; "before" states only exist with motion on
-   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the film of hands opening the envelope plays (4.2s) → the courtyard
-   settles from 3s → the film fades from 3.7s (1.6s). */
+   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the film plays (8s: the flap opens, the card rises, the camera moves into
+   its courtyard painting) → the courtyard page settles from 6.6s → the film fades from 7.3s (1.3s). */
 
 .root {
   --k-dur: 1.2s;
@@ -22,17 +22,22 @@
 .em { font-style: italic; }
 .gold { background: linear-gradient(110deg, #8a6420 0%, #d9b45c 22%, #fff1bf 34%, #c99a3c 46%, #8f6a22 62%, #e8c875 80%, #9c7426 100%) 0 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-/* ═════ The envelope: a short film of hands opening it ═════ */
-.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #5e6449; transform-origin: 50% 50%; }
-.intro[data-phase="leaving"] { opacity: 0; transform: scale(1.05); transition: transform 2.2s cubic-bezier(.45, 0, .2, 1), opacity 1.6s cubic-bezier(.45, 0, .2, 1) !important; }
-.film { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
-.filmBox { position: relative; width: min(100vw, 82svh * 600 / 480, 760px); aspect-ratio: 600 / 480; container-type: inline-size; }
-@media (max-aspect-ratio: 3/4) { .filmBox { width: 100vw; } }
-.filmVid { display: block; width: 100%; height: 100%; object-fit: cover; box-shadow: 0 18px 40px -18px rgb(20 24 12 / .6); }
-/* the couple's initials in gold foil on the flap, between the hands; they lift away as the flap is lifted */
-.filmMono { position: absolute; left: 45.5%; top: 45%; translate: -50% -50%; font: 400 8.6cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .35s ease, translate .6s ease; }
+/* ═════ The envelope: a short film of the sage envelope opening by itself ═════ */
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #706e54; transform-origin: 50% 50%; }
+.intro[data-phase="leaving"] { opacity: 0; transform: scale(1.04); transition: transform 1.6s cubic-bezier(.45, 0, .2, 1), opacity 1.3s cubic-bezier(.45, 0, .2, 1) !important; }
+/* the film's own olive-printed sage paper continues above and below it */
+.film { --fw: min(100vw, 86svh * 384 / 480, 620px); position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden;
+  background: url("/templates/olive-courtyard/opening-table.webp") center / calc(var(--fw) * 460 / 384) auto repeat, #706e54; }
+.filmBox { position: relative; width: var(--fw); aspect-ratio: 384 / 480; container-type: inline-size; }
+.filmVid { display: block; width: 100%; height: 100%; object-fit: cover;
+  -webkit-mask: linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-composite: intersect; }
+/* the couple's initials in gold foil on the flap; they fade as the flap starts to lift */
+.filmMono { position: absolute; left: 49.5%; top: 37%; translate: -50% -50%; font: 400 9.5cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .35s ease, translate .6s ease; }
 .filmMono .gold { display: inline-block; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 1px 1.5px rgb(40 30 10 / .6)); }
-.intro:not([data-phase="closed"]) .filmMono { opacity: 0; translate: -50% -60%; }
+.intro:not([data-phase="closed"]) .filmMono { opacity: 0; translate: -50% -58%; transition-delay: .8s; }
 @keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
 .hint { position: absolute; left: 0; right: 0; bottom: max(6svh, 34px); z-index: 7; margin: 0; text-align: center; color: #efe9cf; font: 400 .7rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(30 34 20 / .5); animation: up 1.2s var(--ease) 1.2s both, breathe 3s ease-in-out 2.4s infinite; }
 .intro:not([data-phase="closed"]) .hint { animation: none; opacity: 0; transition: opacity .4s; }
