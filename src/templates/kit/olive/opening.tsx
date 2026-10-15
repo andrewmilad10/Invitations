@@ -9,14 +9,14 @@ import s from "./olive.module.css";
 /**
  * Olive Courtyard's opening. A close-up sage envelope fills the screen with
  * the couple's initials in gold foil on the flap; it leans a little with the
- * pointer or the phone. Tap: the flap turns over on its fold towards the reader, showing the olive
- * liner on its inner side while its shadow stretches and fades on the pocket; while it is still
- * opening the screen eases into the courtyard.
+ * pointer or the phone. Tap: like a hand lifting it by its point, the flap turns up and over on its
+ * fold and lies open above the envelope, showing the olive liner on its inner side, while the view pulls
+ * back to show the whole envelope; after a short hold the screen eases into the courtyard.
  */
 export function OliveOpening({ model }: { model: InvitationModel }) {
   const mono = initials(model);
   return (
-    <KitIntro model={model} className={s.intro} timing={[2200, 2000]}>
+    <KitIntro model={model} className={s.intro} timing={[3400, 1800]}>
       {({ phase, open, skip }) => (
         <>
           <Envelope phase={phase} mono={mono} />
@@ -82,7 +82,7 @@ function ReadyMark({ phase }: { phase: IntroPhase }) {
       root.removeAttribute("data-ready");
       return;
     }
-    const t = window.setTimeout(() => root.setAttribute("data-ready", ""), 1500);
+    const t = window.setTimeout(() => root.setAttribute("data-ready", ""), 2800);
     return () => clearTimeout(t);
   }, [phase]);
   return null;
