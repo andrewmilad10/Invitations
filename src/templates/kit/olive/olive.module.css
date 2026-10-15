@@ -1,8 +1,7 @@
 /* Olive Courtyard. Day colours from --inv-*; night (data-night, from the sun-and-moon switch) uses its own navy
    and gold, matched to the night painting. Final states are the defaults; "before" states only exist with motion on
-   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the flap is lifted by its point and turns up and over on its fold
-   (3.1s) while the view pulls back to show the whole envelope with its liner open → a short hold → the courtyard
-   settles from 3.5s → the envelope fades from 4.1s (1.8s). */
+   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the film of hands opening the envelope plays (4.2s) → the courtyard
+   settles from 3s → the film fades from 3.7s (1.6s). */
 
 .root {
   --k-dur: 1.2s;
@@ -23,54 +22,23 @@
 .em { font-style: italic; }
 .gold { background: linear-gradient(110deg, #8a6420 0%, #d9b45c 22%, #fff1bf 34%, #c99a3c 46%, #8f6a22 62%, #e8c875 80%, #9c7426 100%) 0 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-/* ═════ The envelope ═════ */
-.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #667052; perspective: 2600px; perspective-origin: 50% 35%; transform-origin: 50% 58%; }
-.intro[data-phase="leaving"] { transform: scale(1.06); transition: transform 2.4s cubic-bezier(.45, 0, .2, 1), opacity 1.8s cubic-bezier(.45, 0, .2, 1) !important; }
-.intro[data-phase="leaving"] { opacity: 0; }
-.env { position: absolute; left: 50%; top: 50%; height: max(100svh, calc(100vw * 1672 / 941)); aspect-ratio: 941 / 1672; translate: -50% -50%;
-  transform-style: preserve-3d; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
-  transition: transform .6s ease-out, translate 2.8s cubic-bezier(.5, 0, .3, 1) .3s, scale 2.8s cubic-bezier(.5, 0, .3, 1) .3s;
-  box-shadow: 0 0 0 100vmax #667052; }
-/* the view pulls back (like a camera rising over the table) so the opened flap, lying above the envelope, stays in frame;
-   the envelope is 1 + 0.62 heights tall when open, so it shrinks to 1/1.62 and slides down by the flap's height */
-.intro:not([data-phase="closed"]) .env { scale: .6; translate: -50% calc(-50% + 19svh); }
-.env::before { content: ""; position: absolute; inset: 0; z-index: -1; box-shadow: 0 30px 50px -10px rgb(20 24 12 / .55), 0 6px 14px rgb(20 24 12 / .3); opacity: 0; transition: opacity 1.4s ease .6s; }
-.intro:not([data-phase="closed"]) .env::before { opacity: 1; }
-.env > * { position: absolute; left: 0; width: 100%; }
-.under { top: 0; height: 100%; background: url("/templates/olive-courtyard/body.webp") center / 100% 100%; }
-/* The flap is cut from the very same photograph as the envelope, so nothing changes at the tap: it simply turns over
-   on its fold, towards the reader, with the olive liner on its inner side; its shadow stretches and fades on the pocket. */
-.hinge { top: 0; height: 62.08%; z-index: 5; transform-origin: 50% 0; transform-style: preserve-3d; transform: translateZ(1px) rotateX(0deg);
-}
-.hinge > i { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.hinge > i::after { content: ""; position: absolute; inset: 0; opacity: 0; pointer-events: none; -webkit-mask: var(--m) center / 100% 100%; mask: var(--m) center / 100% 100%; }
-.front { --m: url("/templates/olive-courtyard/flap-front.webp"); background: var(--m) center / 100% 100%; }
-.front::after { background: linear-gradient(180deg, rgb(28 32 18 / .05), rgb(28 32 18 / .5)); }
-.back { --m: url("/templates/olive-courtyard/flap-back.webp"); background: var(--m) center / 100% 100%; transform: rotateX(180deg); }
-.back::after { background: linear-gradient(0deg, rgb(28 32 18 / .55), rgb(28 32 18 / .15)); opacity: 1; }
-.shade { top: 0; height: 62.08%; z-index: 4; pointer-events: none; opacity: 0; background: rgb(22 26 12 / .55);
-  -webkit-mask: url("/templates/olive-courtyard/flap-front.webp") center / 100% 100%; mask: url("/templates/olive-courtyard/flap-front.webp") center / 100% 100%; }
-/* like fingers lifting it: the point peels up slowly, the flap stands up, then it turns over and settles flat */
-.intro:not([data-phase="closed"]) .hinge { animation: fold 3.1s .1s both; }
-@keyframes fold {
-  0% { transform: translateZ(1px) rotateX(0deg); animation-timing-function: cubic-bezier(.5, 0, .7, .4); }
-  18% { transform: translateZ(1px) rotateX(14deg); animation-timing-function: cubic-bezier(.3, .2, .5, 1); }
-  55% { transform: translateZ(1px) rotateX(92deg); animation-timing-function: cubic-bezier(.4, 0, .25, 1); }
-  100% { transform: translateZ(1px) rotateX(180deg); }
-}
-.intro:not([data-phase="closed"]) .front::after { animation: dim 1.8s cubic-bezier(.5, 0, .5, 1) .1s both; }
-.intro:not([data-phase="closed"]) .back::after { animation: lit 1.6s cubic-bezier(.3, 0, .3, 1) 1.8s both; }
-.intro:not([data-phase="closed"]) .shade { animation: cast 2.4s cubic-bezier(.4, 0, .3, 1) .1s both; }
-@keyframes dim { to { opacity: 1; } }
-@keyframes lit { from { opacity: 1; } to { opacity: 0; } }
-@keyframes cast {
-  0% { opacity: .5; transform: translateY(.6%) scaleY(1); filter: blur(2px); }
-  30% { opacity: .42; transform: translateY(4%) scaleY(.92); filter: blur(12px); }
-  65% { opacity: .12; transform: translateY(2%) scaleY(.55); filter: blur(26px); }
-  100% { opacity: 0; transform: translateY(0) scaleY(.4); filter: blur(30px); }
-}
-.mono { position: absolute; left: 0; right: 0; top: 73%; translate: 0 -50%; text-align: center; font: 400 calc(var(--envW, 400px) * .2)/1.2 var(--inv-font-heading); }
-.mono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 2px 2px rgb(40 30 10 / .55)); }
+/* ═════ The envelope: a short film of hands opening it ═════ */
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #6d6a55; transform-origin: 50% 50%; }
+.intro[data-phase="leaving"] { opacity: 0; transform: scale(1.05); transition: transform 2.2s cubic-bezier(.45, 0, .2, 1), opacity 1.6s cubic-bezier(.45, 0, .2, 1) !important; }
+.film { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+/* the same table, blurred, fills the rest of the screen */
+.filmBg { position: absolute; inset: -40px; background: url("/templates/olive-courtyard/opening-poster.webp") center / cover; filter: blur(22px) saturate(.95) brightness(.97); transform: scale(1.3); }
+.filmBox { position: relative; width: min(100vw, 82svh * 600 / 480, 760px); aspect-ratio: 600 / 480; container-type: inline-size; }
+@media (max-aspect-ratio: 3/4) { .filmBox { width: min(118vw, 760px); } }
+.filmVid { display: block; width: 100%; height: 100%; object-fit: cover;
+  -webkit-mask: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent), linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-composite: source-in;
+  mask: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent), linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-composite: intersect; }
+/* the couple's initials in gold foil on the flap, between the hands; they lift away as the flap is lifted */
+.filmMono { position: absolute; left: 45.5%; top: 45%; translate: -50% -50%; font: 400 8.6cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .35s ease, translate .6s ease; }
+.filmMono .gold { display: inline-block; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 1px 1.5px rgb(40 30 10 / .6)); }
+.intro:not([data-phase="closed"]) .filmMono { opacity: 0; translate: -50% -60%; }
 @keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
 .hint { position: absolute; left: 0; right: 0; bottom: max(6svh, 34px); z-index: 7; margin: 0; text-align: center; color: #efe9cf; font: 400 .7rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(30 34 20 / .5); animation: up 1.2s var(--ease) 1.2s both, breathe 3s ease-in-out 2.4s infinite; }
 .intro:not([data-phase="closed"]) .hint { animation: none; opacity: 0; transition: opacity .4s; }
