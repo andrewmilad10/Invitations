@@ -8,7 +8,7 @@ import s from "./olive.module.css";
 
 /**
  * Olive Courtyard's opening: a short film of hands opening the sage envelope,
- * over a softly blurred copy of the same table. The first frame waits, with
+ * on plain sage. The first frame waits, with
  * the couple's initials in gold foil on the flap; a tap fades the initials and
  * plays the film (the flap is lifted by its point and turned over, showing
  * the olive liner), then the screen eases into the courtyard.
@@ -46,7 +46,6 @@ function Film({ phase, mono }: { phase: IntroPhase; mono: string }) {
   }, [phase]);
   return (
     <div className={s.film} aria-hidden>
-      <span className={s.filmBg} />
       <div className={s.filmBox}>
         <video ref={ref} className={s.filmVid} poster={`${FILM}-poster.webp`} muted playsInline preload="auto" disablePictureInPicture>
           <source src={`${FILM}.webm`} type="video/webm" />
