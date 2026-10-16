@@ -1,7 +1,6 @@
 /* Olive Courtyard. Day colours from --inv-*; night (data-night, from the sun-and-moon switch) uses its own navy
    and gold, matched to the night painting. Final states are the defaults; "before" states only exist with motion on
-   (data-fx="on" from KitMotion). Opening, from the intro's data-phase: tap → the flap lifts and slides straight up (3.2s) → the
-   courtyard settles from 1.5s → the envelope fades from 2.2s (2s). */
+   (data-fx="on" from KitMotion). Opening: tap → the film plays (8s) → the page settles underneath → the film fades from 7.1s (.9s). */
 
 .root {
   --k-dur: 1.2s;
@@ -22,25 +21,18 @@
 .em { font-style: italic; }
 .gold { background: linear-gradient(110deg, #8a6420 0%, #d9b45c 22%, #fff1bf 34%, #c99a3c 46%, #8f6a22 62%, #e8c875 80%, #9c7426 100%) 0 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-/* ═════ The envelope ═════ */
-.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #667052; perspective: 2600px; perspective-origin: 50% 35%; transform-origin: 50% 58%; }
-.intro:not([data-phase="closed"]) { transform: scale(1.08); transition: transform 4s cubic-bezier(.45, 0, .2, 1) 1.2s, opacity 2s cubic-bezier(.45, 0, .2, 1) !important; }
-.intro[data-phase="leaving"] { opacity: 0; }
-.env { position: absolute; left: 50%; top: 50%; height: max(100svh, calc(100vw * 1672 / 941)); aspect-ratio: 941 / 1672; translate: -50% -50%;
-  transform-style: preserve-3d; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transition: transform .6s ease-out; box-shadow: 0 0 0 100vmax #667052; }
-.env > * { position: absolute; left: 0; width: 100%; }
-.under { top: 0; height: 100%; background: url("/templates/olive-courtyard/under.webp") center / 100% 100%; }
-.still { top: 0; height: 100%; z-index: 6; background: url("/templates/olive-courtyard/closed.webp") center / 100% 100%; transition: opacity .1s linear; }
-.hinge { top: 0; height: 62.08%; z-index: 5; transform-origin: 50% 0; transform: translateZ(2px); transition: transform 3.2s cubic-bezier(.5, .05, .3, 1) .05s; }
-.hinge > i { position: absolute; inset: 0; }
-.front { background: url("/templates/olive-courtyard/flap.webp") center / 100% 100%; filter: drop-shadow(0 6px 8px rgb(30 34 20 / .35)); transition: filter 3.2s ease .05s; }
-.intro:not([data-phase="closed"]) .still { opacity: 0; }
-.intro:not([data-phase="closed"]) .hinge { transform: translateZ(2px) translateY(-104%) rotateX(14deg); }
-.intro:not([data-phase="closed"]) .front { filter: drop-shadow(0 34px 30px rgb(20 24 12 / .55)); }
-.mono { position: absolute; left: 0; right: 0; top: 73%; translate: 0 -50%; text-align: center; font: 400 calc(var(--envW, 400px) * .2)/1.2 var(--inv-font-heading); }
-.mono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 2px 2px rgb(40 30 10 / .55)); }
+
+/* ═════ The opening: a film of the envelope, full screen like the Burgundy envelope ═════ */
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #7a7c62; }
+.intro[data-phase="leaving"] { opacity: 0; transition: opacity .9s ease !important; }
+/* the film covers the screen; this box has the film's own shape, so the initials stay on the flap at any screen size */
+.film { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100vw, 100svh * 864 / 480); height: max(100svh, 100vw * 480 / 864); container-type: inline-size; }
+.filmVid { display: block; width: 100%; height: 100%; object-fit: cover; }
+.filmMono { position: absolute; left: 50%; top: 39.5%; translate: -50% -50%; font: 400 4.6cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .45s ease .3s; }
+.filmMono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 1px 2px rgb(40 30 10 / .55)); }
+.intro:not([data-phase="closed"]) .filmMono { opacity: 0; }
 @keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
-.hint { position: absolute; left: 0; right: 0; bottom: max(6svh, 34px); z-index: 7; margin: 0; text-align: center; color: #efe9cf; font: 400 .7rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(30 34 20 / .5); animation: up 1.2s var(--ease) 1.2s both, breathe 3s ease-in-out 2.4s infinite; }
+.hint { position: absolute; left: 0; right: 0; bottom: max(6svh, 34px); z-index: 7; margin: 0; text-align: center; color: #f3eed8; font: 400 .7rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(30 34 20 / .55); animation: up 1.2s var(--ease) 1.2s both, breathe 3s ease-in-out 2.4s infinite; }
 .intro:not([data-phase="closed"]) .hint { animation: none; opacity: 0; transition: opacity .4s; }
 @keyframes up { from { opacity: 0; transform: translateY(8px); } }
 @keyframes breathe { 50% { opacity: .45; } }
