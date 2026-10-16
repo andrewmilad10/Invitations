@@ -45,7 +45,8 @@
 @media (min-aspect-ratio: 941/1672) { .pic { height: auto; width: 100%; top: auto; } }
 .root[data-fx="on"]:not([data-ready]) .pic { transform: scale(1.08); transition: none; }
 .pic > span { position: absolute; inset: 0; }
-.dayPic { background: url("/templates/olive-courtyard/day.webp") center / cover; }
+/* the same painting the card shows at the end of the opening film, so the hand-over is seamless */
+.dayPic { background: url("/templates/olive-courtyard/courtyard.webp") center / cover; }
 .nightPic { background: url("/templates/olive-courtyard/night.webp") center / cover; opacity: 0; transition: opacity 2.2s ease; }
 .root[data-night] .nightPic { opacity: 1; }
 .glow { opacity: 0; pointer-events: none; transition: opacity 2.4s ease .4s; mix-blend-mode: screen;
