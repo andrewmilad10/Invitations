@@ -1,6 +1,6 @@
 /* Olive Courtyard. Day colours from --inv-*; night (data-night, from the sun-and-moon switch) uses its own navy
    and gold, matched to the night painting. Final states are the defaults; "before" states only exist with motion on
-   (data-fx="on" from KitMotion). The opening has its own stylesheet (opening.module.css). */
+   (data-fx="on" from KitMotion). Opening: tap → the film plays (8s) → the page settles underneath → the film fades from 7.1s (.9s). */
 
 .root {
   --k-dur: 1.2s;
@@ -21,6 +21,23 @@
 .em { font-style: italic; }
 .gold { background: linear-gradient(110deg, #8a6420 0%, #d9b45c 22%, #fff1bf 34%, #c99a3c 46%, #8f6a22 62%, #e8c875 80%, #9c7426 100%) 0 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
 
+
+/* ═════ The opening: a film of the envelope, full screen like the Burgundy envelope ═════ */
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #7a7c62; }
+.intro[data-phase="leaving"] { opacity: 0; transition: opacity .9s ease !important; }
+/* the film covers the screen; this box has the film's own shape, so the initials stay on the flap at any screen size */
+.film { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100vw, 100svh * 864 / 480); height: max(100svh, 100vw * 480 / 864); container-type: inline-size; }
+.filmVid { display: block; width: 100%; height: 100%; object-fit: cover; }
+.filmMono { position: absolute; left: 50%; top: 39.5%; translate: -50% -50%; font: 400 4.6cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .45s ease .3s; }
+.filmMono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 1px 2px rgb(40 30 10 / .55)); }
+.intro:not([data-phase="closed"]) .filmMono { opacity: 0; }
+@keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
+.hint { position: absolute; left: 0; right: 0; bottom: max(6svh, 34px); z-index: 7; margin: 0; text-align: center; color: #f3eed8; font: 400 .7rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(30 34 20 / .55); animation: up 1.2s var(--ease) 1.2s both, breathe 3s ease-in-out 2.4s infinite; }
+.intro:not([data-phase="closed"]) .hint { animation: none; opacity: 0; transition: opacity .4s; }
+@keyframes up { from { opacity: 0; transform: translateY(8px); } }
+@keyframes breathe { 50% { opacity: .45; } }
+.envBtn { position: absolute; inset: 0; z-index: 8; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.envBtn:focus-visible { outline: 2px solid #c9a24a; outline-offset: -10px; }
 
 /* ═════ The courtyard, day and night ═════ */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; background: #c9cdbb; }
