@@ -48,6 +48,7 @@ const Posy = dynamic(() => import("./kit/posy/Renderer"));
 const Ribbon = dynamic(() => import("./kit/ribbon/Renderer"));
 const Lagoon = dynamic(() => import("./kit/lagoon/Renderer"));
 const Wisteria = dynamic(() => import("./kit/wisteria/Renderer"));
+const Lace = dynamic(() => import("./kit/lace/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
@@ -108,6 +109,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   ribbon: Ribbon,
   lagoon: Lagoon,
   wisteria: Wisteria,
+  lace: Lace,
   burgundy: Burgundy,
 };
 

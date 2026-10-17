@@ -1,0 +1,180 @@
+/* Blush Lace. Colours from --inv-*; the photographs, the lace envelope and the blush band carry their own blush.
+   White text only sits on the photographs (with a soft shade under it). Final states are the defaults; "before"
+   states only exist with motion on (data-fx="on" from KitMotion).
+   Opening: cream page, names, the lace envelope settles into focus → tap → the page dissolves (1.4s) into the
+   flower photograph, and the first screen's words rise in as it clears. */
+
+.root {
+  --k-dur: 1.1s;
+  --k-ease: cubic-bezier(.25, .7, .25, 1);
+  --k-dist: 18px;
+  --ease: cubic-bezier(.22, .8, .24, 1);
+  --blush: #ead2c9;        /* the band behind the countdown (brown ink stays readable on it) */
+  --col: min(100% - 3rem, 32rem);
+  position: relative;
+  background: url("/templates/blush-lace/paper.webp") 0 0 / 640px auto repeat, var(--inv-bg);
+  color: var(--inv-fg);
+  font: 500 1.1rem/1.75 var(--inv-font-body);
+  font-variant-numeric: lining-nums;
+  overflow-x: clip;
+}
+.root p { margin: 0; }
+.root:dir(rtl) { line-height: 1.95; }
+
+.caps { font: 500 .7rem/1.9 var(--inv-font-accent); letter-spacing: .32em; text-transform: uppercase; color: var(--inv-muted); }
+.root:dir(rtl) .caps { letter-spacing: 0; font-size: .88rem; }
+.small { font-size: .95rem; color: var(--inv-muted); }
+.body { max-width: 26rem; margin-inline: auto; }
+.body > * + * { margin-top: .9rem; }
+.script { margin: 0; font: 400 clamp(2.6rem, 11vw, 3.4rem)/1.2 var(--inv-font-heading); color: var(--inv-accent); }
+.signed { margin-top: .6rem !important; font: 400 1.9rem/1.2 var(--inv-font-heading); color: var(--inv-muted); }
+.quote { font-style: italic; font-size: 1.15rem; }
+.venue { font-size: 1.2rem; font-weight: 600; }
+
+/* ── first screen: the flower photograph with the names in white script ── */
+.hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: #fffdfb; }
+.heroPic { position: absolute; inset: 0; background: url("/templates/blush-lace/flowers.webp") 50% 40% / cover no-repeat; transition: transform 7s var(--ease); }
+.root[data-fx="on"]:not([data-ready]) .heroPic { transform: scale(1.07); transition: none; }
+.heroShade { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 55% at 50% 42%, rgb(70 42 36 / .32), transparent 75%); }
+.heroText { position: absolute; inset: 9svh 1.4rem auto; display: grid; justify-items: center; gap: .4rem; text-align: center; text-shadow: 0 1px 14px rgb(60 34 28 / .45); }
+.hero .caps { color: #fffdfb; }
+.mono { display: grid; place-items: center; grid-auto-flow: column; width: 4.4rem; aspect-ratio: 1; margin-bottom: 1.4rem; border: 1px solid rgb(255 253 251 / .85); border-radius: 50%; font: 400 1.5rem/1 var(--inv-font-heading); text-shadow: none; }
+.mono i { font-style: normal; font-size: .62em; padding: 0 .08em; }
+.names { margin: 0; display: grid; justify-items: center; font: 400 clamp(4rem, 19vw, 6.4rem)/1 var(--inv-font-heading); }
+.amp { font-size: .45em; line-height: 1.3; }
+.heroDate { margin-top: 1.1rem; font-size: .82rem; }
+.heroTag { max-width: 20rem; font-style: italic; }
+.w { transition: opacity 1.5s var(--ease), transform 1.7s var(--ease), filter 1.5s var(--ease); transition-delay: calc(.5s + var(--i) * 180ms); }
+.root[data-fx="on"]:not([data-ready]) .w { opacity: 0; transform: translateY(14px); filter: blur(5px); transition: none; }
+
+/* ── sections on the paper ── */
+.sec { padding: 5.2rem 0 1rem; text-align: center; }
+.col { width: var(--col); margin: 0 auto; display: grid; justify-items: center; gap: .7rem; }
+
+/* a photo with a round second photo resting on its corner */
+.pair { position: relative; width: min(64vw, 280px); margin: 4rem auto 2rem; }
+.pairMain { aspect-ratio: 4 / 5; background: var(--inv-border); box-shadow: 0 18px 34px -20px rgb(74 52 46 / .45); }
+.pairRound { position: absolute; right: -24%; bottom: 14%; width: 52%; aspect-ratio: 1; border-radius: 50%; border: 6px solid var(--inv-bg); background: var(--inv-border); box-shadow: 0 12px 26px -14px rgb(74 52 46 / .45); }
+.pair:dir(rtl) .pairRound { right: auto; left: -24%; }
+
+/* the countdown on a blush band */
+.band { margin: 4rem 0 0; padding: 3.2rem 1rem; background: var(--blush); text-align: center; }
+.bandInner { display: grid; justify-items: center; gap: .8rem; }
+.clock { display: flex; justify-content: center; }
+.unit { position: relative; display: grid; justify-items: center; min-width: 4.4rem; }
+.unit + .unit::before { content: ":"; position: absolute; left: -.2rem; top: .05rem; font: 300 2.3rem/1.1 var(--inv-font-body); color: var(--inv-muted); }
+.value { font: 300 2.6rem/1.1 var(--inv-font-body); letter-spacing: .04em; }
+.unitLabel { font: 500 .6rem/1.8 var(--inv-font-accent); letter-spacing: .26em; text-transform: uppercase; color: var(--inv-muted); }
+
+/* the wedding week as a small calendar, the day ringed, then a thin stem down to the date */
+.cal { display: grid; justify-items: center; gap: .9rem; width: 100%; }
+.calMonth { font: 500 .8rem/1.6 var(--inv-font-accent); letter-spacing: .4em; text-transform: uppercase; }
+.calGrid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: .5rem; width: min(100%, 22rem); }
+.calHead { font: 500 .62rem/1.6 var(--inv-font-accent); letter-spacing: .12em; text-transform: uppercase; color: var(--inv-muted); }
+.calDay { position: relative; justify-self: center; display: grid; place-items: center; width: 2.3rem; aspect-ratio: 1; font-size: 1.05rem; }
+.calDay[data-on] { color: var(--inv-accent); font-weight: 600; }
+.calDay[data-on]::after { content: ""; position: absolute; inset: -2px; border: 1px solid var(--inv-accent); border-radius: 50%; }
+.stem { display: block; width: 1px; height: 3.2rem; margin: .4rem 0; background: var(--inv-border); }
+.event { display: grid; justify-items: center; gap: .1rem; }
+.event + .event { margin-top: 1.6rem; }
+.eventWhen { font: 500 .8rem/1.8 var(--inv-font-accent); letter-spacing: .2em; text-transform: uppercase; }
+.root:dir(rtl) .eventWhen { letter-spacing: 0; font-size: .95rem; }
+
+/* the love story: words beside two overlapping photographs */
+.story { width: min(100% - 3rem, 46rem); margin: 0 auto; display: grid; gap: 3rem; align-items: center; }
+.storyText { display: grid; justify-items: center; gap: .7rem; }
+.overlap { position: relative; justify-self: center; width: min(78vw, 330px); aspect-ratio: 1 / 1.05; }
+.ovBack, .ovFront { position: absolute; width: 60%; aspect-ratio: 4 / 5; background: var(--inv-border); box-shadow: 0 16px 30px -18px rgb(74 52 46 / .5); }
+.ovBack { left: 0; top: 0; }
+.ovFront { right: 0; bottom: 0; border: 6px solid var(--inv-bg); }
+@media (min-width: 760px) {
+  .story { grid-template-columns: 1fr 1fr; text-align: start; }
+  .storyText { justify-items: start; }
+}
+
+/* the day over a sky of pink clouds */
+.sky { position: relative; margin-top: 5rem; padding: 6rem 1.3rem; overflow: hidden; text-align: center; }
+.skyPic { position: absolute; inset: 0; background: url("/templates/blush-lace/clouds.webp") 50% 50% / cover no-repeat;
+  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); }
+.skyCard { position: relative; width: min(100%, 28rem); margin: 0 auto; padding: 2.6rem 1.4rem 2.4rem; background: rgb(251 247 242 / .88); box-shadow: 0 20px 44px -26px rgb(74 52 46 / .5); }
+.timeline { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: 2rem; }
+.timeline li { display: grid; justify-items: center; gap: .1rem; }
+.icon { width: auto; height: 64px; margin-bottom: .5rem; }
+.time { font: 300 1.9rem/1.1 var(--inv-font-body); }
+
+/* the place over a band of flowers */
+.flowers { position: relative; min-height: 78svh; display: grid; place-items: center; margin-top: 4rem; overflow: hidden; text-align: center; color: #fffdfb; }
+.flowersPic { position: absolute; inset: 0; background: url("/templates/blush-lace/flowers.webp") 50% 70% / cover no-repeat; }
+.flowersPic::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 45% at 50% 50%, rgb(70 42 36 / .38), transparent 78%); }
+.flowersText { position: relative; display: grid; justify-items: center; gap: .4rem; padding: 2rem 1.6rem; text-shadow: 0 1px 12px rgb(60 34 28 / .5); }
+.flowers .caps { color: #fffdfb; }
+.flowersVenue { font: 400 clamp(2.4rem, 10vw, 3.2rem)/1.2 var(--inv-font-heading); }
+.flowersNote { max-width: 22rem; font-size: 1rem; }
+.pillLink { margin-top: 1rem; padding: .7rem 1.8rem; border-radius: 99px; background: #fffdfb; color: var(--inv-accent); font: 600 .7rem/1.6 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; text-decoration: none; text-shadow: none; box-shadow: 0 8px 20px -10px rgb(40 24 20 / .5); transition: transform .4s var(--ease); }
+.pillLink:hover { transform: translateY(-2px); }
+.pillLink:active { transform: none; opacity: .85; }
+.pillLink:focus-visible { outline: 2px solid #fffdfb; outline-offset: 3px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; width: 100%; margin-top: .6rem; }
+.gridPic { aspect-ratio: 4 / 5; background: var(--inv-border); }
+
+.faq { width: 100%; text-align: start; }
+.faq details { border-bottom: 1px solid var(--inv-border); }
+.faq summary { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 0; cursor: pointer; list-style: none; font-weight: 600; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--inv-accent); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 0 1rem; color: var(--inv-muted); }
+
+/* the reply: a cream card standing above the lace envelope (the envelope covers the card's foot) */
+.reply { padding: 5.4rem 0 2rem; text-align: center; }
+.replyStack { display: grid; justify-items: center; width: min(100% - 2.4rem, 25rem); margin: 0 auto; }
+.replyCard { position: relative; display: grid; justify-items: center; gap: .6rem; width: 88%; padding: 2.6rem 1.4rem 6.5rem; margin-bottom: -26%;
+  background: url("/templates/blush-lace/paper.webp") 0 0 / 520px auto, var(--inv-surface); box-shadow: 0 -4px 26px -12px rgb(74 52 46 / .35); }
+.replyTitle { font-size: clamp(2.4rem, 10vw, 3rem); }
+.replyEnv { position: relative; z-index: 1; display: block; width: 100%; height: auto; filter: drop-shadow(0 18px 24px rgb(74 52 46 / .25)); pointer-events: none; }
+
+.form { display: grid; gap: 1rem; width: 100%; margin-top: .6rem; text-align: start; }
+.field { display: grid; gap: .25rem; }
+.fieldLabel { padding: 0; font: 500 .64rem/1.6 var(--inv-font-accent); letter-spacing: .22em; text-transform: uppercase; color: var(--inv-muted); }
+.root:dir(rtl) .fieldLabel { letter-spacing: 0; font-size: .85rem; }
+.input { width: 100%; padding: .35rem 0; border: 0; border-bottom: 1px solid var(--inv-border); border-radius: 0; background: transparent; color: var(--inv-fg); font: 500 1.05rem/1.5 var(--inv-font-body); resize: none; }
+.input:focus { outline: none; border-bottom-color: var(--inv-accent); }
+select.input { cursor: pointer; }
+.choice { margin: 0; padding: 0; border: 0; display: grid; gap: .45rem; }
+.pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pill { position: relative; flex: 1 1 8rem; padding: .55rem .6rem; border: 1px solid var(--inv-border); border-radius: 99px; text-align: center; font-size: .98rem; cursor: pointer; transition: background-color .3s, border-color .3s, color .3s; }
+.pill input { position: absolute; opacity: 0; pointer-events: none; }
+.pill[data-on] { border-color: var(--inv-accent); background: var(--inv-accent); color: var(--inv-accent-fg); }
+.pill:has(input:focus-visible) { outline: 2px solid var(--inv-accent); outline-offset: 2px; }
+.button { justify-self: center; margin-top: .3rem; padding: .75rem 1.8rem; border: 0; border-radius: 99px; background: var(--inv-accent); color: var(--inv-accent-fg); font: 600 .7rem/1.6 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; cursor: pointer; }
+.button:hover { opacity: .9; }
+.button:active { opacity: .8; }
+.button:focus-visible { outline: 2px solid var(--inv-accent); outline-offset: 3px; }
+.thanks { display: grid; justify-items: center; gap: .35rem; padding: .6rem 0 .2rem; }
+.thanksTitle { font: 400 2.2rem/1.1 var(--inv-font-heading); color: var(--inv-accent); }
+
+.closeIcon { width: auto; height: 90px; margin-top: 1.4rem; opacity: .9; }
+.footer { position: relative; margin-top: 4rem; min-height: 240px; display: grid; align-items: end; overflow: hidden; }
+.footPic { position: absolute; inset: 0; background: url("/templates/blush-lace/flowers.webp") 50% 85% / cover no-repeat; mask-image: linear-gradient(180deg, transparent, #000 60%); }
+.footText { position: relative; display: grid; justify-items: center; gap: .2rem; padding: 1.4rem 1rem 1.8rem; font: 500 .68rem/1.8 var(--inv-font-accent); letter-spacing: .26em; text-transform: uppercase; color: #fffdfb; text-shadow: 0 1px 8px rgb(60 34 28 / .55); }
+
+/* ═════ The opening: cream page, names, the lace envelope; a tap dissolves it into the invitation ═════ */
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); display: grid; place-items: center; background: url("/templates/blush-lace/paper.webp") 0 0 / 640px auto repeat, var(--inv-bg); color: var(--inv-fg); }
+.intro[data-phase="leaving"] { opacity: 0; filter: blur(14px); transform: scale(1.02); transition: opacity 1.4s ease, filter 1.4s ease, transform 1.4s ease !important; }
+.introInner { display: grid; justify-items: center; width: min(100% - 2.4rem, 30rem); text-align: center; }
+.introSmall { margin: 0; font: 500 .7rem/1.9 var(--inv-font-accent); letter-spacing: .34em; text-transform: uppercase; color: var(--inv-muted); animation: rise 1.4s var(--ease) .2s both; }
+.introNames { margin: .4rem 0 0; font: 400 clamp(2.6rem, 11vw, 3.6rem)/1.2 var(--inv-font-heading); color: var(--inv-fg); animation: rise 1.4s var(--ease) .45s both; }
+.introAmp { font-size: .62em; color: var(--inv-muted); }
+.introEnv { display: block; width: 100%; height: auto; margin: 2.2rem 0 0; filter: drop-shadow(0 22px 28px rgb(74 52 46 / .28)); animation: settle 1.8s var(--ease) .7s both; }
+.introTap { margin: 2rem 0 0; font: 500 .68rem/1.9 var(--inv-font-accent); letter-spacing: .34em; text-transform: uppercase; color: var(--inv-muted); animation: rise 1.2s var(--ease) 1.8s both, breathe 3.2s ease-in-out 3s infinite; }
+.intro:dir(rtl) .introSmall, .intro:dir(rtl) .introTap { letter-spacing: 0; font-size: .9rem; }
+.introBtn { position: absolute; inset: 0; z-index: 2; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.introBtn:focus-visible { outline: 2px solid var(--inv-accent); outline-offset: -10px; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes settle { from { opacity: 0; filter: blur(10px) drop-shadow(0 22px 28px rgb(74 52 46 / .28)); transform: scale(1.03); } }
+@keyframes breathe { 50% { opacity: .45; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .root *, .intro * { animation: none !important; transition-duration: .01s !important; transition-delay: 0s !important; }
+}

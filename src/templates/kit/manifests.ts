@@ -87,6 +87,7 @@ const P = {
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   // Ribbon & Pearls: ivory paper and dusty rose
+  blushLace: { id: "lace-blush", label: "Cream, blush lace & dusty rose", family: "neutral", colors: c("#f7f1ea", "#fbf8f4", "#4f4340", "#6f5e59", "#96655d", "#fbf8f4", "#e6d9d1") },
   wisteriaLake: { id: "wisteria-blush", label: "Cream, blush rose & wisteria", family: "neutral", colors: c("#f7f2ea", "#fffdf9", "#4a3b38", "#6b5753", "#8e4f4e", "#fffdf9", "#e6d8cf") },
   gounaLagoon: { id: "lagoon-sand", label: "Sand, turquoise & coral", family: "neutral", colors: c("#f9f6eb", "#fffdf8", "#4a3a2c", "#6b5948", "#b9543d", "#fffdf8", "#e4d9c6") },
   ribbonPearls: { id: "ivory-copper", label: "Ivory, pearl & copper", family: "neutral", colors: c("#f6f2e7", "#fbf8f1", "#3a302a", "#665a52", "#87543c", "#fbf7f0", "#e3d7c8") },
@@ -499,6 +500,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
   }),
+  kitTemplate("lace", {
+    id: "blush-lace",
+    name: "Blush Lace",
+    tagline: "A blush lace envelope that dissolves into a field of soft pink flowers.",
+    description:
+      "Opens on a quiet cream page with your names above a blush lace envelope; one tap and the page dissolves into a full-screen photograph of soft pink flowers with your names in white script. Below, one calm cream column: your welcome with a photo and a round second photo, the countdown on a blush band, your wedding week as a small calendar with the day ringed, your love story beside two overlapping photos, the day's moments with fine line drawings over pink clouds, the place over a band of flowers, the reply on a card above the lace envelope, and your last word.",
+    categories: ["romantic", "botanical", "elegant", "modern"],
+    palettes: [P.blushLace],
+    fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }, { opening: true }),
   kitTemplate("wisteria", {
     id: "wisteria-lake",
     name: "Wisteria Lake",
