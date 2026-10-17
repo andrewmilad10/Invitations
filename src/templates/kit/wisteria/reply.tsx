@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- watercolour pieces */
 
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import s from "./wisteria.module.css";
 
 const ART = "/templates/wisteria-lake";
@@ -12,24 +12,19 @@ const T = {
 };
 
 /**
- * The reply envelope. The wax seal is a button: tapped, the seal presses down
- * and comes away, the flap opens, the cream reply card rises out of the envelope,
- * then the envelope fades away and the card stays on the page with the reply
- * date, the couple's words and a small reply form (name, yes or no, guests, a
- * note). Stages: 1 the seal and flap, 2 the card rises, 3 the envelope leaves.
+ * The reply card on the page: cream paper with a wisteria sprig, the reply date,
+ * the couple's words and a small reply form (name, yes or no, guests, a note).
  *
  * Replies are not collected by Vellum yet, so nothing typed here is sent or
  * kept. When the couple has their own reply link, the button opens it. Without
  * one, the demo thanks the guest and says nothing was sent, and a real
  * invitation says online replies open soon.
  */
-export function ReplyEnvelope({
+export function ReplyCard({
   message,
   deadline,
   linkUrl,
   linkLabel,
-  openLabel,
-  hint,
   locale,
   demo,
   heading,
@@ -38,22 +33,13 @@ export function ReplyEnvelope({
   deadline: string;
   linkUrl: string;
   linkLabel: string;
-  openLabel: string;
-  hint: string;
   locale: string;
   demo: boolean;
   heading: string;
 }) {
   const t = locale === "ar" ? T.ar : T.en;
   const id = useId();
-  const [stage, setStage] = useState(0);
-  const open = stage > 0;
   const [done, setDone] = useState(false);
-  useEffect(() => {
-    if (stage === 0 || stage === 3) return;
-    const id = window.setTimeout(() => setStage(stage + 1), stage === 1 ? 1100 : 1500);
-    return () => clearTimeout(id);
-  }, [stage]);
   const [coming, setComing] = useState<"yes" | "no">("yes");
 
   function submit(e: FormEvent) {
@@ -65,9 +51,9 @@ export function ReplyEnvelope({
     setDone(true);
   }
 
-  const card = (
-    <div className={s.slot}>
-      <div className={s.popCard} aria-hidden={!open} inert={!open} aria-label={heading} role="group">
+  return (
+    <div className={s.replyCardBox}>
+      <div className={s.popCard} aria-label={heading} role="group">
         <img src={`${ART}/corner.webp`} alt="" className={s.popFlower} width={728} height={900} aria-hidden="true" />
         {deadline ? <p className={s.caps}>{deadline}</p> : null}
         {message ? <p className={s.replyMsg}>{message}</p> : null}
@@ -115,24 +101,6 @@ export function ReplyEnvelope({
           </form>
         )}
       </div>
-    </div>
-  );
-
-  return (
-    <div className={s.replyBox} data-stage={stage}>
-      <div className={s.rise}>
-        {card}
-        <div className={s.envWrap}>
-          <span className={s.envInside} aria-hidden="true" />
-          <img src={`${ART}/envelope.webp`} alt="" className={s.envBody} width={1200} height={864} loading="lazy" aria-hidden="true" />
-          <span className={s.flap} aria-hidden="true" />
-          <span className={s.flapUp} aria-hidden="true" />
-          <button type="button" className={s.sealBtn} onClick={() => setStage(1)} aria-expanded={open} aria-label={openLabel} disabled={open}>
-            <img src={`${ART}/seal.webp`} alt="" width={507} height={520} loading="lazy" />
-          </button>
-        </div>
-      </div>
-      <p className={`${s.small} ${s.replyHint}`}>{hint}</p>
     </div>
   );
 }
