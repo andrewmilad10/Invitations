@@ -10,14 +10,16 @@ import s from "./wisteria.module.css";
  * blush envelope, full screen on phones (on wide screens it stands in the
  * middle and melts into the same lake painting at its sides). The first frame
  * waits with the couple's names in the sky. A tap plays 5.2s: the flap lifts
- * by itself, the cream card rises and the couple's names appear on it; then
- * the film fades softly (1.2s) into the page, already settled underneath.
+ * by itself, the cream card rises and the invitation appears on it (names, date,
+ * time and place); then the film fades softly (1.2s) into the page underneath.
  */
 const FILM = "/templates/wisteria-lake/opening";
 
 export function WisteriaOpening({ model }: { model: InvitationModel }) {
   const { wedding } = model;
-  const amp = model.locale === "ar" ? "و" : "&";
+  const ar = model.locale === "ar";
+  const amp = ar ? "و" : "&";
+  const first = model.events.ceremony ?? model.events.reception;
   return (
     <KitIntro model={model} className={s.intro} timing={[5200, 1200]}>
       {({ phase, open, skip }) => (
@@ -28,10 +30,14 @@ export function WisteriaOpening({ model }: { model: InvitationModel }) {
               {wedding.partnerOne} <span className={s.filmAmp}>{amp}</span> {wedding.partnerTwo}
             </p>
             <div className={s.cardText}>
-              <p className={s.cardNames}>
-                {wedding.partnerOne} <span className={s.filmAmp}>{amp}</span> {wedding.partnerTwo}
-              </p>
-              {wedding.date ? <p className={s.cardDate}>{wedding.date.short}</p> : null}
+              <p className={s.cardSmall}>{ar ? "بمباركة عائلتيهما" : "Together with their families"}</p>
+              <p className={s.cardNames}>{wedding.partnerOne}</p>
+              <p className={s.cardAmp}>{amp}</p>
+              <p className={s.cardNames}>{wedding.partnerTwo}</p>
+              <p className={s.cardInvite}>{ar ? "يتشرفان بدعوتكم لحضور حفل زفافهما" : "request the pleasure of your company"}</p>
+              {wedding.date ? <p className={s.cardDate}>{wedding.date.long}</p> : null}
+              {first?.timeLabel ? <p className={s.cardDate}>{first.timeLabel}</p> : null}
+              {first?.venueName ? <p className={s.cardVenue}>{first.venueName}</p> : null}
             </div>
           </div>
           <p className={s.hint}>{model.locale === "ar" ? "اضغطوا للفتح" : "Tap to open"}</p>
