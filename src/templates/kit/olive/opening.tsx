@@ -7,19 +7,18 @@ import { initials } from "./util";
 import s from "./olive.module.css";
 
 /**
- * Olive Courtyard's opening, made like the Burgundy envelope: a rendered film
- * shown full screen as a steady close-up of the sage envelope (its first frame
- * waits, with the couple's initials in gold foil on the flap). A tap plays it:
- * the flap lifts and turns over, the olive liner shows, the card rises and
- * fills the screen with the courtyard; then the page, with the same courtyard
- * and the couple's names, takes over.
+ * Olive Courtyard's opening, made like a simple envelope reveal: an upright
+ * film of the sage envelope, full screen on phones (whole and centred on wide
+ * screens). Its first frame waits, with the couple's initials in gold foil on
+ * the flap. A tap plays 2.8s: the flap lifts part way by itself; then the
+ * film fades softly (1.2s) into the page, already settled underneath.
  */
 const FILM = "/templates/olive-courtyard/opening";
 
 export function OliveOpening({ model }: { model: InvitationModel }) {
   const mono = initials(model);
   return (
-    <KitIntro model={model} className={s.intro} timing={[7100, 900]}>
+    <KitIntro model={model} className={s.intro} timing={[2800, 1200]}>
       {({ phase, open, skip }) => (
         <>
           <Film phase={phase} mono={mono} />

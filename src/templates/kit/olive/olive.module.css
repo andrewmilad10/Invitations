@@ -1,6 +1,6 @@
 /* Olive Courtyard. Day colours from --inv-*; night (data-night, from the sun-and-moon switch) uses its own navy
    and gold, matched to the night painting. Final states are the defaults; "before" states only exist with motion on
-   (data-fx="on" from KitMotion). Opening: tap → the film plays (8s) → the page settles underneath → the film fades from 7.1s (.9s). */
+   (data-fx="on" from KitMotion). Opening: tap → the film plays (2.8s, the flap lifts part way) → the page settles underneath → the film fades (1.2s). */
 
 .root {
   --k-dur: 1.2s;
@@ -23,12 +23,14 @@
 
 
 /* ═════ The opening: a film of the envelope, full screen like the Burgundy envelope ═════ */
-.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #7a7c62; }
-.intro[data-phase="leaving"] { opacity: 0; transition: opacity .9s ease !important; }
-/* the film covers the screen; this box has the film's own shape, so the initials stay on the flap at any screen size */
-.film { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100vw, 100svh * 864 / 480); height: max(100svh, 100vw * 480 / 864); container-type: inline-size; }
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #797a5c; }
+.intro[data-phase="leaving"] { opacity: 0; transition: opacity 1.2s ease !important; }
+/* the upright film fills a phone screen; on wide screens it stands whole in the middle, on paper of its own sage.
+   This box has the film's own shape, so the initials stay on the flap at any screen size */
+.film { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100vw, 100svh * 720 / 1296); height: max(100svh, 100vw * 1296 / 720); container-type: inline-size; }
+@media (min-aspect-ratio: 4/5) { .film { width: calc(100svh * 720 / 1296); height: 100svh; box-shadow: 0 30px 90px -30px rgb(40 42 26 / .5); } }
 .filmVid { display: block; width: 100%; height: 100%; object-fit: cover; }
-.filmMono { position: absolute; left: 50%; top: 39.5%; translate: -50% -50%; font: 400 4.6cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .45s ease .3s; }
+.filmMono { position: absolute; left: 50%; top: 36%; translate: -50% -50%; font: 400 10cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .45s ease .15s; }
 .filmMono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 1px 2px rgb(40 30 10 / .55)); }
 .intro:not([data-phase="closed"]) .filmMono { opacity: 0; }
 @keyframes foil { 0%, 55% { background-position: 0 0; } 100% { background-position: -120% 0; } }
