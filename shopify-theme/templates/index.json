@@ -20,7 +20,7 @@
     "fact3": {
      "type": "fact",
      "settings": {
-      "value": "23",
+      "value": "24",
       "label": "original designs"
      }
     },
@@ -45,6 +45,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "wisteria-lake": {
+     "type": "design",
+     "settings": {
+      "template_id": "wisteria-lake",
+      "name": "Wisteria Lake",
+      "name_ar": "بحيرة الوستارية",
+      "mood": "floral",
+      "tagline": "A blush envelope on a lakeside terrace under wisteria, opening to a soft watercolour invitation."
+     }
+    },
     "gouna-lagoon": {
      "type": "design",
      "settings": {
@@ -277,6 +287,7 @@
     }
    },
    "block_order": [
+    "wisteria-lake",
     "gouna-lagoon",
     "ribbon-pearls",
     "peony-blush",
@@ -303,7 +314,7 @@
    ],
    "settings": {
     "limit": 9,
-    "more_label": "See all 23 designs",
+    "more_label": "See all 24 designs",
     "more_link": "/collections/all"
    }
   },
