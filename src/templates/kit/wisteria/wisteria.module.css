@@ -112,11 +112,27 @@
 .replyInner { width: var(--col); margin: 0 auto; display: grid; justify-items: center; gap: .8rem; }
 .replyBox { display: grid; justify-items: center; width: min(100%, 24rem); margin-top: .6rem; }
 /* the card's slot grows from nothing, and the card sits at its bottom, so it seems to slide up out of the envelope */
-.cardSlot { display: grid; grid-template-rows: 0fr; width: 82%; margin-bottom: -18%; transition: grid-template-rows 1.4s var(--ease) .25s; }
+.cardSlot { display: grid; grid-template-rows: 0fr; width: 86%; margin-bottom: -18%; transition: grid-template-rows 1.4s var(--ease) .25s; }
 .replyBox[data-open] .cardSlot { grid-template-rows: 1fr; }
 .slotInner { min-height: 0; overflow: hidden; display: grid; align-content: end; padding: 0 6px; }
-.replyCard { display: grid; justify-items: center; gap: .7rem; padding: 1.7rem 1.4rem 4.6rem; background: var(--inv-surface); box-shadow: 0 -4px 18px -8px rgb(74 59 56 / .3); }
+.replyCard { display: grid; justify-items: center; gap: .7rem; padding: 1.7rem 1.5rem 5.2rem; background: var(--inv-surface); box-shadow: 0 -4px 18px -8px rgb(74 59 56 / .3); }
 .replyMsg { font-size: 1.05rem; }
+.form { display: grid; gap: 1rem; width: 100%; margin-top: .4rem; text-align: start; }
+.field { display: grid; gap: .25rem; }
+.fieldLabel { padding: 0; font: 500 .66rem/1.6 var(--inv-font-accent); letter-spacing: .22em; text-transform: uppercase; color: var(--inv-muted); }
+.root:dir(rtl) .fieldLabel { letter-spacing: 0; font-size: .85rem; }
+.input { width: 100%; padding: .35rem 0; border: 0; border-bottom: 1px solid var(--inv-border); border-radius: 0; background: transparent; color: var(--inv-fg); font: 500 1.05rem/1.5 var(--inv-font-body); resize: none; }
+.input:focus { outline: none; border-bottom-color: var(--inv-accent); }
+select.input { cursor: pointer; }
+.choice { margin: 0; padding: 0; border: 0; display: grid; gap: .45rem; }
+.pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pill { position: relative; flex: 1 1 8rem; padding: .55rem .6rem; border: 1px solid var(--inv-border); border-radius: 99px; text-align: center; font-size: .98rem; cursor: pointer; transition: background-color .3s, border-color .3s, color .3s; }
+.pill input { position: absolute; opacity: 0; pointer-events: none; }
+.pill[data-on] { border-color: var(--inv-accent); background: var(--inv-accent); color: var(--inv-accent-fg); }
+.pill:has(input:focus-visible) { outline: 2px solid var(--inv-accent); outline-offset: 2px; }
+.form .button { justify-self: center; margin-top: .3rem; border: 0; cursor: pointer; }
+.thanks { display: grid; justify-items: center; gap: .35rem; padding: .6rem 0 .2rem; }
+.thanksTitle { font: 400 2.2rem/1.1 var(--inv-font-heading); color: var(--inv-accent); }
 .button { display: inline-block; padding: .75rem 1.6rem; background: var(--inv-accent); color: var(--inv-accent-fg); font: 600 .72rem/1.6 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; text-decoration: none; }
 .button:hover { opacity: .88; }
 .button:active { opacity: .78; }

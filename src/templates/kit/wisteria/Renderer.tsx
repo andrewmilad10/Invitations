@@ -270,6 +270,8 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
           linkLabel={content.linkLabel || content.heading || copy.rsvp}
           openLabel={t.open}
           hint={t.seal}
+          locale={model.locale}
+          demo={model.mode !== "live"}
         />
       </div>
     </Sec>
