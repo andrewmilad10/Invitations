@@ -87,6 +87,7 @@ const P = {
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   // Ribbon & Pearls: ivory paper and dusty rose
+  wisteriaLake: { id: "wisteria-blush", label: "Cream, blush rose & wisteria", family: "neutral", colors: c("#f7f2ea", "#fffdf9", "#4a3b38", "#6b5753", "#8e4f4e", "#fffdf9", "#e6d8cf") },
   gounaLagoon: { id: "lagoon-sand", label: "Sand, turquoise & coral", family: "neutral", colors: c("#f9f6eb", "#fffdf8", "#4a3a2c", "#6b5948", "#b9543d", "#fffdf8", "#e4d9c6") },
   ribbonPearls: { id: "ivory-copper", label: "Ivory, pearl & copper", family: "neutral", colors: c("#f6f2e7", "#fbf8f1", "#3a302a", "#665a52", "#87543c", "#fbf7f0", "#e3d7c8") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
@@ -498,6 +499,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
   }),
+  kitTemplate("wisteria", {
+    id: "wisteria-lake",
+    name: "Wisteria Lake",
+    tagline: "A blush envelope on a lakeside terrace under wisteria, opening to a soft watercolour invitation.",
+    description:
+      "Opens on a watercolour lakeside terrace under a wisteria pergola: a blush envelope with a pressed-flower wax seal waits with your names above it. One tap and the flap lifts by itself and a cream card rises with your names, then the page appears. Below, cream cotton paper with hanging wisteria: your story in a deckled paper frame, a countdown over the lake, the ceremony and party on one card framed in wisteria, the day on a rose band with little drawings, and the reply under the seal.",
+    categories: ["romantic", "botanical", "elegant", "outdoor"],
+    palettes: [P.wisteriaLake],
+    fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }, { opening: true }),
   kitTemplate("lagoon", {
     id: "gouna-lagoon",
     name: "Gouna Lagoon",

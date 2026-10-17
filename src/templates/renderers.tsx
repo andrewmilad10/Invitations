@@ -36,6 +36,7 @@ import PondRenderer from "./kit/pond/Renderer";
 import PosyRenderer from "./kit/posy/Renderer";
 import RibbonRenderer from "./kit/ribbon/Renderer";
 import LagoonRenderer from "./kit/lagoon/Renderer";
+import WisteriaRenderer from "./kit/wisteria/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -97,6 +98,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   posy: PosyRenderer,
   ribbon: RibbonRenderer,
   lagoon: LagoonRenderer,
+  wisteria: WisteriaRenderer,
   burgundy: BurgundyRenderer,
 };
 
