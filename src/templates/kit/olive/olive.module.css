@@ -25,10 +25,8 @@
 /* ═════ The opening: a film of the envelope, full screen like the Burgundy envelope ═════ */
 .intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #797a5c; }
 .intro[data-phase="leaving"] { opacity: 0; transition: opacity 1.2s ease !important; }
-/* the upright film fills a phone screen; on wide screens it stands whole in the middle, on paper of its own sage.
-   This box has the film's own shape, so the initials stay on the flap at any screen size */
+/* the upright film covers the whole screen on phones and computers alike (like the Burgundy envelope). This box has the film's own shape, so the initials stay on the flap at any screen size */
 .film { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100vw, 100svh * 720 / 1296); height: max(100svh, 100vw * 1296 / 720); container-type: inline-size; }
-@media (min-aspect-ratio: 4/5) { .film { width: calc(100svh * 720 / 1296); height: 100svh; box-shadow: 0 30px 90px -30px rgb(40 42 26 / .5); } }
 .filmVid { display: block; width: 100%; height: 100%; object-fit: cover; }
 .filmMono { position: absolute; left: 50%; top: 36%; translate: -50% -50%; font: 400 10cqw/1 var(--inv-font-heading); white-space: nowrap; transition: opacity .45s ease .15s; }
 .filmMono .gold { display: inline-block; padding: 0 .2em; animation: foil 7s ease-in-out 1.5s infinite; filter: drop-shadow(0 1px 0 rgb(255 240 190 / .35)) drop-shadow(0 1px 2px rgb(40 30 10 / .55)); }
@@ -44,7 +42,9 @@
 /* ═════ The courtyard, day and night ═════ */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; background: #c9cdbb; }
 .pic { position: absolute; top: 0; bottom: 0; left: 50%; aspect-ratio: 941 / 1672; height: 100%; min-width: 100%; translate: -50% 0; transition: transform 6s var(--slow); }
-@media (min-aspect-ratio: 941/1672) { .pic { height: auto; width: 100%; top: auto; } }
+/* wide screens: the courtyard painting simply covers the whole first screen */
+@media (min-aspect-ratio: 941/1672) { .pic { inset: 0; width: 100%; height: 100%; min-width: 0; aspect-ratio: auto; translate: none; }
+  .pic > .dayPic { inset: 0 -19%; background-position: center top; } }
 .root[data-fx="on"]:not([data-ready]) .pic { transform: scale(1.08); transition: none; }
 .pic > span { position: absolute; inset: 0; }
 /* the same painting the card shows at the end of the opening film, so the hand-over is seamless */
