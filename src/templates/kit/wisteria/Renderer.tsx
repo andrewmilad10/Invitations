@@ -272,6 +272,7 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
           hint={t.seal}
           locale={model.locale}
           demo={model.mode !== "live"}
+          heading={content.heading || copy.rsvp}
         />
       </div>
     </Sec>
