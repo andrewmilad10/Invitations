@@ -134,6 +134,8 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
           </div>
         </div>
+      ) : template.renderer === "wisteria" ? (
+        <div className="absolute inset-0 bg-[url(/templates/wisteria-lake/opening-poster.webp)] bg-cover bg-center" />
       ) : template.renderer === "olive" ? (
         <div className="absolute inset-0 bg-[url(/templates/olive-courtyard/closed.webp)] bg-cover bg-center" />
       ) : template.renderer === "fan" ? (

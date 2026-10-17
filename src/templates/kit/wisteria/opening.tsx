@@ -10,8 +10,8 @@ import s from "./wisteria.module.css";
  * blush envelope, full screen on phones (on wide screens it stands in the
  * middle and melts into the same lake painting at its sides). The first frame
  * waits with the couple's names in the sky. A tap plays 5.2s: the flap lifts
- * by itself, the cream card rises and the invitation appears on it (names, date,
- * time and place); then the film fades softly (1.2s) into the page underneath.
+ * by itself, the cream card rises carrying the invitation (names, date, time and
+ * place), its writing tied to the card frame by frame; then the film fades softly (1.2s) into the page underneath.
  */
 const FILM = "/templates/wisteria-lake/opening";
 
@@ -29,6 +29,7 @@ export function WisteriaOpening({ model }: { model: InvitationModel }) {
             <p className={s.filmNames}>
               {wedding.partnerOne} <span className={s.filmAmp}>{amp}</span> {wedding.partnerTwo}
             </p>
+            <div className={s.cardClip}>
             <div className={s.cardText}>
               <p className={s.cardSmall}>{ar ? "بمباركة عائلتيهما" : "Together with their families"}</p>
               <p className={s.cardNames}>{wedding.partnerOne}</p>
@@ -38,6 +39,7 @@ export function WisteriaOpening({ model }: { model: InvitationModel }) {
               {wedding.date ? <p className={s.cardDate}>{wedding.date.long}</p> : null}
               {first?.timeLabel ? <p className={s.cardDate}>{first.timeLabel}</p> : null}
               {first?.venueName ? <p className={s.cardVenue}>{first.venueName}</p> : null}
+            </div>
             </div>
           </div>
           <p className={s.hint}>{model.locale === "ar" ? "اضغطوا للفتح" : "Tap to open"}</p>
@@ -50,17 +52,47 @@ export function WisteriaOpening({ model }: { model: InvitationModel }) {
   );
 }
 
+/**
+ * Where the card's top edge is in the film (seconds → share of the film's height), traced from the film itself.
+ * The writing on the card follows it frame by frame, so it rises with the card instead of after it.
+ */
+const CARD: [number, number][] = [[0, 0.4367], [2.9, 0.4367], [3.0, 0.4306], [3.25, 0.4182], [3.5, 0.4005], [3.75, 0.3773], [4.0, 0.3549], [4.25, 0.3322], [4.5, 0.3129], [4.75, 0.2959], [5.0, 0.2828], [5.2, 0.2755]];
+const END = CARD[CARD.length - 1][1];
+function cardTop(t: number) {
+  for (let i = 1; i < CARD.length; i++) {
+    const [t1, y1] = CARD[i];
+    const [t0, y0] = CARD[i - 1];
+    if (t <= t1) return y0 + ((y1 - y0) * (t - t0)) / (t1 - t0);
+  }
+  return END;
+}
+
 function Film({ phase }: { phase: IntroPhase }) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
-    if (!v) return;
+    const box = v?.parentElement;
+    if (!v || !box) return;
+    // offset of the writing below its final place, in film widths (the film is 1296/720 widths tall)
+    const place = (t: number) => {
+      box.style.setProperty("--rise", `${((cardTop(t) - END) * 1296) / 7.2}cqw`);
+      box.style.setProperty("--show", `${Math.min(1, Math.max(0, (t - 1.55) / 0.35))}`);
+    };
+    place(0);
     if (phase === "closed") {
       v.pause();
       v.currentTime = 0;
-    } else if (phase === "opening") {
-      void v.play().catch(() => {});
+      return;
     }
+    if (phase !== "opening") return;
+    void v.play().catch(() => {});
+    let id = 0;
+    const tick = () => {
+      place(v.currentTime);
+      id = requestAnimationFrame(tick);
+    };
+    id = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(id);
   }, [phase]);
   return (
     <video ref={ref} className={s.filmVid} poster={`${FILM}-poster.webp`} muted playsInline preload="auto" disablePictureInPicture>

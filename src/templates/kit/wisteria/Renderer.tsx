@@ -4,8 +4,9 @@ import type { EventModel, InvitationModel } from "@/core/invitation/model";
 import { Sections } from "../../shared/invitation-root";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../../types";
 import { eventDate, faqItems, heroPhoto, kitCopy, mappedEvents, photos, scheduleItems } from "../data";
-import { Clock, Directions, fx, KitRoot, Paragraphs, Pic, ReplyLink, Sec } from "../pieces";
+import { Clock, Directions, fx, KitRoot, Paragraphs, Pic, Sec } from "../pieces";
 import { WisteriaOpening, WisteriaReady } from "./opening";
+import { ReplyEnvelope } from "./reply";
 import s from "./wisteria.module.css";
 
 /**
@@ -28,8 +29,8 @@ const ART = "/templates/wisteria-lake";
 const ICONS = ["rings", "glass", "plate", "dance"] as const;
 
 const T = {
-  en: { together: "Together with their families", invite: "invite you to celebrate their wedding", story: "Our story", count: "Until we say I do", day: "The day", moments: "Moments", qa: "Questions", love: "With love,", map: "Finding your way", seal: "Tap the seal to reply" },
-  ar: { together: "بمباركة عائلتيهما", invite: "يدعوانكم لمشاركتهما فرحة زفافهما", story: "حكايتنا", count: "حتى نقول نعم", day: "برنامج اليوم", moments: "لحظات", qa: "أسئلة", love: "مع حبنا،", map: "الطريق إلينا", seal: "اضغطوا على الختم للرد" },
+  en: { together: "Together with their families", invite: "invite you to celebrate their wedding", story: "Our story", count: "Until we say I do", day: "The day", moments: "Moments", qa: "Questions", love: "With love,", map: "Finding your way", seal: "Tap the seal to open", open: "Open the reply envelope" },
+  ar: { together: "بمباركة عائلتيهما", invite: "يدعوانكم لمشاركتهما فرحة زفافهما", story: "حكايتنا", count: "حتى نقول نعم", day: "برنامج اليوم", moments: "لحظات", qa: "أسئلة", love: "مع حبنا،", map: "الطريق إلينا", seal: "اضغطوا على الختم للفتح", open: "افتحوا ظرف الرد" },
 };
 const tr = (m: InvitationModel) => (m.locale === "ar" ? T.ar : T.en);
 
@@ -254,25 +255,22 @@ function Faq({ model, content }: SectionProps<"faq">) {
   );
 }
 
-/** The reply: the blush envelope, and its wax seal is the button. */
+/** The reply: the blush envelope; its wax seal opens it and the reply card rises out. */
 function Rsvp({ model, content }: SectionProps<"rsvp">) {
   const t = tr(model);
+  const copy = kitCopy(model);
   return (
     <Sec id="rsvp" className={s.reply}>
       <div className={s.replyInner} {...fx("rise")}>
-        <Title>{content.heading || kitCopy(model).rsvp}</Title>
-        {content.deadline ? <p className={s.caps}>{content.deadline}</p> : null}
-        {content.message ? <p className={s.body}>{content.message}</p> : null}
-        <div className={s.envWrap}>
-          <img src={`${ART}/envelope.webp`} alt="" className={s.envArt} width={1200} height={864} loading="lazy" aria-hidden="true" />
-          {content.linkUrl ? (
-            <ReplyLink content={content} className={s.sealBtn}>
-              <img src={`${ART}/seal.webp`} alt="" width={507} height={520} loading="lazy" />
-              <span className={s.sr}>{content.linkLabel || content.heading || kitCopy(model).rsvp}</span>
-            </ReplyLink>
-          ) : null}
-        </div>
-        {content.linkUrl ? <p className={s.small}>{t.seal}</p> : null}
+        <Title>{content.heading || copy.rsvp}</Title>
+        <ReplyEnvelope
+          message={content.message}
+          deadline={content.deadline}
+          linkUrl={content.linkUrl}
+          linkLabel={content.linkLabel || content.heading || copy.rsvp}
+          openLabel={t.open}
+          hint={t.seal}
+        />
       </div>
     </Sec>
   );
