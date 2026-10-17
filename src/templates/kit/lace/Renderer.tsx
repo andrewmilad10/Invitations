@@ -74,7 +74,7 @@ function Couple({ model, content }: SectionProps<"couple">) {
   return (
     <Sec id="couple" className={s.sec}>
       <div className={s.col} {...fx("rise")}>
-        <p className={s.caps}>{t.welcome}</p>
+        <p className={s.caps}>{content.eyebrow || t.welcome}</p>
         <Script>{content.heading || t.our}</Script>
         {content.message ? <p className={s.body}>{content.message}</p> : null}
         <p className={s.signed}>{model.wedding.coupleName}</p>
@@ -176,8 +176,15 @@ function Events({ model, id, note }: { model: InvitationModel; id: "ceremony" | 
               {eventDate(model, e)}
               {e.timeLabel ? <> · {e.timeLabel}</> : null}
             </p>
-            {e.venueName ? <p className={s.venue}>{e.venueName}</p> : null}
+            {e.venueName ? (
+              e.mapUrl ? (
+                <a className={s.venueLink} href={e.mapUrl} target="_blank" rel="noopener noreferrer">{e.venueName}</a>
+              ) : (
+                <p className={s.venue}>{e.venueName}</p>
+              )
+            ) : null}
             {e.address ? <p className={s.small}>{e.address}</p> : null}
+            <Directions model={model} event={e} className={s.link} />
           </div>
         ))}
         {note ? <p className={s.body}>{note}</p> : null}
@@ -238,20 +245,25 @@ function Schedule({ model, content }: SectionProps<"schedule">) {
   );
 }
 
-/** The place over a band of flowers, in white, with a pill to find the way. */
+/** The places over a band of flowers, in white, each with its own pill to find the way. */
 function Venue({ model, content }: SectionProps<"venue">) {
   const mapped = mappedEvents(model);
-  const e = mapped[0] ?? model.events.reception ?? model.events.ceremony;
+  const places = (mapped.length ? mapped : model.events.all.filter((e) => e.venueName || e.address)).slice(0, 3);
   return (
     <Sec id="venue" className={s.flowers}>
       <div className={s.flowersPic} aria-hidden="true" />
-      {e ? (
+      {places.length ? (
         <div className={s.flowersText} {...fx("fade")}>
           <p className={s.caps}>{content.heading || tr(model).place}</p>
-          {e.venueName ? <p className={s.flowersVenue}>{e.venueName}</p> : null}
-          {e.address ? <p className={s.flowersNote}>{e.address}</p> : null}
           {content.note ? <p className={s.flowersNote}>{content.note}</p> : null}
-          <Directions model={model} event={e} className={s.pillLink} />
+          {places.map((e) => (
+            <div key={e.id} className={s.place}>
+              {places.length > 1 ? <p className={s.placeWhat}>{e.title}</p> : null}
+              {e.venueName ? <p className={s.flowersVenue}>{e.venueName}</p> : null}
+              {e.address ? <p className={s.flowersNote}>{e.address}</p> : null}
+              <Directions model={model} event={e} className={s.pillLink} />
+            </div>
+          ))}
         </div>
       ) : null}
     </Sec>
@@ -319,9 +331,9 @@ function Closing({ model, content }: SectionProps<"closing">) {
   return (
     <Sec id="closing" className={s.sec}>
       <div className={s.col} {...fx("rise")}>
-        <Script>{t.until}</Script>
+        <Script>{content.heading || t.until}</Script>
         {content.message ? <p className={s.body}>{content.message}</p> : null}
-        <p className={s.caps}>{content.heading || t.love}</p>
+        <p className={s.caps}>{t.love}</p>
         <p className={s.signed}>{content.signature || model.wedding.coupleName}</p>
         <img src={`${ART}/icon-bouquet.webp`} alt="" className={s.closeIcon} width={459} height={520} loading="lazy" aria-hidden="true" />
       </div>

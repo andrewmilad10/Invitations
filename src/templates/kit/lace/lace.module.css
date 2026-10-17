@@ -30,6 +30,11 @@
 .signed { margin-top: .6rem !important; font: 400 1.9rem/1.2 var(--inv-font-heading); color: var(--inv-muted); }
 .quote { font-style: italic; font-size: 1.15rem; }
 .venue { font-size: 1.2rem; font-weight: 600; }
+.venueLink { font-size: 1.2rem; font-weight: 600; color: var(--inv-fg); text-decoration: underline; text-decoration-color: var(--inv-border); text-underline-offset: .25em; }
+.venueLink:hover { color: var(--inv-accent); text-decoration-color: currentColor; }
+.link { display: inline-block; margin-top: .45rem; font: 600 .66rem/1.8 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; color: var(--inv-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+.link:hover { opacity: .75; }
+.link:focus-visible, .venueLink:focus-visible { outline: 2px solid var(--inv-accent); outline-offset: 3px; }
 
 /* ── first screen: the flower photograph with the names in white script ── */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: #fffdfb; }
@@ -42,7 +47,7 @@
 .mono i { font-style: normal; font-size: .62em; padding: 0 .08em; }
 .names { margin: 0; display: grid; justify-items: center; font: 400 clamp(4rem, 19vw, 6.4rem)/1 var(--inv-font-heading); }
 .amp { font-size: .45em; line-height: 1.3; }
-.heroDate { margin-top: 1.1rem; font-size: .82rem; }
+.heroDate { margin-top: 1.2rem; font: 500 clamp(1.25rem, 5.4vw, 1.6rem)/1.4 var(--inv-font-body); letter-spacing: .28em; }
 .heroTag { max-width: 20rem; font-style: italic; }
 .w { transition: opacity 1.5s var(--ease), transform 1.7s var(--ease), filter 1.5s var(--ease); transition-delay: calc(.5s + var(--i) * 180ms); }
 .root[data-fx="on"]:not([data-ready]) .w { opacity: 0; transform: translateY(14px); filter: blur(5px); transition: none; }
@@ -110,6 +115,9 @@
 .flowers .caps { color: #fffdfb; }
 .flowersVenue { font: 400 clamp(2.4rem, 10vw, 3.2rem)/1.2 var(--inv-font-heading); }
 .flowersNote { max-width: 22rem; font-size: 1rem; }
+.place { display: grid; justify-items: center; gap: .2rem; margin-top: 1rem; }
+.place + .place { margin-top: 2rem; }
+.placeWhat { font: 500 .66rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; }
 .pillLink { margin-top: 1rem; padding: .7rem 1.8rem; border-radius: 99px; background: #fffdfb; color: var(--inv-accent); font: 600 .7rem/1.6 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; text-decoration: none; text-shadow: none; box-shadow: 0 8px 20px -10px rgb(40 24 20 / .5); transition: transform .4s var(--ease); }
 .pillLink:hover { transform: translateY(-2px); }
 .pillLink:active { transform: none; opacity: .85; }
