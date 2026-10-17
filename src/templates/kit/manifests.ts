@@ -505,7 +505,7 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     name: "Blush Lace",
     tagline: "A blush lace envelope that dissolves into a field of soft pink flowers.",
     description:
-      "Opens on a quiet cream page with your names above a blush lace envelope; one tap and the page dissolves into a full-screen photograph of soft pink flowers with your names in white script. Below, one calm cream column: your welcome with a photo and a round second photo, the countdown on a blush band, your wedding week as a small calendar with the day ringed, your love story beside two overlapping photos, the day's moments with fine line drawings over pink clouds, the place over a band of flowers, the reply on a card above the lace envelope, and your last word.",
+      "Opens on a quiet cream page with your names above a blush lace envelope; one tap and the page dissolves into a full-screen photograph of soft pink flowers with your names in white script. Below, one calm cream column: your welcome with a photo and a round second photo, the countdown on a blush band, your wedding week as a small calendar with the day ringed, your love story beside two overlapping photos, the day's moments with fine line drawings over pink clouds, the place over a band of flowers, the reply on a cream card, and your last word.",
     categories: ["romantic", "botanical", "elegant", "modern"],
     palettes: [P.blushLace],
     fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },

@@ -18,7 +18,7 @@ import s from "./lace.module.css";
  * the wedding week as a small calendar with the day ringed, the love story
  * beside two overlapping photos, the day's moments with small rose-brown line
  * drawings over a sky of pink clouds, the place over a band of flowers, the
- * reply written on a card above the lace envelope, and a last word.
+ * reply written on a cream card, and a last word.
  * The photographs and drawings were made for Vellum (public/templates/blush-lace).
  *
  * Colours: bg = cream paper, surface = the cards, fg = warm brown ink, muted =
@@ -296,7 +296,7 @@ function Faq({ model, content }: SectionProps<"faq">) {
   );
 }
 
-/** The reply, written on a cream card standing above the lace envelope. */
+/** The reply, written on a cream card. */
 function Rsvp({ model, content }: SectionProps<"rsvp">) {
   const copy = kitCopy(model);
   return (
@@ -308,7 +308,6 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
           {content.message ? <p className={s.body}>{content.message}</p> : null}
           <ReplyForm locale={model.locale} linkUrl={content.linkUrl} linkLabel={content.linkLabel || content.heading || copy.rsvp} demo={model.mode !== "live"} />
         </div>
-        <img src={`${ART}/envelope.webp`} alt="" className={s.replyEnv} width={982} height={733} loading="lazy" aria-hidden="true" />
       </div>
     </Sec>
   );
