@@ -176,15 +176,10 @@ function Events({ model, id, note }: { model: InvitationModel; id: "ceremony" | 
               {eventDate(model, e)}
               {e.timeLabel ? <> · {e.timeLabel}</> : null}
             </p>
-            {e.venueName ? (
-              e.mapUrl ? (
-                <a className={s.venueLink} href={e.mapUrl} target="_blank" rel="noopener noreferrer">{e.venueName}</a>
-              ) : (
-                <p className={s.venue}>{e.venueName}</p>
-              )
-            ) : null}
+            {e.venueName ? <p className={s.venue}>{e.venueName}</p> : null}
             {e.address ? <p className={s.small}>{e.address}</p> : null}
-            <Directions model={model} event={e} className={s.link} />
+            {/* the way there lives on the flower band; only shown here when that band is turned off */}
+            {has(model, "venue") ? null : <Directions model={model} event={e} className={s.link} />}
           </div>
         ))}
         {note ? <p className={s.body}>{note}</p> : null}

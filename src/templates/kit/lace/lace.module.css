@@ -30,12 +30,9 @@
 .signed { margin-top: .6rem !important; font: 400 1.9rem/1.2 var(--inv-font-heading); color: var(--inv-muted); }
 .quote { font-style: italic; font-size: 1.15rem; }
 .venue { font-size: 1.2rem; font-weight: 600; }
-.venueLink { font-size: 1.2rem; font-weight: 600; color: var(--inv-fg); text-decoration: underline; text-decoration-color: var(--inv-border); text-underline-offset: .25em; }
-.venueLink:hover { color: var(--inv-accent); text-decoration-color: currentColor; }
 .link { display: inline-block; margin-top: .45rem; font: 600 .66rem/1.8 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; color: var(--inv-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
 .link:hover { opacity: .75; }
-.link:focus-visible, .venueLink:focus-visible { outline: 2px solid var(--inv-accent); outline-offset: 3px; }
-
+.link:focus-visible, 
 /* ── first screen: the flower photograph with the names in white script ── */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: #fffdfb; }
 .heroPic { position: absolute; inset: 0; background: url("/templates/blush-lace/flowers.webp") 50% 40% / cover no-repeat; transition: transform 7s var(--ease); }
