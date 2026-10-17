@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { EventModel, InvitationModel } from "@/core/invitation/model";
 import { Sections } from "../../shared/invitation-root";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../../types";
-import { eventDate, faqItems, heroPhoto, kitCopy, mappedEvents, photos, scheduleItems } from "../data";
+import { eventDate, faqItems, heroPhoto, kitCopy, photos, scheduleItems } from "../data";
 import { Clock, Directions, fx, KitRoot, Paragraphs, Pic, Sec } from "../pieces";
 import { LaceOpening, LaceReady } from "./opening";
 import { ReplyForm } from "./reply";
@@ -17,7 +17,7 @@ import s from "./lace.module.css";
  * photo with a round second photo resting on it, the countdown on a blush band,
  * the wedding week as a small calendar with the day ringed, the love story
  * beside two overlapping photos, the day's moments with small rose-brown line
- * drawings over a sky of pink clouds, the place over a band of flowers, the
+ * drawings over a sky of pink clouds, a pause of flowers, the
  * reply written on a cream card, and a last word.
  * The photographs and drawings were made for Vellum (public/templates/blush-lace).
  *
@@ -30,8 +30,8 @@ const ART = "/templates/blush-lace";
 const ICONS = ["bouquet", "toast", "cake", "car"] as const;
 
 const T = {
-  en: { welcome: "Welcome to", our: "our wedding", story: "Our story", count: "Until we say I do", day: "The day", place: "The place", moments: "Moments", qa: "Questions", love: "With love,", until: "See you soon" },
-  ar: { welcome: "أهلًا بكم في", our: "حفل زفافنا", story: "حكايتنا", count: "حتى نقول نعم", day: "برنامج اليوم", place: "المكان", moments: "لحظات", qa: "أسئلة", love: "مع حبنا،", until: "نراكم قريبًا" },
+  en: { welcome: "Welcome to", our: "our wedding", story: "Our story", count: "Until we say I do", day: "The day", moments: "Moments", qa: "Questions", love: "With love,", until: "See you soon" },
+  ar: { welcome: "أهلًا بكم في", our: "حفل زفافنا", story: "حكايتنا", count: "حتى نقول نعم", day: "برنامج اليوم", moments: "لحظات", qa: "أسئلة", love: "مع حبنا،", until: "نراكم قريبًا" },
 };
 const tr = (m: InvitationModel) => (m.locale === "ar" ? T.ar : T.en);
 
@@ -178,8 +178,7 @@ function Events({ model, id, note }: { model: InvitationModel; id: "ceremony" | 
             </p>
             {e.venueName ? <p className={s.venue}>{e.venueName}</p> : null}
             {e.address ? <p className={s.small}>{e.address}</p> : null}
-            {/* the way there lives on the flower band; only shown here when that band is turned off */}
-            {has(model, "venue") ? null : <Directions model={model} event={e} className={s.link} />}
+            <Directions model={model} event={e} className={s.dirBtn} />
           </div>
         ))}
         {note ? <p className={s.body}>{note}</p> : null}
@@ -240,25 +239,19 @@ function Schedule({ model, content }: SectionProps<"schedule">) {
   );
 }
 
-/** The places over a band of flowers, in white, each with its own pill to find the way. */
-function Venue({ model, content }: SectionProps<"venue">) {
-  const mapped = mappedEvents(model);
-  const places = (mapped.length ? mapped : model.events.all.filter((e) => e.venueName || e.address)).slice(0, 3);
+/**
+ * A quiet pause of flowers between the sections. The places themselves (with
+ * the way there) are under the calendar, so nothing repeats here: only the
+ * couple's own note for the venue (with its title), when they write one.
+ */
+function Venue({ content }: SectionProps<"venue">) {
   return (
     <Sec id="venue" className={s.flowers}>
       <div className={s.flowersPic} aria-hidden="true" />
-      {places.length ? (
+      {content.note ? (
         <div className={s.flowersText} {...fx("fade")}>
-          <p className={s.caps}>{content.heading || tr(model).place}</p>
+          {content.heading ? <p className={s.flowersVenue}>{content.heading}</p> : null}
           {content.note ? <p className={s.flowersNote}>{content.note}</p> : null}
-          {places.map((e) => (
-            <div key={e.id} className={s.place}>
-              {places.length > 1 ? <p className={s.placeWhat}>{e.title}</p> : null}
-              {e.venueName ? <p className={s.flowersVenue}>{e.venueName}</p> : null}
-              {e.address ? <p className={s.flowersNote}>{e.address}</p> : null}
-              <Directions model={model} event={e} className={s.pillLink} />
-            </div>
-          ))}
         </div>
       ) : null}
     </Sec>

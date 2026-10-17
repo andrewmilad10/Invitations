@@ -30,9 +30,8 @@
 .signed { margin-top: .6rem !important; font: 400 1.9rem/1.2 var(--inv-font-heading); color: var(--inv-muted); }
 .quote { font-style: italic; font-size: 1.15rem; }
 .venue { font-size: 1.2rem; font-weight: 600; }
-.link { display: inline-block; margin-top: .45rem; font: 600 .66rem/1.8 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; color: var(--inv-accent); text-decoration: none; border-bottom: 1px solid currentColor; }
-.link:hover { opacity: .75; }
-.link:focus-visible, 
+.dirBtn:focus-visible { outline: 2px solid var(--inv-accent); outline-offset: 3px; }
+
 /* ── first screen: the flower photograph with the names in white script ── */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; color: #fffdfb; }
 .heroPic { position: absolute; inset: 0; background: url("/templates/blush-lace/flowers.webp") 50% 40% / cover no-repeat; transition: transform 7s var(--ease); }
@@ -78,7 +77,10 @@
 .calDay[data-on]::after { content: ""; position: absolute; inset: -2px; border: 1px solid var(--inv-accent); border-radius: 50%; }
 .stem { display: block; width: 1px; height: 3.2rem; margin: .4rem 0; background: var(--inv-border); }
 .event { display: grid; justify-items: center; gap: .1rem; }
-.event + .event { margin-top: 1.6rem; }
+.event + .event { margin-top: 2.4rem; }
+.dirBtn { margin-top: .8rem; padding: .6rem 1.5rem; border: 1px solid var(--inv-accent); border-radius: 99px; color: var(--inv-accent); font: 600 .64rem/1.6 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; text-decoration: none; transition: background-color .35s, color .35s; }
+.dirBtn:hover { background: var(--inv-accent); color: var(--inv-accent-fg); }
+.dirBtn:active { opacity: .85; }
 .eventWhen { font: 500 .8rem/1.8 var(--inv-font-accent); letter-spacing: .2em; text-transform: uppercase; }
 .root:dir(rtl) .eventWhen { letter-spacing: 0; font-size: .95rem; }
 
@@ -105,20 +107,13 @@
 .time { font: 300 1.9rem/1.1 var(--inv-font-body); }
 
 /* the place over a band of flowers */
-.flowers { position: relative; min-height: 78svh; display: grid; place-items: center; margin-top: 4rem; overflow: hidden; text-align: center; color: #fffdfb; }
+.flowers { position: relative; min-height: 64svh; display: grid; place-items: center; margin-top: 4rem; overflow: hidden; text-align: center; color: #fffdfb; }
 .flowersPic { position: absolute; inset: 0; background: url("/templates/blush-lace/flowers.webp") 50% 70% / cover no-repeat; }
 .flowersPic::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 45% at 50% 50%, rgb(70 42 36 / .38), transparent 78%); }
 .flowersText { position: relative; display: grid; justify-items: center; gap: .4rem; padding: 2rem 1.6rem; text-shadow: 0 1px 12px rgb(60 34 28 / .5); }
 .flowers .caps { color: #fffdfb; }
 .flowersVenue { font: 400 clamp(2.4rem, 10vw, 3.2rem)/1.2 var(--inv-font-heading); }
 .flowersNote { max-width: 22rem; font-size: 1rem; }
-.place { display: grid; justify-items: center; gap: .2rem; margin-top: 1rem; }
-.place + .place { margin-top: 2rem; }
-.placeWhat { font: 500 .66rem/1.8 var(--inv-font-accent); letter-spacing: .3em; text-transform: uppercase; }
-.pillLink { margin-top: 1rem; padding: .7rem 1.8rem; border-radius: 99px; background: #fffdfb; color: var(--inv-accent); font: 600 .7rem/1.6 var(--inv-font-accent); letter-spacing: .24em; text-transform: uppercase; text-decoration: none; text-shadow: none; box-shadow: 0 8px 20px -10px rgb(40 24 20 / .5); transition: transform .4s var(--ease); }
-.pillLink:hover { transform: translateY(-2px); }
-.pillLink:active { transform: none; opacity: .85; }
-.pillLink:focus-visible { outline: 2px solid #fffdfb; outline-offset: 3px; }
 
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; width: 100%; margin-top: .6rem; }
 .gridPic { aspect-ratio: 4 / 5; background: var(--inv-border); }
