@@ -134,6 +134,10 @@ function Envelope({ template }: { template: TemplateManifest }) {
             <span className="absolute left-1/2 top-[58%] aspect-square w-[15%] -translate-x-1/2 -translate-y-1/2 rounded-full border-[0.8cqw] border-[rgb(200_140_122)]" />
           </div>
         </div>
+      ) : template.renderer === "lace" ? (
+        <div className="absolute inset-0 grid place-items-center bg-[url(/templates/blush-lace/paper.webp)] bg-[length:70cqw]">
+          <div className="aspect-[982/733] w-[92%] bg-[url(/templates/blush-lace/envelope.webp)] bg-[length:100%_100%] drop-shadow-[0_2cqw_3cqw_rgb(74_52_46/0.35)]" />
+        </div>
       ) : template.renderer === "wisteria" ? (
         <div className="absolute inset-0 bg-[url(/templates/wisteria-lake/opening-poster.webp)] bg-cover bg-center" />
       ) : template.renderer === "olive" ? (

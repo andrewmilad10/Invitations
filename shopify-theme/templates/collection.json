@@ -3,6 +3,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "blush-lace": {
+     "type": "design",
+     "settings": {
+      "template_id": "blush-lace",
+      "name": "Blush Lace",
+      "name_ar": "دانتيل وردي",
+      "mood": "floral",
+      "tagline": "A blush lace envelope that dissolves into a field of soft pink flowers."
+     }
+    },
     "wisteria-lake": {
      "type": "design",
      "settings": {
@@ -245,6 +255,7 @@
     }
    },
    "block_order": [
+    "blush-lace",
     "wisteria-lake",
     "gouna-lagoon",
     "ribbon-pearls",
