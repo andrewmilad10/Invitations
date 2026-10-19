@@ -122,23 +122,25 @@ select.input { cursor: pointer; }
 .thanks { display: grid; justify-items: center; gap: .35rem; padding: .6rem 0 .2rem; }
 .thanksTitle { font: 400 2.2rem/1.1 var(--inv-font-heading); color: var(--inv-accent); }
 
-/* ═════ The opening: the envelope fills the screen; a tap dissolves it into the invitation ═════ */
-.intro { --ease: cubic-bezier(.22, .8, .24, 1); background: #f1ece2; }
+/* ═════ The opening: names above the ivory envelope; a tap dissolves it into the invitation ═════
+   The page is the envelope photo's own background colour, and the photo's edges fade into it, so the envelope
+   simply lies on the page at any screen size (full width on phones, a comfortable size in the middle on computers). */
+.intro { --ease: cubic-bezier(.22, .8, .24, 1); display: grid; place-items: center; background: #ebe3d7; color: #5e5349; }
 .intro[data-phase="leaving"] { opacity: 0; filter: blur(14px); transform: scale(1.02); transition: opacity 1.4s ease, filter 1.4s ease, transform 1.4s ease !important; }
-/* the picture keeps its shape and covers the screen; on wide screens it stands in the middle on its own ivory */
-.introEnv { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100vw, 100svh * 1080 / 1920); height: max(100svh, 100vw * 1920 / 1080); container-type: inline-size;
-  background: url("/templates/ivory-veil/envelope.webp") 50% 50% / 100% 100% no-repeat; animation: settle 1.6s var(--ease) both; }
-@media (min-aspect-ratio: 3/4) { .introEnv { width: calc(100svh * 1080 / 1920); height: 100svh; box-shadow: 0 30px 90px -30px rgb(60 50 40 / .4); } }
-/* on the flap, where the reference picture had its words */
-.introText { position: absolute; left: 6%; right: 6%; top: 30%; translate: 0 -50%; display: grid; justify-items: center; gap: 4cqw; text-align: center; }
-.introNames { margin: 0; font: 400 9.6cqw/1.2 var(--inv-font-heading); color: #6e6257; animation: rise 1.4s var(--ease) .5s both; }
+.introInner { display: grid; justify-items: center; width: min(100% - 1.6rem, 34rem, 62svh * 1024 / 770); text-align: center; }
+.introSmall { margin: 0; font: 600 .7rem/1.9 var(--inv-font-accent); letter-spacing: .34em; text-transform: uppercase; color: #6e6257; animation: rise 1.4s var(--ease) .2s both; }
+.introNames { margin: .3rem 0 0; font: 400 clamp(2.6rem, 11vw, 3.6rem)/1.2 var(--inv-font-heading); color: #5e5349; animation: rise 1.4s var(--ease) .45s both; }
 .introAmp { font-size: .62em; color: #8e8276; }
-.introTap { margin: 0; font: 600 3.2cqw/1.9 var(--inv-font-accent); letter-spacing: .34em; text-transform: uppercase; color: #5e5349; animation: rise 1.2s var(--ease) 1.3s both, breathe 3.2s ease-in-out 2.6s infinite; }
-.intro:dir(rtl) .introTap { letter-spacing: 0; font-size: 3.6cqw; }
+.introEnv { width: 100%; aspect-ratio: 1024 / 770; margin-top: .6rem; background: url("/templates/ivory-veil/envelope.webp") 50% 50% / 100% 100% no-repeat;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent), linear-gradient(180deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 3.5%, #000 96.5%, transparent), linear-gradient(180deg, transparent, #000 6%, #000 94%, transparent); mask-composite: intersect;
+  animation: settle 1.8s var(--ease) .7s both; }
+.introTap { margin: .6rem 0 0; font: 600 .7rem/1.9 var(--inv-font-accent); letter-spacing: .34em; text-transform: uppercase; color: #5e5349; animation: rise 1.2s var(--ease) 1.8s both, breathe 3.2s ease-in-out 3s infinite; }
+.intro:dir(rtl) .introSmall, .intro:dir(rtl) .introTap { letter-spacing: 0; font-size: .9rem; }
 .introBtn { position: absolute; inset: 0; z-index: 2; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .introBtn:focus-visible { outline: 2px solid #8e8276; outline-offset: -10px; }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
-@keyframes settle { from { opacity: 0; filter: blur(8px); } }
+@keyframes settle { from { opacity: 0; filter: blur(10px); transform: scale(1.03); } }
 @keyframes breathe { 50% { opacity: .6; } }
 
 @media (prefers-reduced-motion: reduce) {

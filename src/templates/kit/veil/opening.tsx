@@ -6,9 +6,9 @@ import { KitIntro, type IntroPhase } from "../intro";
 import s from "./veil.module.css";
 
 /**
- * Ivory Veil's opening: the ivory envelope fills the screen, with a small lace
- * heart seal at the flap's tip. On the flap, the couple's names in script and
- * "Tap to open" in small capitals. A tap does nothing to the envelope itself:
+ * Ivory Veil's opening: a calm ivory page with "An invitation from" and the
+ * couple's names in script, the ivory envelope with its lace heart seal below,
+ * and "Tap to open" in small capitals. A tap does nothing to the envelope itself:
  * the whole page softly dissolves into the invitation underneath.
  */
 export function VeilOpening({ model }: { model: InvitationModel }) {
@@ -18,13 +18,13 @@ export function VeilOpening({ model }: { model: InvitationModel }) {
     <KitIntro model={model} className={s.intro} timing={[60, 1400]}>
       {({ phase, open }) => (
         <>
-          <div className={s.introEnv} aria-hidden>
-            <div className={s.introText}>
-              <p className={s.introNames}>
-                {wedding.partnerOne} <span className={s.introAmp}>{ar ? "و" : "&"}</span> {wedding.partnerTwo}
-              </p>
-              <p className={s.introTap}>{ar ? "اضغطوا للفتح" : "Tap to open"}</p>
-            </div>
+          <div className={s.introInner} aria-hidden>
+            <p className={s.introSmall}>{ar ? "دعوة من" : "An invitation from"}</p>
+            <p className={s.introNames}>
+              {wedding.partnerOne} <span className={s.introAmp}>{ar ? "و" : "&"}</span> {wedding.partnerTwo}
+            </p>
+            <div className={s.introEnv} />
+            <p className={s.introTap}>{ar ? "اضغطوا للفتح" : "Tap to open"}</p>
           </div>
           <button type="button" className={s.introBtn} onClick={open} aria-label={model.strings.openInvitation} />
           <ReadyMark phase={phase} />
