@@ -232,11 +232,9 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
       <Head note={content.deadline || t.reply} title={content.heading || t.come} />
       <div className={s.card} {...fx("rise", 240)}>
         {content.message ? <p className={s.lead}>{content.message}</p> : null}
-        {content.linkUrl ? (
-          <ReplyLink content={content} className={s.btn}>
-            {content.linkLabel || t.send}
-          </ReplyLink>
-        ) : null}
+        <ReplyLink content={content} className={s.btn}>
+          {content.linkLabel || t.send}
+        </ReplyLink>
       </div>
     </Sec>
   );

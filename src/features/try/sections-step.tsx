@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Switch } from "@/components/ui/switch";
-import { sectionDisplayOrder } from "@/core/invitation/build-model";
+import { designBlocks, sectionDisplayOrder } from "@/core/invitation/build-model";
 import { toLocale } from "@/core/i18n/locales";
 import { resolveSectionContent, SECTION_DEFINITIONS, type FieldDescriptor, type SectionType } from "@/core/sections/registry";
 import type { TemplateManifest } from "@/core/template/manifest";
@@ -84,20 +84,35 @@ export function SectionsStep({
   const [drag, setDrag] = useState<SectionType | null>(null);
   const [over, setOver] = useState<SectionType | null>(null);
 
-  const pinned = (t: SectionType) => t === "hero";
+  // The design's shape: the first screen and the closing stay put, and pairs
+  // the design shows together (ceremony and reception) move as one.
+  const blocks = designBlocks(order, template.defaultSectionOrder);
+  const blockOf = (t: SectionType) => blocks.findIndex((b) => b.includes(t));
+  const pinned = (t: SectionType) => t === "hero" || t === "closing" || t === "footer";
+  const firstMovable = blocks.findIndex((b) => !b.some(pinned));
+  const lastMovable = blocks.length - 1 - [...blocks].reverse().findIndex((b) => !b.some(pinned));
   const isOn = (t: SectionType) => {
     const own = answers.sections?.[t]?.enabled;
     if (own !== undefined) return own;
     const row = bundle.sections.find((s) => s.type === t);
     return row?.enabled ?? !((template.defaultDisabled ?? []).includes(t) || SECTION_DEFINITIONS[t].defaultEnabled === false);
   };
-  const setOrder = (next: SectionType[]) => update((a) => ({ ...a, order: next }));
+  const setOrder = (next: SectionType[][]) => update((a) => ({ ...a, order: next.flat() }));
   const move = (t: SectionType, by: number) => {
-    const i = order.indexOf(t);
+    const i = blockOf(t);
     const j = i + by;
-    if (j < 1 || j >= order.length) return;
-    const next = order.slice();
+    if (pinned(t) || j < firstMovable || j > lastMovable) return;
+    const next = blocks.slice();
     [next[i], next[j]] = [next[j], next[i]];
+    setOrder(next);
+  };
+  const dropOn = (from: SectionType, onto: SectionType) => {
+    const fi = blockOf(from);
+    const ti = blockOf(onto);
+    if (fi === ti || pinned(from) || pinned(onto)) return;
+    const next = blocks.slice();
+    const [moving] = next.splice(fi, 1);
+    next.splice(next.indexOf(blocks[ti]), 0, moving);
     setOrder(next);
   };
   const setSection = (t: SectionType, patch: { enabled?: boolean; name?: string; value?: unknown }) =>
@@ -118,7 +133,7 @@ export function SectionsStep({
         </button>
       ) : null}
       <ol className="grid gap-2">
-        {order.map((t, i) => {
+        {order.map((t) => {
           const def = SECTION_DEFINITIONS[t];
           const on = isOn(t);
           const expanded = open === t;
@@ -145,9 +160,7 @@ export function SectionsStep({
               onDrop={(e) => {
                 e.preventDefault();
                 if (!drag || drag === t || pinned(t)) return;
-                const next = order.filter((x) => x !== drag);
-                next.splice(next.indexOf(t), 0, drag);
-                setOrder(next);
+                dropOn(drag, t);
                 setDrag(null);
                 setOver(null);
               }}
@@ -172,10 +185,10 @@ export function SectionsStep({
                   <span className={cn("text-sm font-medium", !on && "text-muted-foreground line-through decoration-muted-foreground/40")}>{def.label}</span>
                   <span className="truncate text-xs text-muted-foreground">{t === "hero" ? `${answers.partnerOne || "Emma"} & ${answers.partnerTwo || "James"}` : summary(def.fields, own, shown)}</span>
                 </button>
-                <button type="button" aria-label={`Move ${def.label} up`} disabled={pinned(t) || i <= 1} onClick={() => move(t, -1)} className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary disabled:opacity-25">
+                <button type="button" aria-label={`Move ${def.label} up`} disabled={pinned(t) || blockOf(t) <= firstMovable} onClick={() => move(t, -1)} className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary disabled:opacity-25">
                   <ArrowUp className="size-4" />
                 </button>
-                <button type="button" aria-label={`Move ${def.label} down`} disabled={pinned(t) || i === order.length - 1} onClick={() => move(t, 1)} className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary disabled:opacity-25">
+                <button type="button" aria-label={`Move ${def.label} down`} disabled={pinned(t) || blockOf(t) >= lastMovable} onClick={() => move(t, 1)} className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary disabled:opacity-25">
                   <ArrowDown className="size-4" />
                 </button>
                 <Switch checked={on} disabled={!def.canDisable} aria-label={`Show ${def.label}`} onCheckedChange={(v) => setSection(t, { enabled: v })} />

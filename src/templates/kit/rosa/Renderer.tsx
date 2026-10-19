@@ -283,16 +283,12 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
         <h2 className={s.script} {...fx("blur")}>{content.heading || kitCopy(model).rsvp}</h2>
         {content.message ? <p className={s.italic}>{content.message}</p> : null}
         {content.deadline ? <p className={s.deadline}>{content.deadline}</p> : null}
-        {content.linkUrl ? <p className={s.tapHeart}>{a ? "اضغطوا على القلب للرد" : "Tap the heart below to reply"}</p> : null}
+        <p className={s.tapHeart}>{a ? "اضغطوا على القلب للرد" : "Tap the heart below to reply"}</p>
       </div>
       <div className={s.vee}>
-        {content.linkUrl ? (
-          <ReplyLink content={content} className={s.heartBtn}>
-            {content.linkLabel || content.heading || kitCopy(model).rsvp}
-          </ReplyLink>
-        ) : (
-          <span className={s.heartBtn} aria-hidden />
-        )}
+        <ReplyLink content={content} className={s.heartBtn}>
+          {content.linkLabel || content.heading || kitCopy(model).rsvp}
+        </ReplyLink>
       </div>
     </section>
   );

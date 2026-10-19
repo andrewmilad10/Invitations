@@ -254,11 +254,9 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
         <Head script={content.heading || tr(model).rsvp} sub={content.deadline} />
         <img className={s.rings} src={`${ART}/rings.webp`} alt="" loading="lazy" {...fx("rings", 200)} />
         {content.message ? <p className={s.lead}>{content.message}</p> : null}
-        {content.linkUrl ? (
-          <ReplyLink content={content} className={s.btn}>
-            {content.linkLabel || tr(model).send}
-          </ReplyLink>
-        ) : null}
+        <ReplyLink content={content} className={s.btn}>
+          {content.linkLabel || tr(model).send}
+        </ReplyLink>
       </div>
     </Sec>
   );

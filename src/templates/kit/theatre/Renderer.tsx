@@ -323,11 +323,9 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
             <span className={s.seatName}>{model.wedding.coupleName}</span>
           </div>
         </div>
-        {content.linkUrl ? (
-          <ReplyLink content={content} className={s.btn}>
-            {content.linkLabel || t.reserve}
-          </ReplyLink>
-        ) : null}
+        <ReplyLink content={content} className={s.btn}>
+          {content.linkLabel || t.reserve}
+        </ReplyLink>
       </div>
     </Sec>
   );

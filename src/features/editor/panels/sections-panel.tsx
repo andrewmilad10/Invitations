@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowUp, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { sectionDisplayOrder } from "@/core/invitation/build-model";
+import { designBlocks, sectionDisplayOrder } from "@/core/invitation/build-model";
 import { SECTION_DEFINITIONS, type SectionType } from "@/core/sections/registry";
 import { cn } from "@/lib/utils";
 import { resolveTemplateManifest } from "@/templates/registry";
@@ -43,18 +43,31 @@ export function SectionList({ selected, onSelect }: { selected: SectionType | nu
     update((b) => setSectionOrder(b, next));
     save("section-order", () => saveSectionOrder(weddingId, next), 300);
   }
-  function move(index: number, delta: number) {
-    const next = order.slice();
-    [next[index], next[index + delta]] = [next[index + delta], next[index]];
-    commit(next);
+  // Same rules as the try flow: the first screen and the closing stay put, and
+  // pairs the design shows together (ceremony and reception) move as one.
+  const blocks = designBlocks(order, template.defaultSectionOrder);
+  const blockOf = (t: SectionType) => blocks.findIndex((b) => b.includes(t));
+  const pinned = (t: SectionType) => t === "hero" || t === "closing" || t === "footer";
+  const firstMovable = blocks.findIndex((b) => !b.some(pinned));
+  const lastMovable = blocks.length - 1 - [...blocks].reverse().findIndex((b) => !b.some(pinned));
+  function move(type: SectionType, delta: number) {
+    const i = blockOf(type);
+    const j = i + delta;
+    if (pinned(type) || j < firstMovable || j > lastMovable) return;
+    const next = blocks.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    commit(next.flat());
   }
-  /** Drop the dragged section in front of `target` (hero stays first, footer last). */
+  /** Drop the dragged section (with its pair) in front of `target`. */
   function dropOn(target: SectionType) {
-    if (!drag || drag === target || target === "hero") return;
-    const next = order.filter((t) => t !== drag);
-    const at = Math.min(next.indexOf(target), next.length - (next.at(-1) === "footer" ? 1 : 0));
-    next.splice(Math.max(1, at), 0, drag);
-    commit(next);
+    if (!drag || drag === target || pinned(drag) || pinned(target)) return;
+    const fi = blockOf(drag);
+    const ti = blockOf(target);
+    if (fi === ti) return;
+    const next = blocks.slice();
+    const [moving] = next.splice(fi, 1);
+    next.splice(next.indexOf(blocks[ti]), 0, moving);
+    commit(next.flat());
   }
 
   return (
@@ -75,11 +88,11 @@ export function SectionList({ selected, onSelect }: { selected: SectionType | nu
         ) : null}
       </div>
       <ol className="grid gap-0.5">
-        {order.map((type, index) => {
+        {order.map((type) => {
           const def = SECTION_DEFINITIONS[type];
           const row = bundle.sections.find((s) => s.type === type);
           const enabled = row?.enabled ?? !(template.defaultDisabled ?? []).includes(type);
-          const fixed = type === "hero" || type === "footer";
+          const fixed = pinned(type);
           const active = selected === type;
           return (
             <li
@@ -94,7 +107,7 @@ export function SectionList({ selected, onSelect }: { selected: SectionType | nu
                 setOver(null);
               }}
               onDragOver={(e) => {
-                if (!drag || type === "hero") return;
+                if (!drag || pinned(type)) return;
                 e.preventDefault();
                 setOver(type);
               }}
@@ -122,10 +135,10 @@ export function SectionList({ selected, onSelect }: { selected: SectionType | nu
               </button>
               {!fixed && canEdit ? (
                 <span className="hidden items-center group-focus-within:flex group-hover:flex">
-                  <button type="button" className="rounded p-1 text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} up`} disabled={index <= 1} onClick={() => move(index, -1)}>
+                  <button type="button" className="rounded p-1 text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} up`} disabled={pinned(type) || blockOf(type) <= firstMovable} onClick={() => move(type, -1)}>
                     <ArrowUp className="size-3.5" />
                   </button>
-                  <button type="button" className="rounded p-1 text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} down`} disabled={index >= order.length - 2} onClick={() => move(index, 1)}>
+                  <button type="button" className="rounded p-1 text-muted-foreground hover:text-foreground disabled:opacity-30" aria-label={`Move ${def.label} down`} disabled={pinned(type) || blockOf(type) >= lastMovable} onClick={() => move(type, 1)}>
                     <ArrowDown className="size-3.5" />
                   </button>
                 </span>

@@ -254,16 +254,10 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
       <Head title={content.heading || tr(model).join} sub={content.deadline} />
       <div className={s.card} {...fx("rise", 200)}>
         {content.message ? <p className={s.lead}>{content.message}</p> : null}
-        {content.linkUrl ? (
-          <ReplyLink content={content} className={s.press}>
-            <span className={s.hand} aria-hidden />
-            <span className={s.pressLabel}>{content.linkLabel || tr(model).send}</span>
-          </ReplyLink>
-        ) : (
-          <span className={s.press} aria-hidden>
-            <span className={s.hand} />
-          </span>
-        )}
+        <ReplyLink content={content} className={s.press}>
+          <span className={s.hand} aria-hidden />
+          <span className={s.pressLabel}>{content.linkLabel || tr(model).send}</span>
+        </ReplyLink>
       </div>
     </Sec>
   );

@@ -252,11 +252,9 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
         <div className={s.reply} {...fx("rise", 240)}>
           <img className={s.plane} src={`${ART}/plane.webp`} alt="" loading="lazy" />
           {content.message ? <p className={s.lead}>{content.message}</p> : null}
-          {content.linkUrl ? (
-            <ReplyLink content={content} className={s.btn}>
-              {content.linkLabel || tr(model).send}
-            </ReplyLink>
-          ) : null}
+          <ReplyLink content={content} className={s.btn}>
+            {content.linkLabel || tr(model).send}
+          </ReplyLink>
         </div>
       </div>
     </Sec>

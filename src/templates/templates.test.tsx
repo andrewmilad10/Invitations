@@ -71,3 +71,18 @@ describe("template source rules", () => {
     expect(source).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
   });
 });
+
+describe("guests can always reply", () => {
+  const websites = TEMPLATE_MANIFESTS.filter((t) => t.supportedSections.includes("rsvp"));
+  it.each(websites.map((t) => t.id))("%s shows a way to reply without an outside link", (id) => {
+    const html = render(id, (b) => {
+      b.sections = b.sections.filter((s) => s.type !== "rsvp");
+      b.sections.push({ type: "rsvp", enabled: true, sort_order: null, content: { linkUrl: "" } } as never);
+    });
+    const at = html.indexOf('data-section="rsvp"');
+    expect(at, "the reply section renders").toBeGreaterThan(-1);
+    const next = html.indexOf("data-section=", at + 20);
+    const rest = html.slice(at, next === -1 ? undefined : next);
+    expect(/<button|<form|<dialog/.test(rest), "a reply button or form inside the reply section").toBe(true);
+  });
+});

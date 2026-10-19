@@ -285,16 +285,10 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
         <h2 className={s.h2}>{content.heading || kitCopy(model).rsvp}</h2>
         {content.deadline ? <p className={cn(s.caps, s.gap)}>{content.deadline}</p> : null}
         {content.message ? <p className={s.body}>{content.message}</p> : null}
-        {content.linkUrl ? (
-          <ReplyLink content={content} className={s.reply}>
-            <img src="/templates/set-sail/seal-reply.webp" alt="" className={s.replySeal} />
-            <span className={s.replyLabel}>{content.linkLabel || tr(model).aboard}</span>
-          </ReplyLink>
-        ) : (
-          <span className={s.reply} aria-hidden>
-            <img src="/templates/set-sail/seal-reply.webp" alt="" className={s.replySeal} />
-          </span>
-        )}
+        <ReplyLink content={content} className={s.reply}>
+          <img src="/templates/set-sail/seal-reply.webp" alt="" className={s.replySeal} />
+          <span className={s.replyLabel}>{content.linkLabel || tr(model).aboard}</span>
+        </ReplyLink>
       </Card>
     </Sec>
   );

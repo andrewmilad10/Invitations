@@ -166,6 +166,55 @@ function resolveSections(
  * in a random spot. Input must be in template default order.
  */
 function orderSections<T extends { type: SectionType; order: number | null }>(inDefaultOrder: T[]): T[] {
+  const placed = placeByOrder(inDefaultOrder);
+  if (placed === inDefaultOrder) return placed;
+  const byType = new Map(placed.map((s) => [s.type, s]));
+  return keepDesignShape(
+    placed.map((s) => s.type),
+    inDefaultOrder.map((s) => s.type),
+  ).map((t) => byType.get(t)!);
+}
+
+/** Opens the invitation, wherever the couple moves other sections. */
+const FIRST: SectionType[] = ["hero"];
+/** Close it, in this order. */
+const LAST: SectionType[] = ["closing", "footer"];
+/** Shown as one piece by designs that put them side by side (e.g. "The details"). */
+const PAIRS: [SectionType, SectionType][] = [["ceremony", "reception"]];
+
+/**
+ * The design's shape survives any reordering: the first screen stays first,
+ * the closing words and footer stay last, and sections a design presents as
+ * one piece (ceremony and reception, when the design has them next to each
+ * other) move together, in the design's own order, at the place of whichever
+ * comes first.
+ */
+export function keepDesignShape(order: SectionType[], defaultOrder: readonly SectionType[]): SectionType[] {
+  return designBlocks(order, defaultOrder).flat();
+}
+
+/**
+ * The order as blocks that move as one: [hero], single sections, joined
+ * pairs, then [closing, footer]. The editor moves whole blocks.
+ */
+export function designBlocks(order: SectionType[], defaultOrder: readonly SectionType[]): SectionType[][] {
+  const head = FIRST.filter((t) => order.includes(t));
+  const tail = LAST.filter((t) => order.includes(t));
+  const middle = order.filter((t) => !head.includes(t) && !tail.includes(t));
+  const joined = PAIRS.filter(([a, b]) => middle.includes(a) && middle.includes(b) && defaultOrder.indexOf(b) === defaultOrder.indexOf(a) + 1);
+  const blocks: SectionType[][] = [];
+  const done = new Set<SectionType>();
+  for (const t of middle) {
+    if (done.has(t)) continue;
+    const pair = joined.find(([a, b]) => a === t || b === t);
+    const block = pair ? [...pair] : [t];
+    block.forEach((x) => done.add(x));
+    blocks.push(block);
+  }
+  return [...(head.length ? [head] : []), ...blocks, ...(tail.length ? [tail] : [])];
+}
+
+function placeByOrder<T extends { type: SectionType; order: number | null }>(inDefaultOrder: T[]): T[] {
   const explicit = inDefaultOrder
     .map((s, index) => ({ s, index }))
     .filter(({ s }) => s.order !== null)
