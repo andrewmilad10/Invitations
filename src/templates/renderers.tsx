@@ -39,6 +39,7 @@ import LagoonRenderer from "./kit/lagoon/Renderer";
 import WisteriaRenderer from "./kit/wisteria/Renderer";
 import LaceRenderer from "./kit/lace/Renderer";
 import VeilRenderer from "./kit/veil/Renderer";
+import ButterRenderer from "./kit/butter/Renderer";
 import MaisonRenderer from "./maison/Renderer";
 import PostaleRenderer from "./postale/Renderer";
 import ShowpieceRenderer from "./showpiece/Renderer";
@@ -103,6 +104,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   wisteria: WisteriaRenderer,
   lace: LaceRenderer,
   veil: VeilRenderer,
+  butter: ButterRenderer,
   burgundy: BurgundyRenderer,
 };
 

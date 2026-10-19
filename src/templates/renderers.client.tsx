@@ -50,6 +50,7 @@ const Lagoon = dynamic(() => import("./kit/lagoon/Renderer"));
 const Wisteria = dynamic(() => import("./kit/wisteria/Renderer"));
 const Lace = dynamic(() => import("./kit/lace/Renderer"));
 const Veil = dynamic(() => import("./kit/veil/Renderer"));
+const Butter = dynamic(() => import("./kit/butter/Renderer"));
 const Burgundy = dynamic(() => import("./kit/burgundy/Renderer"));
 const Maison = dynamic(() => import("./maison/Renderer"));
 const Postale = dynamic(() => import("./postale/Renderer"));
@@ -112,6 +113,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   wisteria: Wisteria,
   lace: Lace,
   veil: Veil,
+  butter: Butter,
   burgundy: Burgundy,
 };
 

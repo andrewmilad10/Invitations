@@ -87,6 +87,7 @@ const P = {
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   // Ribbon & Pearls: ivory paper and dusty rose
+  butterLetter: { id: "butter-olive", label: "Cream, butter yellow & olive", family: "neutral", colors: c("#fbf7ec", "#f2ead2", "#4e463a", "#6e6352", "#6f6a3d", "#fbf7ec", "#e6dcc4") },
   ivoryVeil: { id: "veil-ivory", label: "Ivory, lace & taupe", family: "neutral", colors: c("#f5f0e7", "#fbf8f2", "#4f4840", "#6c6259", "#7d6f61", "#fbf8f2", "#e3d9cb") },
   blushLace: { id: "lace-blush", label: "Cream, blush lace & dusty rose", family: "neutral", colors: c("#f7f1ea", "#fbf8f4", "#4f4340", "#6f5e59", "#96655d", "#fbf8f4", "#e6d9d1") },
   wisteriaLake: { id: "wisteria-blush", label: "Cream, blush rose & wisteria", family: "neutral", colors: c("#f7f2ea", "#fffdf9", "#4a3b38", "#6b5753", "#8e4f4e", "#fffdf9", "#e6d8cf") },
@@ -501,6 +502,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
   }),
+  kitTemplate("butter", {
+    id: "butter-letter",
+    name: "Butter Letter",
+    tagline: "A butter-yellow love letter with a lace-trimmed flap that opens into a paper collage in 3D.",
+    description:
+      "Opens on a butter-yellow envelope with a lace-trimmed flap and a jasmine wax seal, turning gently as guests move their phone; one tap tips it away. The first screen builds itself as a paper collage: the open envelope, your photo in a cream oval rising from the pocket, a terracotta lace doily carrying your date, the wax seal and a cascade of jasmine, every piece at its own depth. Below, plain cream space: where to meet you, a slim countdown, olive buttons, your story beside an oval photo, the ceremony and celebration, the day, and the reply in flat butter-cream blocks.",
+    categories: ["romantic", "vintage", "elegant", "floral"],
+    palettes: [P.butterLetter],
+    fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }, { opening: true }),
   kitTemplate("veil", {
     id: "ivory-veil",
     name: "Ivory Veil",
