@@ -169,7 +169,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
             </button>
           ) : null}
           <nav aria-label="Steps" className="border-b px-4 py-3">
-            <ol className="flex gap-1 overflow-x-auto">
+            <ol className="flex flex-wrap gap-1">
               {STEPS.map((s, i) => (
                 <li key={s.id}>
                   <button
@@ -178,7 +178,11 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
                     aria-current={i === step ? "step" : undefined}
                     className={cn(
                       "whitespace-nowrap rounded-full px-3 py-1.5 text-xs transition-colors",
-                      i === step ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+                      i === step
+                        ? "bg-primary text-primary-foreground"
+                        : s.id === "sections"
+                          ? "border border-accent/60 text-foreground hover:bg-secondary"
+                          : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                     )}
                   >
                     {i + 1}. {s.label}
