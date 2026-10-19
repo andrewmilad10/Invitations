@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowLeft, Check, Copy, Download, Eye, EyeOff, Link2, Plus, Search, Trash2, X } from "lucide-react";
+import { ArrowLeft, Check, Copy, Download, Eye, EyeOff, Link2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { guestLines, guestsCsv, questionTotals, totals, type GuestLine, type ReplyStatus } from "@/core/guests/summary";
 import type { GuestRow, WishRow } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/utils";
-import { addGuest, addGuestList, deleteGuests, deleteReply, deleteWish, setWishHidden } from "./actions";
+import { addGuest, addGuestList, deleteGuests, deleteReply, deleteWish, setWishHidden, updateGuest } from "./actions";
 import type { GuestsPageData } from "./queries";
 
 type Filter = "all" | ReplyStatus;
@@ -33,6 +33,7 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
   const [q, setQ] = useState("");
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<GuestRow | null>(null);
 
   const lines = useMemo(() => guestLines(guests, replies), [guests, replies]);
   const sum = totals(lines);
@@ -208,7 +209,7 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
                 </thead>
                 <tbody>
                   {shown.map((l) => (
-                    <Row key={l.key} l={l} questions={questions} canEdit={canEdit} picked={picked.has(l.key)} onPick={(on) => setPicked((s) => { const n = new Set(s); if (on) n.add(l.key); else n.delete(l.key); return n; })} onCopy={() => l.token && copy(linkFor(l.token), `${l.name}'s link`)} />
+                    <Row key={l.key} l={l} questions={questions} canEdit={canEdit} picked={picked.has(l.key)} onPick={(on) => setPicked((s) => { const n = new Set(s); if (on) n.add(l.key); else n.delete(l.key); return n; })} onCopy={() => l.token && copy(linkFor(l.token), `${l.name}'s link`)} onEdit={canEdit && l.guestId ? () => setEditing(guests.find((g) => g.id === l.guestId) ?? null) : undefined} />
                   ))}
                   {shown.length === 0 ? (
                     <tr>
@@ -227,6 +228,15 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
         <Wishes weddingId={wedding.id} wishes={wishes} setWishes={setWishes} canEdit={canEdit} on={data.wishesOn} />
       )}
 
+      {editing ? (
+        <AddGuests
+          weddingId={wedding.id}
+          defaultMax={data.maxGuests}
+          guest={editing}
+          onClose={() => setEditing(null)}
+          onAdded={(rows) => setGuests((gs) => gs.map((g) => rows.find((x) => x.id === g.id) ?? g))}
+        />
+      ) : null}
       {adding ? (
         <AddGuests
           weddingId={wedding.id}
@@ -239,7 +249,7 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
   );
 }
 
-function Row({ l, questions, canEdit, picked, onPick, onCopy }: { l: GuestLine; questions: { id: string; text: string }[]; canEdit: boolean; picked: boolean; onPick: (on: boolean) => void; onCopy: () => void }) {
+function Row({ l, questions, canEdit, picked, onPick, onCopy, onEdit }: { l: GuestLine; questions: { id: string; text: string }[]; canEdit: boolean; picked: boolean; onPick: (on: boolean) => void; onCopy: () => void; onEdit?: () => void }) {
   const answered = questions.filter((q) => l.answers[q.id]);
   return (
     <tr className="border-t border-border align-top">
@@ -278,11 +288,18 @@ function Row({ l, questions, canEdit, picked, onPick, onCopy }: { l: GuestLine; 
       <td className="whitespace-nowrap px-3 py-3 text-muted-foreground">{l.repliedAt ? new Date(l.repliedAt).toLocaleDateString(undefined, { day: "numeric", month: "short" }) : "–"}</td>
       <td className="px-3 py-3 tabular-nums text-muted-foreground">{l.general ? "–" : `${l.opens}×`}</td>
       <td className="px-3 py-3">
-        {l.token ? (
-          <button type="button" onClick={onCopy} className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-border px-2.5 py-1 text-xs hover:border-muted-foreground">
-            <Copy className="size-3.5" /> Copy link
-          </button>
-        ) : null}
+        <div className="flex items-center gap-1">
+          {l.token ? (
+            <button type="button" onClick={onCopy} className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-border px-2.5 py-1 text-xs hover:border-muted-foreground">
+              <Copy className="size-3.5" /> Copy link
+            </button>
+          ) : null}
+          {onEdit ? (
+            <button type="button" onClick={onEdit} aria-label={`Edit ${l.name}`} title="Edit" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground">
+              <Pencil className="size-3.5" />
+            </button>
+          ) : null}
+        </div>
       </td>
     </tr>
   );
@@ -309,12 +326,13 @@ function Empty({ canEdit, onAdd, onCopy }: { canEdit: boolean; onAdd: () => void
   );
 }
 
-function AddGuests({ weddingId, defaultMax, onClose, onAdded }: { weddingId: string; defaultMax: number; onClose: () => void; onAdded: (rows: GuestRow[]) => void }) {
+function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { weddingId: string; defaultMax: number; guest?: GuestRow; onClose: () => void; onAdded: (rows: GuestRow[]) => void }) {
   const [mode, setMode] = useState<"one" | "list">("one");
-  const [name, setName] = useState("");
-  const [greeting, setGreeting] = useState("");
-  const [groupText, setGroupText] = useState("");
-  const [max, setMax] = useState<string>("");
+  const [name, setName] = useState(guest?.name ?? "");
+  const [greeting, setGreeting] = useState(guest?.greeting ?? "");
+  const [message, setMessage] = useState(guest?.message ?? "");
+  const [groupText, setGroupText] = useState(guest?.groups.join(", ") ?? "");
+  const [max, setMax] = useState<string>(guest?.max_party ? String(guest.max_party) : "");
   const [list, setList] = useState("");
   const [busy, setBusy] = useState(false);
   const dlg = useRef<HTMLDialogElement>(null);
@@ -322,6 +340,21 @@ function AddGuests({ weddingId, defaultMax, onClose, onAdded }: { weddingId: str
 
   async function save() {
     setBusy(true);
+    if (guest) {
+      const res = await updateGuest(weddingId, guest.id, {
+        name,
+        greeting: greeting || null,
+        message: message || null,
+        groups: groupText.split(",").map((g) => g.trim()).filter(Boolean),
+        maxParty: max ? Number(max) : null,
+      });
+      setBusy(false);
+      if (!res.ok) return toast.error(res.error);
+      onAdded([res.data]);
+      toast.success("Saved");
+      dlg.current?.close();
+      return;
+    }
     if (mode === "one") {
       const res = await addGuest(weddingId, {
         name,
@@ -363,12 +396,12 @@ function AddGuests({ weddingId, defaultMax, onClose, onAdded }: { weddingId: str
         }}
       >
         <div className="flex items-center justify-between">
-          <h2 className="font-serif text-3xl">Add guests</h2>
+          <h2 className="font-serif text-3xl">{guest ? "Edit guest" : "Add guests"}</h2>
           <button type="button" onClick={() => dlg.current?.close()} aria-label="Close" className="rounded-full p-1.5 hover:bg-muted">
             <X className="size-5" />
           </button>
         </div>
-        <div className="inline-flex justify-self-start rounded-full border border-border p-0.5 text-sm">
+        <div className={cn("inline-flex justify-self-start rounded-full border border-border p-0.5 text-sm", guest && "hidden")}>
           {(["one", "list"] as const).map((m) => (
             <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)} className={cn("rounded-full px-3.5 py-1.5", mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>
               {m === "one" ? "One guest" : "Paste a list"}
@@ -392,6 +425,12 @@ function AddGuests({ weddingId, defaultMax, onClose, onAdded }: { weddingId: str
                 <input type="number" min={1} max={20} value={max} onChange={(e) => setMax(e.target.value)} placeholder={String(defaultMax)} className="h-10 rounded-lg border border-input bg-background px-3" />
               </label>
             </div>
+            {guest ? (
+              <label className="grid gap-1.5 text-sm">
+                <span className="font-medium">A line just for them</span>
+                <input value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} placeholder="Optional" className="h-10 rounded-lg border border-input bg-background px-3" />
+              </label>
+            ) : null}
             <label className="grid gap-1.5 text-sm">
               <span className="font-medium">Groups</span>
               <input value={groupText} onChange={(e) => setGroupText(e.target.value)} maxLength={200} placeholder="e.g. Bride's family, Work" className="h-10 rounded-lg border border-input bg-background px-3" />
@@ -408,10 +447,10 @@ function AddGuests({ weddingId, defaultMax, onClose, onAdded }: { weddingId: str
         )}
         <div className="flex justify-end gap-2">
           <button type="button" onClick={() => dlg.current?.close()} className="h-10 rounded-full px-4 text-sm text-muted-foreground hover:text-foreground">
-            {mode === "one" ? "Done" : "Cancel"}
+            {guest ? "Cancel" : mode === "one" ? "Done" : "Cancel"}
           </button>
           <button type="submit" disabled={busy || (mode === "one" ? !name.trim() : !lines)} className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground disabled:opacity-50">
-            <Check className="size-4" /> {busy ? "Saving…" : mode === "one" ? "Add guest" : `Add ${lines || ""}`}
+            <Check className="size-4" /> {busy ? "Saving…" : guest ? "Save" : mode === "one" ? "Add guest" : `Add ${lines || ""}`}
           </button>
         </div>
       </form>
