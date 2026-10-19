@@ -44,7 +44,7 @@ function Hero() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Btn href="/websites">Choose a design</Btn>
-            <Btn href="/#replies" light>
+            <Btn href="/guests" light>
               See how replies work
             </Btn>
           </div>
@@ -218,9 +218,14 @@ function Replies() {
             ))}
           </ul>
           <div className="mt-8">
-            <Link href="/websites" className="inline-flex h-12 items-center rounded-full bg-primary-foreground px-6 font-medium text-primary">
-              Start your invitation
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/guests" className="inline-flex h-12 items-center rounded-full bg-primary-foreground px-6 font-medium text-primary">
+                See your guest list
+              </Link>
+              <Link href="/websites" className="inline-flex h-12 items-center rounded-full border border-primary-foreground/40 px-6 font-medium text-primary-foreground">
+                Start your invitation
+              </Link>
+            </div>
           </div>
         </div>
         <div aria-hidden className="grid gap-4 rounded-2xl bg-card p-5 text-foreground shadow-[0_30px_50px_-30px_#000]">

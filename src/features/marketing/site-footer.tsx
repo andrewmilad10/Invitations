@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 
 const COLS: [string, [string, string][]][] = [
   ["Designs", [["/websites", "Wedding websites"], ["/invitations", "Invitation cards"], ["/websites?sort=new", "New designs"]]],
-  ["For couples", [["/#replies", "Guests & replies"], ["/#pricing", "Price"], ["/dashboard", "My invitations"]]],
+  ["For couples", [["/guests", "Guests & replies"], ["/#pricing", "Price"], ["/dashboard", "My invitations"]]],
   ["Help", [["/#how-it-works", "How it works"], ["/#faq", "Questions"], ["/login", "Log in"]]],
 ];
 

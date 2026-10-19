@@ -2,15 +2,38 @@
 
 import { ArrowLeft, Check, Copy, Download, Eye, EyeOff, Link2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { createContext, useContext, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { guestLines, guestsCsv, questionTotals, totals, type GuestLine, type ReplyStatus } from "@/core/guests/summary";
+import { guestLines, guestsCsv, parsePastedGuests, questionTotals, totals, type GuestLine, type ReplyStatus } from "@/core/guests/summary";
 import type { GuestRow, WishRow } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/utils";
-import { addGuest, addGuestList, deleteGuests, deleteReply, deleteWish, setWishHidden, updateGuest } from "./actions";
+import * as server from "./actions";
 import type { GuestsPageData } from "./queries";
 
 type Filter = "all" | ReplyStatus;
+
+/** How the page saves: the real server actions, or an example that changes only this screen. */
+type Ops = Pick<typeof server, "addGuest" | "addGuestList" | "updateGuest" | "deleteGuests" | "deleteReply" | "setWishHidden" | "deleteWish">;
+const ok = <T,>(data: T) => Promise.resolve({ ok: true as const, data });
+let demoId = 100;
+const demoRow = (name: string, groups: string[] = [], extra: Partial<GuestRow> = {}): GuestRow => {
+  const n = ++demoId;
+  const now = new Date().toISOString();
+  return { id: `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`, wedding_id: "demo", name, greeting: null, message: null, groups, max_party: null, token: n.toString(16).padStart(32, "a"), open_count: 0, last_opened_at: null, created_at: now, updated_at: now, ...extra };
+};
+const DEMO_OPS: Ops = {
+  addGuest: (_w, i) => ok(demoRow(i.name.trim(), i.groups ?? [], { greeting: i.greeting ?? null, max_party: i.maxParty ?? null })),
+  addGuestList: (_w, text) => {
+    const res = parsePastedGuests(text, []);
+    return ok({ added: res.add.map((g) => demoRow(g.name, g.groups)), duplicates: res.duplicates });
+  },
+  updateGuest: (_w, id, i) => ok(demoRow(i.name ?? "", i.groups ?? [], { id, greeting: i.greeting ?? null, message: i.message ?? null, max_party: i.maxParty ?? null })),
+  deleteGuests: () => ok(undefined),
+  deleteReply: () => ok(undefined),
+  setWishHidden: () => ok(undefined),
+  deleteWish: () => ok(undefined),
+};
+const OpsCtx = createContext<Ops>(server);
 const STATUS: Record<ReplyStatus, { label: string; cls: string }> = {
   yes: { label: "Coming", cls: "bg-[#e3ece5] text-success" },
   no: { label: "Can't come", cls: "bg-[#f4e2df] text-destructive" },
@@ -22,7 +45,16 @@ const STATUS: Record<ReplyStatus, { label: string; cls: string }> = {
  * and answers, personal links to copy, adding guests one at a time or as a
  * pasted list, the wishes guests left, and the whole list as a spreadsheet.
  */
-export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: string }) {
+export function GuestsPage({ data, siteUrl, demo = false }: { data: GuestsPageData; siteUrl: string; demo?: boolean }) {
+  return (
+    <OpsCtx.Provider value={demo ? DEMO_OPS : server}>
+      <GuestsScreen data={data} siteUrl={siteUrl} demo={demo} />
+    </OpsCtx.Provider>
+  );
+}
+
+function GuestsScreen({ data, siteUrl, demo }: { data: GuestsPageData; siteUrl: string; demo: boolean }) {
+  const ops = useContext(OpsCtx);
   const { wedding, canEdit, questions } = data;
   const [guests, setGuests] = useState<GuestRow[]>(data.guests);
   const [replies, setReplies] = useState(data.replies);
@@ -66,8 +98,8 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
     const ids = [...picked].filter((k) => guests.some((g) => g.id === k));
     const replyIds = [...picked].filter((k) => !ids.includes(k));
     if (!ids.length && !replyIds.length) return;
-    const res = await deleteGuests(wedding.id, ids);
-    for (const r of replyIds) await deleteReply(wedding.id, r);
+    const res = await ops.deleteGuests(wedding.id, ids);
+    for (const r of replyIds) await ops.deleteReply(wedding.id, r);
     if (!res.ok) return toast.error(res.error);
     setGuests((gs) => gs.filter((g) => !ids.includes(g.id)));
     setReplies((rs) => rs.filter((r) => !replyIds.includes(r.id) && !ids.includes(r.guest_id ?? "")));
@@ -79,13 +111,21 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
   const count = (f: Filter) => (f === "all" ? sum.invitations : f === "yes" ? sum.coming : f === "no" ? sum.cantCome : sum.waiting);
 
   return (
-    <main className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
+    <div className={demo ? "" : "mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8"}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <Link href={`/dashboard/weddings/${wedding.id}`} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="size-4" /> {wedding.names}
-          </Link>
-          <h1 className="mt-2 font-serif text-4xl sm:text-5xl">Guests &amp; replies</h1>
+          {demo ? (
+            <p className="text-sm text-muted-foreground">
+              {wedding.names} · <span className="rounded-full bg-[#f3ead6] px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#8a6a2c]">Example</span>
+            </p>
+          ) : (
+            <Link href={`/dashboard/weddings/${wedding.id}`} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="size-4" /> {wedding.names}
+            </Link>
+          )}
+          <p className="mt-2 font-serif text-4xl sm:text-5xl" role="heading" aria-level={demo ? 3 : 1}>
+            Guests &amp; replies
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={() => copy(general, "General link")} className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-4 text-sm hover:border-muted-foreground">
@@ -245,7 +285,7 @@ export function GuestsPage({ data, siteUrl }: { data: GuestsPageData; siteUrl: s
           onAdded={(rows) => setGuests((gs) => [...gs, ...rows])}
         />
       ) : null}
-    </main>
+    </div>
   );
 }
 
@@ -327,6 +367,7 @@ function Empty({ canEdit, onAdd, onCopy }: { canEdit: boolean; onAdd: () => void
 }
 
 function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { weddingId: string; defaultMax: number; guest?: GuestRow; onClose: () => void; onAdded: (rows: GuestRow[]) => void }) {
+  const ops = useContext(OpsCtx);
   const [mode, setMode] = useState<"one" | "list">("one");
   const [name, setName] = useState(guest?.name ?? "");
   const [greeting, setGreeting] = useState(guest?.greeting ?? "");
@@ -341,7 +382,7 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
   async function save() {
     setBusy(true);
     if (guest) {
-      const res = await updateGuest(weddingId, guest.id, {
+      const res = await ops.updateGuest(weddingId, guest.id, {
         name,
         greeting: greeting || null,
         message: message || null,
@@ -356,7 +397,7 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
       return;
     }
     if (mode === "one") {
-      const res = await addGuest(weddingId, {
+      const res = await ops.addGuest(weddingId, {
         name,
         greeting: greeting || null,
         groups: groupText.split(",").map((g) => g.trim()).filter(Boolean),
@@ -370,7 +411,7 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
       setGreeting("");
       return;
     }
-    const res = await addGuestList(weddingId, list);
+    const res = await ops.addGuestList(weddingId, list);
     setBusy(false);
     if (!res.ok) return toast.error(res.error);
     onAdded(res.data.added);
@@ -459,6 +500,7 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
 }
 
 function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: string; wishes: WishRow[]; setWishes: (f: (w: WishRow[]) => WishRow[]) => void; canEdit: boolean; on: boolean }) {
+  const ops = useContext(OpsCtx);
   if (!wishes.length) {
     return (
       <div className="mt-6 rounded-2xl border border-dashed border-border px-6 py-14 text-center text-muted-foreground">
@@ -490,7 +532,7 @@ function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: stri
                 title={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
                 className="rounded-full p-2 hover:bg-muted"
                 onClick={async () => {
-                  const res = await setWishHidden(weddingId, w.id, !w.hidden);
+                  const res = await ops.setWishHidden(weddingId, w.id, !w.hidden);
                   if (!res.ok) return toast.error(res.error);
                   setWishes((ws) => ws.map((x) => (x.id === w.id ? { ...x, hidden: !w.hidden } : x)));
                 }}
@@ -502,7 +544,7 @@ function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: stri
                 aria-label="Delete wish"
                 className="rounded-full p-2 hover:bg-muted"
                 onClick={async () => {
-                  const res = await deleteWish(weddingId, w.id);
+                  const res = await ops.deleteWish(weddingId, w.id);
                   if (!res.ok) return toast.error(res.error);
                   setWishes((ws) => ws.filter((x) => x.id !== w.id));
                 }}

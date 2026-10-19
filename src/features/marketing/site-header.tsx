@@ -18,7 +18,7 @@ const STYLES = [
   { href: "/websites?mood=nights", label: "Egyptian nights" },
 ];
 const LINKS = [
-  { href: "/#replies", label: "Guests & replies" },
+  { href: "/guests", label: "Guests & replies" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/#how-it-works", label: "How it works" },
   { href: "/#faq", label: "Help" },

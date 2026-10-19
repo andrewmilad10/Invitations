@@ -39,7 +39,7 @@ const STEPS = [
   { id: "location", label: "Location" },
   { id: "style", label: "Style" },
   { id: "photos", label: "Photos" },
-  { id: "sections", label: "Sections" },
+  { id: "sections", label: "All sections" },
 ] as const;
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
@@ -155,6 +155,19 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
 
       <div className="flex min-h-0 flex-1">
         <section className={cn("flex min-h-0 w-full flex-col lg:w-[460px] lg:shrink-0 lg:border-e", tab === "preview" && "hidden lg:flex")} aria-label="Your details">
+          {current.id !== "sections" ? (
+            <button
+              type="button"
+              onClick={() => setStep(STEPS.length - 1)}
+              className="flex items-center justify-between gap-3 border-b bg-secondary/60 px-5 py-2.5 text-start text-sm hover:bg-secondary"
+            >
+              <span>
+                <b className="font-medium">Edit every section</b>
+                <span className="block text-xs text-muted-foreground">Story, the day&apos;s plan, replies, families, wishes, gifts… and their order</span>
+              </span>
+              <span aria-hidden className="text-lg">→</span>
+            </button>
+          ) : null}
           <nav aria-label="Steps" className="border-b px-4 py-3">
             <ol className="flex gap-1 overflow-x-auto">
               {STEPS.map((s, i) => (

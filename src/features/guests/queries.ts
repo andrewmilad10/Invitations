@@ -21,7 +21,7 @@ export interface GuestsPageData {
  * Everything the guest list page shows, read with the couple's own session:
  * Row Level Security returns nothing unless they are a member of the wedding.
  */
-export async function loadGuestsPage(weddingId: string): Promise<GuestsPageData | null> {
+export async function loadGuestsPage(weddingId: string): Promise<GuestsPageData | "not-ready" | null> {
   if (!isUuid(weddingId)) return null;
   const user = await getCurrentUser();
   if (!user) return null;
@@ -37,6 +37,9 @@ export async function loadGuestsPage(weddingId: string): Promise<GuestsPageData 
     supabase.from("wedding_settings").select("locale").eq("wedding_id", weddingId).maybeSingle(),
   ]);
   if (w.error || !w.data) return null;
+  // The guest tables arrive with migration 0008; until it is applied, say so instead of failing.
+  const missing = (e: { code?: string } | null) => e?.code === "42P01" || e?.code === "PGRST205" || e?.code === "PGRST200";
+  if ([guests, replies, wishes].some((r) => missing(r.error))) return "not-ready";
   for (const r of [guests, replies, wishes, sections]) if (r.error) throw new Error("Could not load the guest list.");
 
   const locale = toLocale(settings.data?.locale);
