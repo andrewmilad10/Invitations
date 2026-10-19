@@ -116,8 +116,11 @@ couple changed. Created empty by trigger.
 * **Flood limits** (0010): the publishable key is public, so the guest
   functions can be called without the app. Per invitation, at most 120 new
   general-link replies and 40 wishes per 10 minutes (`busy` after that);
-  personal links are not limited. Also one SELECT policy on `weddings`
-  (owner or member) instead of two, and an index on `media.created_by`.
+  personal links are not limited. Also an index on `media.created_by`.
+
+* **One read policy on weddings** (0011): "members read" now also covers
+  the owner, replacing the separate "owner reads own" (same access, half the
+  policy work per row).
 
 ## Decisions (and deviations from the initial brief)
 

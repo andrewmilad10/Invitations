@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- 0010 · Flood limits on guest writes, and two small speed fixes
+-- 0010 · Flood limits on guest writes
 --
 -- The publishable key is public, so anyone can call submit_reply and
 -- submit_wish directly, skipping the app's per-visitor brake. The database now
@@ -10,20 +10,11 @@
 -- a short time…"). Personal links are not limited: they need the guest's
 -- private code, and a reply there only ever updates one row.
 --
--- Speed: one SELECT policy on weddings instead of two (Postgres runs every
--- permissive policy on every row), and an index for media.created_by.
+-- Also an index for media.created_by (a foreign key without one).
 -- ═══════════════════════════════════════════════════════════════════════════
 
 create index if not exists media_created_by_idx on public.media (created_by);
 create index if not exists replies_general_recent_idx on public.replies (wedding_id, created_at) where guest_id is null;
-
-drop policy "weddings: members read" on public.weddings;
-drop policy "weddings: owner reads own" on public.weddings;
--- Members read; the creator also reads the row back right after insert, before
--- the AFTER trigger has added their membership.
-create policy "weddings: members read"
-  on public.weddings for select to authenticated
-  using (owner_id = (select auth.uid()) or public.can_view_wedding(id));
 
 create or replace function public.submit_reply(
   p_slug text, p_token text, p_name text, p_attending boolean, p_party integer, p_note text, p_answers jsonb
