@@ -7,7 +7,7 @@ import { DraftImporter } from "@/features/try/draft-importer";
 import { WeddingCard } from "@/features/weddings/components/wedding-card";
 import { listMyWeddingCards } from "@/features/weddings/queries";
 
-export const metadata: Metadata = { title: "My weddings" };
+export const metadata: Metadata = { title: "My invitations" };
 
 export default async function DashboardPage(props: PageProps<"/dashboard">) {
   const { draft } = await props.searchParams;
@@ -19,7 +19,7 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-serif text-5xl font-light">My weddings</h1>
+          <h1 className="font-serif text-5xl font-light">My invitations</h1>
           <p className="mt-2 text-muted-foreground">
             {weddings.length === 0
               ? "Your invitations will appear here."
@@ -28,7 +28,7 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
         </div>
         <Button asChild className="rounded-full px-5">
           <Link href="/websites">
-            <Plus /> Create new wedding
+            <Plus /> Create new invitation
           </Link>
         </Button>
       </div>

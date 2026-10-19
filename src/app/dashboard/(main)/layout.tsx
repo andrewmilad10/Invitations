@@ -17,7 +17,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <Brand />
             <nav aria-label="Account" className="hidden gap-6 text-sm sm:flex">
               <Link href="/dashboard" className="text-foreground">
-                My weddings
+                My invitations
               </Link>
               <Link href="/websites" className="text-muted-foreground hover:text-foreground">
                 Designs

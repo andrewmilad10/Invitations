@@ -38,7 +38,7 @@ export function SaveDraftAfterAuth() {
       <div role="alert" className="grid gap-4 text-center">
         <p className="text-sm">{error}</p>
         <Button asChild>
-          <Link href="/dashboard">Go to my weddings</Link>
+          <Link href="/dashboard">Go to my invitations</Link>
         </Button>
       </div>
     );

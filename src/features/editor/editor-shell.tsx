@@ -237,7 +237,7 @@ function EditorHeader({ onPublish }: { onPublish: () => void }) {
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b bg-card px-3 sm:px-4">
-      <Button asChild variant="ghost" size="icon" aria-label="Back to my weddings">
+      <Button asChild variant="ghost" size="icon" aria-label="Back to my invitations">
         <Link href="/dashboard">
           <ArrowLeft className="rtl:rotate-180" />
         </Link>

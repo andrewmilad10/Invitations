@@ -7,7 +7,7 @@ export default function DashboardNotFound() {
       <h1 className="font-serif text-4xl">We couldn&apos;t find that wedding</h1>
       <p className="mt-2 text-muted-foreground">It may have been deleted, or you don&apos;t have access to it.</p>
       <Button asChild className="mt-6">
-        <Link href="/dashboard">Back to my weddings</Link>
+        <Link href="/dashboard">Back to my invitations</Link>
       </Button>
     </main>
   );

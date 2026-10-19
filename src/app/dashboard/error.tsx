@@ -15,7 +15,7 @@ export default function DashboardError({ error, reset }: { error: Error & { dige
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Button type="button" onClick={reset}>Try again</Button>
         <Button asChild variant="outline">
-          <Link href="/dashboard">Back to my weddings</Link>
+          <Link href="/dashboard">Back to my invitations</Link>
         </Button>
       </div>
     </main>

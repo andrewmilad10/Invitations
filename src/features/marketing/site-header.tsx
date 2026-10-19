@@ -60,7 +60,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState(false);
   const signedIn = useSignedIn();
-  const account = signedIn ? { href: "/dashboard", label: "My weddings" } : { href: "/login", label: "Log in" };
+  const account = signedIn ? { href: "/dashboard", label: "My invitations" } : { href: "/login", label: "Log in" };
   const closeT = useRef<number>(0);
   const dropRef = useRef<HTMLDivElement>(null);
 
