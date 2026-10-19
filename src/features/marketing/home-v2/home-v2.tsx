@@ -9,42 +9,9 @@ import { FilteredGrid } from "./filtered-grid";
 import { HeroEnvelope } from "./hero-envelope";
 import { HeroLineup } from "./hero-lineup";
 import { NamesProvider } from "./names";
+import { DESIGN_INFO, MOODS as MOOD_LIST } from "../design-info";
 
-/** Each website design's name in Arabic, and its mood for the filter. */
-const DESIGN_INFO: Record<string, { ar: string; mood: string }> = {
-  "swan-lake": { ar: "بحيرة البجع", mood: "floral" },
-  "villa-rosa": { ar: "فيلا روزا", mood: "floral" },
-  "swan-pond": { ar: "بحيرة البجع الصغيرة", mood: "floral" },
-  "something-blue": { ar: "لمسة زرقاء", mood: "floral" },
-  "pressed-garden": { ar: "حديقة الزهور المجففة", mood: "floral" },
-  "wild-posy": { ar: "باقة برية", mood: "floral" },
-  "ivory-veil": { ar: "الطرحة العاجية", mood: "classic" },
-  "blush-lace": { ar: "دانتيل وردي", mood: "floral" },
-  "wisteria-lake": { ar: "بحيرة الوستارية", mood: "floral" },
-  "gouna-lagoon": { ar: "بحيرة الجونة", mood: "nights" },
-  "ribbon-pearls": { ar: "شريطة ولؤلؤ", mood: "floral" },
-  "peony-blush": { ar: "زهور الفاوانيا", mood: "floral" },
-  "lemon-terrace": { ar: "شرفة الليمون", mood: "floral" },
-  "linen-meadow": { ar: "مرج الكتان", mood: "floral" },
-  "henna-tent": { ar: "خيمة الحنة", mood: "nights" },
-  "sketchbook": { ar: "كراسة الرسم", mood: "floral" },
-  "opening-night": { ar: "ليلة الافتتاح", mood: "nights" },
-  "garden-gate": { ar: "بوابة الحديقة", mood: "floral" },
-  "message-in-a-bottle": { ar: "رسالة في زجاجة", mood: "classic" },
-  "paper-fan": { ar: "المروحة الورقية", mood: "floral" },
-  "olive-courtyard": { ar: "فناء الزيتون", mood: "classic" },
-  "set-sail": { ar: "نُبحر معاً", mood: "classic" },
-  "cotton-press": { ar: "حبر وقطن", mood: "classic" },
-  "rose-marble": { ar: "رخام وردي", mood: "classic" },
-  "burgundy-envelope": { ar: "الظرف العنابي", mood: "classic" },
-  "the-gate": { ar: "البوابة", mood: "nights" },
-  "moonlit-nile": { ar: "ليلة على النيل", mood: "nights" },
-};
-const MOODS: [string, string][] = [
-  ["floral", "Floral & romantic"],
-  ["classic", "Classic & foil"],
-  ["nights", "Egyptian nights"],
-];
+const MOODS = MOOD_LIST;
 
 function OpenOne() {
   return (

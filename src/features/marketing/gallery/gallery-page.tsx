@@ -5,7 +5,9 @@ import { selectableTemplates } from "@/templates/registry";
 import { PRODUCTS, templatesFor, websiteOrder, type Product } from "../products";
 import { SiteFooter } from "../site-footer";
 import { SiteHeader } from "../site-header";
-import { WebsiteCard } from "../home/website-card";
+import { designInfo, MOODS } from "../design-info";
+import { openingOf } from "../products";
+import { WebsitesGallery } from "../play/websites-gallery";
 import { DesignGallery } from "./design-gallery";
 import { NO_FILTERS } from "./filters";
 
@@ -49,12 +51,25 @@ export function GalleryPage({ product }: { product: Product }) {
               <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">{info.intro}</p>
             </Stagger>
             {product === "websites" ? (
-              // Websites: the same cards as the home page (phone + envelope or opening scene).
-              <div className="mx-auto mt-12 grid max-w-7xl grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-                {templates.map((t) => (
-                  <WebsiteCard key={t.id} template={t} href={`/websites/${t.id}`} />
-                ))}
-              </div>
+              <WebsitesGallery
+                designs={templates.map((t, rank) => {
+                  const info = designInfo(t.id);
+                  const opening = openingOf(t);
+                  return {
+                    id: t.id,
+                    name: t.name,
+                    ar: info.ar,
+                    note: t.tagline,
+                    href: `/create/${t.id}`,
+                    page: `/websites/${t.id}`,
+                    mood: info.mood,
+                    tone: info.tone,
+                    isNew: Boolean(info.isNew),
+                    rank,
+                    tags: [opening ? opening.label : "No opening", MOODS.find(([m]) => m === info.mood)?.[1] ?? ""].filter(Boolean),
+                  };
+                })}
+              />
             ) : (
               <DesignGallery templates={templates} initialFilters={NO_FILTERS} product={product} />
             )}

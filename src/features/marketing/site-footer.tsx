@@ -1,31 +1,36 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
+const COLS: [string, [string, string][]][] = [
+  ["Designs", [["/websites", "Wedding websites"], ["/invitations", "Invitation cards"], ["/websites?sort=new", "New designs"]]],
+  ["For couples", [["/#replies", "Guests & replies"], ["/#pricing", "Price"], ["/dashboard", "My invitations"]]],
+  ["Help", [["/#how-it-works", "How it works"], ["/#faq", "Questions"], ["/login", "Log in"]]],
+];
+
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.5fr_1fr_1fr]">
-        <div>
-          <p className="font-serif text-3xl">{siteConfig.name}</p>
-          <p className="mt-2 max-w-xs text-sm text-muted-foreground">Wedding invitations and websites, designed like fine stationery.</p>
+    <footer className="mt-24 border-t border-border bg-background">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="col-span-2 md:col-span-1">
+          <Link href="/" className="font-serif text-3xl">
+            {siteConfig.name}
+          </Link>
+          <p className="mt-2 max-w-xs text-sm text-muted-foreground">Wedding websites and invitation cards that open like real stationery, in English and Arabic.</p>
         </div>
-        <nav aria-label="Product" className="grid content-start gap-2.5 text-sm">
-          <p className="mb-1 font-medium">Product</p>
-          <Link href="/invitations" className="text-muted-foreground hover:text-foreground">Invitation cards</Link>
-          <Link href="/websites" className="text-muted-foreground hover:text-foreground">Wedding websites</Link>
-          <Link href="/#features" className="text-muted-foreground hover:text-foreground">Features</Link>
-          <Link href="/#how-it-works" className="text-muted-foreground hover:text-foreground">How it works</Link>
-        </nav>
-        <nav aria-label="Account" className="grid content-start gap-2.5 text-sm">
-          <p className="mb-1 font-medium">Your invitation</p>
-          <Link href="/invitations" className="text-muted-foreground hover:text-foreground">Start creating</Link>
-          <Link href="/login" className="text-muted-foreground hover:text-foreground">Log in</Link>
-          <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">My weddings</Link>
-        </nav>
+        {COLS.map(([title, links]) => (
+          <nav key={title} aria-label={title} className="grid content-start gap-2.5 text-sm">
+            <p className="mb-1 text-[0.7rem] font-semibold uppercase tracking-[0.2em]">{title}</p>
+            {links.map(([href, label]) => (
+              <Link key={href} href={href} className="text-muted-foreground hover:text-foreground">
+                {label}
+              </Link>
+            ))}
+          </nav>
+        ))}
       </div>
       <div className="border-t border-border">
-        <p className="mx-auto max-w-7xl px-5 py-6 text-xs text-muted-foreground sm:px-8">
-          © {new Date().getFullYear()} {siteConfig.name}.
+        <p className="mx-auto max-w-6xl px-5 py-6 text-xs text-muted-foreground sm:px-8">
+          © {new Date().getFullYear()} {siteConfig.name}. Designs and wording are our own.
         </p>
       </div>
     </footer>

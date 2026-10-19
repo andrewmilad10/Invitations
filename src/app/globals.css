@@ -493,3 +493,15 @@ html.motion-failed [data-image-reveal] {
   from { opacity: 0; transform: translateX(-50%) translateY(18%) rotate(0deg) scale(calc(var(--s) * .92)); }
 }
 @media (prefers-reduced-motion: reduce) { .lineup-phone { animation: none; } }
+
+/* Homepage: the "are coming" note that appears beside the phones now and then. */
+.home-toast {
+  animation: home-toast 5s var(--ease-out-soft) 1s infinite both;
+}
+@keyframes home-toast {
+  0%, 100% { opacity: 0; translate: 0 10px; }
+  10%, 80% { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-toast { animation: none; }
+}
