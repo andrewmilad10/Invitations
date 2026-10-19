@@ -47,6 +47,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   env: publicSettings,
   poweredByHeader: false,
+  // Never publish source maps: the browser only gets minified bundles.
+  productionBrowserSourceMaps: false,
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

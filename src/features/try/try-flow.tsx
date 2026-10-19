@@ -27,7 +27,6 @@ import { draftFiles, draftStore, useHydrated, useStoredDraft } from "./draft-sto
 import { ExistingDraftDialog } from "./existing-draft-dialog";
 import { SectionsStep } from "./sections-step";
 import { resolveTemplateManifest } from "@/templates/registry";
-import { DownloadCardButton } from "@/features/cards/download-card";
 
 type TemplateOption = TemplateManifest;
 
@@ -120,7 +119,6 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
           <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
             <Link href={productHref(productOf(template), template.id)}>Exit</Link>
           </Button>
-          <DownloadCardButton bundle={bundle} className="hidden sm:inline-flex" />
           <SaveButton canSave={canSave} onMissingNames={() => setPanel("content")} />
         </div>
       </header>

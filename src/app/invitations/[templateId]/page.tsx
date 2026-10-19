@@ -33,7 +33,7 @@ export default async function InvitationCardPage(props: PageProps<"/invitations/
   // Website layouts have their own page (keeping a chosen colour).
   if (productOf(template) !== "cards") {
     const { palette } = await props.searchParams;
-    redirect(productHref("websites", template.id, typeof palette === "string" ? `palette=${palette}` : ""));
+    redirect(productHref("websites", template.id, typeof palette === "string" ? new URLSearchParams({ palette: palette.slice(0, 40) }) : ""));
   }
   // Static page: the colour and finish in a shared link are applied in the browser.
   const initialPalette = template.palettes[0].id;

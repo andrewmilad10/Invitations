@@ -36,7 +36,7 @@ export default async function TemplatePage(props: PageProps<"/websites/[template
   // Card designs have their own product page (keeping a chosen colour).
   if (productOf(template) !== "websites") {
     const { palette } = await props.searchParams;
-    redirect(productHref("cards", template.id, typeof palette === "string" ? `palette=${palette}` : ""));
+    redirect(productHref("cards", template.id, typeof palette === "string" ? new URLSearchParams({ palette: palette.slice(0, 40) }) : ""));
   }
   const product: Product = "websites";
   // Static page: the colour and view in a shared link are applied in the browser.
