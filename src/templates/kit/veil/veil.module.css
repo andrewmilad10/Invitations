@@ -56,7 +56,6 @@
 /* a short hairline opens each section on the paper, for an even rhythm */
 .sec::before { content: ""; display: block; width: 2.6rem; height: 1px; margin: 0 auto 3rem; background: var(--inv-border); }
 .col { width: var(--col); margin: 0 auto; display: grid; justify-items: center; gap: .9rem; }
-.roundSmall { display: block; width: 6.5rem; aspect-ratio: 1; margin-top: 1.6rem; border-radius: 50%; background: url("/templates/ivory-veil/rose.webp") 50% 50% / cover; box-shadow: 0 10px 24px -14px rgb(70 60 50 / .45); }
 
 .clock { display: flex; justify-content: center; }
 .unit { position: relative; display: grid; justify-items: center; min-width: 4.4rem; }
@@ -136,7 +135,6 @@ select.input { cursor: pointer; }
   .body { max-width: 32rem; }
   .value { font-size: 3.2rem; }
   .unit { min-width: 6rem; }
-  .roundSmall { width: 8rem; }
   .oval { width: 290px; }
   .bowl { width: 300px; }
   .wreath { width: 9rem; }

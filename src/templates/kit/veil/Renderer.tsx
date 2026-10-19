@@ -14,7 +14,7 @@ import s from "./veil.module.css";
  * opens on an ivory envelope filling the screen with a lace heart seal; a tap
  * dissolves it into a first screen of tulle and lace with the names in widely
  * spaced capitals. Below, one quiet ivory column: the couple's words in a soft
- * italic with the date spaced out and a round photo of a rose, the countdown,
+ * italic with the date spaced out, the countdown,
  * the story beside the couple's photo in a thin oval frame, the reply card
  * resting tilted on lace, the day with a round photo of flowers in a bowl,
  * the timeline as fine line drawings in two columns, ceremony and celebration
@@ -62,7 +62,7 @@ function Hero({ model, content }: SectionProps<"hero">) {
   );
 }
 
-/** The couple's words in a soft italic, the date spaced out, and a round photo of a rose. */
+/** The couple's words in a soft italic and the date spaced out. */
 function Couple({ model, content }: SectionProps<"couple">) {
   const d = model.wedding.date;
   return (
@@ -72,7 +72,6 @@ function Couple({ model, content }: SectionProps<"couple">) {
         {content.heading ? <Script>{content.heading}</Script> : null}
         {content.message ? <p className={s.italic}>{content.message}</p> : null}
         {d ? <p className={s.spaced}>{d.short.split(/[./]/).join(" · ")}</p> : null}
-        <span className={s.roundSmall} aria-hidden="true" />
       </div>
     </Sec>
   );

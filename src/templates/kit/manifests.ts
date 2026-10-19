@@ -506,7 +506,7 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     name: "Ivory Veil",
     tagline: "An ivory envelope with a lace heart seal that dissolves into tulle, lace and quiet cream pages.",
     description:
-      "Opens on an ivory envelope filling the screen, with a small lace heart seal and your names on the flap; one tap and it dissolves into a first screen of tulle and vintage lace with your names in widely spaced capitals. Below, one quiet ivory column: your words in a soft italic with the date and a round photo of a rose, the countdown, your story beside your photo in a thin oval frame, the reply card resting on lace, the day with a round photo of flowers in a bowl, a timeline of fine line drawings, the ceremony and celebration under a leaf wreath, and your last word.",
+      "Opens on an ivory envelope filling the screen, with a small lace heart seal and your names on the flap; one tap and it dissolves into a first screen of tulle and vintage lace with your names in widely spaced capitals. Below, one quiet ivory column: your words in a soft italic with the date, the countdown, your story beside your photo in a thin oval frame, the reply card resting on lace, the day with a round photo of flowers in a bowl, a timeline of fine line drawings, the ceremony and celebration under a leaf wreath, and your last word.",
     categories: ["elegant", "classic", "romantic", "vintage"],
     palettes: [P.ivoryVeil],
     fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },
