@@ -41,9 +41,10 @@ export async function generateMetadata(props: PageProps<"/w/[slug]">): Promise<M
 export default async function PublicInvitationPage(props: PageProps<"/w/[slug]">) {
   const { slug } = await props.params;
   const { g } = await props.searchParams;
-  const bundle = await getPublicBundle(slug);
+  // All three at once (one round trip, not two); guest and wishes are only used if the invitation exists.
+  const key = decodeURIComponent(slug).toLowerCase();
+  const [bundle, guest, wishes] = await Promise.all([getPublicBundle(slug), getGuest(key, typeof g === "string" ? g : undefined), getPublicWishes(key)]);
   if (!bundle) notFound();
-  const [guest, wishes] = await Promise.all([getGuest(bundle.wedding.slug, typeof g === "string" ? g : undefined), getPublicWishes(bundle.wedding.slug)]);
 
   // The model is built once, on the server, and serialized to client islands —
   // so dates/times can never differ between server and browser.

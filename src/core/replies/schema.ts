@@ -71,6 +71,7 @@ export function replyErrorText(code: string, ar: boolean): string {
     full: "Replies are full for this invitation. Please contact the couple.",
     invalid: "Please check what you wrote and try again.",
     busy: "Too many tries in a short time. Please wait a minute and try again.",
+    offline: "No connection. Check your internet and press send again.",
   };
   const arabic: Record<string, string> = {
     closed: "تأكيد الحضور غير متاح لهذه الدعوة.",
@@ -79,6 +80,7 @@ export function replyErrorText(code: string, ar: boolean): string {
     full: "اكتمل عدد الردود لهذه الدعوة. تواصلوا مع العروسين.",
     invalid: "راجعوا ما كتبتم وحاولوا مرة أخرى.",
     busy: "محاولات كثيرة في وقت قصير. انتظروا دقيقة ثم حاولوا مجددًا.",
+    offline: "لا يوجد اتصال. تحققوا من الإنترنت واضغطوا إرسال مرة أخرى.",
   };
   const dict = ar ? arabic : en;
   return dict[code] ?? (ar ? "حدث خطأ. حاولوا مرة أخرى." : "Something went wrong. Please try again.");

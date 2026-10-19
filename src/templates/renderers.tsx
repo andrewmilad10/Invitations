@@ -1,4 +1,5 @@
 import type { InvitationModel } from "@/core/invitation/model";
+import { FirstPaint } from "./shared/first-paint";
 import AtelierRenderer from "./atelier/Renderer";
 import CinematicRenderer from "./cinematic/Renderer";
 import EditorialRenderer from "./editorial/Renderer";
@@ -109,5 +110,12 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
 /** Renders a model with the layout of the template it was built for. */
 export function InvitationRenderer({ model }: { model: InvitationModel }) {
   const Renderer = TEMPLATE_RENDERERS[model.template.renderer] ?? TEMPLATE_RENDERERS[DEFAULT_TEMPLATE_ID];
-  return <Renderer model={model} />;
+  // Guests (and visitors trying a design) see the first screen only once it is ready.
+  const cover = model.mode === "live" || model.mode === "sample";
+  return (
+    <>
+      <Renderer model={model} />
+      {cover ? <FirstPaint vars={model.cssVars} /> : null}
+    </>
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { replyErrorText } from "@/core/replies/schema";
 import type { SectionContent } from "@/core/sections/registry";
@@ -82,10 +82,13 @@ export function ReplyForm({ model, content, onDone }: { model: InvitationModel; 
   const [state, setState] = useState<"form" | "sending" | "done">(prev ? "done" : "form");
   const [saved, setSaved] = useState<{ attending: boolean; people: number; demo: boolean }>({ attending: prev?.attending ?? true, people: prev?.partySize ?? 0, demo: false });
   const [error, setError] = useState("");
+  const sending = useRef(false);
   const questions = (content.questions ?? []).filter((q) => q.text.trim());
 
   async function submit(e: FormEvent) {
     e.preventDefault();
+    // one reply at a time: a second tap while sending does nothing
+    if (sending.current) return;
     setError("");
     if (!guest && !name.trim()) {
       setError(replyErrorText("name", ar));
@@ -98,16 +101,20 @@ export function ReplyForm({ model, content, onDone }: { model: InvitationModel; 
       onDone?.();
       return;
     }
+    sending.current = true;
     setState("sending");
-    const res = await actions.submitReply({
-      slug: model.wedding.slug,
-      token: guest?.token ?? null,
-      name: guest ? guest.name : name,
-      attending,
-      partySize: n,
-      note,
-      answers: Object.fromEntries(Object.entries(answers).filter(([k, v]) => v && questions.some((q) => q.id === k))),
-    });
+    const res = await actions
+      .submitReply({
+        slug: model.wedding.slug,
+        token: guest?.token ?? null,
+        name: guest ? guest.name : name,
+        attending,
+        partySize: n,
+        note,
+        answers: Object.fromEntries(Object.entries(answers).filter(([k, v]) => v && questions.some((q) => q.id === k))),
+      })
+      .catch(() => ({ ok: false as const, error: "offline" }));
+    sending.current = false;
     if (res.ok) {
       setSaved({ attending, people: res.partySize, demo: false });
       setState("done");

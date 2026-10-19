@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart, ZoomIn } from "lucide-react";
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/intent-link";
 import { useState, ViewTransition } from "react";
 import { cardOptionsToQuery, type CardOptionOverrides } from "@/core/card/options";
 import { cardShape, designCardDefaults, type TemplateManifest } from "@/core/template/manifest";

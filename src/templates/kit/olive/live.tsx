@@ -7,6 +7,14 @@ import s from "./olive.module.css";
 /** The sun-and-moon switch: night turns the courtyard and the whole page to evening. */
 export function DayNight({ labels }: { labels: [string, string] }) {
   const [night, setNight] = useState(false);
+  // Fetch the night painting once the first screen is in, so the switch fades without waiting.
+  useEffect(() => {
+    const root = document.querySelector<HTMLElement>('[data-kit="olive"]');
+    if (!root) return;
+    const warm = () => root.setAttribute("data-warm", "");
+    const idle = window.requestIdleCallback?.(warm, { timeout: 6000 }) ?? window.setTimeout(warm, 4000);
+    return () => (window.cancelIdleCallback ? window.cancelIdleCallback(idle) : window.clearTimeout(idle));
+  }, []);
   useEffect(() => {
     const root = document.querySelector<HTMLElement>('[data-kit="olive"]');
     if (!root) return;

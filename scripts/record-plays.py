@@ -3,7 +3,7 @@
 
 Needs a running build on :3100 (`npm run build && PORT=3100 npm start`), Playwright for Python and ffmpeg.
   python3 scripts/record-plays.py olive-courtyard blush-lace ...
-Writes public/marketing/play/<id>-page.webp, and <id>-open.mp4 + <id>-first.webp when the design has an opening.
+Writes public/marketing/play/<id>-page.webp and <id>-first.webp (the first screen), and <id>-open.mp4 when the design has an opening.
 Sample photos come from public/samples (the library host is swapped out), so no network is needed.
 """
 import asyncio, sys, time, json, os, subprocess
@@ -57,6 +57,8 @@ async def one(b,id):
         subprocess.run(["ffmpeg","-y","-loglevel","error","-ss",f"{ss:.2f}","-to",f"{to:.2f}","-i",f"{d}/{vf}","-an","-vf","scale=390:844,fps=30","-c:v","libx264","-preset","slow","-crf","27","-pix_fmt","yuv420p","-movflags","+faststart",f"{OUT}/{id}-open.mp4"],check=True)
         subprocess.run(["ffmpeg","-y","-loglevel","error","-i",f"{OUT}/{id}-open.mp4","-frames:v","1","-q:v","4",f"{d}/first.jpg"],check=True)
         Image.open(f"{d}/first.jpg").save(f"{OUT}/{id}-first.webp",quality=80)
+    else:
+        im.crop((0,0,w,min(hh,round(w*844/390)))).save(f"{OUT}/{id}-first.webp",quality=80,method=6)
     res[id]={"opening":has,"ms":round((te-tc)*1000)}
     print(id,res[id],flush=True)
 async def main():

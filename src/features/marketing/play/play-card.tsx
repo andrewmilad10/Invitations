@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { IntentLink as Link } from "@/components/intent-link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { hasOpening } from "./play-data";

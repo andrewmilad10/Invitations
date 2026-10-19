@@ -298,6 +298,14 @@ html.motion-failed [data-image-reveal] {
   clip-path: none !important;
 }
 
+/* The invitation's cover while its first screen loads; lifts by itself without JavaScript (first-paint.tsx). */
+@keyframes first-paint-lift {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
 /* ── Homepage opening (pure CSS: plays on first paint, before JavaScript) ── */
 @keyframes open-settle {
   from {

@@ -39,6 +39,9 @@ function PreviewDialog({ design, onClose }: { design: PreviewDesign | null; onCl
   const scroller = useRef<HTMLDivElement>(null);
   const vid = useRef<HTMLVideoElement>(null);
   const [opened, setOpened] = useState(false);
+  // the opening is still arriving, and which design's full page has finished loading
+  const [waiting, setWaiting] = useState(false);
+  const [readyId, setReadyId] = useState<string | null>(null);
 
   useEffect(() => {
     const d = dlg.current;
@@ -53,20 +56,30 @@ function PreviewDialog({ design, onClose }: { design: PreviewDesign | null; onCl
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const v = vid.current;
     let t = 0;
-    const reveal = () => setOpened(true);
+    let slow = 0;
+    let alive = true;
+    const reveal = () => alive && (setWaiting(false), setOpened(true));
     if (hasOpening(design.id) && v && !still) {
       v.currentTime = 0;
       v.onended = reveal;
       v.onerror = reveal;
+      v.onwaiting = () => alive && setWaiting(true);
+      v.onplaying = () => alive && setWaiting(false);
+      slow = window.setTimeout(() => alive && v.readyState < 3 && setWaiting(true), 300);
       t = window.setTimeout(reveal, 15000);
       const p = v.play();
       if (p) p.catch(() => (t = window.setTimeout(reveal, 800)));
     } else t = window.setTimeout(reveal, still ? 0 : 500);
     return () => {
+      alive = false;
       window.clearTimeout(t);
+      window.clearTimeout(slow);
       setOpened(false);
+      setWaiting(false);
       if (v) {
         v.onended = null;
+        v.onwaiting = null;
+        v.onplaying = null;
         v.pause();
       }
     };
@@ -103,6 +116,7 @@ function PreviewDialog({ design, onClose }: { design: PreviewDesign | null; onCl
   }, [opened]);
 
   const src = design ? playSrc(design.id) : null;
+  const busy = Boolean(design) && (waiting || (opened && readyId !== design?.id));
   return (
     <dialog
       ref={dlg}
@@ -115,8 +129,16 @@ function PreviewDialog({ design, onClose }: { design: PreviewDesign | null; onCl
         <div className="grid items-center justify-items-center gap-5 p-4 md:grid-cols-[auto_18rem] md:gap-10">
           <div className="relative aspect-[390/844] h-[min(46rem,78dvh)] max-w-[calc(100vw-2rem)] rounded-[2.4rem] bg-[#1d1b19] p-2 shadow-[0_40px_80px_-30px_#000] md:h-[min(46rem,86dvh)]">
             <div className="relative size-full overflow-hidden rounded-[2rem] bg-muted">
+              {/* the first screen shows at once while the full page arrives */}
+              <img src={src.first} alt="" className="absolute inset-0 size-full object-cover object-top" />
               <div ref={scroller} tabIndex={0} aria-label={`${design.name}, scroll to see every section`} className="absolute inset-0 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                <img src={src.page} alt={`${design.name}, the whole invitation`} className="block h-auto w-full" />
+                <img
+                  key={design.id}
+                  src={src.page}
+                  alt={`${design.name}, the whole invitation`}
+                  onLoad={() => setReadyId(design.id)}
+                  className={cn("block h-auto w-full transition-opacity duration-300", readyId === design.id ? "opacity-100" : "opacity-0")}
+                />
               </div>
               {hasOpening(design.id) ? (
                 <video
@@ -128,10 +150,15 @@ function PreviewDialog({ design, onClose }: { design: PreviewDesign | null; onCl
                   poster={src.first}
                   className={cn("absolute inset-0 size-full object-cover transition-opacity duration-500", opened && "pointer-events-none opacity-0")}
                 >
+                  <source src={src.openWebm} type='video/webm; codecs="vp9"' />
                   <source src={src.open} type="video/mp4" />
-          <source src={src.openWebm} type="video/webm" />
                 </video>
               ) : null}
+              <span aria-hidden className={cn("pointer-events-none absolute inset-0 grid place-items-center transition-opacity duration-300", busy ? "opacity-100 delay-150" : "opacity-0")}>
+                <span className="grid size-12 place-items-center rounded-full bg-black/45 backdrop-blur-sm">
+                  <span className="size-6 animate-spin rounded-full border-2 border-white/35 border-t-white motion-reduce:animate-none" />
+                </span>
+              </span>
             </div>
           </div>
           <div className="grid justify-items-center gap-3 text-center text-[#f6f2ec] md:justify-items-start md:text-start">

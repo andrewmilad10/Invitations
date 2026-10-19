@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import type { InvitationModel, PublicWish } from "@/core/invitation/model";
 import { replyErrorText } from "@/core/replies/schema";
 import type { SectionContent } from "@/core/sections/registry";
@@ -30,9 +30,11 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
   const [message, setMessage] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState("");
+  const sending = useRef(false);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (sending.current) return;
     setError("");
     if (!name.trim() || !message.trim()) {
       setError(replyErrorText("invalid", ar));
@@ -43,8 +45,10 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
       setState("sent");
       return;
     }
+    sending.current = true;
     setState("sending");
-    const res = await actions.submitWish({ slug: model.wedding.slug, name, message });
+    const res = await actions.submitWish({ slug: model.wedding.slug, name, message }).catch(() => ({ ok: false as const, error: "offline" }));
+    sending.current = false;
     if (res.ok) {
       setList((l) => [{ name: name.trim(), message: message.trim(), at: new Date().toISOString() }, ...l]);
       setState("sent");

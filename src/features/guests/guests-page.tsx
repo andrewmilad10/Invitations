@@ -8,6 +8,7 @@ import { guestLines, guestsCsv, parsePastedGuests, questionTotals, totals, type 
 import type { GuestRow, WishRow } from "@/lib/supabase/database.types";
 import { cn } from "@/lib/utils";
 import * as server from "./actions";
+import { useSingleFlight } from "@/lib/use-single-flight";
 import type { GuestsPageData } from "./queries";
 
 type Filter = "all" | ReplyStatus;
@@ -53,8 +54,11 @@ export function GuestsPage({ data, siteUrl, demo = false }: { data: GuestsPageDa
   );
 }
 
+const offline = () => toast.error("No connection. Check your internet and try again.", { id: "guests-offline" });
+
 function GuestsScreen({ data, siteUrl, demo }: { data: GuestsPageData; siteUrl: string; demo: boolean }) {
   const ops = useContext(OpsCtx);
+  const flight = useSingleFlight(offline);
   const { wedding, canEdit, questions } = data;
   const [guests, setGuests] = useState<GuestRow[]>(data.guests);
   const [replies, setReplies] = useState(data.replies);
@@ -98,8 +102,11 @@ function GuestsScreen({ data, siteUrl, demo }: { data: GuestsPageData; siteUrl: 
     const ids = [...picked].filter((k) => guests.some((g) => g.id === k));
     const replyIds = [...picked].filter((k) => !ids.includes(k));
     if (!ids.length && !replyIds.length) return;
-    const res = await ops.deleteGuests(wedding.id, ids);
-    for (const r of replyIds) await ops.deleteReply(wedding.id, r);
+    const res = await flight.run("remove", async () => {
+      const [g] = await Promise.all([ops.deleteGuests(wedding.id, ids), ...replyIds.map((r) => ops.deleteReply(wedding.id, r))]);
+      return g;
+    });
+    if (!res) return;
     if (!res.ok) return toast.error(res.error);
     setGuests((gs) => gs.filter((g) => !ids.includes(g.id)));
     setReplies((rs) => rs.filter((r) => !replyIds.includes(r.id) && !ids.includes(r.guest_id ?? "")));
@@ -219,7 +226,7 @@ function GuestsScreen({ data, siteUrl, demo }: { data: GuestsPageData; siteUrl: 
           {picked.size && canEdit ? (
             <div className="mt-3 flex items-center gap-3 rounded-xl bg-primary px-4 py-2.5 text-sm text-primary-foreground">
               {picked.size} selected
-              <button type="button" onClick={removePicked} className="ms-auto inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-3 py-1">
+              <button type="button" onClick={removePicked} disabled={flight.busy("remove")} className="ms-auto inline-flex disabled:opacity-60 items-center gap-1.5 rounded-full bg-primary-foreground/15 px-3 py-1">
                 <Trash2 className="size-4" /> Remove
               </button>
               <button type="button" onClick={() => setPicked(new Set())} aria-label="Clear selection" className="rounded-full p-1 hover:bg-primary-foreground/15">
@@ -376,11 +383,24 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
   const [max, setMax] = useState<string>(guest?.max_party ? String(guest.max_party) : "");
   const [list, setList] = useState("");
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false);
   const dlg = useRef<HTMLDialogElement>(null);
   const lines = list.split(/\r?\n/).filter((x) => x.trim()).length;
 
   async function save() {
+    if (saving.current) return;
+    saving.current = true;
     setBusy(true);
+    try {
+      await saveNow();
+    } catch {
+      offline();
+    } finally {
+      saving.current = false;
+      setBusy(false);
+    }
+  }
+  async function saveNow() {
     if (guest) {
       const res = await ops.updateGuest(weddingId, guest.id, {
         name,
@@ -389,7 +409,6 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
         groups: groupText.split(",").map((g) => g.trim()).filter(Boolean),
         maxParty: max ? Number(max) : null,
       });
-      setBusy(false);
       if (!res.ok) return toast.error(res.error);
       onAdded([res.data]);
       toast.success("Saved");
@@ -403,7 +422,6 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
         groups: groupText.split(",").map((g) => g.trim()).filter(Boolean),
         maxParty: max ? Number(max) : null,
       });
-      setBusy(false);
       if (!res.ok) return toast.error(res.error);
       onAdded([res.data]);
       toast.success(`${res.data.name} added`);
@@ -412,7 +430,6 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
       return;
     }
     const res = await ops.addGuestList(weddingId, list);
-    setBusy(false);
     if (!res.ok) return toast.error(res.error);
     onAdded(res.data.added);
     toast.success(`Added ${res.data.added.length}${res.data.duplicates ? `, skipped ${res.data.duplicates} already on the list` : ""}`);
@@ -501,6 +518,7 @@ function AddGuests({ weddingId, defaultMax, guest, onClose, onAdded }: { wedding
 
 function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: string; wishes: WishRow[]; setWishes: (f: (w: WishRow[]) => WishRow[]) => void; canEdit: boolean; on: boolean }) {
   const ops = useContext(OpsCtx);
+  const flight = useSingleFlight(offline);
   if (!wishes.length) {
     return (
       <div className="mt-6 rounded-2xl border border-dashed border-border px-6 py-14 text-center text-muted-foreground">
@@ -530,9 +548,11 @@ function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: stri
                 type="button"
                 aria-label={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
                 title={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
-                className="rounded-full p-2 hover:bg-muted"
+                className="rounded-full p-2 hover:bg-muted disabled:opacity-50"
+                disabled={flight.busy(w.id)}
                 onClick={async () => {
-                  const res = await ops.setWishHidden(weddingId, w.id, !w.hidden);
+                  const res = await flight.run(w.id, () => ops.setWishHidden(weddingId, w.id, !w.hidden));
+                  if (!res) return;
                   if (!res.ok) return toast.error(res.error);
                   setWishes((ws) => ws.map((x) => (x.id === w.id ? { ...x, hidden: !w.hidden } : x)));
                 }}
@@ -542,9 +562,11 @@ function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: stri
               <button
                 type="button"
                 aria-label="Delete wish"
-                className="rounded-full p-2 hover:bg-muted"
+                className="rounded-full p-2 hover:bg-muted disabled:opacity-50"
+                disabled={flight.busy(w.id)}
                 onClick={async () => {
-                  const res = await ops.deleteWish(weddingId, w.id);
+                  const res = await flight.run(w.id, () => ops.deleteWish(weddingId, w.id));
+                  if (!res) return;
                   if (!res.ok) return toast.error(res.error);
                   setWishes((ws) => ws.filter((x) => x.id !== w.id));
                 }}

@@ -54,8 +54,18 @@ export function EditorProvider({
   const [bundle, setBundle] = useState(initialBundle);
   const [status, setStatus] = useState<SaveStatus>("idle");
   const timers = useRef(new Map<string, { timer: number; run: () => Promise<SaveResult> }>());
+  // One save at a time per key: a change made while the previous save of the
+  // same thing is still on its way waits for it, and only the latest is sent.
+  const lanes = useRef(new Map<string, { next: (() => Promise<SaveResult>) | null; done: Promise<void> }>());
   const inFlight = useRef(0);
   const failed = useRef(false);
+
+  const settle = useCallback(() => {
+    if (inFlight.current === 0 && timers.current.size === 0 && lanes.current.size === 0) {
+      setStatus(failed.current ? "error" : "saved");
+      failed.current = false;
+    }
+  }, []);
 
   const execute = useCallback(async (run: () => Promise<SaveResult>) => {
     inFlight.current++;
@@ -69,13 +79,33 @@ export function EditorProvider({
     inFlight.current--;
     if (!result.ok) {
       failed.current = true;
-      toast.error(result.error);
-    }
-    if (inFlight.current === 0 && timers.current.size === 0) {
-      setStatus(failed.current ? "error" : "saved");
-      failed.current = false;
+      // the same message once, not once per failed request
+      toast.error(result.error, { id: "editor-save-error" });
     }
   }, []);
+
+  const send = useCallback(
+    (key: string, run: () => Promise<SaveResult>): Promise<void> => {
+      const busy = lanes.current.get(key);
+      if (busy) {
+        busy.next = run;
+        return busy.done;
+      }
+      const lane: { next: (() => Promise<SaveResult>) | null; done: Promise<void> } = { next: run, done: Promise.resolve() };
+      lanes.current.set(key, lane);
+      lane.done = (async () => {
+        while (lane.next) {
+          const r = lane.next;
+          lane.next = null;
+          await execute(r);
+        }
+        lanes.current.delete(key);
+        settle();
+      })();
+      return lane.done;
+    },
+    [execute, settle],
+  );
 
   const save = useCallback<EditorContextValue["save"]>(
     (key, run, delayMs = 700) => {
@@ -84,24 +114,25 @@ export function EditorProvider({
       setStatus("saving");
       const timer = window.setTimeout(() => {
         timers.current.delete(key);
-        void execute(run);
+        void send(key, run);
       }, delayMs);
       timers.current.set(key, { timer, run });
     },
-    [execute],
+    [send],
   );
 
   const flush = useCallback(async () => {
-    const pending = [...timers.current.values()];
+    const pending = [...timers.current.entries()];
     timers.current.clear();
-    pending.forEach((p) => window.clearTimeout(p.timer));
-    await Promise.all(pending.map((p) => execute(p.run)));
-  }, [execute]);
+    pending.forEach(([, p]) => window.clearTimeout(p.timer));
+    await Promise.all([...pending.map(([key, p]) => send(key, p.run)), ...[...lanes.current.values()].map((l) => l.done)]);
+    settle();
+  }, [send, settle]);
 
   // Warn before leaving with unsaved changes.
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (timers.current.size > 0 || inFlight.current > 0) e.preventDefault();
+      if (timers.current.size > 0 || lanes.current.size > 0 || inFlight.current > 0) e.preventDefault();
     };
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
