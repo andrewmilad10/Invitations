@@ -30,6 +30,7 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
   const [message, setMessage] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
   const sending = useRef(false);
 
   async function submit(e: FormEvent) {
@@ -50,7 +51,9 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
     const res = await actions.submitWish({ slug: model.wedding.slug, name, message }).catch(() => ({ ok: false as const, error: "offline" }));
     sending.current = false;
     if (res.ok) {
-      setList((l) => [{ name: name.trim(), message: message.trim(), at: new Date().toISOString() }, ...l]);
+      // A wish that waits for the couple's approval isn't shown yet.
+      if (!res.pending) setList((l) => [{ name: name.trim(), message: message.trim(), at: new Date().toISOString() }, ...l]);
+      setPending(Boolean(res.pending));
       setState("sent");
       setMessage("");
     } else {
@@ -76,7 +79,17 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
         ) : null}
         {state === "sent" ? (
           <p className={s.small} role="status">
-            {live ? (ar ? "شكرًا! وصلت أمنيتكم." : "Thank you! Your wish is on its way to us.") : ar ? "هذه معاينة، لذلك لم يُحفظ شيء." : "This is a preview, so nothing was saved."}
+            {!live
+              ? ar
+                ? "هذه معاينة، لذلك لم يُحفظ شيء."
+                : "This is a preview, so nothing was saved."
+              : pending
+                ? ar
+                  ? "شكرًا! وصلت أمنيتكم، وستظهر هنا بعد أن يقرأها العروسان."
+                  : "Thank you! The couple will read your wish, and it will appear here once they do."
+                : ar
+                  ? "شكرًا! وصلت أمنيتكم."
+                  : "Thank you! Your wish is on its way to us."}
           </p>
         ) : open ? (
           <form className={s.form} onSubmit={submit} noValidate>

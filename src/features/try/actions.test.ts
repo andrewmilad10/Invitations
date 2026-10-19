@@ -28,10 +28,10 @@ beforeEach(() => {
 });
 
 describe("saveDraftAsWedding", () => {
-  it("saves a valid draft in one call with a readable slug", async () => {
+  it("saves a valid draft in one call with a readable but unguessable slug", async () => {
     expect(await saveDraftAsWedding(valid)).toEqual({ ok: true, data: { id: "new-wedding-id" } });
     expect(rpc).toHaveBeenCalledTimes(1);
-    expect(rpc).toHaveBeenCalledWith("create_wedding_from_draft", { p_draft: expect.objectContaining({ slug: "mariam-and-andrew", partnerOne: "Mariam" }) });
+    expect(rpc).toHaveBeenCalledWith("create_wedding_from_draft", { p_draft: expect.objectContaining({ slug: expect.stringMatching(/^mariam-and-andrew-[a-z0-9]{6}$/), partnerOne: "Mariam" }) });
   });
 
   it("requires a signed-in user", async () => {

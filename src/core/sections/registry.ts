@@ -93,7 +93,7 @@ export const sectionSchemas = {
     maxGuests: z.coerce.number().int().min(1).max(20),
     questions: z.array(replyQuestion).max(6),
   }),
-  wishes: z.object({ heading: text(80), message: text(300) }),
+  wishes: z.object({ heading: text(80), message: text(300), approveFirst: z.boolean() }),
   gifts: z.object({ heading: text(80), note: text(400), method: text(60), account: text(120) }),
   faq: z.object({ heading: text(80), items: z.array(faqItem).max(12) }),
   closing: z.object({ heading: text(120), message: text(600), signature: text(120) }),
@@ -269,8 +269,12 @@ export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } =
     description: "Guests leave a message for you on the invitation. You can hide any of them from your guest list page.",
     canDisable: true,
     defaultEnabled: false,
-    fields: [heading(), { name: "message", label: "A line above the wishes", kind: "textarea", maxLength: 300, rows: 2 }],
-    defaults: (l) => ({ ...d(l).wishes }),
+    fields: [
+      heading(),
+      { name: "message", label: "A line above the wishes", kind: "textarea", maxLength: 300, rows: 2 },
+      { name: "approveFirst", label: "Show a wish only after I approve it", kind: "toggle", hint: "New wishes wait in your guest list until you show them. Turn off to show them straight away." },
+    ],
+    defaults: (l) => ({ ...d(l).wishes, approveFirst: true }),
   },
   gifts: {
     type: "gifts",

@@ -36,7 +36,8 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
   // The unique index is the source of truth; retry with a random suffix on
   // collision instead of a racy "is it taken?" pre-check.
   for (let attempt = 0; attempt < MAX_SLUG_ATTEMPTS; attempt++) {
-    const slug = attempt === 0 && base ? base : withRandomSuffix(base);
+    // always a random suffix: addresses must not be guessable from names
+    const slug = withRandomSuffix(base);
     const { data, error } = await supabase
       .from("weddings")
       .insert({

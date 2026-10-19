@@ -40,9 +40,24 @@ export function suggestSlug(partnerOne: string, partnerTwo: string): string {
   return base.length >= SLUG_MIN ? base.slice(0, SLUG_MAX - 5).replace(/-+$/g, "") : "";
 }
 
-/** "andrew-and-mariam" → "andrew-and-mariam-4k2q" */
-export function withRandomSuffix(slug: string, random: () => number = Math.random): string {
-  const suffix = Array.from({ length: 4 }, () => "abcdefghjkmnpqrstuvwxyz23456789"[Math.floor(random() * 30)]).join("");
-  const base = (slug || "wedding").slice(0, SLUG_MAX - 5).replace(/-+$/g, "");
+/** A random number in [0, 1) from the platform's cryptographic generator. */
+function secureRandom(): number {
+  const n = new Uint32Array(1);
+  globalThis.crypto.getRandomValues(n);
+  return n[0] / 2 ** 32;
+}
+
+/** Letters and digits that can't be confused when read aloud or typed. */
+const SUFFIX_CHARS = "abcdefghjkmnpqrstuvwxyz23456789";
+export const SUFFIX_LENGTH = 6;
+
+/**
+ * "andrew-and-mariam" → "andrew-and-mariam-4k2q9x". Every new invitation gets
+ * one, so its address can't be guessed from the couple's names (30^6, about
+ * 729 million possibilities per name pair).
+ */
+export function withRandomSuffix(slug: string, random: () => number = secureRandom): string {
+  const suffix = Array.from({ length: SUFFIX_LENGTH }, () => SUFFIX_CHARS[Math.floor(random() * SUFFIX_CHARS.length)]).join("");
+  const base = (slug || "wedding").slice(0, SLUG_MAX - SUFFIX_LENGTH - 1).replace(/-+$/g, "");
   return `${base}-${suffix}`;
 }

@@ -530,53 +530,61 @@ function Wishes({ weddingId, wishes, setWishes, canEdit, on }: { weddingId: stri
       </div>
     );
   }
+  const waiting = wishes.filter((w) => w.hidden).length;
   return (
-    <ul className="mt-6 grid gap-3">
-      {wishes.map((w) => (
-        <li key={w.id} className={cn("flex gap-4 rounded-2xl border border-border bg-card p-4", w.hidden && "opacity-60")}>
-          <div className="min-w-0 flex-1">
-            <p className="font-medium">{w.name}</p>
-            <p className="mt-1 whitespace-pre-line text-[0.95rem]">{w.message}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {new Date(w.created_at).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}
-              {w.hidden ? " · Hidden from the invitation" : ""}
-            </p>
-          </div>
-          {canEdit ? (
-            <div className="flex shrink-0 items-start gap-1">
-              <button
-                type="button"
-                aria-label={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
-                title={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
-                className="rounded-full p-2 hover:bg-muted disabled:opacity-50"
-                disabled={flight.busy(w.id)}
-                onClick={async () => {
-                  const res = await flight.run(w.id, () => ops.setWishHidden(weddingId, w.id, !w.hidden));
-                  if (!res) return;
-                  if (!res.ok) return toast.error(res.error);
-                  setWishes((ws) => ws.map((x) => (x.id === w.id ? { ...x, hidden: !w.hidden } : x)));
-                }}
-              >
-                {w.hidden ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
-              </button>
-              <button
-                type="button"
-                aria-label="Delete wish"
-                className="rounded-full p-2 hover:bg-muted disabled:opacity-50"
-                disabled={flight.busy(w.id)}
-                onClick={async () => {
-                  const res = await flight.run(w.id, () => ops.deleteWish(weddingId, w.id));
-                  if (!res) return;
-                  if (!res.ok) return toast.error(res.error);
-                  setWishes((ws) => ws.filter((x) => x.id !== w.id));
-                }}
-              >
-                <Trash2 className="size-4" />
-              </button>
+    <>
+      {waiting && canEdit ? (
+        <p className="mt-6 text-sm text-muted-foreground" role="status">
+          {waiting === 1 ? "1 wish is" : `${waiting} wishes are`} waiting for you. Guests only see a wish after you show it.
+        </p>
+      ) : null}
+      <ul className="mt-6 grid gap-3">
+        {wishes.map((w) => (
+          <li key={w.id} className={cn("flex gap-4 rounded-2xl border border-border bg-card p-4", w.hidden && "opacity-60")}>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium">{w.name}</p>
+              <p className="mt-1 whitespace-pre-line text-[0.95rem]">{w.message}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {new Date(w.created_at).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}
+                {w.hidden ? " · Not on the invitation. Tap the eye to show it" : ""}
+              </p>
             </div>
-          ) : null}
-        </li>
-      ))}
-    </ul>
+            {canEdit ? (
+              <div className="flex shrink-0 items-start gap-1">
+                <button
+                  type="button"
+                  aria-label={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
+                  title={w.hidden ? "Show on the invitation" : "Hide from the invitation"}
+                  className="rounded-full p-2 hover:bg-muted disabled:opacity-50"
+                  disabled={flight.busy(w.id)}
+                  onClick={async () => {
+                    const res = await flight.run(w.id, () => ops.setWishHidden(weddingId, w.id, !w.hidden));
+                    if (!res) return;
+                    if (!res.ok) return toast.error(res.error);
+                    setWishes((ws) => ws.map((x) => (x.id === w.id ? { ...x, hidden: !w.hidden } : x)));
+                  }}
+                >
+                  {w.hidden ? <Eye className="size-4" /> : <EyeOff className="size-4" />}
+                </button>
+                <button
+                  type="button"
+                  aria-label="Delete wish"
+                  className="rounded-full p-2 hover:bg-muted disabled:opacity-50"
+                  disabled={flight.busy(w.id)}
+                  onClick={async () => {
+                    const res = await flight.run(w.id, () => ops.deleteWish(weddingId, w.id));
+                    if (!res) return;
+                    if (!res.ok) return toast.error(res.error);
+                    setWishes((ws) => ws.filter((x) => x.id !== w.id));
+                  }}
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              </div>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

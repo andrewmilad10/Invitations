@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
+import { isAllowedMedia } from "@/core/media/signature";
 import { sectionStyleSchema } from "@/core/sections/style";
 import { isSectionType, SECTION_DEFINITIONS, validateSectionContent, type SectionType } from "@/core/sections/registry";
 import { themeOverridesSchema } from "@/core/theme/tokens";
@@ -13,7 +14,7 @@ import { isUuid } from "@/features/weddings/queries";
 import type { Json } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { isSelectableTemplateId } from "@/templates/registry";
-import { detailsSchema, eventSchema, registerMediaSchema, settingsSchema, type EventInput } from "./schemas";
+import { detailsSchema, eventSchema, MEDIA_LIMITS, registerMediaSchema, settingsSchema, type EventInput } from "./schemas";
 
 /**
  * Editor mutations. Every action: checks the session, validates input with
@@ -245,6 +246,22 @@ export async function saveEvent(weddingId: string, input: EventInput): Promise<A
  * is authorised by Storage RLS). Hero and music are single-slot: the previous
  * file is replaced.
  */
+async function verifyUpload(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  path: string,
+  purpose: "hero" | "gallery" | "music",
+): Promise<string | null> {
+  const { data, error } = await supabase.storage.from(MEDIA_BUCKET).download(path);
+  if (error || !data) return "We couldn't read that file. Please try again.";
+  const max = purpose === "music" ? MEDIA_LIMITS.audioBytes : MEDIA_LIMITS.imageBytes;
+  if (data.size > max) return `That file is too large (max ${Math.round(max / 1024 / 1024)} MB).`;
+  const head = new Uint8Array(await data.slice(0, 64).arrayBuffer());
+  if (!isAllowedMedia(head, purpose)) {
+    return purpose === "music" ? "That isn't a real audio file. Please choose an MP3, M4A, AAC, OGG or WAV file." : "That isn't a real photo. Please choose a JPG, PNG, WebP or AVIF image.";
+  }
+  return null;
+}
+
 export async function registerMedia(
   weddingId: string,
   input: z.input<typeof registerMediaSchema>,
@@ -258,6 +275,14 @@ export async function registerMedia(
   const expectedPrefix = `weddings/${weddingId}/${m.purpose}/`;
   if (!m.storagePath.startsWith(expectedPrefix) || m.storagePath.slice(expectedPrefix.length).includes("/")) {
     return { ok: false, error: "Invalid file location." };
+  }
+
+  // Check what the file really is from its bytes (not its name or claimed
+  // type) and its real size. Anything else is deleted and refused.
+  const fileError = await verifyUpload(ctx.supabase, m.storagePath, m.purpose);
+  if (fileError) {
+    await ctx.supabase.storage.from(MEDIA_BUCKET).remove([m.storagePath]);
+    return { ok: false, error: fileError };
   }
 
   const replaced: { id: string; storage_path: string }[] = [];

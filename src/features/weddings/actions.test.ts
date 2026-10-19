@@ -34,12 +34,12 @@ beforeEach(() => {
 });
 
 describe("createWedding", () => {
-  it("creates a wedding with a readable slug owned by the current user", async () => {
+  it("creates a wedding with a readable but unguessable slug owned by the current user", async () => {
     const result = await createWedding(valid);
     expect(result).toEqual({ ok: true, data: { id: "new-id" } });
     expect(inserted[0]).toMatchObject({
       owner_id: "user-1",
-      slug: "andrew-and-mariam",
+      slug: expect.stringMatching(/^andrew-and-mariam-[a-z0-9]{6}$/),
       partner_one_name: "Andrew",
       partner_two_name: "Mariam",
       wedding_date: "2027-06-12",
@@ -49,12 +49,13 @@ describe("createWedding", () => {
     expect(inserted[0]).not.toHaveProperty("status");
   });
 
-  it("retries with a random suffix when the slug is taken", async () => {
+  it("retries with a new random suffix when the slug is taken", async () => {
     insertResults.push({ data: null, error: { code: "23505", message: "duplicate" } });
     const result = await createWedding(valid);
     expect(result.ok).toBe(true);
     expect(inserted).toHaveLength(2);
-    expect(inserted[1].slug).toMatch(/^andrew-and-mariam-[a-z0-9]{4}$/);
+    expect(inserted[1].slug).toMatch(/^andrew-and-mariam-[a-z0-9]{6}$/);
+    expect(inserted[1].slug).not.toBe(inserted[0].slug);
   });
 
   it("gives up after repeated collisions", async () => {
@@ -74,7 +75,7 @@ describe("createWedding", () => {
 
   it("uses a generated slug for names without a Latin form", async () => {
     await createWedding({ ...valid, partnerOne: "أندرو", partnerTwo: "مريم" });
-    expect(inserted[0].slug).toMatch(/^wedding-[a-z0-9]{4}$/);
+    expect(inserted[0].slug).toMatch(/^wedding-[a-z0-9]{6}$/);
     expect(inserted[0].partner_one_name).toBe("أندرو");
   });
 

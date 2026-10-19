@@ -31,7 +31,7 @@ export const wishInput = z.object({
 export type WishInput = z.input<typeof wishInput>;
 
 export type ReplyResult = { ok: true; partySize: number } | { ok: false; error: string };
-export type WishResult = { ok: true } | { ok: false; error: string };
+export type WishResult = { ok: true; pending?: boolean } | { ok: false; error: string };
 
 const guestRow = z.object({
   name: z.string(),

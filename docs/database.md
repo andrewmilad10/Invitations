@@ -131,6 +131,10 @@ couple changed. Created empty by trigger.
   a public pass-through with `security definer`. Supabase's security advisor
   should stay at zero warnings.
 
+* **Wishes wait for approval** (0013): `submit_wish` saves a wish hidden unless
+  the wishes section's `approveFirst` is false (it is true when not set) and
+  answers `pending`. The couple shows wishes from their guest list.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

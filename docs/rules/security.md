@@ -45,8 +45,17 @@ of them is not finished.
   only (`safeQrUrl`). No `javascript:` or data URLs.
 - Never render user text as HTML (`dangerouslySetInnerHTML` is not used for
   user content).
-- Uploaded images: check type and size, downscale on the client, store under
-  the owner's folder with storage policies.
+- Uploaded images: check type and size, then redraw them in the browser into a
+  new WebP/JPEG (`cleanImage`: drops GPS and camera data and anything hidden in
+  the file, max 2560px). The server reads every uploaded file's first bytes
+  (`isAllowedMedia`) and deletes anything that isn't a real image or audio
+  file before it is recorded. Files go under the owner's folder with storage
+  policies; SVG is never accepted.
+- Invitation addresses always end in a random 6-character code
+  (`withRandomSuffix`), so they can't be guessed from names.
+- Every page sends a Content Security Policy (next.config.ts): scripts only
+  from this site, data only to this site and Supabase, frames only Google
+  Maps. A new outside service must be added there on purpose.
 
 ## Dependencies
 

@@ -57,6 +57,6 @@ export async function submitWish(input: WishInput): Promise<WishResult> {
 
   const { data, error } = await createAnonClient().rpc("submit_wish", { p_slug: w.slug, p_name: w.name, p_message: w.message });
   if (error || !data || typeof data !== "object") return { ok: false, error: "failed" };
-  const res = data as { ok?: boolean; error?: string };
-  return res.ok ? { ok: true } : { ok: false, error: res.error ?? "failed" };
+  const res = data as { ok?: boolean; error?: string; pending?: boolean };
+  return res.ok ? { ok: true, pending: res.pending !== false } : { ok: false, error: res.error ?? "failed" };
 }

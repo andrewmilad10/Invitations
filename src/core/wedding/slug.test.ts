@@ -9,7 +9,7 @@ describe("slugs", () => {
 
   it("returns empty when names have no Latin form, so callers can fall back", () => {
     expect(suggestSlug("أندرو", "مريم")).toBe("");
-    expect(withRandomSuffix("", () => 0)).toBe("wedding-aaaa");
+    expect(withRandomSuffix("", () => 0)).toBe("wedding-aaaaaa");
   });
 
   it("slugify strips punctuation and collapses separators", () => {

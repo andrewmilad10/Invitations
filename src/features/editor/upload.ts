@@ -43,10 +43,59 @@ async function imageSize(file: File): Promise<{ width: number | null; height: nu
   }
 }
 
+/** Longest side of a stored photo: sharp on any phone or laptop screen. */
+const MAX_SIDE = 2560;
+
+/**
+ * Redraws a photo into a brand-new image file. Only the pixels survive:
+ * hidden data (the phone's GPS location, camera details, anything appended
+ * to the file) is left behind, and very large photos are scaled down.
+ * Returns null when the file can't be opened as an image.
+ */
+export async function cleanImage(file: File): Promise<File | null> {
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  } catch {
+    return null;
+  }
+  const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+  const w = Math.max(1, Math.round(bitmap.width * scale));
+  const h = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const g = canvas.getContext("2d");
+  if (!g) {
+    bitmap.close();
+    return null;
+  }
+  g.drawImage(bitmap, 0, 0, w, h);
+  bitmap.close();
+  const encode = (type: string, quality: number) => new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
+  // WebP keeps transparency and is small; browsers that can't write it give JPEG (on white).
+  let blob = await encode("image/webp", 0.88);
+  if (!blob || blob.type !== "image/webp") {
+    g.globalCompositeOperation = "destination-over";
+    g.fillStyle = "#ffffff";
+    g.fillRect(0, 0, w, h);
+    blob = await encode("image/jpeg", 0.9);
+  }
+  if (!blob) return null;
+  const name = file.name.replace(/\.[^.]+$/, "") + (blob.type === "image/webp" ? ".webp" : ".jpg");
+  return new File([blob], name, { type: blob.type });
+}
+
 /** Uploads to weddings/{id}/{purpose}/{uuid}.{ext} and records it in `media`. */
-export async function uploadMedia(weddingId: string, purpose: Purpose, file: File): Promise<UploadResult> {
-  const invalid = validateFile(file, purpose);
+export async function uploadMedia(weddingId: string, purpose: Purpose, original: File): Promise<UploadResult> {
+  const invalid = validateFile(original, purpose);
   if (invalid) return { ok: false, error: invalid };
+  let file = original;
+  if (purpose !== "music") {
+    const clean = await cleanImage(original);
+    if (!clean) return { ok: false, error: "That isn't a photo we can open. Please choose a JPG, PNG, WebP or AVIF image." };
+    file = clean;
+  }
 
   const path = `weddings/${weddingId}/${purpose}/${crypto.randomUUID()}.${EXTENSIONS[file.type]}`;
   const { width, height } = purpose === "music" ? { width: null, height: null } : await imageSize(file);

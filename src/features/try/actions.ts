@@ -5,7 +5,7 @@ import { z } from "zod";
 import { isValidTimeZone } from "@/core/i18n/format";
 import { LOCALES } from "@/core/i18n/locales";
 import { themeOverridesSchema } from "@/core/theme/tokens";
-import { suggestSlug } from "@/core/wedding/slug";
+import { suggestSlug, withRandomSuffix } from "@/core/wedding/slug";
 import { getCurrentUser } from "@/features/auth/session";
 import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
 import type { ActionResult } from "@/features/weddings/schemas";
@@ -58,7 +58,7 @@ export async function saveDraftAsWedding(draft: DraftToCreate): Promise<ActionRe
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("create_wedding_from_draft", {
-    p_draft: { ...d, slug: suggestSlug(d.partnerOne, d.partnerTwo) } as unknown as Json,
+    p_draft: { ...d, slug: withRandomSuffix(suggestSlug(d.partnerOne, d.partnerTwo)) } as unknown as Json,
   });
   if (error || !data) {
     console.error("create_wedding_from_draft failed", error);

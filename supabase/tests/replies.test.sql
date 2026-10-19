@@ -97,9 +97,23 @@ select tests.eq((select open_count from public.guests where name = 'Mariam & fam
 insert into public.wedding_sections (wedding_id, type, enabled) values (tests.rwid('eve-and-ian'), 'wishes', true);
 set local role anon;
 select set_config('request.jwt.claim.sub', '', true);
-select tests.eq(public.submit_wish('eve-and-ian', 'Aunt Hoda', 'Congratulations!') ->> 'ok', 'true', 'a guest leaves a wish');
+select tests.eq(public.submit_wish('eve-and-ian', 'Aunt Hoda', 'Congratulations!') ->> 'pending', 'true', 'a new wish waits for the couple by default');
+select tests.eq(jsonb_array_length(public.get_public_wishes('eve-and-ian')), 0, 'a waiting wish is not shown to guests');
 select tests.eq(public.submit_wish('eve-and-ian', 'Spam', repeat('x', 501)) ->> 'error', 'invalid', 'long wishes are refused');
-select tests.eq(jsonb_array_length(public.get_public_wishes('eve-and-ian')), 1, 'guests see the wish');
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-000000000005', true);
+select tests.eq(tests.affected($$update public.wishes set hidden = false where name = 'Aunt Hoda'$$), 1, 'the couple shows the wish');
+update public.wedding_sections set content = '{"approveFirst": false}' where type = 'wishes';
+set local role anon;
+select set_config('request.jwt.claim.sub', '', true);
+select tests.eq(jsonb_array_length(public.get_public_wishes('eve-and-ian')), 1, 'guests see the wish once shown');
+select tests.eq(public.submit_wish('eve-and-ian', 'Cousin Rana', 'Mabrouk!') ->> 'pending', 'false', 'with approval off a wish shows straight away');
+select tests.eq(jsonb_array_length(public.get_public_wishes('eve-and-ian')), 2, 'guests see it at once');
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-000000000005', true);
+delete from public.wishes where name = 'Cousin Rana';
+set local role anon;
+select set_config('request.jwt.claim.sub', '', true);
 
 set local role authenticated;
 select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-000000000005', true);

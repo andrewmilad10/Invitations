@@ -44,6 +44,38 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
+/**
+ * Content Security Policy: what a page may load and talk to. Scripts only
+ * from this site (Next.js needs its small inline start-up scripts), data only
+ * to this site and Supabase, frames only Google Maps. So even an injected
+ * script could not load code from elsewhere or send data anywhere else.
+ */
+const supabaseOrigin = (() => {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!raw) return "";
+  const u = new URL(raw);
+  return `${u.origin} ${u.protocol === "https:" ? "wss:" : "ws:"}//${u.host}`;
+})();
+const isDev = process.env.NODE_ENV !== "production";
+function csp(frameAncestors: string) {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+    "style-src 'self' 'unsafe-inline'",
+    `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${supabaseOrigin}`.trim(),
+    `media-src 'self' blob: https://*.supabase.co ${supabaseOrigin}`.trim(),
+    "font-src 'self' data:",
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co ${supabaseOrigin}`.trim(),
+    "frame-src 'self' https://maps.google.com https://www.google.com https://*.google.com",
+    "worker-src 'self' blob:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    `frame-ancestors ${frameAncestors}`,
+    ...(isDev ? [] : ["upgrade-insecure-requests"]),
+  ].join("; ");
+}
+
 const nextConfig: NextConfig = {
   env: publicSettings,
   poweredByHeader: false,
@@ -52,8 +84,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
-      { source: "/((?!embed/).*)", headers: [{ key: "Content-Security-Policy", value: "frame-ancestors 'self'" }, { key: "X-Frame-Options", value: "SAMEORIGIN" }] },
-      { source: "/embed/:path*", headers: [{ key: "Content-Security-Policy", value: `frame-ancestors 'self' ${shopOrigins}` }] },
+      { source: "/((?!embed/).*)", headers: [{ key: "Content-Security-Policy", value: csp("'self'") }, { key: "X-Frame-Options", value: "SAMEORIGIN" }] },
+      { source: "/embed/:path*", headers: [{ key: "Content-Security-Policy", value: csp(`'self' ${shopOrigins}`) }] },
     ];
   },
   images: {
