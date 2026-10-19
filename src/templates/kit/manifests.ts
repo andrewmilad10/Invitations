@@ -87,6 +87,7 @@ const P = {
   // Peony Blush: one palette, matched to its painted paper
   peonyBlush: { id: "blush-peony", label: "Blush paper & peonies", family: "pink", colors: c("#fcf7f2", "#fffcf9", "#4a3a36", "#6e5a54", "#4a3a36", "#fffcf9", "#ecdcd3") },
   // Ribbon & Pearls: ivory paper and dusty rose
+  ivoryVeil: { id: "veil-ivory", label: "Ivory, lace & taupe", family: "neutral", colors: c("#f5f0e7", "#fbf8f2", "#4f4840", "#6c6259", "#7d6f61", "#fbf8f2", "#e3d9cb") },
   blushLace: { id: "lace-blush", label: "Cream, blush lace & dusty rose", family: "neutral", colors: c("#f7f1ea", "#fbf8f4", "#4f4340", "#6f5e59", "#96655d", "#fbf8f4", "#e6d9d1") },
   wisteriaLake: { id: "wisteria-blush", label: "Cream, blush rose & wisteria", family: "neutral", colors: c("#f7f2ea", "#fffdf9", "#4a3b38", "#6b5753", "#8e4f4e", "#fffdf9", "#e6d8cf") },
   gounaLagoon: { id: "lagoon-sand", label: "Sand, turquoise & coral", family: "neutral", colors: c("#f9f6eb", "#fffdf8", "#4a3a2c", "#6b5948", "#b9543d", "#fffdf8", "#e4d9c6") },
@@ -500,6 +501,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
   }),
+  kitTemplate("veil", {
+    id: "ivory-veil",
+    name: "Ivory Veil",
+    tagline: "An ivory envelope with a lace heart seal that dissolves into tulle, lace and quiet cream pages.",
+    description:
+      "Opens on an ivory envelope filling the screen, with a small lace heart seal and your names on the flap; one tap and it dissolves into a first screen of tulle and vintage lace with your names in widely spaced capitals. Below, one quiet ivory column: your words in a soft italic with the date and a round photo of a rose, the countdown, your story beside your photo in a thin oval frame, the reply card resting on lace, the day with a round photo of flowers in a bowl, a timeline of fine line drawings, the ceremony and celebration under a leaf wreath, and your last word.",
+    categories: ["elegant", "classic", "romantic", "vintage"],
+    palettes: [P.ivoryVeil],
+    fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },
+    card: { layout: "classic" },
+  }, { opening: true }),
   kitTemplate("lace", {
     id: "blush-lace",
     name: "Blush Lace",
