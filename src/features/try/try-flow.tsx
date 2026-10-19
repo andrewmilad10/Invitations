@@ -31,17 +31,6 @@ import { DownloadCardButton } from "@/features/cards/download-card";
 
 type TemplateOption = TemplateManifest;
 
-const STEPS = [
-  { id: "names", label: "Names" },
-  { id: "date", label: "Date" },
-  { id: "ceremony", label: "Ceremony" },
-  { id: "reception", label: "Reception" },
-  { id: "location", label: "Location" },
-  { id: "style", label: "Style" },
-  { id: "photos", label: "Photos" },
-  { id: "sections", label: "All sections" },
-] as const;
-
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
@@ -65,7 +54,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
   const router = useRouter();
   const hydrated = useHydrated();
   const stored = useStoredDraft();
-  const [step, setStep] = useState(0);
+  const [panel, setPanel] = useState<"content" | "design" | "settings">("content");
   const [tab, setTab] = useState<"edit" | "preview">("edit");
 
   // The visitor's answers: the stored draft (switched to this template if
@@ -108,8 +97,6 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
     router.replace(`/create/${id}`, { scroll: false });
   }
 
-  const current = STEPS[step];
-  const last = step === STEPS.length - 1;
   const canSave = Boolean(answers.partnerOne.trim() && answers.partnerTwo.trim());
 
   return (
@@ -134,7 +121,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
             <Link href={productHref(productOf(template), template.id)}>Exit</Link>
           </Button>
           <DownloadCardButton bundle={bundle} className="hidden sm:inline-flex" />
-          <SaveButton canSave={canSave} onMissingNames={() => setStep(0)} />
+          <SaveButton canSave={canSave} onMissingNames={() => setPanel("content")} />
         </div>
       </header>
 
@@ -155,73 +142,51 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
 
       <div className="flex min-h-0 flex-1">
         <section className={cn("flex min-h-0 w-full flex-col lg:w-[460px] lg:shrink-0 lg:border-e", tab === "preview" && "hidden lg:flex")} aria-label="Your details">
-          {current.id !== "sections" ? (
-            <button
-              type="button"
-              onClick={() => setStep(STEPS.length - 1)}
-              className="flex items-center justify-between gap-3 border-b bg-secondary/60 px-5 py-2.5 text-start text-sm hover:bg-secondary"
-            >
-              <span>
-                <b className="font-medium">Edit every section</b>
-                <span className="block text-xs text-muted-foreground">Story, the day&apos;s plan, replies, families, wishes, gifts… and their order</span>
-              </span>
-              <span aria-hidden className="text-lg">→</span>
-            </button>
-          ) : null}
-          <nav aria-label="Steps" className="border-b px-4 py-3">
-            <ol className="flex flex-wrap gap-1">
-              {STEPS.map((s, i) => (
-                <li key={s.id}>
-                  <button
-                    type="button"
-                    onClick={() => setStep(i)}
-                    aria-current={i === step ? "step" : undefined}
-                    className={cn(
-                      "whitespace-nowrap rounded-full px-3 py-1.5 text-xs transition-colors",
-                      i === step
-                        ? "bg-primary text-primary-foreground"
-                        : s.id === "sections"
-                          ? "border border-accent/60 text-foreground hover:bg-secondary"
-                          : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-                    )}
-                  >
-                    {i + 1}. {s.label}
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          <div className="min-h-0 flex-1 overflow-y-auto px-6 py-8">
-            {current.id === "names" && <NamesStep answers={answers} update={update} />}
-            {current.id === "date" && <DateStep answers={answers} update={update} />}
-            {current.id === "ceremony" && <EventStep kind="ceremony" answers={answers} update={update} />}
-            {current.id === "reception" && <EventStep kind="reception" answers={answers} update={update} />}
-            {current.id === "location" && <LocationStep answers={answers} update={update} />}
-            {current.id === "style" && <StyleStep answers={answers} update={update} templates={templates} onTemplate={chooseTemplate} />}
-            {current.id === "photos" && <PhotosStep answers={answers} update={update} urls={urls} />}
-            {current.id === "sections" && <SectionsStep answers={answers} update={update} template={resolveTemplateManifest(answers.templateId)} bundle={bundle} />}
+          <div role="tablist" aria-label="Edit" className="flex gap-1 border-b px-3 py-2">
+            {(["content", "design", "settings"] as const).map((p) => (
+              <button
+                key={p}
+                type="button"
+                role="tab"
+                aria-selected={panel === p}
+                onClick={() => setPanel(p)}
+                className={cn("flex-1 rounded-full py-2 text-sm capitalize transition-colors", panel === p ? "bg-secondary font-medium text-foreground" : "text-muted-foreground hover:text-foreground")}
+              >
+                {p}
+              </button>
+            ))}
           </div>
 
-          {last ? (
-            <div className="border-t bg-card px-6 pt-3 sm:hidden">
-              <DownloadCardButton bundle={bundle} className="w-full" label="Download my card" />
-            </div>
-          ) : null}
-          <div className="flex items-center justify-between gap-3 border-t bg-card px-6 py-4">
-            <Button type="button" variant="ghost" disabled={step === 0} onClick={() => setStep((s) => s - 1)}>
-              Back
-            </Button>
-            <span className="text-xs text-muted-foreground">
-              Step {step + 1} of {STEPS.length}
-            </span>
-            {last ? (
-              <SaveButton canSave={canSave} onMissingNames={() => setStep(0)} label="Save my invitation" />
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5">
+            {panel === "content" ? (
+              <SectionsStep
+                answers={answers}
+                update={update}
+                template={resolveTemplateManifest(answers.templateId)}
+                bundle={bundle}
+                extra={{
+                  hero: (
+                    <>
+                      <NamesStep answers={answers} update={update} bare />
+                      <DateStep answers={answers} update={update} bare />
+                      <PhotosStep answers={answers} update={update} urls={urls} bare only="hero" />
+                    </>
+                  ),
+                  ceremony: <EventStep kind="ceremony" answers={answers} update={update} bare />,
+                  reception: <EventStep kind="reception" answers={answers} update={update} bare />,
+                  gallery: <PhotosStep answers={answers} update={update} urls={urls} bare only="gallery" />,
+                }}
+              />
+            ) : panel === "design" ? (
+              <StyleStep answers={answers} update={update} templates={templates} onTemplate={chooseTemplate} bare />
             ) : (
-              <Button type="button" onClick={() => setStep((s) => s + 1)}>
-                Next
-              </Button>
+              <LocationStep answers={answers} update={update} bare />
             )}
+          </div>
+
+          <div className="flex items-center justify-between gap-3 border-t bg-card px-5 py-3">
+            <span className="text-xs text-muted-foreground">{hasProgress(answers) ? "Saved in this browser" : "Nothing saved yet"}</span>
+            <SaveButton canSave={canSave} onMissingNames={() => setPanel("content")} label="Save my invitation" />
           </div>
         </section>
 
@@ -259,9 +224,10 @@ function SaveButton({ canSave, onMissingNames, label = "Save invitation" }: { ca
 
 // ── Steps ───────────────────────────────────────────────────────────────────
 
-type StepProps = { answers: TryAnswers; update: (patch: Partial<TryAnswers>) => void };
+type StepProps = { answers: TryAnswers; update: (patch: Partial<TryAnswers>) => void; bare?: boolean };
 
-function StepHeader({ title, children }: { title: string; children?: ReactNode }) {
+function StepHeader({ title, children, bare }: { title: string; children?: ReactNode; bare?: boolean }) {
+  if (bare) return null;
   return (
     <header className="mb-8">
       <h1 className="font-serif text-4xl font-light leading-tight">{title}</h1>
@@ -270,13 +236,13 @@ function StepHeader({ title, children }: { title: string; children?: ReactNode }
   );
 }
 
-function NamesStep({ answers, update }: StepProps) {
+function NamesStep({ answers, update, bare }: StepProps) {
   return (
     <>
-      <StepHeader title="Who's getting married?">Exactly as you&apos;d like your names to appear. Watch them appear on the invitation.</StepHeader>
+      <StepHeader bare={bare} title="Who's getting married?">Exactly as you&apos;d like your names to appear. Watch them appear on the invitation.</StepHeader>
       <div className="grid gap-5">
         <Field id="partnerOne" label="First name">
-          <Input id="partnerOne" value={answers.partnerOne} placeholder="Emma" maxLength={80} autoFocus onChange={(e) => update({ partnerOne: e.target.value })} />
+          <Input id="partnerOne" value={answers.partnerOne} placeholder="Emma" maxLength={80} autoFocus={!bare} onChange={(e) => update({ partnerOne: e.target.value })} />
         </Field>
         <Field id="partnerTwo" label="Second name">
           <Input id="partnerTwo" value={answers.partnerTwo} placeholder="James" maxLength={80} onChange={(e) => update({ partnerTwo: e.target.value })} />
@@ -286,10 +252,10 @@ function NamesStep({ answers, update }: StepProps) {
   );
 }
 
-function DateStep({ answers, update }: StepProps) {
+function DateStep({ answers, update, bare }: StepProps) {
   return (
     <>
-      <StepHeader title="When is the big day?">Your countdown starts the moment you choose.</StepHeader>
+      <StepHeader bare={bare} title="When is the big day?">Your countdown starts the moment you choose.</StepHeader>
       <Field id="date" label="Wedding date">
         <Input id="date" type="date" value={answers.date ?? ""} className="max-w-xs" onChange={(e) => update({ date: e.target.value || null })} />
       </Field>
@@ -302,7 +268,7 @@ function DateStep({ answers, update }: StepProps) {
   );
 }
 
-function EventStep({ kind, answers, update }: StepProps & { kind: "ceremony" | "reception" }) {
+function EventStep({ kind, answers, update, bare }: StepProps & { kind: "ceremony" | "reception" }) {
   const e = answers[kind];
   const set = (patch: Partial<EventAnswers>) => update({ [kind]: { ...e, ...patch } } as Partial<TryAnswers>);
   const copy =
@@ -311,7 +277,7 @@ function EventStep({ kind, answers, update }: StepProps & { kind: "ceremony" | "
       : { title: "The reception", hint: "Where the celebration continues.", venue: "The Garden Estate", address: "Holland Park, London" };
   return (
     <>
-      <StepHeader title={copy.title}>{copy.hint} You can skip this and add it later.</StepHeader>
+      <StepHeader bare={bare} title={copy.title}>{copy.hint} You can skip this and add it later.</StepHeader>
       <div className="grid gap-5">
         <Field id={`${kind}-venue`} label="Venue">
           <Input id={`${kind}-venue`} value={e.venue} placeholder={copy.venue} maxLength={160} onChange={(ev) => set({ venue: ev.target.value })} />
@@ -336,14 +302,14 @@ function EventStep({ kind, answers, update }: StepProps & { kind: "ceremony" | "
   );
 }
 
-function LocationStep({ answers, update }: StepProps) {
+function LocationStep({ answers, update, bare }: StepProps) {
   const zones = useMemo(() => {
     const all = typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : [];
     return all.includes(answers.timezone) ? all : [answers.timezone, ...all];
   }, [answers.timezone]);
   return (
     <>
-      <StepHeader title="Where in the world?">So times show correctly for every guest, wherever they are.</StepHeader>
+      <StepHeader bare={bare} title="Where in the world?">So times show correctly for every guest, wherever they are.</StepHeader>
       <div className="grid gap-5">
         <Field id="timezone" label="Time zone of the wedding">
           <NativeSelect id="timezone" value={answers.timezone} onChange={(e) => update({ timezone: e.target.value })}>
@@ -368,7 +334,7 @@ function LocationStep({ answers, update }: StepProps) {
   );
 }
 
-function StyleStep({ answers, update, templates, onTemplate }: StepProps & { templates: TemplateOption[]; onTemplate: (id: string) => void }) {
+function StyleStep({ answers, update, templates, onTemplate, bare }: StepProps & { templates: TemplateOption[]; onTemplate: (id: string) => void }) {
   const current = templates.find((t) => t.id === answers.templateId) ?? templates[0];
   const [showAll, setShowAll] = useState(false);
   // The chosen design and its variants first, then the rest in featured order.
@@ -377,7 +343,7 @@ function StyleStep({ answers, update, templates, onTemplate }: StepProps & { tem
   const visible = showAll ? ordered : ordered.slice(0, 9);
   return (
     <>
-      <StepHeader title="Choose your style">Switch freely — your details stay exactly as they are.</StepHeader>
+      <StepHeader bare={bare} title="Choose your style">Switch freely — your details stay exactly as they are.</StepHeader>
       <h2 className="mb-3 text-sm font-medium">Colours</h2>
       <div role="radiogroup" aria-label="Palette" className="grid gap-2">
         {current.palettes.map((p, i) => {
@@ -435,8 +401,9 @@ function StyleStep({ answers, update, templates, onTemplate }: StepProps & { tem
   );
 }
 
-function PhotosStep({ answers, update, urls }: StepProps & { urls: Record<string, string> }) {
-  const [target, setTarget] = useState<"hero" | "gallery">("hero");
+function PhotosStep({ answers, update, urls, bare, only }: StepProps & { urls: Record<string, string>; only?: "hero" | "gallery" }) {
+  const [picked, setTarget] = useState<"hero" | "gallery">("hero");
+  const target = only ?? picked;
   const input = useRef<HTMLInputElement>(null);
   const { hero, gallery } = answers.photos;
 
@@ -503,9 +470,9 @@ function PhotosStep({ answers, update, urls }: StepProps & { urls: Record<string
 
   return (
     <>
-      <StepHeader title="Add your photos">Upload your own or choose from our collection. Photos stay on this device until you save.</StepHeader>
+      <StepHeader bare={bare} title="Add your photos">Upload your own or choose from our collection. Photos stay on this device until you save.</StepHeader>
 
-      <div role="tablist" aria-label="Photo" className="mb-6 grid grid-cols-2 rounded-full border p-1 text-sm">
+      <div role="tablist" aria-label="Photo" className={cn("mb-6 grid grid-cols-2 rounded-full border p-1 text-sm", only && "hidden")}>
         {(["hero", "gallery"] as const).map((t) => (
           <button key={t} type="button" role="tab" aria-selected={target === t} onClick={() => setTarget(t)} className={cn("rounded-full py-1.5", target === t ? "bg-primary text-primary-foreground" : "text-muted-foreground")}>
             {t === "hero" ? "Main photo" : `Gallery (${gallery.length})`}

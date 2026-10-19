@@ -1,7 +1,28 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ChevronDown, GripVertical } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  BookOpen,
+  CalendarDays,
+  CheckSquare,
+  ChevronDown,
+  Clock,
+  Footprints,
+  Gift,
+  GlassWater,
+  GripVertical,
+  Heart,
+  HelpCircle,
+  Image as ImageIcon,
+  ListOrdered,
+  MapPin,
+  MessageCircle,
+  PenLine,
+  ScrollText,
+  type LucideIcon,
+} from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { Switch } from "@/components/ui/switch";
 import { sectionDisplayOrder } from "@/core/invitation/build-model";
 import { toLocale } from "@/core/i18n/locales";
@@ -12,15 +33,29 @@ import { FieldControl } from "@/features/editor/panels/section-fields";
 import { cn } from "@/lib/utils";
 import { isFilled, type TryAnswers } from "./answers";
 
-/** Where the parts of a section that aren't text are filled in. */
+/** A note under a section's description. */
 const ELSEWHERE: Partial<Record<SectionType, string>> = {
-  hero: "Your names and date are in steps 1–2, the photo in step 7.",
-  ceremony: "The place and time are in step 3.",
-  reception: "The place and time are in step 4.",
-  venue: "The map comes from the addresses in steps 3–4.",
-  gallery: "Photos are in step 7.",
+  venue: "The map comes from the ceremony and celebration addresses.",
   countdown: "It counts down to your ceremony.",
   rsvp: "Every reply is saved to your guest list once you publish.",
+};
+const ICONS: Record<SectionType, LucideIcon> = {
+  hero: Heart,
+  couple: ScrollText,
+  date: CalendarDays,
+  countdown: Clock,
+  story: BookOpen,
+  ceremony: Heart,
+  reception: GlassWater,
+  venue: MapPin,
+  gallery: ImageIcon,
+  schedule: ListOrdered,
+  rsvp: CheckSquare,
+  wishes: MessageCircle,
+  gifts: Gift,
+  faq: HelpCircle,
+  closing: PenLine,
+  footer: Footprints,
 };
 
 /**
@@ -34,15 +69,18 @@ export function SectionsStep({
   update,
   template,
   bundle,
+  extra = {},
 }: {
   answers: TryAnswers;
   update: (f: (a: TryAnswers) => TryAnswers) => void;
   template: TemplateManifest;
   bundle: WeddingBundle;
+  /** Fields that belong to a section but aren't section text (names, places, photos). */
+  extra?: Partial<Record<SectionType, ReactNode>>;
 }) {
   const locale = toLocale(answers.locale);
   const order = sectionDisplayOrder(bundle.sections, template);
-  const [open, setOpen] = useState<SectionType | null>(null);
+  const [open, setOpen] = useState<SectionType | null>("hero");
   const [drag, setDrag] = useState<SectionType | null>(null);
   const [over, setOver] = useState<SectionType | null>(null);
 
@@ -71,12 +109,9 @@ export function SectionsStep({
 
   return (
     <>
-      <header className="mb-6">
-        <h1 className="font-serif text-4xl font-light leading-tight">Every section</h1>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Write in any section and watch it change on the invitation. Switch off what you don&apos;t need, and drag <GripVertical className="inline size-3.5" /> to change the order.
-        </p>
-      </header>
+      <p className="mb-4 px-1 text-sm leading-relaxed text-muted-foreground">
+        Tap a section to write in it. Drag <GripVertical className="inline size-3.5" /> to change the order, or switch a section off to hide it.
+      </p>
       {answers.order?.length ? (
         <button type="button" className="mb-3 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground" onClick={() => update((a) => ({ ...a, order: null }))}>
           Back to the design&apos;s order
@@ -124,12 +159,18 @@ export function SectionsStep({
               )}
             >
               <div className="flex items-center gap-1.5 py-1.5 pe-2 ps-1.5">
-                <span className={cn("grid size-8 place-items-center text-muted-foreground", pinned(t) ? "opacity-30" : "cursor-grab active:cursor-grabbing")} aria-hidden>
+                <span className={cn("grid size-7 place-items-center text-muted-foreground", pinned(t) ? "opacity-30" : "cursor-grab active:cursor-grabbing")} aria-hidden>
                   <GripVertical className="size-4" />
+                </span>
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-secondary text-primary" aria-hidden>
+                  {(() => {
+                    const Icon = ICONS[t];
+                    return <Icon className="size-4" />;
+                  })()}
                 </span>
                 <button type="button" onClick={() => setOpen(expanded ? null : t)} aria-expanded={expanded} className="grid min-w-0 flex-1 text-start">
                   <span className={cn("text-sm font-medium", !on && "text-muted-foreground line-through decoration-muted-foreground/40")}>{def.label}</span>
-                  <span className="truncate text-xs text-muted-foreground">{summary(def.fields, own, shown)}</span>
+                  <span className="truncate text-xs text-muted-foreground">{t === "hero" ? `${answers.partnerOne || "Emma"} & ${answers.partnerTwo || "James"}` : summary(def.fields, own, shown)}</span>
                 </button>
                 <button type="button" aria-label={`Move ${def.label} up`} disabled={pinned(t) || i <= 1} onClick={() => move(t, -1)} className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary disabled:opacity-25">
                   <ArrowUp className="size-4" />
@@ -148,6 +189,7 @@ export function SectionsStep({
                     {def.description}
                     {ELSEWHERE[t] ? ` ${ELSEWHERE[t]}` : ""}
                   </p>
+                  {extra[t] ? <div className="grid gap-5">{extra[t]}</div> : null}
                   {def.fields.map((f) => (
                     <FieldControl
                       key={f.name}
