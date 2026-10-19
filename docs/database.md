@@ -107,6 +107,12 @@ couple changed. Created empty by trigger.
   only answers to the couple's own questions and limit totals per wedding.
   Tests: `supabase/tests/replies.test.sql`.
 
+* **Internal helpers locked** (0009): Supabase grants `anon`/`authenticated`
+  EXECUTE on new functions by default, so `revoke … from public` is not
+  enough. `published_wedding_id`, `section_on` and `replies_guest_matches`
+  are callable only from inside the guest-facing functions; new helpers must
+  revoke from `public, anon, authenticated` explicitly.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own
