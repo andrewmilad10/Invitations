@@ -113,6 +113,12 @@ couple changed. Created empty by trigger.
   are callable only from inside the guest-facing functions; new helpers must
   revoke from `public, anon, authenticated` explicitly.
 
+* **Flood limits** (0010): the publishable key is public, so the guest
+  functions can be called without the app. Per invitation, at most 120 new
+  general-link replies and 40 wishes per 10 minutes (`busy` after that);
+  personal links are not limited. Also one SELECT policy on `weddings`
+  (owner or member) instead of two, and an index on `media.created_by`.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

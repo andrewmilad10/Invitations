@@ -128,3 +128,13 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-000000000005', true);
 delete from public.guests where name = 'Uncle Hossam';
 select tests.eq((select count(*) from public.replies)::int, 2, 'deleting a guest removes their reply');
+
+-- ── Flood limits (0010): the public functions slow down a burst ────────────
+set local role anon;
+select set_config('request.jwt.claim.sub', '', true);
+select tests.eq((select count(*) from generate_series(1, 39) i where public.submit_wish('eve-and-ian', 'Guest ' || i, 'Hello') ->> 'ok' = 'true')::int, 39, 'a busy evening of wishes goes through');
+select tests.eq(public.submit_wish('eve-and-ian', 'Bot', 'spam') ->> 'error', 'busy', 'the 41st wish in ten minutes waits');
+select tests.eq((select count(*) from generate_series(1, 119) i where public.submit_reply('eve-and-ian', null, 'Visitor ' || i, true, 1, null, null) ->> 'ok' = 'true')::int, 119, 'a crowd replying through the general link goes through');
+select tests.eq(public.submit_reply('eve-and-ian', null, 'One too many', true, 1, null, null) ->> 'error', 'busy', 'the 121st new general reply in ten minutes waits');
+select tests.eq(public.submit_reply('eve-and-ian', null, 'Karim', true, 2, null, null) ->> 'ok', 'true', 'someone already on the list can still change their reply');
+select tests.eq(public.submit_reply('eve-and-ian', tests.token('Mariam & family'), null, true, 2, null, null) ->> 'ok', 'true', 'personal links are never slowed down');
