@@ -20,7 +20,7 @@
     "fact3": {
      "type": "fact",
      "settings": {
-      "value": "25",
+      "value": "26",
       "label": "original designs"
      }
     },
@@ -45,6 +45,16 @@
   "designs": {
    "type": "vellum-designs",
    "blocks": {
+    "ivory-veil": {
+     "type": "design",
+     "settings": {
+      "template_id": "ivory-veil",
+      "name": "Ivory Veil",
+      "name_ar": "الطرحة العاجية",
+      "mood": "classic",
+      "tagline": "An ivory envelope with a lace heart seal that dissolves into tulle, lace and quiet cream pages."
+     }
+    },
     "blush-lace": {
      "type": "design",
      "settings": {
@@ -297,6 +307,7 @@
     }
    },
    "block_order": [
+    "ivory-veil",
     "blush-lace",
     "wisteria-lake",
     "gouna-lagoon",
@@ -325,7 +336,7 @@
    ],
    "settings": {
     "limit": 9,
-    "more_label": "See all 25 designs",
+    "more_label": "See all 26 designs",
     "more_link": "/collections/all"
    }
   },
