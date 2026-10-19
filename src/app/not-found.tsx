@@ -13,7 +13,7 @@ export default function NotFound() {
           <p className="mt-3 text-muted-foreground">The link may be old, or the page may have moved.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild>
-              <Link href="/invitations">See invitation cards</Link>
+              <Link href="/websites">See the designs</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/">Go to the home page</Link>
