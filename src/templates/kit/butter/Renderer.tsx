@@ -6,25 +6,22 @@ import type { SectionComponents, SectionProps, TemplateRendererProps } from "../
 import { eventDate, faqItems, heroPhoto, kitCopy, photos, scheduleItems } from "../data";
 import { Clock, Directions, fx, KitRoot, Paragraphs, Pic, Sec } from "../pieces";
 import { Depth } from "./depth";
-import { ButterOpening, ButterReady } from "./opening";
+import { ButterReady } from "./ready";
 import { ReplyForm } from "./reply";
 import s from "./butter.module.css";
 
 /**
- * Butter Letter — a love letter made of layered paper. It opens on a
- * butter-yellow envelope with a lace-trimmed flap and a jasmine wax seal,
- * turning gently in 3D; a tap tips it away. The first screen is a paper
- * collage that builds itself: the open envelope, the couple's photo in a cream
- * oval mat rising out of the pocket, a terracotta lace doily carrying the
- * date, the wax seal, and a cascade of jasmine falling down the side — every
- * piece at its own depth, drifting with the pointer, the phone's tilt and
- * scrolling. No backgrounds below: plain cream space, small capitals with
+ * Butter Letter — a quiet love letter on cream paper. No opening: the first
+ * screen is the invitation itself — the names in script, the couple's photo in
+ * a cream oval mat with a jasmine wax seal pressed at its foot and a sprig of
+ * jasmine behind it, then the date. The pieces drift a little with the pointer,
+ * the phone's tilt and scrolling. Below, plain cream space: small capitals with
  * script, a slim countdown, olive pill buttons, and a reply written in flat
  * butter-cream blocks. The pieces were made for Vellum (public/templates/butter-letter).
  *
  * Colours: bg = cream page, surface = butter cream (fields, cards), fg = warm
  * ink, muted = soft brown, accent = olive (buttons), accent-fg = cream, border
- * = hairlines. Butter yellow and terracotta belong to the paper pieces.
+ * = hairlines. The jasmine and the seal belong to the paper pieces.
  */
 
 const ART = "/templates/butter-letter";
@@ -41,45 +38,34 @@ function Script({ children, className }: { children: ReactNode; className?: stri
   return <h2 className={`${s.script} ${className ?? ""}`}>{children}</h2>;
 }
 
-/** The paper collage: the open envelope, the photo rising from it, the doily with the date, the seal and the jasmine. */
+/** The first screen, kept simple: the names, the couple's photo in the cream oval with the wax seal pressed at its foot and a sprig of jasmine behind it, then the date. */
 function Hero({ model, content }: SectionProps<"hero">) {
   const { wedding } = model;
   const t = tr(model);
   const amp = model.locale === "ar" ? "و" : "&";
   const photo = heroPhoto(model);
+  const first = model.events.ceremony ?? model.events.reception;
   return (
     <header id="hero" data-section="hero" className={s.hero}>
       <Depth className={s.collage}>
-        <div className={s.heading} style={d(0.25)}>
-          <p className={`${s.caps} ${s.in}`} style={d(0.25, 0)}>{content.eyebrow || t.save}</p>
-          <h1 className={`${s.names} ${s.in}`} style={d(0.25, 1)}>
-            <span>{wedding.partnerOne}</span>
-            <span className={s.amp}>{amp}</span>
-            <span>{wedding.partnerTwo}</span>
-          </h1>
-        </div>
-        <div className={s.env} style={d(0.5)}>
-          <img src={`${ART}/open.webp`} alt="" className={s.envBack} width={1185} height={1052} aria-hidden="true" />
-          <div className={s.card} style={d(0.9)}>
-            <div className={s.cardIn}>
-              {photo ? <Pic asset={photo} priority sizes="(min-width: 700px) 260px, 46vw" className={s.cardPhoto} /> : <span className={s.cardBlank} />}
-              <img src={`${ART}/oval.webp`} alt="" className={s.cardMat} width={893} height={1170} aria-hidden="true" />
-            </div>
+        <p className={`${s.caps} ${s.in}`} style={d(0, 0)}>{content.eyebrow || t.save}</p>
+        <h1 className={`${s.names} ${s.in}`} style={d(0.2, 1)}>
+          {wedding.partnerOne} <span className={s.amp}>{amp}</span> {wedding.partnerTwo}
+        </h1>
+        <div className={`${s.frame} ${s.in}`} style={d(0.5, 2)}>
+          <div className={s.jasmine} style={d(1.2)}>
+            <img src={`${ART}/jasmine.webp`} alt="" className={s.jasmineIn} width={522} height={1440} aria-hidden="true" />
           </div>
-          <img src={`${ART}/open.webp`} alt="" className={s.envFront} width={1185} height={1052} aria-hidden="true" />
-          <div className={s.doily} style={d(1.3)}>
-            <div className={s.doilyIn}>
-              <img src={`${ART}/doily.webp`} alt="" width={1100} height={1065} aria-hidden="true" />
-              {wedding.date ? <span className={s.doilyDate}>{wedding.date.short}</span> : null}
-            </div>
+          <div className={s.oval} style={d(0.6)}>
+            {photo ? <Pic asset={photo} priority sizes="(min-width: 700px) 300px, 62vw" className={s.cardPhoto} /> : <span className={s.cardBlank} />}
+            <img src={`${ART}/oval.webp`} alt="" className={s.cardMat} width={893} height={1170} aria-hidden="true" />
           </div>
-          <div className={s.seal} style={d(1.1)}>
+          <div className={s.seal} style={d(1)}>
             <img src={`${ART}/seal.webp`} alt="" className={s.sealIn} width={413} height={560} aria-hidden="true" />
           </div>
         </div>
-        <div className={s.jasmine} style={d(1.6)}>
-          <img src={`${ART}/jasmine.webp`} alt="" className={s.jasmineIn} width={522} height={1440} aria-hidden="true" />
-        </div>
+        {wedding.date ? <p className={`${s.heroDate} ${s.in}`} style={d(0.1, 4)}>{wedding.date.long}</p> : null}
+        {first?.venueName ? <p className={`${s.smallCaps} ${s.in}`} style={d(0.1, 5)}>{first.venueName}</p> : null}
       </Depth>
       {content.tagline ? <p className={`${s.tagline} ${s.in}`} style={d(0, 6)}>{content.tagline}</p> : null}
     </header>
@@ -327,8 +313,8 @@ const sections: SectionComponents = {
 
 export default function ButterRenderer({ model }: TemplateRendererProps) {
   return (
-    <KitRoot model={model} kit="butter" className={s.root} after={model.mode === "export" ? null : <ButterOpening model={model} />}>
-      <ButterReady model={model} />
+    <KitRoot model={model} kit="butter" className={s.root}>
+      <ButterReady />
       <Sections model={model} components={sections} />
     </KitRoot>
   );

@@ -505,14 +505,14 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
   kitTemplate("butter", {
     id: "butter-letter",
     name: "Butter Letter",
-    tagline: "A butter-yellow love letter with a lace-trimmed flap that opens into a paper collage in 3D.",
+    tagline: "A quiet cream love letter: your photo in an oval with a jasmine wax seal.",
     description:
-      "Opens on a butter-yellow envelope with a lace-trimmed flap and a jasmine wax seal, turning gently as guests move their phone; one tap tips it away. The first screen builds itself as a paper collage: the open envelope, your photo in a cream oval rising from the pocket, a terracotta lace doily carrying your date, the wax seal and a cascade of jasmine, every piece at its own depth. Below, plain cream space: where to meet you, a slim countdown, olive buttons, your story beside an oval photo, the ceremony and celebration, the day, and the reply in flat butter-cream blocks.",
+      "No opening: the first screen is the invitation itself. Your names in flowing script, your photo in a cream oval mat with a jasmine wax seal pressed at its foot and a sprig of jasmine behind it, then the date, every piece drifting gently as guests move their phone. Below, plain cream space: where to meet you, a slim countdown, olive buttons, your story beside an oval photo, the ceremony and celebration, the day, and the reply in flat butter-cream blocks.",
     categories: ["romantic", "vintage", "elegant", "floral"],
     palettes: [P.butterLetter],
     fonts: { heading: "pinyon", body: "cormorant", accent: "cormorant" },
     card: { layout: "classic" },
-  }, { opening: true }),
+  }),
   kitTemplate("veil", {
     id: "ivory-veil",
     name: "Ivory Veil",
