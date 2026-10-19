@@ -1,5 +1,25 @@
 import type { NextConfig } from "next";
 
+/**
+ * The live Supabase project, used only for builds on Vercel when its
+ * environment settings don't name one (values set in Vercel always win).
+ * Both values are public by design: the publishable key is sent to every
+ * visitor's browser, and Row Level Security protects the data. The secret
+ * key is never here, nor anywhere else in the code.
+ */
+const LIVE_SUPABASE = {
+  NEXT_PUBLIC_SUPABASE_URL: "https://sehdfrbsfxmewskznqwf.supabase.co",
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_icJ-qGcMzYm3HSW7aSslyg_-pu2JWt7",
+};
+const onVercel = process.env.VERCEL === "1";
+const publicSettings: Record<string, string> = {};
+if (onVercel && !process.env.NEXT_PUBLIC_SUPABASE_URL) Object.assign(publicSettings, LIVE_SUPABASE);
+if (onVercel && !process.env.NEXT_PUBLIC_SITE_URL && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+  publicSettings.NEXT_PUBLIC_SITE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+}
+// Server code reads process.env directly; give it the same values.
+for (const [k, v] of Object.entries(publicSettings)) process.env[k] = v;
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHost = supabaseUrl ? new URL(supabaseUrl) : null;
 
@@ -25,6 +45,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  env: publicSettings,
   poweredByHeader: false,
   async headers() {
     return [
