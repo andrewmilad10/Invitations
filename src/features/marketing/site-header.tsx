@@ -25,6 +25,32 @@ const LINKS = [
 ];
 
 /**
+ * Whether a visitor is signed in, read in the browser after the page shows
+ * (the marketing pages stay static and fast). The Supabase client loads only
+ * then, and only reads the session already in this browser's cookies.
+ */
+function useSignedIn() {
+  const [signedIn, setSignedIn] = useState(false);
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
+    let alive = true;
+    let stop: (() => void) | undefined;
+    void import("@/lib/supabase/client").then(({ createClient }) => {
+      if (!alive) return;
+      const supabase = createClient();
+      void supabase.auth.getSession().then(({ data }) => alive && setSignedIn(Boolean(data.session)));
+      const { data } = supabase.auth.onAuthStateChange((_event, session) => alive && setSignedIn(Boolean(session)));
+      stop = () => data.subscription.unsubscribe();
+    });
+    return () => {
+      alive = false;
+      stop?.();
+    };
+  }, []);
+  return signedIn;
+}
+
+/**
  * Public site header: a slim cream capsule that floats over the page and
  * stays at the top while scrolling. "Designs" opens a small menu (hover on a
  * computer, tap anywhere). On phones it folds into a menu button.
@@ -33,6 +59,8 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState(false);
+  const signedIn = useSignedIn();
+  const account = signedIn ? { href: "/dashboard", label: "My weddings" } : { href: "/login", label: "Log in" };
   const closeT = useRef<number>(0);
   const dropRef = useRef<HTMLDivElement>(null);
 
@@ -134,8 +162,8 @@ export function SiteHeader() {
           </nav>
 
           <div className="ms-auto hidden items-center gap-1 lg:flex">
-            <Link href="/login" className="rounded-full px-3 py-2 text-[0.9rem] text-muted-foreground hover:text-foreground">
-              Log in
+            <Link href={account.href} className="rounded-full px-3 py-2 text-[0.9rem] text-muted-foreground hover:text-foreground">
+              {account.label}
             </Link>
             <Link href="/websites" className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-[0.9rem] font-medium text-primary-foreground transition-colors hover:bg-primary/90">
               Create invitation
@@ -171,8 +199,8 @@ export function SiteHeader() {
             <Link href="/websites" onClick={() => setOpen(false)} className="inline-flex h-12 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground">
               Create invitation
             </Link>
-            <Link href="/login" onClick={() => setOpen(false)} className="inline-flex h-12 items-center justify-center rounded-full border border-border">
-              Log in
+            <Link href={account.href} onClick={() => setOpen(false)} className="inline-flex h-12 items-center justify-center rounded-full border border-border">
+              {account.label}
             </Link>
           </div>
         </div>
