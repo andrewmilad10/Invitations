@@ -160,7 +160,9 @@ select tests.eq((select count(*) from pg_proc p join pg_namespace n on n.oid = p
     and p.proname in ('wedding_role','can_view_wedding','can_edit_wedding','get_public_invitation','get_guest','get_public_wishes','submit_reply','submit_wish'))::int,
   0, 'no public function a guest or user can call runs with full rights');
 select tests.eq((select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-  where n.nspname = 'private' and p.prosecdef)::int, 8, 'the full-rights versions live in the private schema');
+  where n.nspname = 'private' and p.prosecdef
+    and p.proname in ('wedding_role','can_view_wedding','can_edit_wedding','get_public_invitation','get_guest','get_public_wishes','submit_reply','submit_wish'))::int,
+  8, 'the full-rights versions live in the private schema');
 set local role anon;
 select set_config('request.jwt.claim.sub', '', true);
 select tests.ok(public.get_public_invitation('eve-and-ian') ->> 'wedding' is not null, 'guests still open a published invitation through public');

@@ -26,6 +26,10 @@ type WeddingRow = {
   template_id: string;
   status: WeddingStatus;
   published_at: string | null;
+  /** Set by staff/payments only (not client-writable): live until, or null = no limit yet. */
+  active_until: string | null;
+  deactivated_at: string | null;
+  deactivated_reason: string | null;
 } & Timestamps;
 
 type MemberRow = { wedding_id: string; user_id: string; role: MemberRole; created_at: string };
@@ -200,6 +204,20 @@ export type Database = {
       };
       submit_wish: { Args: { p_slug: string; p_name: string; p_message: string }; Returns: Json };
       get_public_wishes: { Args: { p_slug: string }; Returns: Json };
+      admin_me: { Args: Record<string, never>; Returns: Json };
+      admin_overview: { Args: { p_days: number }; Returns: Json };
+      admin_list_weddings: { Args: { p_filter: string; p_search: string | null; p_limit: number; p_offset: number }; Returns: Json };
+      admin_list_sales: { Args: { p_search: string | null; p_limit: number; p_offset: number }; Returns: Json };
+      admin_record_sale: {
+        Args: { p_wedding: string; p_amount: number; p_method: string; p_reference: string | null; p_note: string | null; p_months: number; p_publish: boolean };
+        Returns: Json;
+      };
+      admin_refund: { Args: { p_order: string; p_deactivate: boolean }; Returns: Json };
+      admin_set_deactivated: { Args: { p_wedding: string; p_off: boolean; p_reason: string | null }; Returns: Json };
+      admin_extend: { Args: { p_wedding: string; p_days: number }; Returns: Json };
+      admin_list_staff: { Args: Record<string, never>; Returns: Json };
+      admin_set_staff: { Args: { p_email: string; p_role: string | null }; Returns: Json };
+      admin_activity: { Args: { p_limit: number }; Returns: Json };
     };
     Enums: {
       wedding_status: WeddingStatus;

@@ -3,11 +3,13 @@ import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/actions";
 import { requireUser } from "@/features/auth/session";
+import { getStaff } from "@/features/admin/queries";
 
 /** Chrome for the dashboard list and quick-start wizard (the editor is full-screen). */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser("/dashboard");
   const name = (user.user_metadata?.full_name as string | undefined) ?? user.email;
+  const staff = await getStaff();
 
   return (
     <div className="min-h-dvh">
@@ -22,6 +24,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <Link href="/websites" className="text-muted-foreground hover:text-foreground">
                 Designs
               </Link>
+              {staff ? (
+                <Link href="/admin" className="text-muted-foreground hover:text-foreground">
+                  Admin
+                </Link>
+              ) : null}
             </nav>
           </div>
           <div className="flex items-center gap-3">

@@ -135,6 +135,19 @@ couple changed. Created empty by trigger.
   the wishes section's `approveFirst` is false (it is true when not set) and
   answers `pending`. The couple shows wishes from their guest list.
 
+* **Admin, sales and live periods** (0014, 0015): `platform_staff` (owner ·
+  admin · marketing), `orders` (one row per sale; recorded by staff for now,
+  Paymob later) and `admin_audit` (every change made from /admin). Weddings
+  gain `active_until` (a sale keeps an invitation live for 3 months),
+  `deactivated_at` and `deactivated_reason`; guests only see invitations that
+  are published, not turned off and not past `active_until`. Clients can't set
+  those columns. Staff work only through `admin_*` functions that check the
+  role first: marketing sees counts and designs, never money, customer emails
+  or changes; only the owner manages staff and can't change their own access.
+  Nobody reads the staff or audit tables directly (restrictive `false`
+  policies); a couple can read their own orders. Tests:
+  `supabase/tests/admin.test.sql`.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

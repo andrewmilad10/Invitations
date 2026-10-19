@@ -4,7 +4,7 @@ import { isSupabaseConfigured, publicEnv } from "@/config/env";
 import type { Database } from "./database.types";
 
 /** Routes that require a signed-in user. */
-const PROTECTED_PREFIXES = ["/dashboard", "/preview"];
+const PROTECTED_PREFIXES = ["/dashboard", "/preview", "/admin"];
 /** Routes a signed-in user should skip. */
 const AUTH_ROUTES = ["/login", "/register"];
 

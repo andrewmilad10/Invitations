@@ -52,6 +52,11 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
         ) : (
           <p className="mt-2 text-xs text-muted-foreground">Private draft — only you can see it</p>
         )}
+        {w.deactivated_at ? (
+          <p className="mt-1 text-xs font-medium text-destructive">Turned off. Guests can&apos;t open it; please contact us.</p>
+        ) : w.active_until && w.daysLeft !== null ? (
+          <LiveUntil until={w.active_until} days={w.daysLeft} />
+        ) : null}
 
         <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-5">
           <Button asChild size="sm">
@@ -79,5 +84,16 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
         </div>
       </div>
     </li>
+  );
+}
+
+/** How long the invitation stays live, from its last payment. */
+function LiveUntil({ until, days }: { until: string; days: number }) {
+  const date = new Date(until).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Cairo" });
+  if (days <= 0) return <p className="mt-1 text-xs font-medium text-destructive">Ended on {date}. Renew to bring it back for guests.</p>;
+  return (
+    <p className={days <= 14 ? "mt-1 text-xs font-medium text-accent" : "mt-1 text-xs text-muted-foreground"}>
+      Live until {date} · {days} day{days === 1 ? "" : "s"} left
+    </p>
   );
 }

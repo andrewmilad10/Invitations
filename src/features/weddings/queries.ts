@@ -4,11 +4,11 @@ import type { Tables } from "@/lib/supabase/database.types";
 
 export type WeddingSummary = Pick<
   Tables<"weddings">,
-  "id" | "slug" | "partner_one_name" | "partner_two_name" | "wedding_date" | "template_id" | "status" | "published_at" | "updated_at"
+  "id" | "slug" | "partner_one_name" | "partner_two_name" | "wedding_date" | "template_id" | "status" | "published_at" | "updated_at" | "active_until" | "deactivated_at"
 >;
 
 const SUMMARY_COLUMNS =
-  "id, slug, partner_one_name, partner_two_name, wedding_date, template_id, status, published_at, updated_at";
+  "id, slug, partner_one_name, partner_two_name, wedding_date, template_id, status, published_at, updated_at, active_until, deactivated_at";
 
 /** Weddings the current user can access (RLS limits this to their memberships). */
 export async function listMyWeddings(): Promise<WeddingSummary[]> {
@@ -34,7 +34,7 @@ export function isUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
 
-export type WeddingCard = WeddingSummary & { themeTokens: Record<string, unknown> };
+export type WeddingCard = WeddingSummary & { themeTokens: Record<string, unknown>; daysLeft: number | null };
 
 /** Dashboard cards: summaries plus each wedding's theme overrides (for its thumbnail). */
 export async function listMyWeddingCards(): Promise<WeddingCard[]> {
@@ -50,5 +50,10 @@ export async function listMyWeddingCards(): Promise<WeddingCard[]> {
     );
   if (error) throw new Error(`Could not load themes: ${error.message}`);
   const tokens = new Map((data ?? []).map((t) => [t.wedding_id, (t.tokens ?? {}) as Record<string, unknown>]));
-  return weddings.map((w) => ({ ...w, themeTokens: tokens.get(w.id) ?? {} }));
+  const now = Date.now();
+  return weddings.map((w) => ({
+    ...w,
+    themeTokens: tokens.get(w.id) ?? {},
+    daysLeft: w.active_until ? Math.ceil((new Date(w.active_until).getTime() - now) / 86_400_000) : null,
+  }));
 }
