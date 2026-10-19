@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowUp, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import { sectionDisplayOrder } from "@/core/invitation/build-model";
 import { SECTION_DEFINITIONS, type SectionType } from "@/core/sections/registry";
 import { cn } from "@/lib/utils";
@@ -35,11 +36,25 @@ export function SectionList({ selected, onSelect }: { selected: SectionType | nu
   const order = sectionDisplayOrder(bundle.sections, template);
   const customised = bundle.sections.some((s) => s.sort_order !== null);
 
+  const [drag, setDrag] = useState<SectionType | null>(null);
+  const [over, setOver] = useState<SectionType | null>(null);
+
+  function commit(next: SectionType[]) {
+    update((b) => setSectionOrder(b, next));
+    save("section-order", () => saveSectionOrder(weddingId, next), 300);
+  }
   function move(index: number, delta: number) {
     const next = order.slice();
     [next[index], next[index + delta]] = [next[index + delta], next[index]];
-    update((b) => setSectionOrder(b, next));
-    save("section-order", () => saveSectionOrder(weddingId, next), 300);
+    commit(next);
+  }
+  /** Drop the dragged section in front of `target` (hero stays first, footer last). */
+  function dropOn(target: SectionType) {
+    if (!drag || drag === target || target === "hero") return;
+    const next = order.filter((t) => t !== drag);
+    const at = Math.min(next.indexOf(target), next.length - (next.at(-1) === "footer" ? 1 : 0));
+    next.splice(Math.max(1, at), 0, drag);
+    commit(next);
   }
 
   return (
@@ -67,7 +82,36 @@ export function SectionList({ selected, onSelect }: { selected: SectionType | nu
           const fixed = type === "hero" || type === "footer";
           const active = selected === type;
           return (
-            <li key={type} className={cn("group flex items-center gap-1 rounded-md pe-1", active ? "bg-secondary" : "hover:bg-secondary/60")}>
+            <li
+              key={type}
+              draggable={!fixed && canEdit}
+              onDragStart={(e) => {
+                setDrag(type);
+                e.dataTransfer.effectAllowed = "move";
+              }}
+              onDragEnd={() => {
+                setDrag(null);
+                setOver(null);
+              }}
+              onDragOver={(e) => {
+                if (!drag || type === "hero") return;
+                e.preventDefault();
+                setOver(type);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                dropOn(type);
+                setDrag(null);
+                setOver(null);
+              }}
+              className={cn(
+                "group flex items-center gap-1 rounded-md pe-1",
+                active ? "bg-secondary" : "hover:bg-secondary/60",
+                !fixed && canEdit && "cursor-grab active:cursor-grabbing",
+                drag === type && "opacity-40",
+                over === type && drag !== type && "shadow-[0_-2px_0_var(--accent)]",
+              )}
+            >
               <button
                 type="button"
                 onClick={() => onSelect(type)}

@@ -86,3 +86,30 @@ describe("try-flow answers", () => {
     expect(hasProgress({ ...emptyAnswers("romantic"), partnerTwo: "Omar" })).toBe(true);
   });
 });
+
+describe("sections in the draft", () => {
+  it("shows the visitor's words over the sample, but saves only their own", async () => {
+    const { previewSections, sectionsToSave } = await import("./answers");
+    const a = {
+      ...emptyAnswers("swan-lake"),
+      sections: {
+        story: { content: { heading: "How we met", body: "   " } },
+        wishes: { enabled: true },
+        gifts: { enabled: false, content: { account: "" } },
+      },
+      order: ["hero", "story", "couple"],
+    } as TryAnswers;
+    const demo = [{ type: "story", enabled: true, sort_order: null, content: { heading: "Our story", body: "Sample words" } }];
+    const rows = previewSections(a, demo);
+    const story = rows.find((r) => r.type === "story");
+    expect(story?.content).toEqual({ heading: "How we met", body: "Sample words" });
+    expect(story?.sort_order).toBe(1);
+    expect(rows.find((r) => r.type === "wishes")?.enabled).toBe(true);
+    expect(sectionsToSave(a)).toEqual([
+      { type: "story", content: { heading: "How we met" } },
+      { type: "wishes", enabled: true },
+      { type: "gifts", enabled: false },
+    ]);
+    expect(hasProgress({ ...emptyAnswers("swan-lake"), order: ["hero", "story"] })).toBe(true);
+  });
+});

@@ -67,6 +67,6 @@ describe("editor bundle updates", () => {
     const switched = u.setTemplate(edited, "editorial");
     expect(switched.sections).toEqual(edited.sections);
     expect(model(switched, editorialManifest).sections.some((s) => s.type === "countdown")).toBe(false);
-    expect(model(u.setTemplate(switched, "cinematic")).sections.find((s) => s.type === "countdown")?.content).toEqual({ heading: "Soon" });
+    expect(model(u.setTemplate(switched, "cinematic")).sections.find((s) => s.type === "countdown")?.content).toEqual({ heading: "Soon", calendar: false });
   });
 });

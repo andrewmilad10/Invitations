@@ -40,6 +40,7 @@ export type FieldDescriptor =
   | { name: string; label: string; kind: "text"; maxLength: number; placeholder?: string }
   | { name: string; label: string; kind: "textarea"; maxLength: number; placeholder?: string; rows?: number }
   | { name: string; label: string; kind: "number"; min: number; max: number; hint?: string }
+  | { name: string; label: string; kind: "toggle"; hint?: string }
   | {
       name: string;
       label: string;
@@ -74,9 +75,9 @@ const httpsUrl = z.union([z.literal(""), z.string().max(2048).regex(/^https:\/\/
 
 export const sectionSchemas = {
   hero: z.object({ eyebrow: text(80), tagline: text(160) }),
-  couple: z.object({ eyebrow: text(80), heading: text(120), message: text(600) }),
+  couple: z.object({ eyebrow: text(80), heading: text(120), message: text(600), familyOne: text(160), familyTwo: text(160) }),
   date: z.object({ heading: text(80), note: text(200) }),
-  countdown: z.object({ heading: text(80) }),
+  countdown: z.object({ heading: text(80), calendar: z.boolean() }),
   story: z.object({ heading: text(80), body: text(4000), quote: text(400), quoteSource: text(120) }),
   ceremony: z.object({ heading: text(80), note: text(400) }),
   reception: z.object({ heading: text(80), note: text(400) }),
@@ -125,7 +126,7 @@ const heading = (max = 80): FieldDescriptor => ({ name: "heading", label: "Headi
 export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } = {
   hero: {
     type: "hero",
-    label: "Hero",
+    label: "First screen",
     description: "The first thing guests see: your names, the date and a photo.",
     canDisable: false,
     manages: { media: "hero" },
@@ -144,8 +145,10 @@ export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } =
       { name: "eyebrow", label: "Opening line", kind: "text", maxLength: 80 },
       heading(120),
       { name: "message", label: "Message", kind: "textarea", maxLength: 600, rows: 4 },
+      { name: "familyOne", label: "First family (optional)", kind: "text", maxLength: 160, placeholder: "e.g. Mr & Mrs Samir Adel" },
+      { name: "familyTwo", label: "Second family (optional)", kind: "text", maxLength: 160, placeholder: "e.g. Mr & Mrs Hany Fawzy" },
     ],
-    defaults: (l) => ({ ...d(l).couple }),
+    defaults: (l) => ({ ...d(l).couple, familyOne: "", familyTwo: "" }),
   },
   date: {
     type: "date",
@@ -160,8 +163,8 @@ export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } =
     label: "Countdown",
     description: "Days, hours and minutes until the ceremony.",
     canDisable: true,
-    fields: [heading()],
-    defaults: (l) => ({ ...d(l).countdown }),
+    fields: [heading(), { name: "calendar", label: "Show an \"Add to calendar\" button", kind: "toggle", hint: "Guests add your wedding to Google, Apple or Outlook calendar in one tap." }],
+    defaults: (l) => ({ ...d(l).countdown, calendar: false }),
   },
   story: {
     type: "story",

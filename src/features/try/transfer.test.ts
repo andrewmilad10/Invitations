@@ -11,6 +11,7 @@ const save = vi.fn();
 vi.mock("./actions", () => ({ saveDraftAsWedding: (d: unknown) => save(d) }));
 const upload = vi.fn();
 vi.mock("@/features/editor/upload", () => ({ uploadMedia: (...args: unknown[]) => upload(...args) }));
+vi.mock("@/features/editor/actions", () => ({ saveSection: async () => ({ ok: true }), saveSectionOrder: async () => ({ ok: true }) }));
 
 const { transferDraft } = await import("./transfer");
 

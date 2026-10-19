@@ -25,6 +25,8 @@ import { cn } from "@/lib/utils";
 import { emptyAnswers, hasProgress, MAX_DRAFT_GALLERY, previewBundle, withTemplate, type EventAnswers, type PhotoRef, type TryAnswers } from "./answers";
 import { draftFiles, draftStore, useHydrated, useStoredDraft } from "./draft-store";
 import { ExistingDraftDialog } from "./existing-draft-dialog";
+import { SectionsStep } from "./sections-step";
+import { resolveTemplateManifest } from "@/templates/registry";
 import { DownloadCardButton } from "@/features/cards/download-card";
 
 type TemplateOption = TemplateManifest;
@@ -37,6 +39,7 @@ const STEPS = [
   { id: "location", label: "Location" },
   { id: "style", label: "Style" },
   { id: "photos", label: "Photos" },
+  { id: "sections", label: "Sections" },
 ] as const;
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"];
@@ -180,6 +183,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
             {current.id === "location" && <LocationStep answers={answers} update={update} />}
             {current.id === "style" && <StyleStep answers={answers} update={update} templates={templates} onTemplate={chooseTemplate} />}
             {current.id === "photos" && <PhotosStep answers={answers} update={update} urls={urls} />}
+            {current.id === "sections" && <SectionsStep answers={answers} update={update} template={resolveTemplateManifest(answers.templateId)} bundle={bundle} />}
           </div>
 
           {last ? (

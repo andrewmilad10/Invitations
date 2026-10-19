@@ -1,9 +1,10 @@
 "use client";
 
+import { saveSection, saveSectionOrder } from "@/features/editor/actions";
 import { uploadMedia } from "@/features/editor/upload";
 import { resolveTemplateManifest } from "@/templates/registry";
 import { saveDraftAsWedding } from "./actions";
-import { draftToCreate, hasProgress, localPhotos } from "./answers";
+import { draftToCreate, hasProgress, localPhotos, sectionsToSave } from "./answers";
 import { draftFiles, draftStore } from "./draft-store";
 
 export type TransferResult = { ok: true; weddingId: string; photosNotSaved: number } | { ok: false; error: string };
@@ -36,6 +37,12 @@ async function run(): Promise<TransferResult> {
   // but keep the photo files until they're uploaded.
   const photos = localPhotos(answers);
   draftStore.clear();
+
+  // Sections the visitor wrote in or switched, and their order (each validated on the server).
+  for (const s of sectionsToSave(answers)) {
+    await saveSection(saved.data.id, s.type, { enabled: s.enabled, content: s.content }).catch(() => undefined);
+  }
+  if (answers.order?.length) await saveSectionOrder(saved.data.id, answers.order).catch(() => undefined);
 
   let photosNotSaved = 0;
   for (const photo of photos) {

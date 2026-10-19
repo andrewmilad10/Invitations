@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { SectionComponents } from "../types";
 import { GiftsSection, GuestDear, WishesSection } from "./reply/guest-sections";
 import { InvitationModelProvider } from "./reply/model-context";
+import { AddToCalendar, Families } from "./reply/section-extras";
 
 /** Sections drawn the same way in every design that has no own version. */
 const SHARED: SectionComponents = { wishes: WishesSection, gifts: GiftsSection };
@@ -61,6 +62,8 @@ export function Sections({ model, components }: { model: InvitationModel; compon
             style={section.toneVars as React.CSSProperties}
           >
             <Component model={model} content={section.content} />
+            {section.type === "couple" ? <Families one={String((section.content as { familyOne?: string }).familyOne ?? "")} two={String((section.content as { familyTwo?: string }).familyTwo ?? "")} locale={model.locale} /> : null}
+            {section.type === "countdown" && (section.content as { calendar?: boolean }).calendar ? <AddToCalendar model={model} /> : null}
           </div>
         );
       })}

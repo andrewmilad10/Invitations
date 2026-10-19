@@ -69,7 +69,7 @@ export function SectionFields({ type }: { type: SectionType }) {
   );
 }
 
-function FieldControl({
+export function FieldControl({
   type,
   field,
   value,
@@ -99,6 +99,19 @@ function FieldControl({
     );
   }
 
+  if (field.kind === "toggle") {
+    return (
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <Label htmlFor={id} className="text-sm font-medium">
+            {field.label}
+          </Label>
+          {field.hint ? <p className="mt-1 text-xs text-muted-foreground">{field.hint}</p> : null}
+        </div>
+        <Switch id={id} checked={Boolean(value)} disabled={disabled} onCheckedChange={(v) => onChange(v)} />
+      </div>
+    );
+  }
   if (field.kind === "number") {
     const n = Number(value ?? field.min);
     return (

@@ -36,6 +36,13 @@ export const photoRefSchema = z.discriminatedUnion("source", [
 ]);
 export type PhotoRef = z.infer<typeof photoRefSchema>;
 
+/** A section the visitor touched: switched on/off, or wrote in. Only their own words are kept. */
+const sectionAnswers = z.object({
+  enabled: z.boolean().optional(),
+  content: z.record(z.string(), z.unknown()).optional(),
+});
+export type SectionAnswers = z.infer<typeof sectionAnswers>;
+
 const timeString = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).or(z.literal(""));
 
 const eventAnswers = z.object({
@@ -63,6 +70,9 @@ export const answersSchema = z.object({
     hero: photoRefSchema.nullable(),
     gallery: z.array(photoRefSchema).max(12),
   }),
+  /** Sections the visitor changed (by type), and their own order of sections. */
+  sections: z.record(z.string(), sectionAnswers).optional(),
+  order: z.array(z.string().max(20)).max(30).nullable().optional(),
   updatedAt: z.string(),
 });
 export type TryAnswers = z.infer<typeof answersSchema>;
@@ -97,8 +107,40 @@ export function parseAnswers(raw: unknown): TryAnswers | null {
 /** True once the visitor has entered something worth saving. */
 export function hasProgress(a: TryAnswers): boolean {
   return Boolean(
-    a.partnerOne.trim() || a.partnerTwo.trim() || a.date || a.ceremony.venue.trim() || a.reception.venue.trim() || a.photos.hero || a.photos.gallery.length,
+    a.partnerOne.trim() ||
+      a.partnerTwo.trim() ||
+      a.date ||
+      a.ceremony.venue.trim() ||
+      a.reception.venue.trim() ||
+      a.photos.hero ||
+      a.photos.gallery.length ||
+      Object.keys(a.sections ?? {}).length ||
+      a.order?.length,
   );
+}
+
+/** A value the visitor actually wrote (blank text and empty lists don't count). */
+export const isFilled = (v: unknown) => (typeof v === "string" ? v.trim() !== "" : Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null);
+
+/**
+ * Sections for the preview: the sample's rows, with the visitor's own words
+ * laid over them field by field (a blank field keeps showing the sample),
+ * their on/off choices and their order.
+ */
+export function previewSections(a: TryAnswers, demo: WeddingBundle["sections"]): WeddingBundle["sections"] {
+  const rows = new Map(demo.map((s) => [s.type, { ...s }]));
+  for (const [type, s] of Object.entries(a.sections ?? {})) {
+    const base = rows.get(type) ?? { type, enabled: true, sort_order: null, content: {} };
+    const own = Object.fromEntries(Object.entries(s.content ?? {}).filter(([, v]) => isFilled(v)));
+    rows.set(type, { ...base, enabled: s.enabled ?? base.enabled, content: { ...(base.content as Record<string, unknown>), ...own } });
+  }
+  if (a.order?.length) {
+    a.order.forEach((type, i) => {
+      const row = rows.get(type) ?? { type, enabled: true, sort_order: null, content: {} };
+      rows.set(type, { ...row, sort_order: i });
+    });
+  }
+  return [...rows.values()];
 }
 
 /** Switching template keeps every answer; only the palette (a presentation choice of the old template) resets. */
@@ -183,9 +225,20 @@ export function previewBundle(a: TryAnswers, template: TemplateManifest, now: Da
     },
     settings: { ...demo.settings, locale: a.locale, timezone },
     theme: { tokens: themeOverrides(a, template) as Record<string, unknown> },
+    sections: previewSections(a, demo.sections),
     events,
     media,
   };
+}
+
+/** The visitor's section changes, to save after sign-up: only what they switched or wrote. */
+export function sectionsToSave(a: TryAnswers): { type: string; enabled?: boolean; content?: Record<string, unknown> }[] {
+  return Object.entries(a.sections ?? {})
+    .map(([type, s]) => {
+      const own = Object.fromEntries(Object.entries(s.content ?? {}).filter(([, v]) => isFilled(v)));
+      return { type, ...(s.enabled !== undefined ? { enabled: s.enabled } : {}), ...(Object.keys(own).length ? { content: own } : {}) };
+    })
+    .filter((s) => "enabled" in s || "content" in s);
 }
 
 /** What gets saved when the visitor creates an account (validated again on the server). */
