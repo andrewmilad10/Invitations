@@ -41,9 +41,6 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
             <Button asChild size="lg" className="rounded-full px-7">
               <Link href="/websites">Choose a template</Link>
             </Button>
-            <Button asChild size="lg" variant="ghost" className="rounded-full">
-              <Link href="/dashboard/new">Quick start</Link>
-            </Button>
           </div>
         </div>
       ) : (
@@ -56,11 +53,7 @@ export default async function DashboardPage(props: PageProps<"/dashboard">) {
           <p className="mt-8 text-sm text-muted-foreground">
             Planning more than one celebration?{" "}
             <Link href="/websites" className="underline underline-offset-4">
-              Start another from a template
-            </Link>{" "}
-            or use the{" "}
-            <Link href="/dashboard/new" className="underline underline-offset-4">
-              quick start
+              Start another from a design
             </Link>
             .
           </p>
