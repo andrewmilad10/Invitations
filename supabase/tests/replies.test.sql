@@ -138,3 +138,16 @@ select tests.eq((select count(*) from generate_series(1, 119) i where public.sub
 select tests.eq(public.submit_reply('eve-and-ian', null, 'One too many', true, 1, null, null) ->> 'error', 'busy', 'the 121st new general reply in ten minutes waits');
 select tests.eq(public.submit_reply('eve-and-ian', null, 'Karim', true, 2, null, null) ->> 'ok', 'true', 'someone already on the list can still change their reply');
 select tests.eq(public.submit_reply('eve-and-ian', tests.token('Mariam & family'), null, true, 2, null, null) ->> 'ok', 'true', 'personal links are never slowed down');
+
+-- ── 0012: full-rights functions are out of the public API ──────────────────
+reset role;
+select tests.eq((select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+  where n.nspname = 'public' and p.prosecdef
+    and p.proname in ('wedding_role','can_view_wedding','can_edit_wedding','get_public_invitation','get_guest','get_public_wishes','submit_reply','submit_wish'))::int,
+  0, 'no public function a guest or user can call runs with full rights');
+select tests.eq((select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+  where n.nspname = 'private' and p.prosecdef)::int, 8, 'the full-rights versions live in the private schema');
+set local role anon;
+select set_config('request.jwt.claim.sub', '', true);
+select tests.ok(public.get_public_invitation('eve-and-ian') ->> 'wedding' is not null, 'guests still open a published invitation through public');
+select tests.throws($$select public.can_view_wedding(gen_random_uuid())$$, '42501', 'guests cannot call the access helpers');

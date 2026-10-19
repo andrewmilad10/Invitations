@@ -122,6 +122,15 @@ couple changed. Created empty by trigger.
   the owner, replacing the separate "owner reads own" (same access, half the
   policy work per row).
 
+* **Full-rights functions out of the API** (0012): every SECURITY DEFINER
+  function a role can call lives in the `private` schema (not exposed by the
+  API); `public` has a SECURITY INVOKER function with the same name and
+  arguments that passes the call on. Policies point at the `private`
+  versions. **Rule for new functions:** put a SECURITY DEFINER body in
+  `private`, add the pass-through in `public`, and never `create or replace`
+  a public pass-through with `security definer`. Supabase's security advisor
+  should stay at zero warnings.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own
