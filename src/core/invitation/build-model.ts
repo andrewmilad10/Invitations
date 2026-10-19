@@ -7,12 +7,15 @@ import { decorFamily, designCardDefaults, stationeryArt, type TemplateManifest }
 import { resolveCardOptions } from "../card/options";
 import { resolveTheme, sanitizeOverrides, themeToCssVars, type ThemeTokens } from "../theme/tokens";
 import type { BundleEvent, BundleMedia, WeddingBundle } from "../wedding/bundle";
-import type { EventModel, InvitationModel, MediaAsset, RenderedSection, RenderMode } from "./model";
+import type { EventModel, GuestGreeting, InvitationModel, MediaAsset, PublicWish, RenderedSection, RenderMode } from "./model";
 
 export interface BuildOptions {
   mode: RenderMode;
   /** Maps a storage path to a public URL. Injected so core stays backend-agnostic. */
   mediaUrl: (storagePath: string) => string;
+  /** Who opened this copy (personal links on the live page). */
+  guest?: GuestGreeting | null;
+  wishes?: PublicWish[];
 }
 
 /**
@@ -96,6 +99,8 @@ export function buildInvitationModel(
     },
     countdownTarget,
     strings: dictionaries[locale].ui,
+    guest: options.guest ?? null,
+    wishes: options.wishes ?? [],
   };
 }
 

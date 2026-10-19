@@ -94,6 +94,28 @@ export interface InvitationModel {
   /** ISO instant the countdown targets, or null. */
   countdownTarget: string | null;
   strings: InvitationDictionary["ui"];
+  /** The guest this copy was sent to (opened from their personal link), or null. */
+  guest: GuestGreeting | null;
+  /** Visible wishes guests left, newest first (live page only). */
+  wishes: PublicWish[];
+}
+
+export interface GuestGreeting {
+  /** The private link code, sent back with the reply. Never shown. */
+  token: string;
+  name: string;
+  /** "Dear" — the line above the name; null uses the design's own words. */
+  greeting: string | null;
+  message: string | null;
+  /** This guest's own limit, or null for the invitation's. */
+  maxParty: number | null;
+  reply: { attending: boolean; partySize: number; note: string | null; answers: Record<string, string> } | null;
+}
+
+export interface PublicWish {
+  name: string;
+  message: string;
+  at: string;
 }
 
 export function getSection<T extends SectionType>(model: InvitationModel, type: T) {

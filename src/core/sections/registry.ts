@@ -22,6 +22,8 @@ export const SECTION_TYPES = [
   "gallery",
   "schedule",
   "rsvp",
+  "wishes",
+  "gifts",
   "faq",
   "closing",
   "footer",
@@ -37,13 +39,23 @@ export function isSectionType(value: unknown): value is SectionType {
 export type FieldDescriptor =
   | { name: string; label: string; kind: "text"; maxLength: number; placeholder?: string }
   | { name: string; label: string; kind: "textarea"; maxLength: number; placeholder?: string; rows?: number }
+  | { name: string; label: string; kind: "number"; min: number; max: number; hint?: string }
   | {
       name: string;
       label: string;
       kind: "list";
       maxItems: number;
       itemLabel: string;
-      itemFields: { name: string; label: string; maxLength: number; placeholder?: string }[];
+      itemFields: {
+        name: string;
+        label: string;
+        maxLength: number;
+        placeholder?: string;
+        /** A choice instead of free text. */
+        options?: { value: string; label: string }[];
+        /** Kept but not shown (e.g. a stable id filled in on save). */
+        hidden?: boolean;
+      }[];
     };
 
 const text = (max: number) => z.string().max(max);
@@ -51,6 +63,12 @@ const text = (max: number) => z.string().max(max);
 // ── Content schemas ─────────────────────────────────────────────────────────
 const scheduleItem = z.object({ time: text(40), title: text(120), note: text(300) });
 const faqItem = z.object({ question: text(160), answer: text(600) });
+/** One of the couple's own reply questions. `id` keys the guests' answers, so it stays when the wording changes. */
+const replyQuestion = z.object({
+  id: z.string().max(24).regex(/^[a-z0-9]*$/).default(""),
+  text: text(160),
+  kind: z.enum(["yesno", "text"]).default("yesno"),
+});
 /** An optional external link: https only, so it can never run script. */
 const httpsUrl = z.union([z.literal(""), z.string().max(2048).regex(/^https:\/\/[^\s<>"']+$/, "Use a full https:// link.")]);
 
@@ -65,7 +83,17 @@ export const sectionSchemas = {
   venue: z.object({ heading: text(80), note: text(600) }),
   gallery: z.object({ heading: text(80), caption: text(200) }),
   schedule: z.object({ heading: text(80), items: z.array(scheduleItem).max(20) }),
-  rsvp: z.object({ heading: text(80), message: text(400), deadline: text(80), linkUrl: httpsUrl, linkLabel: text(60) }),
+  rsvp: z.object({
+    heading: text(80),
+    message: text(400),
+    deadline: text(80),
+    linkUrl: httpsUrl,
+    linkLabel: text(60),
+    maxGuests: z.coerce.number().int().min(1).max(20),
+    questions: z.array(replyQuestion).max(6),
+  }),
+  wishes: z.object({ heading: text(80), message: text(300) }),
+  gifts: z.object({ heading: text(80), note: text(400), method: text(60), account: text(120) }),
   faq: z.object({ heading: text(80), items: z.array(faqItem).max(12) }),
   closing: z.object({ heading: text(120), message: text(600), signature: text(120) }),
   footer: z.object({ note: text(200) }),
@@ -82,6 +110,8 @@ export interface SectionDefinition<T extends SectionType = SectionType> {
   description: string;
   /** Can the couple switch it off? */
   canDisable: boolean;
+  /** Off until the couple switches it on (when the design doesn't say otherwise). */
+  defaultEnabled?: boolean;
   fields: FieldDescriptor[];
   /** Extra data the section's editor panel manages besides `content`. */
   manages?: { event?: "ceremony" | "reception"; media?: "hero" | "gallery" };
@@ -205,17 +235,53 @@ export const SECTION_DEFINITIONS: { [T in SectionType]: SectionDefinition<T> } =
   },
   rsvp: {
     type: "rsvp",
-    label: "RSVP",
-    description: "A reply section. Online RSVP forms arrive in a later release.",
+    label: "Replies",
+    description: "Guests answer on the invitation: coming or not, how many, a note and your own questions. Every reply is saved to your guest list.",
     canDisable: true,
     fields: [
       heading(),
       { name: "message", label: "Message", kind: "textarea", maxLength: 400, rows: 3 },
-      { name: "deadline", label: "Reply by", kind: "text", maxLength: 80, placeholder: "e.g. 1 May 2027" },
-      { name: "linkUrl", label: "Reply link", kind: "text", maxLength: 2048, placeholder: "Optional — https:// link to a form you already use" },
-      { name: "linkLabel", label: "Link button text", kind: "text", maxLength: 60, placeholder: "e.g. Reply online" },
+      { name: "deadline", label: "Reply by", kind: "text", maxLength: 80, placeholder: "e.g. 1 September 2027" },
+      { name: "maxGuests", label: "Most guests per invitation", kind: "number", min: 1, max: 20, hint: "You can give one guest a different number on the guest list." },
+      {
+        name: "questions",
+        label: "Your own questions",
+        kind: "list",
+        maxItems: 6,
+        itemLabel: "question",
+        itemFields: [
+          { name: "text", label: "Question", maxLength: 160, placeholder: "Need transport from Cairo?" },
+          { name: "kind", label: "Answer", maxLength: 8, options: [{ value: "yesno", label: "Yes or no" }, { value: "text", label: "Written answer" }] },
+          { name: "id", label: "", maxLength: 24, hidden: true },
+        ],
+      },
+      { name: "linkLabel", label: "Button words", kind: "text", maxLength: 60, placeholder: "e.g. Reply here" },
+      { name: "linkUrl", label: "Use your own form instead", kind: "text", maxLength: 2048, placeholder: "Optional — https:// link. Leave empty to collect replies here." },
     ],
-    defaults: (l) => ({ ...d(l).rsvp }),
+    defaults: (l) => ({ ...d(l).rsvp, maxGuests: 6, questions: [] }),
+  },
+  wishes: {
+    type: "wishes",
+    label: "Wishes",
+    description: "Guests leave a message for you on the invitation. You can hide any of them from your guest list page.",
+    canDisable: true,
+    defaultEnabled: false,
+    fields: [heading(), { name: "message", label: "A line above the wishes", kind: "textarea", maxLength: 300, rows: 2 }],
+    defaults: (l) => ({ ...d(l).wishes }),
+  },
+  gifts: {
+    type: "gifts",
+    label: "Gifts",
+    description: "Optional: how guests can send a gift, such as an InstaPay address. Off until you switch it on.",
+    canDisable: true,
+    defaultEnabled: false,
+    fields: [
+      heading(),
+      { name: "note", label: "A few words", kind: "textarea", maxLength: 400, rows: 3 },
+      { name: "method", label: "How to send", kind: "text", maxLength: 60, placeholder: "e.g. InstaPay" },
+      { name: "account", label: "Address or account", kind: "text", maxLength: 120, placeholder: "e.g. names@instapay" },
+    ],
+    defaults: (l) => ({ ...d(l).gifts }),
   },
   faq: {
     type: "faq",

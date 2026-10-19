@@ -8,6 +8,7 @@ import { MapEmbed } from "../shared/map-embed";
 import { MusicToggle } from "../shared/music-toggle";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
 import e from "./essentials.module.css";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 /**
  * The Essentials family: four calm, simple wedding websites with no opening
@@ -243,11 +244,9 @@ function Reply({ content }: SectionProps<"rsvp">) {
         <Heading>{content.heading}</Heading>
         {content.message ? <p className={e.lead}>{content.message}</p> : null}
         {content.deadline ? <p className={e.muted}>{content.deadline}</p> : null}
-        {content.linkUrl ? (
-          <a className={e.btn} href={content.linkUrl} target="_blank" rel="noopener noreferrer">
-            {content.linkLabel || content.heading}
-          </a>
-        ) : null}
+        <ReplyButton content={content} className={e.btn}>
+          {content.linkLabel || content.heading}
+        </ReplyButton>
       </div>
     </Block>
   );

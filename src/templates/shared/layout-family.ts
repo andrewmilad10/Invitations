@@ -34,6 +34,15 @@ export interface LayoutTemplateSpec {
   card: { layout: StationeryLayout; shape?: CardShape };
 }
 
+/** Wishes and gifts follow the reply section in every design (drawn by the shared pieces when a design has none). */
+function withGuestSections(sections: readonly SectionType[]): readonly SectionType[] {
+  const extra = (["wishes", "gifts"] as const).filter((x) => !sections.includes(x));
+  if (!extra.length) return sections;
+  const at = sections.indexOf("rsvp");
+  const i = at === -1 ? Math.max(0, sections.indexOf("footer")) : at + 1;
+  return [...sections.slice(0, i), ...extra, ...sections.slice(i)];
+}
+
 export function layoutTemplate(
   renderer: string,
   sections: readonly SectionType[],
@@ -41,6 +50,7 @@ export function layoutTemplate(
   options: { defaultDisabled?: readonly SectionType[] } = {},
 ): TemplateManifest {
   const [first, ...rest] = s.palettes;
+  sections = withGuestSections(sections);
   return {
     id: s.id,
     name: s.name,
@@ -51,7 +61,7 @@ export function layoutTemplate(
     stationery: { ornament: "none", layout: s.card.layout, shape: s.card.shape },
     supportedSections: sections,
     defaultSectionOrder: sections,
-    defaultDisabled: options.defaultDisabled,
+    defaultDisabled: [...(options.defaultDisabled ?? []), "wishes", "gifts"],
     themeDefaults: {
       colors: { ...first.colors },
       fonts: { ...s.fonts },

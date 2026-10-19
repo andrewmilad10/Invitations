@@ -248,6 +248,11 @@ function EditorHeader({ onPublish }: { onPublish: () => void }) {
         <SaveIndicator status={status} />
       </div>
       <DownloadCardButton bundle={bundle} className="hidden md:inline-flex" />
+      <Button asChild variant="ghost" size="sm">
+        <Link href={`/dashboard/weddings/${weddingId}/guests`}>
+          <Users /> <span className="hidden sm:inline">Guests &amp; replies</span>
+        </Link>
+      </Button>
       <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
         <a href={`/preview/${weddingId}`} target="_blank" rel="noopener noreferrer">
           <Eye /> Preview

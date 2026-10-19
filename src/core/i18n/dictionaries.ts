@@ -40,6 +40,8 @@ export interface InvitationDictionary {
     gallery: { heading: string; caption: string };
     schedule: { heading: string };
     rsvp: { heading: string; message: string; deadline: string; linkUrl: string; linkLabel: string };
+    wishes: { heading: string; message: string };
+    gifts: { heading: string; note: string; method: string; account: string };
     faq: { heading: string };
     closing: { heading: string; message: string; signature: string };
     footer: { note: string };
@@ -87,11 +89,13 @@ const en: InvitationDictionary = {
     schedule: { heading: "The day" },
     rsvp: {
       heading: "Kindly reply",
-      message: "Online replies will open soon. We can't wait to celebrate with you.",
+      message: "Let us know if you can join us. We can't wait to celebrate with you.",
       deadline: "",
       linkUrl: "",
-      linkLabel: "Reply online",
+      linkLabel: "Reply here",
     },
+    wishes: { heading: "Leave us a wish", message: "A few words for us to keep." },
+    gifts: { heading: "A gift for us", note: "Your presence is the greatest gift. If you'd like to send something, you can use:", method: "InstaPay", account: "" },
     faq: { heading: "Questions & answers" },
     closing: {
       heading: "We hope to see you there",
@@ -140,7 +144,9 @@ const ar: InvitationDictionary = {
     venue: { heading: "كيف تصلون إلينا", note: "" },
     gallery: { heading: "لحظات", caption: "" },
     schedule: { heading: "برنامج اليوم" },
-    rsvp: { heading: "تأكيد الحضور", message: "سيتاح تأكيد الحضور عبر الإنترنت قريبًا.", deadline: "", linkUrl: "", linkLabel: "أكّد حضورك" },
+    rsvp: { heading: "تأكيد الحضور", message: "يسعدنا أن تخبرونا إن كنتم ستشاركوننا فرحتنا.", deadline: "", linkUrl: "", linkLabel: "أكّدوا حضوركم" },
+    wishes: { heading: "اتركوا لنا أمنية", message: "كلمات نحتفظ بها للذكرى." },
+    gifts: { heading: "هدية لنا", note: "حضوركم هو أجمل هدية. وإن أحببتم إرسال هدية يمكنكم استخدام:", method: "إنستاباي", account: "" },
     faq: { heading: "أسئلة شائعة" },
     closing: { heading: "نتطلع لرؤيتكم", message: "حضوركم هو أجمل هدية لنا.", signature: "" },
     footer: { note: "" },

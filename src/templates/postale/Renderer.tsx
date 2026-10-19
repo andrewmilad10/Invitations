@@ -9,6 +9,7 @@ import { MapEmbed } from "../shared/map-embed";
 import { MusicToggle } from "../shared/music-toggle";
 import { hash } from "../shared/numbering";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 /**
  * Postale — the wedding as a journey. The invitation arrives as a postcard
@@ -431,16 +432,9 @@ function ReplyByPost({ model, content }: SectionProps<"rsvp">) {
             <p className={cn(MONO, "text-inv-muted")}>{content.deadline}</p>
             <p className="mt-5 font-inv-heading text-5xl leading-none sm:text-6xl">{content.heading}</p>
             {content.message ? <p className="mx-auto mt-6 max-w-md leading-relaxed text-inv-fg/85">{content.message}</p> : null}
-            {content.linkUrl ? (
-              <a
-                href={content.linkUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(MONO, "group/btn mt-10 inline-flex items-center gap-3 bg-inv-accent px-8 py-4 text-inv-accent-fg shadow-[3px_3px_0_var(--inv-fg)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--inv-fg)]")}
-              >
-                {content.linkLabel || content.heading} <span aria-hidden className="transition-transform group-hover/btn:translate-x-1 rtl:-scale-x-100">→</span>
-              </a>
-            ) : null}
+            <ReplyButton content={content} className={cn(MONO, "group/btn mt-10 inline-flex items-center gap-3 bg-inv-accent px-8 py-4 text-inv-accent-fg shadow-[3px_3px_0_var(--inv-fg)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--inv-fg)]")}>
+              {content.linkLabel || content.heading} <span aria-hidden className="transition-transform group-hover/btn:translate-x-1 rtl:-scale-x-100">→</span>
+            </ReplyButton>
           </div>
         </div>
       </div>

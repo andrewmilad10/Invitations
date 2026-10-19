@@ -5,6 +5,7 @@ import { InvitationImage } from "../shared/invitation-image";
 import { InvitationRoot, Paragraphs, Sections } from "../shared/invitation-root";
 import type { EventModel } from "@/core/invitation/model";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 function Block({ id, label, children }: { id: string; label?: string; children: ReactNode }) {
   return (
@@ -122,11 +123,9 @@ const sections: SectionComponents = {
     <Block id="rsvp" label={content.heading}>
       <p className="max-w-prose text-lg">{content.message}</p>
       {content.deadline ? <p className="mt-4 text-inv-accent">{content.deadline}</p> : null}
-      {content.linkUrl ? (
-        <a href={content.linkUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block border border-inv-fg px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-inv-fg hover:text-inv-bg">
-          {content.linkLabel || content.heading}
-        </a>
-      ) : null}
+      <ReplyButton content={content} className="mt-8 inline-block border border-inv-fg px-6 py-3 text-sm uppercase tracking-[0.2em] transition hover:bg-inv-fg hover:text-inv-bg">
+        {content.linkLabel || content.heading}
+      </ReplyButton>
     </Block>
   ),
   faq: ({ content }: SectionProps<"faq">) => {

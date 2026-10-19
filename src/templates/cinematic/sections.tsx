@@ -8,6 +8,7 @@ import { MapEmbed } from "../shared/map-embed";
 import type { EventModel } from "@/core/invitation/model";
 import { cn } from "@/lib/utils";
 import type { SectionComponents, SectionProps } from "../types";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 // ── Building blocks ─────────────────────────────────────────────────────────
 
@@ -456,16 +457,9 @@ function Rsvp({ content }: SectionProps<"rsvp">) {
           {content.deadline}
         </p>
       ) : null}
-      {content.linkUrl ? (
-        <a
-          href={content.linkUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 inline-block rounded-inv bg-inv-accent px-8 py-3 text-xs uppercase tracking-[0.25em] text-inv-accent-fg transition hover:opacity-90"
-        >
-          {content.linkLabel || content.heading}
-        </a>
-      ) : null}
+      <ReplyButton content={content} className="mt-8 inline-block rounded-inv bg-inv-accent px-8 py-3 text-xs uppercase tracking-[0.25em] text-inv-accent-fg transition hover:opacity-90">
+        {content.linkLabel || content.heading}
+      </ReplyButton>
     </Section>
   );
 }

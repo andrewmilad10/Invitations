@@ -2,7 +2,8 @@ import "server-only";
 import { cache } from "react";
 import { isSupabaseConfigured } from "@/config/env";
 import { buildInvitationModel } from "@/core/invitation/build-model";
-import type { InvitationModel, RenderMode } from "@/core/invitation/model";
+import type { GuestGreeting, InvitationModel, PublicWish, RenderMode } from "@/core/invitation/model";
+import { GUEST_TOKEN, parseGuest, parseWishes } from "@/core/replies/schema";
 import { parseWeddingBundle, type WeddingBundle } from "@/core/wedding/bundle";
 import { publicMediaUrl } from "@/features/media/urls";
 import { createAnonClient } from "@/lib/supabase/server";
@@ -31,10 +32,31 @@ export const getPublicBundle = cache(async (rawSlug: string): Promise<WeddingBun
   return bundle;
 });
 
+/**
+ * The guest a personal link was made for (?g=<code>), or null. Counts the
+ * open. Unknown or malformed codes simply show the general invitation.
+ */
+export async function getGuest(slug: string, token: string | undefined): Promise<GuestGreeting | null> {
+  if (!token || !GUEST_TOKEN.test(token) || !isSupabaseConfigured()) return null;
+  const { data, error } = await createAnonClient().rpc("get_guest", { p_slug: slug.toLowerCase(), p_token: token });
+  if (error || !data) return null;
+  return parseGuest(data, token);
+}
+
+/** Visible wishes for a published invitation (none if the section is off). */
+export async function getPublicWishes(slug: string): Promise<PublicWish[]> {
+  if (!isSupabaseConfigured()) return [];
+  const { data, error } = await createAnonClient().rpc("get_public_wishes", { p_slug: slug.toLowerCase() });
+  if (error) return [];
+  return parseWishes(data);
+}
+
 /** Bundle → model with the wedding's selected template. */
-export function toModel(bundle: WeddingBundle, mode: RenderMode): InvitationModel {
+export function toModel(bundle: WeddingBundle, mode: RenderMode, extra: { guest?: GuestGreeting | null; wishes?: PublicWish[] } = {}): InvitationModel {
   return buildInvitationModel(bundle, resolveTemplateManifest(bundle.wedding.template_id), {
     mode,
     mediaUrl: publicMediaUrl,
+    guest: extra.guest,
+    wishes: extra.wishes,
   });
 }

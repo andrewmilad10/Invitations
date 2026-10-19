@@ -17,6 +17,15 @@ describe("template registry", () => {
     expect(getTemplateManifest(DEFAULT_TEMPLATE_ID)).toBeDefined();
   });
 
+  it("gives every live website wishes and gifts right after the reply, off until the couple switches them on", () => {
+    for (const t of TEMPLATE_MANIFESTS.filter((m) => m.status !== "hidden" && (m.features.hero ?? "photo") !== "card")) {
+      const order = t.defaultSectionOrder;
+      const at = order.indexOf("rsvp");
+      expect(order.slice(at + 1, at + 3), t.id).toEqual(["wishes", "gifts"]);
+      expect(t.defaultDisabled, t.id).toEqual(expect.arrayContaining(["wishes", "gifts"]));
+    }
+  });
+
   describe.each(TEMPLATE_MANIFESTS.map((t) => [t.id, t] as const))("%s", (_id, t) => {
     it("supports the required sections", () => {
       expect(t.supportedSections).toContain("hero");

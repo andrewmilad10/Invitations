@@ -262,15 +262,7 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
     <Sec id="rsvp" className={s.reply}>
       <div className={s.replyInner} {...fx("rise")}>
         <Title>{content.heading || copy.rsvp}</Title>
-        <ReplyCard
-          message={content.message}
-          deadline={content.deadline}
-          linkUrl={content.linkUrl}
-          linkLabel={content.linkLabel || content.heading || copy.rsvp}
-          locale={model.locale}
-          demo={model.mode !== "live"}
-          heading={content.heading || copy.rsvp}
-        />
+<ReplyCard model={model} content={content} heading={content.heading || copy.rsvp} />
       </div>
     </Sec>
   );

@@ -1,4 +1,4 @@
-import { Eye, Pencil, Settings } from "lucide-react";
+import { Eye, Pencil, Settings, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { formatDateOnly } from "@/core/i18n/format";
@@ -63,6 +63,11 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
             <a href={`/preview/${w.id}`} target="_blank" rel="noopener noreferrer">
               <Eye /> Preview
             </a>
+          </Button>
+          <Button asChild size="sm" variant="ghost">
+            <Link href={`/dashboard/weddings/${w.id}/guests`}>
+              <Users /> Guests
+            </Link>
           </Button>
           <PublishToggle weddingId={w.id} published={published} publicUrl={publicUrl} />
           <ShareMenu url={publicUrl} coupleName={coupleName} published={published} />

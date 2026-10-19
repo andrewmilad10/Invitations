@@ -6,6 +6,7 @@ import { InvitationImage } from "../shared/invitation-image";
 import { InvitationRoot, Paragraphs, Sections } from "../shared/invitation-root";
 import { MapEmbed } from "../shared/map-embed";
 import { MusicToggle } from "../shared/music-toggle";
+import { ReplyButton } from "../shared/reply/reply-button";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
 import { HeroSky, ShowpieceEffects } from "./effects";
 import { CREATIVE_EMBLEMS, CREATIVE_HEROES } from "./creative";
@@ -392,11 +393,7 @@ function Reply({ model, content }: SectionProps<"rsvp">) {
           {content.deadline ? <p className={styles.deadline}>{content.deadline}</p> : null}
           <h2 className={styles.title}>{content.heading || kick(model).reply}</h2>
           {content.message ? <p className={cn(styles.muted, "mx-auto mt-4 max-w-md")}>{content.message}</p> : null}
-          {content.linkUrl ? (
-            <a className={styles.btn} href={content.linkUrl} target="_blank" rel="noopener noreferrer">
-              {content.linkLabel || content.heading}
-            </a>
-          ) : null}
+          <ReplyButton content={content} className={styles.btn} />
         </div>
       </div>
     </Block>

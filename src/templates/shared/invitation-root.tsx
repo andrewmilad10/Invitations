@@ -2,6 +2,11 @@ import type { CSSProperties, ReactNode } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { cn } from "@/lib/utils";
 import type { SectionComponents } from "../types";
+import { GiftsSection, GuestDear, WishesSection } from "./reply/guest-sections";
+import { InvitationModelProvider } from "./reply/model-context";
+
+/** Sections drawn the same way in every design that has no own version. */
+const SHARED: SectionComponents = { wishes: WishesSection, gifts: GiftsSection };
 
 /**
  * Root element of every invitation: applies the theme's CSS variables,
@@ -26,7 +31,10 @@ export function InvitationRoot({
       style={model.cssVars as CSSProperties}
       className={cn("group/inv min-h-dvh bg-inv-bg font-inv-body text-inv-fg antialiased", className)}
     >
-      {children}
+      <InvitationModelProvider model={model}>
+        {model.mode === "live" ? <GuestDear model={model} /> : null}
+        {children}
+      </InvitationModelProvider>
     </div>
   );
 }
@@ -36,7 +44,7 @@ export function Sections({ model, components }: { model: InvitationModel; compon
   return (
     <>
       {model.sections.map((section) => {
-        const Component = components[section.type] as
+        const Component = (components[section.type] ?? SHARED[section.type]) as
           | React.ComponentType<{ model: InvitationModel; content: typeof section.content }>
           | undefined;
         if (!Component) return null;

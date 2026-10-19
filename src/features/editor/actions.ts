@@ -141,7 +141,7 @@ export async function saveSection(
   if (patch.content !== undefined) {
     const parsed = validateSectionContent(type, patch.content);
     if (!parsed.success) return invalid(parsed.error);
-    row.content = parsed.data as Json;
+    row.content = withQuestionIds(parsed.data) as Json;
   }
   if (patch.style !== undefined) {
     const parsed = sectionStyleSchema.safeParse(patch.style);
@@ -343,4 +343,11 @@ export async function reorderGallery(weddingId: string, mediaIds: string[]): Pro
   );
   if (results.some((r) => r.error)) return FAILED("the order");
   return { ok: true };
+}
+
+/** New reply questions get a short random id that keys guests' answers (kept when the wording changes). */
+function withQuestionIds<T>(content: T): T {
+  const c = content as { questions?: { id?: string }[] };
+  if (!Array.isArray(c.questions)) return content;
+  return { ...c, questions: c.questions.map((q) => (q.id ? q : { ...q, id: crypto.randomUUID().replace(/-/g, "").slice(0, 12) })) } as T;
 }

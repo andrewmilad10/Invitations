@@ -11,6 +11,7 @@ import { resolveSectionContent, SECTION_DEFINITIONS, type FieldDescriptor, type 
 import { saveSection } from "../actions";
 import { setSection } from "../bundle-updates";
 import { useEditor } from "../editor-context";
+import { resolveTemplateManifest } from "@/templates/registry";
 
 type ListItem = Record<string, string>;
 
@@ -18,8 +19,9 @@ type ListItem = Record<string, string>;
 export function useSectionState(type: SectionType) {
   const { bundle } = useEditor();
   const row = bundle.sections.find((s) => s.type === type);
+  const offByDefault = (resolveTemplateManifest(bundle.wedding.template_id).defaultDisabled ?? []).includes(type) || SECTION_DEFINITIONS[type].defaultEnabled === false;
   return {
-    enabled: row?.enabled ?? true,
+    enabled: row?.enabled ?? !offByDefault,
     content: resolveSectionContent(type, row?.content, toLocale(bundle.settings.locale)) as Record<string, unknown>,
   };
 }
@@ -97,10 +99,33 @@ function FieldControl({
     );
   }
 
+  if (field.kind === "number") {
+    const n = Number(value ?? field.min);
+    return (
+      <Field id={id} label={field.label} hint={field.hint}>
+        <Input
+          id={id}
+          type="number"
+          inputMode="numeric"
+          min={field.min}
+          max={field.max}
+          className="w-28"
+          value={Number.isFinite(n) ? n : field.min}
+          disabled={disabled}
+          onChange={(e) => {
+            const v = Math.round(Number(e.target.value));
+            if (Number.isFinite(v)) onChange(Math.min(field.max, Math.max(field.min, v)));
+          }}
+        />
+      </Field>
+    );
+  }
+
   // list
   const items = (Array.isArray(value) ? value : []) as ListItem[];
   const set = (next: ListItem[]) => onChange(next);
-  const empty = Object.fromEntries(field.itemFields.map((f) => [f.name, ""]));
+  const empty = Object.fromEntries(field.itemFields.map((f) => [f.name, f.options?.[0]?.value ?? ""]));
+  const shown = field.itemFields.filter((f) => !f.hidden);
   return (
     <fieldset className="grid gap-3">
       <legend className="mb-2 text-sm font-medium">{field.label}</legend>
@@ -108,19 +133,35 @@ function FieldControl({
       {items.map((item, index) => (
         <div key={index} className="grid gap-3 rounded-lg border bg-card p-4">
           <div className="grid gap-3 sm:grid-cols-[8rem_1fr]">
-            {field.itemFields.map((f) => (
-              <div key={f.name} className={f.name === "note" ? "sm:col-span-2" : undefined}>
+            {shown.map((f) => (
+              <div key={f.name} className={f.name === "note" || f.name === "text" ? "sm:col-span-2" : undefined}>
                 <Label htmlFor={`${id}-${index}-${f.name}`} className="mb-1.5 block text-xs text-muted-foreground">
                   {f.label}
                 </Label>
-                <Input
-                  id={`${id}-${index}-${f.name}`}
-                  value={item[f.name] ?? ""}
-                  maxLength={f.maxLength}
-                  placeholder={f.placeholder}
-                  disabled={disabled}
-                  onChange={(e) => set(items.map((it, i) => (i === index ? { ...it, [f.name]: e.target.value } : it)))}
-                />
+                {f.options ? (
+                  <select
+                    id={`${id}-${index}-${f.name}`}
+                    value={item[f.name] ?? f.options[0].value}
+                    disabled={disabled}
+                    onChange={(e) => set(items.map((it, i) => (i === index ? { ...it, [f.name]: e.target.value } : it)))}
+                    className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  >
+                    {f.options.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <Input
+                    id={`${id}-${index}-${f.name}`}
+                    value={item[f.name] ?? ""}
+                    maxLength={f.maxLength}
+                    placeholder={f.placeholder}
+                    disabled={disabled}
+                    onChange={(e) => set(items.map((it, i) => (i === index ? { ...it, [f.name]: e.target.value } : it)))}
+                  />
+                )}
               </div>
             ))}
           </div>

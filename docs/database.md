@@ -95,6 +95,18 @@ couple changed. Created empty by trigger.
 * **`wedding_sections.style`** (0007): per-section presentation hints, kept
   apart from content (see docs/templates.md).
 
+* **Guests, replies and wishes** (0008): `guests` (the couple's list; each
+  has a random 32-character `token` for their personal link `/w/{slug}?g=…`,
+  so names never go in URLs), `replies` (one per listed guest; general-link
+  replies have no guest and are matched by name), `wishes` (messages guests
+  leave; the couple can hide them). Members read; owner/editor write; the
+  token and open counts are set only by the database. Guests never touch the
+  tables: they go through `get_guest`, `submit_reply`, `submit_wish` and
+  `get_public_wishes`, which only work for published weddings, cap party size
+  at the guest's or the invitation's limit (`rsvp.content.maxGuests`), keep
+  only answers to the couple's own questions and limit totals per wedding.
+  Tests: `supabase/tests/replies.test.sql`.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own
@@ -146,7 +158,11 @@ couple changed. Created empty by trigger.
 | settings, themes, sections, events, media | members | owner/editor |
 | `storage.objects` (`wedding-media`) | members (API); files are served from the public bucket URL | owner/editor of the wedding in the path |
 
-`anon`: no table privileges; `EXECUTE` on `get_public_invitation` only.
+| `guests`           | members               | insert/update/delete: owner/editor (token and counts not writable) |
+| `replies`          | members               | owner/editor (guests write through `submit_reply`) |
+| `wishes`           | members               | update (`hidden`)/delete: owner/editor (guests write through `submit_wish`) |
+
+`anon`: no table privileges; `EXECUTE` on `get_public_invitation`, `get_guest`, `submit_reply`, `submit_wish` and `get_public_wishes` only.
 
 ## Storage
 

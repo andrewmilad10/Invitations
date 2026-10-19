@@ -11,6 +11,7 @@ import { MapEmbed } from "../shared/map-embed";
 import { MusicToggle } from "../shared/music-toggle";
 import { roman, season, sectionNumber } from "../shared/numbering";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 /**
  * Maison — a fashion-editorial layout: the invitation as a magazine issue.
@@ -397,19 +398,12 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
           </p>
         ) : null}
         {content.deadline ? <Label className="mt-8 opacity-70">{content.deadline}</Label> : null}
-        {content.linkUrl ? (
-          <a
-            href={content.linkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/btn mt-12 inline-flex items-center gap-4 border border-current px-10 py-4 text-[0.7rem] font-medium uppercase tracking-[0.32em] transition-colors duration-500 hover:bg-inv-bg hover:text-inv-fg"
-          >
-            {content.linkLabel || content.heading}
-            <span aria-hidden className="transition-transform duration-500 group-hover/btn:translate-x-1 rtl:-scale-x-100">
-              →
-            </span>
-          </a>
-        ) : null}
+        <ReplyButton content={content} className="group/btn mt-12 inline-flex items-center gap-4 border border-current px-10 py-4 text-[0.7rem] font-medium uppercase tracking-[0.32em] transition-colors duration-500 hover:bg-inv-bg hover:text-inv-fg">
+          {content.linkLabel || content.heading}
+          <span aria-hidden className="transition-transform duration-500 group-hover/btn:translate-x-1 rtl:-scale-x-100">
+          →
+          </span>
+        </ReplyButton>
       </div>
     </section>
   );

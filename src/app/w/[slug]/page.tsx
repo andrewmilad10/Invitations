@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPublicBundle, toModel } from "@/features/invitations/public";
+import { getGuest, getPublicBundle, getPublicWishes, toModel } from "@/features/invitations/public";
+import { submitReply, submitWish } from "@/features/invitations/reply-actions";
+import { ReplyActionsProvider } from "@/templates/shared/reply/context";
 import { InvitationRenderer } from "@/templates/renderers";
 
 // Published pages read live data so edits appear on refresh (see docs/database.md §8).
@@ -38,10 +40,16 @@ export async function generateMetadata(props: PageProps<"/w/[slug]">): Promise<M
 
 export default async function PublicInvitationPage(props: PageProps<"/w/[slug]">) {
   const { slug } = await props.params;
+  const { g } = await props.searchParams;
   const bundle = await getPublicBundle(slug);
   if (!bundle) notFound();
+  const [guest, wishes] = await Promise.all([getGuest(bundle.wedding.slug, typeof g === "string" ? g : undefined), getPublicWishes(bundle.wedding.slug)]);
 
   // The model is built once, on the server, and serialized to client islands —
   // so dates/times can never differ between server and browser.
-  return <InvitationRenderer model={toModel(bundle, "live")} />;
+  return (
+    <ReplyActionsProvider submitReply={submitReply} submitWish={submitWish}>
+      <InvitationRenderer model={toModel(bundle, "live", { guest, wishes })} />
+    </ReplyActionsProvider>
+  );
 }

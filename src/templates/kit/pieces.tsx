@@ -3,6 +3,7 @@ import type { EventModel, InvitationModel, MediaAsset } from "@/core/invitation/
 import type { SectionContent } from "@/core/sections/registry";
 import { cn } from "@/lib/utils";
 import { Countdown } from "../shared/countdown";
+import { ReplyButton } from "../shared/reply/reply-button";
 import { InvitationImage } from "../shared/invitation-image";
 import { InvitationRoot } from "../shared/invitation-root";
 import { MapEmbed } from "../shared/map-embed";
@@ -83,13 +84,12 @@ export function KitMap({ model, event, className }: { model: InvitationModel; ev
   return <MapEmbed event={event} className={className} />;
 }
 
-/** The couple's reply link as a button (collecting replies in Vellum is Phase 2). */
+/** The reply button: opens the shared reply (saved to the couple's guest list), or the couple's own form link. */
 export function ReplyLink({ content, className, children }: { content: SectionContent<"rsvp">; className?: string; children?: ReactNode }) {
-  if (!content.linkUrl) return null;
   return (
-    <a className={className} href={content.linkUrl} target="_blank" rel="noopener noreferrer">
-      {children ?? (content.linkLabel || content.heading)}
-    </a>
+    <ReplyButton content={content} className={className}>
+      {children}
+    </ReplyButton>
   );
 }
 

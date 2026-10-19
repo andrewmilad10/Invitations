@@ -127,7 +127,7 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
         <h2 className={s.replyTitle}>{content.heading || copy.rsvp}</h2>
         {content.deadline ? <p className={s.caps}>{content.deadline}</p> : null}
         {content.message ? <p className={s.body}>{content.message}</p> : null}
-        <ReplyForm locale={model.locale} linkUrl={content.linkUrl} linkLabel={content.linkLabel || content.heading || copy.rsvp} demo={model.mode !== "live"} />
+        <ReplyForm model={model} content={content} />
       </div>
     </Sec>
   );

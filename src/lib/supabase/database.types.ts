@@ -80,6 +80,43 @@ type MediaRow = {
   created_at: string;
 };
 
+export type GuestRow = {
+  id: string;
+  wedding_id: string;
+  name: string;
+  greeting: string | null;
+  message: string | null;
+  groups: string[];
+  max_party: number | null;
+  token: string;
+  open_count: number;
+  last_opened_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ReplyRow = {
+  id: string;
+  wedding_id: string;
+  guest_id: string | null;
+  name: string;
+  attending: boolean;
+  party_size: number;
+  note: string | null;
+  answers: Json;
+  created_at: string;
+  updated_at: string;
+};
+
+export type WishRow = {
+  id: string;
+  wedding_id: string;
+  name: string;
+  message: string;
+  hidden: boolean;
+  created_at: string;
+};
+
 type Table<Row, Insert, Update = Partial<Insert>> = {
   Row: Row;
   Insert: Insert;
@@ -138,6 +175,17 @@ export type Database = {
           sort_order?: number;
         }
       >;
+      guests: Table<
+        GuestRow,
+        { wedding_id: string; name: string; greeting?: string | null; message?: string | null; groups?: string[]; max_party?: number | null },
+        { name?: string; greeting?: string | null; message?: string | null; groups?: string[]; max_party?: number | null }
+      >;
+      replies: Table<
+        ReplyRow,
+        { wedding_id: string; guest_id?: string | null; name: string; attending: boolean; party_size?: number; note?: string | null; answers?: Json },
+        { attending?: boolean; party_size?: number; note?: string | null; answers?: Json }
+      >;
+      wishes: Table<WishRow, never, { hidden?: boolean }>;
     };
     Views: { [_ in never]: never };
     Functions: {
@@ -145,6 +193,13 @@ export type Database = {
       create_wedding_from_draft: { Args: { p_draft: Json }; Returns: string };
       can_edit_wedding: { Args: { p_wedding_id: string }; Returns: boolean };
       can_view_wedding: { Args: { p_wedding_id: string }; Returns: boolean };
+      get_guest: { Args: { p_slug: string; p_token: string }; Returns: Json };
+      submit_reply: {
+        Args: { p_slug: string; p_token: string | null; p_name: string; p_attending: boolean; p_party: number; p_note: string | null; p_answers: Json };
+        Returns: Json;
+      };
+      submit_wish: { Args: { p_slug: string; p_name: string; p_message: string }; Returns: Json };
+      get_public_wishes: { Args: { p_slug: string }; Returns: Json };
     };
     Enums: {
       wedding_status: WeddingStatus;

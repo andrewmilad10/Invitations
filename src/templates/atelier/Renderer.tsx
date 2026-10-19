@@ -9,6 +9,7 @@ import { InvitationRoot, Paragraphs, Sections } from "../shared/invitation-root"
 import { MapEmbed } from "../shared/map-embed";
 import { MusicToggle } from "../shared/music-toggle";
 import type { SectionComponents, SectionProps, TemplateRendererProps } from "../types";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 /**
  * Atelier — an editorial, calligraphic layout: a colour-washed photo
@@ -323,16 +324,9 @@ function Rsvp({ model, content }: SectionProps<"rsvp">) {
       <div className="relative mx-auto mt-10 max-w-lg">
         {content.message ? <Prose className="text-lg sm:text-xl">{content.message}</Prose> : null}
         {content.deadline ? <Spaced className="mt-6">{content.deadline}</Spaced> : null}
-        {content.linkUrl ? (
-          <a
-            href={content.linkUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-block rounded-inv bg-inv-accent px-9 py-3.5 text-xs uppercase tracking-[0.3em] text-inv-accent-fg transition hover:opacity-90"
-          >
-            {content.linkLabel || content.heading}
-          </a>
-        ) : null}
+        <ReplyButton content={content} className="mt-8 inline-block rounded-inv bg-inv-accent px-9 py-3.5 text-xs uppercase tracking-[0.3em] text-inv-accent-fg transition hover:opacity-90">
+          {content.linkLabel || content.heading}
+        </ReplyButton>
       </div>
     </section>
   );

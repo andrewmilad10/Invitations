@@ -22,6 +22,7 @@ import type {
   SectionProps,
   TemplateRendererProps,
 } from "../types";
+import { ReplyButton } from "../shared/reply/reply-button";
 
 /**
  * Galerie — the wedding as an exhibition. Gallery-white walls and
@@ -547,19 +548,12 @@ function Opening({ model, content }: SectionProps<"rsvp">) {
               <p className="mt-4 text-sm text-inv-muted">{content.deadline}</p>
             ) : null}
           </div>
-          {content.linkUrl ? (
-            <a
-              href={content.linkUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 border-t border-inv-fg bg-inv-fg px-10 py-6 text-inv-bg transition-colors duration-300 hover:bg-inv-accent hover:text-inv-accent-fg sm:border-s sm:border-t-0"
-            >
-              {content.linkLabel || content.heading}{" "}
-              <span aria-hidden className="rtl:-scale-x-100">
-                →
-              </span>
-            </a>
-          ) : null}
+          <ReplyButton content={content} className="flex items-center justify-center gap-3 border-t border-inv-fg bg-inv-fg px-10 py-6 text-inv-bg transition-colors duration-300 hover:bg-inv-accent hover:text-inv-accent-fg sm:border-s sm:border-t-0">
+            {content.linkLabel || content.heading}{" "}
+            <span aria-hidden className="rtl:-scale-x-100">
+            →
+            </span>
+          </ReplyButton>
         </div>
       </div>
     </Room>
