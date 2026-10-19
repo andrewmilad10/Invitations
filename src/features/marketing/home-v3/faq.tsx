@@ -8,7 +8,7 @@ const ITEMS: [string, string][] = [
 
 export function Faq() {
   return (
-    <section id="faq" className="scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-28">
+    <section id="faq" className="px-5 pt-24 sm:px-8 sm:pt-28">
       <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-[0.8fr_1.2fr] md:gap-12">
         <div>
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.26em] text-accent">Questions</p>

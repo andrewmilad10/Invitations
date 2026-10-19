@@ -200,7 +200,7 @@ export function startMotion(): (() => void) | void {
     lenis = new Lenis({
       lerp: 0.11,
       wheelMultiplier: 0.95,
-      anchors: { offset: -80 },
+      anchors: true,
       prevent: (node) => Boolean(node.closest?.("dialog, [data-lenis-prevent]")),
     });
     lenis.on("scroll", ScrollTrigger.update);

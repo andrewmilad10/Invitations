@@ -117,7 +117,7 @@ function Stats({ count }: { count: number }) {
 
 function Loved({ designs, total }: { designs: PreviewDesign[]; total: number }) {
   return (
-    <section className="scroll-mt-24 pt-20 sm:pt-24" id="designs">
+    <section className="pt-20 sm:pt-24" id="designs">
       <div className="mx-auto mb-6 max-w-2xl px-5 text-center">
         <Eyebrow>Most loved</Eyebrow>
         <H2 className="mt-3">Designs couples choose most</H2>
@@ -176,7 +176,7 @@ function HowItWorks() {
     ["Send one link", "Share it on WhatsApp. Guests reply on the invitation and you see every answer."],
   ];
   return (
-    <section id="how-it-works" className="scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-28">
+    <section id="how-it-works" className="px-5 pt-24 sm:px-8 sm:pt-28">
       <div className="mx-auto max-w-6xl">
         <Eyebrow>How it works</Eyebrow>
         <H2 className="mt-3">Ready in an evening</H2>
@@ -198,7 +198,7 @@ function HowItWorks() {
 
 function Replies() {
   return (
-    <section id="replies" className="mt-24 scroll-mt-24 bg-primary text-primary-foreground sm:mt-28">
+    <section id="replies" className="mt-24 bg-primary text-primary-foreground sm:mt-28">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-20 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <Eyebrow className="text-[#c9b38a]">Guests &amp; replies</Eyebrow>
@@ -274,7 +274,7 @@ function Features() {
     ["music", "Music", "Your song plays softly when guests open it."],
   ];
   return (
-    <section id="features" className="scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-28">
+    <section id="features" className="px-5 pt-24 sm:px-8 sm:pt-28">
       <div className="mx-auto max-w-6xl">
         <Eyebrow>In every design</Eyebrow>
         <H2 className="mt-3">Everything your guests need, in one link</H2>
@@ -302,7 +302,7 @@ function Pricing() {
     </li>
   );
   return (
-    <section id="pricing" className="scroll-mt-24 px-5 pt-24 sm:px-8 sm:pt-28">
+    <section id="pricing" className="px-5 pt-24 sm:px-8 sm:pt-28">
       <div className="mx-auto max-w-6xl">
         <Eyebrow>Price</Eyebrow>
         <H2 className="mt-3">One price, no surprises</H2>
