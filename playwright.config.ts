@@ -11,7 +11,8 @@ export default defineConfig({
   timeout: 90_000,
   fullyParallel: false,
   retries: 0,
-  reporter: [["list"]],
+  // On GitHub, failures also show as annotations on the check run.
+  reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
   use: {
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
     trace: "retain-on-failure",

@@ -60,7 +60,10 @@ jobs:
           E2E_DB_URL: ${{ steps.sb.outputs.db }}
       - name: App log (on failure)
         if: failure()
-        run: tail -200 next.log
+        run: |
+          tail -200 next.log
+          # Also as annotations, readable on the check run without the log files.
+          grep -iE "error|fail|denied|refused" next.log | tail -8 | sed 's/^/::warning title=App log::/' || true
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
