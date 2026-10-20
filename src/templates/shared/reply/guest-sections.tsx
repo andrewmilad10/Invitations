@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import { BotCheck } from "@/features/auth/components/bot-check";
 import type { InvitationModel, PublicWish } from "@/core/invitation/model";
 import { replyErrorText } from "@/core/replies/schema";
 import type { SectionContent } from "@/core/sections/registry";
@@ -33,9 +34,10 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
   const [pending, setPending] = useState(false);
   const sending = useRef(false);
 
-  async function submit(e: FormEvent) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (sending.current) return;
+    const captcha = new FormData(e.currentTarget).get("cf-turnstile-response");
     setError("");
     if (!name.trim() || !message.trim()) {
       setError(replyErrorText("invalid", ar));
@@ -48,7 +50,9 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
     }
     sending.current = true;
     setState("sending");
-    const res = await actions.submitWish({ slug: model.wedding.slug, name, message }).catch(() => ({ ok: false as const, error: "offline" }));
+    const res = await actions
+      .submitWish({ slug: model.wedding.slug, name, message, captcha: typeof captcha === "string" ? captcha : null })
+      .catch(() => ({ ok: false as const, error: "offline" }));
     sending.current = false;
     if (res.ok) {
       // A wish that waits for the couple's approval isn't shown yet.
@@ -106,6 +110,7 @@ export function WishesSection({ model, content }: { model: InvitationModel; cont
                 {error}
               </p>
             ) : null}
+            {live ? <BotCheck resetKey={error} /> : null}
             <button type="submit" className={s.send} disabled={state === "sending"}>
               {state === "sending" ? (ar ? "جارٍ الإرسال…" : "Sending…") : ar ? "إرسال" : "Send wish"}
             </button>

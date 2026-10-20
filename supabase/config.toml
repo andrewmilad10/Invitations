@@ -52,3 +52,26 @@ max_enrolled_factors = 10
 [auth.mfa.totp]
 enroll_enabled = true
 verify_enabled = true
+
+# Branded auth emails (the same files are pasted into the live project:
+# Supabase → Authentication → Emails → Templates). Links use the token-hash
+# flow through /auth/confirm, so they work on any device.
+[auth.email.template.confirmation]
+subject = "Confirm your email for Vellum"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Choose a new Vellum password"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "Your Vellum login link"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.email_change]
+subject = "Confirm your new email for Vellum"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.reauthentication]
+subject = "Your Vellum security code"
+content_path = "./supabase/templates/reauthentication.html"

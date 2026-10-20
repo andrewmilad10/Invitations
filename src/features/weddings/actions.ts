@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "@/lib/zod";
 import { suggestSlug, withRandomSuffix } from "@/core/wedding/slug";
 import { getCurrentUser } from "@/features/auth/session";
+import { limitError } from "@/lib/supabase/limit-error";
 import { createClient } from "@/lib/supabase/server";
 import { isSelectableTemplateId } from "@/templates/registry";
 import { isUuid } from "./queries";
@@ -56,6 +57,8 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
       return { ok: true, data: { id: data.id } };
     }
     if (error.code !== UNIQUE_VIOLATION) {
+      const limited = limitError(error);
+      if (limited) return limited;
       console.error("createWedding failed", error);
       return { ok: false, error: "We couldn't create your wedding. Please try again." };
     }

@@ -106,3 +106,17 @@ of them is not finished.
   session; a couple's session against staff functions, orders, staff tables
   and protected columns), staff two-step setup, mark paid, guest sees it.
   New features that touch money or access get a step here.
+- **Quotas** (0022, error `P0413`, message shown as is): 30 invitations per
+  account, 1,500 guests, 80 photos/music files and 20 events per
+  invitation (plus 2,000 replies and 1,000 wishes, 0008). Editor saves are
+  limited to 3,000 an hour and data downloads to 10 (`P0429`). Show these
+  with `limitError()`; other database errors stay generic.
+- **Guest forms** on general links pass the bot check too (verified with
+  `TURNSTILE_SECRET_KEY` in `reply-actions.ts`); personal links skip it.
+- **Auth emails** are branded (`supabase/templates/*`, token-hash links via
+  `/auth/confirm`, which accepts only known link types). The sender name
+  needs custom SMTP in Supabase (built-in email is for testing only).
+- **Links from couples** (maps, own reply form) must be `https://`; checked
+  by Zod and by database constraints, so `javascript:` links can't exist.
+- **Never** put the Supabase secret key in code or `NEXT_PUBLIC_*`: none is
+  used anywhere; the scan in CI (gitleaks) fails if one appears.

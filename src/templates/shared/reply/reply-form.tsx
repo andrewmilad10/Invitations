@@ -4,6 +4,7 @@ import { useId, useRef, useState, type FormEvent } from "react";
 import type { InvitationModel } from "@/core/invitation/model";
 import { replyErrorText } from "@/core/replies/schema";
 import type { SectionContent } from "@/core/sections/registry";
+import { BotCheck } from "@/features/auth/components/bot-check";
 import { useReplyActions } from "./context";
 import s from "./reply.module.css";
 
@@ -85,10 +86,11 @@ export function ReplyForm({ model, content, onDone }: { model: InvitationModel; 
   const sending = useRef(false);
   const questions = (content.questions ?? []).filter((q) => q.text.trim());
 
-  async function submit(e: FormEvent) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     // one reply at a time: a second tap while sending does nothing
     if (sending.current) return;
+    const captcha = new FormData(e.currentTarget).get("cf-turnstile-response");
     setError("");
     if (!guest && !name.trim()) {
       setError(replyErrorText("name", ar));
@@ -112,6 +114,7 @@ export function ReplyForm({ model, content, onDone }: { model: InvitationModel; 
         partySize: n,
         note,
         answers: Object.fromEntries(Object.entries(answers).filter(([k, v]) => v && questions.some((q) => q.id === k))),
+        captcha: typeof captcha === "string" ? captcha : null,
       })
       .catch(() => ({ ok: false as const, error: "offline" }));
     sending.current = false;
@@ -217,6 +220,8 @@ export function ReplyForm({ model, content, onDone }: { model: InvitationModel; 
           {error}
         </p>
       ) : null}
+      {/* General links only: personal links are already tied to one guest. */}
+      {live && !guest ? <BotCheck resetKey={error} /> : null}
       <button type="submit" className={s.send} disabled={state === "sending"}>
         {state === "sending" ? t.sending : t.send}
       </button>

@@ -10,6 +10,7 @@ import { getCurrentUser } from "@/features/auth/session";
 import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
 import type { ActionResult } from "@/features/weddings/schemas";
 import type { Json } from "@/lib/supabase/database.types";
+import { limitError } from "@/lib/supabase/limit-error";
 import { createClient } from "@/lib/supabase/server";
 import { isSelectableTemplateId } from "@/templates/registry";
 import type { DraftToCreate } from "./answers";
@@ -61,6 +62,8 @@ export async function saveDraftAsWedding(draft: DraftToCreate): Promise<ActionRe
     p_draft: { ...d, slug: withRandomSuffix(suggestSlug(d.partnerOne, d.partnerTwo)) } as unknown as Json,
   });
   if (error || !data) {
+    const limited = limitError(error);
+    if (limited) return limited;
     console.error("create_wedding_from_draft failed", error);
     return { ok: false, error: "We couldn't save your invitation. Please try again — your draft is still here." };
   }

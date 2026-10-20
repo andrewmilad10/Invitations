@@ -13,6 +13,9 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return new Response("Please log in.", { status: 401 });
   const supabase = await createClient();
+  // At most 10 downloads an hour per account (the file can be large).
+  const limited = await supabase.rpc("limit_action", { p_action: "data.export" });
+  if (limited.error) return new Response("Too many downloads. Please try again in an hour.", { status: 429 });
   const { data: weddings } = await supabase.from("weddings").select("*").eq("owner_id", user.id);
   const ids = (weddings ?? []).map((w) => w.id);
   const none = ["00000000-0000-0000-0000-000000000000"];

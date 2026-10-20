@@ -25,7 +25,7 @@ export function buildCsp({ frameAncestors, nonce, supabaseUrl, dev, siteUrl }: {
   }
   const script = nonce
     ? `'self' 'nonce-${nonce}' 'strict-dynamic' ${TURNSTILE_ORIGIN}${dev ? " 'unsafe-eval'" : ""}`
-    : `'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`;
+    : `'self' 'unsafe-inline' ${TURNSTILE_ORIGIN}${dev ? " 'unsafe-eval'" : ""}`;
   return [
     "default-src 'self'",
     `script-src ${script}`,

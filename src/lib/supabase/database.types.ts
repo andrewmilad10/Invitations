@@ -238,6 +238,7 @@ export type Database = {
       admin_set_staff: { Args: { p_email: string; p_role: string | null }; Returns: Json };
       admin_activity: { Args: { p_limit: number }; Returns: Json };
       admin_alerts: { Args: { p_days: number }; Returns: Json };
+      limit_action: { Args: { p_action: string }; Returns: undefined };
       admin_list_reminders: { Args: Record<string, never>; Returns: Json };
       admin_mark_reminder_sent: { Args: { p_id: number }; Returns: Json };
       delete_my_account: { Args: Record<string, never>; Returns: Json };

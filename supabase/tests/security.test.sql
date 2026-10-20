@@ -66,3 +66,19 @@ select tests.eq((select count(*) from auth.users where id = 'd0000000-0000-4000-
 select tests.eq((select count(*) from public.weddings where slug like 'rana-%')::int, 0, 'with their invitations');
 select tests.eq((select status::text from public.orders where customer_phone is null and buyer_id is null and cancel_reason = 'Account deleted' limit 1), 'cancelled', 'open orders are cancelled and kept without name or phone');
 select tests.eq((select count(*) from public.orders where customer_phone = '01009876543')::int, 0, 'no phone number is left behind');
+
+-- ── 0022: quotas ───────────────────────────────────────────────────────────
+reset role;
+insert into auth.users (id, email) values ('d0000000-0000-4000-8000-0000000000d9', 'big@test.dev');
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'd0000000-0000-4000-8000-0000000000d9', true);
+insert into public.weddings (owner_id, slug, partner_one_name, partner_two_name) values ('d0000000-0000-4000-8000-0000000000d9', 'big-one-z9y8x7', 'Big', 'List');
+select tests.ok((select count(*) from public.guests) = 0, 'start empty');
+insert into public.guests (wedding_id, name) select tests.swid('big-one-z9y8x7'), 'Guest ' || g from generate_series(1, 1500) g;
+select tests.eq((select count(*) from public.guests where wedding_id = tests.swid('big-one-z9y8x7'))::int, 1500, 'a 1,500-guest list is fine (one import counts once)');
+select tests.throws($$insert into public.guests (wedding_id, name) values (tests.swid('big-one-z9y8x7'), 'One too many')$$, 'P0413', 'guest 1,501 is refused');
+insert into public.events (wedding_id, kind, title) select tests.swid('big-one-z9y8x7'), 'other', 'Event ' || g from generate_series(1, 20) g;
+select tests.throws($$insert into public.events (wedding_id, kind, title) values (tests.swid('big-one-z9y8x7'), 'other', 'Event 21')$$, 'P0413', 'event 21 is refused');
+select tests.throws($$select private.limit_action('nope')$$, '22023', 'unknown limit names are refused');
+select public.limit_action('data.export');
+select tests.ok(true, 'the app can ask for a named limit');

@@ -20,6 +20,8 @@ export const replyInput = z.object({
   partySize: z.number().int().min(0).max(20),
   note: z.string().max(500).transform((s) => s.trim()),
   answers: z.record(z.string().max(24), z.string().max(300)).refine((a) => Object.keys(a).length <= 6, "Too many answers."),
+  /** Bot check answer (Cloudflare Turnstile) from general-link forms, when the check is on. */
+  captcha: z.string().max(4096).nullish(),
 }).refine((r) => r.token !== null || r.name.length > 0, { message: "Please write your name.", path: ["name"] });
 export type ReplyInput = z.input<typeof replyInput>;
 
@@ -27,6 +29,7 @@ export const wishInput = z.object({
   slug: z.string().max(60).regex(SLUG),
   name: clean(80).pipe(z.string().min(1, "Please write your name.")),
   message: z.string().transform((s) => s.trim()).pipe(z.string().min(1, "Please write a few words.").max(500, "Please keep it under 500 characters.")),
+  captcha: z.string().max(4096).nullish(),
 });
 export type WishInput = z.input<typeof wishInput>;
 
@@ -71,6 +74,7 @@ export function replyErrorText(code: string, ar: boolean): string {
     full: "Replies are full for this invitation. Please contact the couple.",
     invalid: "Please check what you wrote and try again.",
     busy: "Too many tries in a short time. Please wait a minute and try again.",
+    check: "Please complete the quick check above the button, then send again.",
     offline: "No connection. Check your internet and press send again.",
   };
   const arabic: Record<string, string> = {
@@ -80,6 +84,7 @@ export function replyErrorText(code: string, ar: boolean): string {
     full: "اكتمل عدد الردود لهذه الدعوة. تواصلوا مع العروسين.",
     invalid: "راجعوا ما كتبتم وحاولوا مرة أخرى.",
     busy: "محاولات كثيرة في وقت قصير. انتظروا دقيقة ثم حاولوا مجددًا.",
+    check: "من فضلكم أكملوا التحقق السريع فوق الزر ثم أرسلوا مرة أخرى.",
     offline: "لا يوجد اتصال. تحققوا من الإنترنت واضغطوا إرسال مرة أخرى.",
   };
   const dict = ar ? arabic : en;

@@ -12,6 +12,7 @@ import { isStoragePath, MEDIA_BUCKET } from "@/features/media/urls";
 import type { ActionResult } from "@/features/weddings/schemas";
 import { isUuid } from "@/features/weddings/queries";
 import type { Json } from "@/lib/supabase/database.types";
+import { limitError } from "@/lib/supabase/limit-error";
 import { createClient } from "@/lib/supabase/server";
 import { isSelectableTemplateId } from "@/templates/registry";
 import { detailsSchema, eventSchema, MEDIA_LIMITS, registerMediaSchema, settingsSchema, type EventInput } from "./schemas";
@@ -56,7 +57,7 @@ export async function updateDetails(weddingId: string, input: z.input<typeof det
     .eq("id", weddingId)
     .select("slug")
     .maybeSingle();
-  if (error) return FAILED("your details");
+  if (error) return limitError(error) ?? FAILED("your details");
   if (!data) return NO_ACCESS;
   return { ok: true };
 }
@@ -66,7 +67,7 @@ export async function updateTemplate(weddingId: string, templateId: string): Pro
   if (!ctx) return NO_ACCESS;
   if (!isSelectableTemplateId(templateId)) return { ok: false, error: "Unknown template." };
   const { data, error } = await ctx.supabase.from("weddings").update({ template_id: templateId }).eq("id", weddingId).select("slug").maybeSingle();
-  if (error) return FAILED("the template");
+  if (error) return limitError(error) ?? FAILED("the template");
   if (!data) return NO_ACCESS;
   return { ok: true };
 }
@@ -79,7 +80,7 @@ export async function updateSlug(weddingId: string, rawSlug: string): Promise<Ac
 
   const { data, error } = await ctx.supabase.from("weddings").update({ slug: parsed.data }).eq("id", weddingId).select("slug").maybeSingle();
   if (error?.code === "23505") return { ok: false, error: "That address is already taken.", fieldErrors: { slug: ["That address is already taken."] } };
-  if (error) return FAILED("the address");
+  if (error) return limitError(error) ?? FAILED("the address");
   if (!data) return NO_ACCESS;
   return { ok: true, data: { slug: data.slug } };
 }
@@ -102,7 +103,7 @@ export async function updateSettings(weddingId: string, input: z.input<typeof se
     .eq("wedding_id", weddingId)
     .select("wedding_id")
     .maybeSingle();
-  if (error) return FAILED("your settings");
+  if (error) return limitError(error) ?? FAILED("your settings");
   if (!data) return NO_ACCESS;
   return { ok: true };
 }
@@ -118,7 +119,7 @@ export async function updateTheme(weddingId: string, overrides: unknown): Promis
     .eq("wedding_id", weddingId)
     .select("wedding_id")
     .maybeSingle();
-  if (error) return FAILED("the theme");
+  if (error) return limitError(error) ?? FAILED("the theme");
   if (!data) return NO_ACCESS;
   return { ok: true };
 }
@@ -158,7 +159,7 @@ export async function saveSection(
     .select("id")
     .maybeSingle();
   if (error?.code === "42501") return NO_ACCESS;
-  if (error) return FAILED("this section");
+  if (error) return limitError(error) ?? FAILED("this section");
   if (!data) return NO_ACCESS;
   return { ok: true };
 }
@@ -170,7 +171,7 @@ export async function saveSectionOrder(weddingId: string, order: string[] | null
 
   if (order === null) {
     const { error } = await ctx.supabase.from("wedding_sections").update({ sort_order: null }).eq("wedding_id", weddingId);
-    if (error) return FAILED("the order");
+    if (error) return limitError(error) ?? FAILED("the order");
     return { ok: true };
   }
 
@@ -180,7 +181,7 @@ export async function saveSectionOrder(weddingId: string, order: string[] | null
   const rows = types.map((type, i) => ({ wedding_id: weddingId, type, sort_order: (i + 1) * 10 }));
   const { data, error } = await ctx.supabase.from("wedding_sections").upsert(rows, { onConflict: "wedding_id,type" }).select("id");
   if (error?.code === "42501") return NO_ACCESS;
-  if (error) return FAILED("the order");
+  if (error) return limitError(error) ?? FAILED("the order");
   if (!data?.length) return NO_ACCESS;
   return { ok: true };
 }
@@ -220,7 +221,7 @@ export async function saveEvent(weddingId: string, input: EventInput): Promise<A
   if (existing && isEmpty) {
     // Clearing every field removes the event (and hides its section).
     const { error } = await ctx.supabase.from("events").delete().eq("id", existing.id);
-    if (error) return FAILED("the event");
+    if (error) return limitError(error) ?? FAILED("the event");
     return { ok: true, data: { id: null } };
   }
   if (!existing && isEmpty) return { ok: true, data: { id: null } };
@@ -319,7 +320,7 @@ export async function registerMedia(
     .select("id")
     .single();
   if (error?.code === "42501") return NO_ACCESS;
-  if (error) return FAILED("the file");
+  if (error) return limitError(error) ?? FAILED("the file");
 
   if (replaced.length) {
     await ctx.supabase.from("media").delete().in("id", replaced.map((r) => r.id));
@@ -339,7 +340,7 @@ export async function deleteMedia(weddingId: string, mediaId: string): Promise<A
     .eq("wedding_id", weddingId)
     .select("storage_path")
     .maybeSingle();
-  if (error) return FAILED("the change");
+  if (error) return limitError(error) ?? FAILED("the change");
   if (!data) return NO_ACCESS;
   // Row first, then file: a failed file removal leaves an orphan (cleaned up
   // later), never a row pointing at a missing file.
@@ -353,7 +354,7 @@ export async function updateMediaAlt(weddingId: string, mediaId: string, altText
   const alt = z.string().trim().max(300).safeParse(altText);
   if (!alt.success) return { ok: false, error: "Description is too long." };
   const { data, error } = await ctx.supabase.from("media").update({ alt_text: alt.data }).eq("id", mediaId).eq("wedding_id", weddingId).select("id").maybeSingle();
-  if (error) return FAILED("the description");
+  if (error) return limitError(error) ?? FAILED("the description");
   if (!data) return NO_ACCESS;
   return { ok: true };
 }

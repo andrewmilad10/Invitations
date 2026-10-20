@@ -3,6 +3,7 @@
 import { z } from "@/lib/zod";
 import { parsePastedGuests } from "@/core/guests/summary";
 import type { GuestRow } from "@/lib/supabase/database.types";
+import { limitError } from "@/lib/supabase/limit-error";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/features/auth/session";
 import { isUuid } from "@/features/weddings/queries";
@@ -45,6 +46,7 @@ export async function addGuest(weddingId: string, input: z.input<typeof guestFie
     .select("*")
     .single();
   if (error?.code === "42501") return NO_ACCESS;
+  if (limitError(error)) return limitError(error)!;
   if (error || !data) return FAILED;
   return { ok: true, data };
 }
@@ -63,6 +65,7 @@ export async function addGuestList(weddingId: string, text: string): Promise<Res
     .insert(parsed.add.map((g) => ({ wedding_id: weddingId, name: g.name, groups: g.groups })))
     .select("*");
   if (error?.code === "42501") return NO_ACCESS;
+  if (limitError(error)) return limitError(error)!;
   if (error || !data) return FAILED;
   return { ok: true, data: { added: data, duplicates: parsed.duplicates } };
 }
@@ -80,7 +83,7 @@ export async function updateGuest(weddingId: string, guestId: string, input: Par
   if (p.data.groups !== undefined) patch.groups = p.data.groups;
   if (p.data.maxParty !== undefined) patch.max_party = p.data.maxParty;
   const { data, error } = await supabase.from("guests").update(patch).eq("id", guestId).eq("wedding_id", weddingId).select("*").maybeSingle();
-  if (error || !data) return error ? FAILED : NO_ACCESS;
+  if (error || !data) return error ? (limitError(error) ?? FAILED) : NO_ACCESS;
   return { ok: true, data };
 }
 

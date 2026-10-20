@@ -36,3 +36,9 @@ select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-0000000000e1
 select tests.eq(public.admin_list_reminders() -> 0 ->> 'customerPhone', '01001112222', 'staff see who to message');
 select tests.eq(public.admin_mark_reminder_sent((public.admin_list_reminders() -> 0 ->> 'id')::bigint) ->> 'ok', 'true', 'staff mark it as sent');
 select tests.eq(jsonb_array_length(public.admin_list_reminders()), 0, 'and it leaves the queue');
+
+-- 0023: old limit records are cleared
+reset role;
+insert into private.rate_events (user_id, action, at) values ('e0000000-0000-4000-8000-0000000000e2', 'old', now() - interval '3 days'), ('e0000000-0000-4000-8000-0000000000e2', 'new', now());
+select tests.eq((private.run_daily_jobs() ->> 'limitRecordsCleared')::int >= 1, true, 'records older than 2 days are cleared');
+select tests.eq((select count(*) from private.rate_events where action = 'new')::int, 1, 'recent ones stay');

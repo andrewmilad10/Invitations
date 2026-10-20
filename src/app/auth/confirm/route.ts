@@ -12,7 +12,9 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
   const next = safeRedirectPath(searchParams.get("next"));
   const tokenHash = searchParams.get("token_hash");
-  const type = searchParams.get("type") as EmailOtpType | null;
+  const rawType = searchParams.get("type");
+  // Only the kinds of link our emails send (see supabase/templates).
+  const type = (["email", "signup", "recovery", "email_change", "magiclink", "invite"] as const).find((t) => t === rawType) as EmailOtpType | undefined;
   const code = searchParams.get("code");
 
   const supabase = await createClient();
