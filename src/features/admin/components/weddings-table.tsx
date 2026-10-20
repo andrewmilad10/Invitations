@@ -28,6 +28,16 @@ function StateBadge({ w }: { w: AdminWedding }) {
   return <span className={cn("inline-flex whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium", cls)}>{text}</span>;
 }
 
+/** One label/value pair in a mobile card. */
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="truncate">{value}</dd>
+    </div>
+  );
+}
+
 export function WeddingsTable({ rows, role, siteUrl, designNames }: Props) {
   const canAct = role === "owner" || role === "admin";
   const [sale, setSale] = useState<AdminWedding | null>(null);
@@ -37,7 +47,37 @@ export function WeddingsTable({ rows, role, siteUrl, designNames }: Props) {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-2xl border bg-card">
+      {/* Phones: a card per invitation, tap-friendly. */}
+      <ul className="grid gap-3 lg:hidden">
+        {rows.map((w) => (
+          <li key={w.id} className="rounded-2xl border bg-card p-4">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="font-medium">{w.names}</div>
+                <a href={`${siteUrl}/w/${w.slug}`} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1 truncate text-xs text-muted-foreground hover:text-foreground">
+                  /w/{w.slug} <ExternalLink className="size-3 shrink-0" aria-hidden />
+                </a>
+              </div>
+              {canAct ? <RowMenu w={w} onSale={() => setSale(w)} onOff={() => setOff(w)} /> : null}
+            </div>
+            <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+              <StateBadge w={w} />
+              <span>{designNames[w.templateId] ?? w.templateId}</span>
+            </div>
+            <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 border-t pt-3 text-sm">
+              <Fact label="Live until" value={w.activeUntil ? fmtDay(w.activeUntil) : "No limit yet"} />
+              <Fact label="Replies" value={String(w.replies)} />
+              {canAct ? <Fact label="Paid" value={w.sales ? fmtMoney(w.paidTotal) : "—"} /> : null}
+              {canAct ? <Fact label="Customer" value={w.ownerEmail ?? "—"} /> : null}
+              <Fact label="Started" value={fmtDay(w.createdAt)} />
+            </dl>
+            {w.deactivatedReason ? <p className="mt-2 text-xs text-destructive">{w.deactivatedReason}</p> : null}
+          </li>
+        ))}
+      </ul>
+
+      {/* Desktop: the full table. */}
+      <div className="hidden overflow-x-auto rounded-2xl border bg-card lg:block">
         <table className="w-full min-w-[56rem] text-sm">
           <thead className="text-left text-muted-foreground">
             <tr className="border-b">
