@@ -111,3 +111,17 @@ select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a4
 select tests.eq((select count(*) from public.orders)::int, 1, 'a couple sees their own receipt');
 select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a5', true);
 select tests.eq((select count(*) from public.orders)::int, 0, 'a stranger sees no receipts');
+
+-- ── 0016: faster reads keep the same rules ─────────────────────────────────
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a1', true);
+select tests.eq(jsonb_array_length(public.admin_overview(7) -> 'daily'), 7, 'the chart has one entry per day, empty days included');
+select tests.eq((public.admin_overview(7) -> 'daily' -> 6 ->> 'day'), to_char((now() at time zone 'Africa/Cairo')::date, 'YYYY-MM-DD'), 'the chart ends today, in Cairo time');
+select tests.eq((public.admin_list_sales('IP-123', 50, 0) ->> 'total')::int, 1, 'sales search finds the reference');
+select tests.ok(public.admin_list_sales(null, 50, 0) ? 'revenue', 'sales totals come from the database');
+select tests.eq((public.admin_list_weddings('all', '%', 50, 0) ->> 'total')::int, 0, 'search text is literal: % is not a wildcard');
+select tests.eq((public.admin_list_weddings('all', 'lina', 50, 0) ->> 'total')::int, 1, 'search by name');
+select tests.eq((public.admin_list_weddings('all', 'COUPLE@test', 50, 0) ->> 'total')::int, 1, 'the owner searches by customer email');
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a3', true);
+select tests.eq((public.admin_list_weddings('all', 'couple@test', 50, 0) ->> 'total')::int, 0, 'marketing still cannot search by customer email');
+select tests.throws($$select public.admin_list_sales(null, 50, 0)$$, '42501', 'marketing still cannot see sales');

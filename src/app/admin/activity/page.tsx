@@ -23,8 +23,7 @@ function detail(action: string, d: Record<string, unknown>) {
 }
 
 export default async function AdminActivity() {
-  await requireStaff(["owner", "admin"]);
-  const rows = await loadActivity(300);
+  const [, rows] = await Promise.all([requireStaff(["owner", "admin"]), loadActivity(300)]);
   return (
     <div className="grid gap-6">
       <div>

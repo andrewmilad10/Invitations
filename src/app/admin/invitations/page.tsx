@@ -23,12 +23,11 @@ const LABEL: Record<WeddingFilter, string> = {
 const PAGE = 25;
 
 export default async function AdminInvitations(props: PageProps<"/admin/invitations">) {
-  const me = await requireStaff();
   const sp = await props.searchParams;
   const filter = WEDDING_FILTERS.find((f) => f === sp.filter) ?? "all";
   const q = typeof sp.q === "string" ? sp.q.slice(0, 80) : "";
   const page = Math.max(0, Math.min(10_000, Number.parseInt(typeof sp.page === "string" ? sp.page : "0", 10) || 0));
-  const { total, rows } = await loadWeddings(filter, q, page, PAGE);
+  const [me, { total, rows }] = await Promise.all([requireStaff(), loadWeddings(filter, q, page, PAGE)]);
   const designNames = Object.fromEntries(TEMPLATE_MANIFESTS.map((t) => [t.id, t.name]));
   const href = (p: Record<string, string | number>) => {
     const u = new URLSearchParams({ filter, ...(q ? { q } : {}), ...Object.fromEntries(Object.entries(p).map(([k, v]) => [k, String(v)])) });

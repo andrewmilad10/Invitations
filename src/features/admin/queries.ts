@@ -1,7 +1,6 @@
 import "server-only";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { requireUser } from "@/features/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import {
   activityRow,
@@ -31,8 +30,12 @@ export const getStaff = cache(async (): Promise<StaffMe | null> => {
   return parsed.success ? parsed.data : null;
 });
 
+/**
+ * No separate sign-in round trip: the proxy already sends signed-out visitors
+ * to /login, and `admin_me` reads the same verified session in the database
+ * (a missing or expired session simply isn't staff).
+ */
 export async function requireStaff(roles: readonly StaffRole[] = ["owner", "admin", "marketing"]): Promise<StaffMe> {
-  await requireUser("/admin");
   const me = await getStaff();
   if (!me || !roles.includes(me.role)) notFound();
   return me;
@@ -48,10 +51,17 @@ async function call<T>(fn: Parameters<Awaited<ReturnType<typeof createClient>>["
   return schema.parse(data);
 }
 
+export const SALES_PAGE = 100;
+
+/**
+ * Pages start these together with `requireStaff` (Promise.all): every admin
+ * function checks the role itself, so nothing is shown that the database
+ * wouldn't allow, and the page waits for one database round trip, not two.
+ */
 export const loadOverview = (days: number) => call("admin_overview", { p_days: days }, overview);
 export const loadWeddings = (filter: WeddingFilter, search: string, page: number, size = 25) =>
   call("admin_list_weddings", { p_filter: filter, p_search: search || null, p_limit: size, p_offset: page * size }, weddingPage);
-export const loadSales = (search: string, page: number, size = 50) =>
+export const loadSales = (search: string, page: number, size = SALES_PAGE) =>
   call("admin_list_sales", { p_search: search || null, p_limit: size, p_offset: page * size }, salePage);
 export const loadStaff = () => call("admin_list_staff", {}, z.array(staffRow));
 export const loadActivity = (limit = 200) => call("admin_activity", { p_limit: limit }, z.array(activityRow));

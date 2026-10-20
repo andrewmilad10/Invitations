@@ -6,8 +6,7 @@ import { canManageTeam } from "@/features/admin/types";
 export const metadata: Metadata = { title: "Team" };
 
 export default async function AdminTeam() {
-  const me = await requireStaff(["owner", "admin"]);
-  const staff = await loadStaff();
+  const [me, staff] = await Promise.all([requireStaff(["owner", "admin"]), loadStaff()]);
   return (
     <div className="grid gap-6">
       <div>

@@ -8,3 +8,10 @@ export const fmtMoney = (n: number | null | undefined) => (n == null ? "—" : m
 export const fmtCount = (n: number) => count.format(n);
 export const fmtDay = (iso: string | null | undefined) => (iso ? day.format(new Date(iso)) : "—");
 export const fmtDayTime = (iso: string | null | undefined) => (iso ? dayTime.format(new Date(iso)) : "—");
+
+/** Cells that could be read as a formula by a spreadsheet are prefixed with ' (CSV injection). */
+export function csvCell(v: unknown) {
+  let s = v == null ? "" : String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return `"${s.replace(/"/g, '""')}"`;
+}

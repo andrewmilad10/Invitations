@@ -1,7 +1,6 @@
 "use client";
 
 import { CalendarPlus, ExternalLink, MoreHorizontal, Power, ReceiptText } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -82,7 +81,6 @@ export function WeddingsTable({ rows, role, siteUrl, designNames }: Props) {
 }
 
 function RowMenu({ w, onSale, onOff }: { w: AdminWedding; onSale: () => void; onOff: () => void }) {
-  const router = useRouter();
   const [busy, start] = useTransition();
   const [open, setOpen] = useState(false);
   const extend = (days: number) =>
@@ -90,14 +88,12 @@ function RowMenu({ w, onSale, onOff }: { w: AdminWedding; onSale: () => void; on
       const r = await extendWedding(w.id, days);
       if (!r.ok) return void toast.error(r.error);
       toast.success(days > 0 ? `Extended by ${days} days` : "Shortened");
-      router.refresh();
     });
   const turnOn = () =>
     start(async () => {
       const r = await setDeactivated(w.id, false, "");
       if (!r.ok) return void toast.error(r.error);
       toast.success("Turned back on");
-      router.refresh();
     });
   return (
     <div className="relative inline-block text-left" onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setOpen(false)}>
@@ -155,7 +151,6 @@ const field = "grid gap-1.5 text-sm";
 const input = "h-11 rounded-lg border bg-background px-3 text-base outline-none focus:border-primary";
 
 function SaleDialog({ w, onClose }: { w: AdminWedding; onClose: () => void }) {
-  const router = useRouter();
   const [busy, start] = useTransition();
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -173,7 +168,6 @@ function SaleDialog({ w, onClose }: { w: AdminWedding; onClose: () => void }) {
       if (!r.ok) return void toast.error(r.error);
       toast.success(`Sale recorded for ${w.names}`);
       onClose();
-      router.refresh();
     });
   };
   return (
@@ -223,7 +217,6 @@ function SaleDialog({ w, onClose }: { w: AdminWedding; onClose: () => void }) {
 }
 
 function OffDialog({ w, onClose }: { w: AdminWedding; onClose: () => void }) {
-  const router = useRouter();
   const [busy, start] = useTransition();
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -233,7 +226,6 @@ function OffDialog({ w, onClose }: { w: AdminWedding; onClose: () => void }) {
       if (!r.ok) return void toast.error(r.error);
       toast.success(`${w.names} is turned off`);
       onClose();
-      router.refresh();
     });
   };
   return (

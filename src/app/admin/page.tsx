@@ -29,10 +29,9 @@ function Stat({ label, value, note, href, tone }: { label: string; value: string
 }
 
 export default async function AdminOverview(props: PageProps<"/admin">) {
-  const me = await requireStaff();
   const { days: raw } = await props.searchParams;
   const days = PERIODS.find((p) => String(p) === raw) ?? 30;
-  const o = await loadOverview(days);
+  const [me, o] = await Promise.all([requireStaff(), loadOverview(days)]);
   const t = o.totals;
   const money = canSeeMoney(me.role);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "—");

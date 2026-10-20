@@ -26,7 +26,11 @@ server. Supabase hosts auth, database and storage.
 ## 1. Supabase project
 
 1. Create a project at supabase.com (choose a region close to your guests,
-   e.g. `eu-central-1` for Egypt/Middle East).
+   e.g. `eu-central-1` for Egypt/Middle East). The live project is in Paris
+   (`eu-west-3`), so `vercel.json` runs the server code in Paris too
+   (`"regions": ["cdg1"]`). **Keep the two in the same city:** every page
+   talks to the database several times, and each trip across the Atlantic
+   adds about 0.1 s. If the database ever moves, change `regions` to match.
 2. Link and push the schema from your machine:
    ```bash
    npx supabase login

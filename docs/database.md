@@ -148,6 +148,17 @@ couple changed. Created empty by trigger.
   policies); a couple can read their own orders. Tests:
   `supabase/tests/admin.test.sql`.
 
+* **Faster admin reads** (0016): same functions, answers and role checks,
+  built to stay quick as the business grows. The overview counts each table
+  once and builds the daily chart in one grouped pass over a calendar of
+  dates (days follow Cairo time); lists find the matching ids first, cut the
+  page and only then add customer, payment, guest and reply details; sales
+  totals come from the database. Indexes on `weddings.created_at`, a trigram
+  index for name search, and paid orders by wedding. Search text is literal.
+  `node scripts/bench-admin.mjs --seed` times them on 50,000 invitations:
+  overview for a year 2.7 s → 0.17 s, sales 0.29 s → 0.04 s, invitation
+  pages and search about 10× faster.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

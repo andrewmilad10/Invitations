@@ -93,7 +93,7 @@ export const saleRow = z.object({
   recordedBy: z.string().nullable(),
 });
 export type AdminSale = z.infer<typeof saleRow>;
-export const salePage = z.object({ total: num, rows: z.array(saleRow) });
+export const salePage = z.object({ total: num, paid: num, revenue: num, rows: z.array(saleRow) });
 
 export const staffRow = z.object({ userId: z.string(), email: z.string().nullable(), role: z.enum(STAFF_ROLES), since: z.string() });
 export type StaffRow = z.infer<typeof staffRow>;

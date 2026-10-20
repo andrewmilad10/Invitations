@@ -2,15 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { getCurrentUser } from "@/features/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { PAYMENT_METHODS, STAFF_ROLES } from "./types";
 
 /**
- * Admin changes. Each one re-checks the session here, validates every value
- * with Zod, and then calls a database function that checks the staff role
- * again and writes the change to the activity log. The browser decides
- * nothing.
+ * Admin changes. Each one validates every value with Zod, then calls a
+ * database function that checks the caller's session and staff role and
+ * writes the change to the activity log (one round trip). The browser
+ * decides nothing. revalidatePath sends the updated admin pages back with
+ * the action's own response, so the browser needs no separate refresh.
  */
 type Result = { ok: true } | { ok: false; error: string };
 const uuid = z.string().uuid();
@@ -19,7 +19,6 @@ const FAILED_TEXT = "That didn't go through. Please try again.";
 const FAILED: Result = { ok: false, error: FAILED_TEXT };
 
 async function run(fn: string, args: Record<string, unknown>): Promise<Result> {
-  if (!(await getCurrentUser())) return DENIED;
   const supabase = await createClient();
   const { data, error } = await supabase.rpc(fn as never, args as never);
   if (error) return error.code === "42501" ? DENIED : FAILED;

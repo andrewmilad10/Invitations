@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -15,14 +14,12 @@ const ROLE = {
 } as const;
 
 export function TeamPanel({ staff, canManage, myEmail }: { staff: StaffRow[]; canManage: boolean; myEmail: string | null }) {
-  const router = useRouter();
   const [busy, start] = useTransition();
   const change = (email: string, role: string, done: string) =>
     start(async () => {
       const r = await setStaff(email, role);
       if (!r.ok) return void toast.error(r.error);
       toast.success(done);
-      router.refresh();
     });
   const add = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
