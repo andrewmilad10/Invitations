@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { isValidTimeZone } from "@/core/i18n/format";
 import { LOCALES } from "@/core/i18n/locales";
 import { themeOverridesSchema } from "@/core/theme/tokens";

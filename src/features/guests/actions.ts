@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { parsePastedGuests } from "@/core/guests/summary";
 import type { GuestRow } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";

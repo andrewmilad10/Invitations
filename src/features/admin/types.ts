@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 /**
  * Shapes of what the admin database functions return (0014), checked on the
@@ -19,7 +19,13 @@ export const METHOD_LABEL: Record<PaymentMethod, string> = {
   other: "Other",
 };
 
-export const staffMe = z.object({ role: z.enum(STAFF_ROLES), email: z.string().nullable(), name: z.string().nullable().optional() });
+export const staffMe = z.object({
+  role: z.enum(STAFF_ROLES),
+  email: z.string().nullable(),
+  name: z.string().nullable().optional(),
+  /** This session passed two-step login (an authenticator code). */
+  verified: z.boolean().optional().default(false),
+});
 export type StaffMe = z.infer<typeof staffMe>;
 
 const num = z.coerce.number();
@@ -121,6 +127,16 @@ export function daysLeft(iso: string | null, now = Date.now()): number | null {
 
 export const canSeeMoney = (role: StaffRole) => role === "owner" || role === "admin";
 export const canManageTeam = (role: StaffRole) => role === "owner";
+
+export const alertRow = z.object({
+  at: z.string(),
+  actor: z.string().nullable(),
+  action: z.string(),
+  targetType: z.string().nullable(),
+  targetId: z.string().nullable(),
+  text: z.string(),
+});
+export type AlertRow = z.infer<typeof alertRow>;
 
 // ── Orders (0018) ───────────────────────────────────────────────────────────
 export const ORDER_TABS = ["all", "pending", "notLive", "paid", "refunded", "cancelled", "archived"] as const;

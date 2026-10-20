@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 // Trim/lowercase BEFORE validating, so pasted emails with spaces are accepted.
 const email = z.string().trim().toLowerCase().pipe(z.email("Enter a valid email address."));

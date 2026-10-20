@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { suggestSlug, withRandomSuffix } from "@/core/wedding/slug";
 import { getCurrentUser } from "@/features/auth/session";
 import { createClient } from "@/lib/supabase/server";

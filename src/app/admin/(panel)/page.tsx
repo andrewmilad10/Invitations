@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { DayBars } from "@/features/admin/components/day-bars";
-import { fmtCount, fmtMoney } from "@/features/admin/format";
-import { loadOverview, requireStaff } from "@/features/admin/queries";
+import { fmtCount, fmtDayTime, fmtMoney } from "@/features/admin/format";
+import { loadAlerts, loadOverview, requireStaff } from "@/features/admin/queries";
 import { canSeeMoney } from "@/features/admin/types";
 import { cn } from "@/lib/utils";
 import { resolveTemplateManifest } from "@/templates/registry";
@@ -31,7 +32,7 @@ function Stat({ label, value, note, href, tone }: { label: string; value: string
 export default async function AdminOverview(props: PageProps<"/admin">) {
   const { days: raw } = await props.searchParams;
   const days = PERIODS.find((p) => String(p) === raw) ?? 30;
-  const [me, o] = await Promise.all([requireStaff(), loadOverview(days)]);
+  const [me, o, alerts] = await Promise.all([requireStaff(), loadOverview(days), loadAlerts(7)]);
   const t = o.totals;
   const money = canSeeMoney(me.role);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "—");
@@ -89,6 +90,42 @@ export default async function AdminOverview(props: PageProps<"/admin">) {
         <DayBars title="New accounts per day" data={o.daily.map((d) => ({ day: d.day, value: d.accounts }))} format={fmtCount} />
         <DayBars title="Invitations started per day" data={o.daily.map((d) => ({ day: d.day, value: d.weddings }))} format={fmtCount} />
       </section>
+
+      {money ? (
+        <section aria-labelledby="alerts-title" className="rounded-2xl border bg-card p-5">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 id="alerts-title" className="flex items-center gap-2 font-serif text-2xl">
+              <ShieldAlert className="size-5 text-accent" aria-hidden /> Security and money alerts
+            </h2>
+            <Link href="/admin/activity" className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground">
+              Full activity log
+            </Link>
+          </div>
+          <p className="text-sm text-muted-foreground">Last 7 days: team changes, refunds, invitations turned off and payments marked despite a warning.</p>
+          {alerts.length ? (
+            <ul className="mt-4 grid gap-2">
+              {alerts.slice(0, 8).map((a, i) => (
+                <li key={`${a.at}-${i}`} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 border-t pt-2 text-sm">
+                  <span>
+                    {a.targetType === "order" && a.targetId ? (
+                      <Link href={`/admin/orders/${a.targetId}`} className="hover:underline">
+                        {a.text}
+                      </Link>
+                    ) : (
+                      a.text
+                    )}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {fmtDayTime(a.at)} · {a.actor ?? "someone"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">Nothing to review.</p>
+          )}
+        </section>
+      ) : null}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1.2fr]">
         <section className="rounded-2xl border bg-card p-5">

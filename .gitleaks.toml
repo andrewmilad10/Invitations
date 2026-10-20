@@ -1,0 +1,9 @@
+# Secret scanning (see .github/workflows/checks.yml). The Supabase
+# publishable key is public by design (it ships to every browser), so it is
+# allowed; everything else that looks like a key fails the check.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public by design"
+regexes = ['''sb_publishable_[A-Za-z0-9_-]+''']

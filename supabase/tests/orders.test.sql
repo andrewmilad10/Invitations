@@ -1,6 +1,9 @@
 -- ═══════════════════════════════════════════════════════════════════════════
 -- Orders (0018): the couple orders, staff confirm payment, it goes live.
 -- ═══════════════════════════════════════════════════════════════════════════
+-- Staff sessions in these tests have passed two-step login (0020).
+select set_config('request.jwt.claim.aal', 'aal2', true);
+
 
 create function tests.owid(p_slug text) returns uuid
 language sql security definer set search_path = '' as $$

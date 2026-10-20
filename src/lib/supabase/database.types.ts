@@ -237,12 +237,14 @@ export type Database = {
       admin_list_staff: { Args: Record<string, never>; Returns: Json };
       admin_set_staff: { Args: { p_email: string; p_role: string | null }; Returns: Json };
       admin_activity: { Args: { p_limit: number }; Returns: Json };
+      admin_alerts: { Args: { p_days: number }; Returns: Json };
+      delete_my_account: { Args: Record<string, never>; Returns: Json };
       request_publish: { Args: { p_wedding: string; p_phone: string; p_method: string }; Returns: Json };
       my_publish_state: { Args: { p_wedding: string }; Returns: Json };
       cancel_my_order: { Args: { p_order: string }; Returns: Json };
       admin_list_orders: { Args: { p_tab: string; p_search: string | null; p_limit: number; p_offset: number }; Returns: Json };
       admin_get_order: { Args: { p_order: string }; Returns: Json };
-      admin_mark_paid: { Args: { p_order: string; p_amount: number | null; p_method: string | null; p_reference: string | null }; Returns: Json };
+      admin_mark_paid: { Args: { p_order: string; p_amount: number | null; p_method: string | null; p_reference: string | null; p_confirmed?: boolean }; Returns: Json };
       admin_cancel_order: { Args: { p_order: string; p_reason: string | null }; Returns: Json };
       admin_order_note: { Args: { p_order: string; p_text: string }; Returns: Json };
       admin_set_order_tags: { Args: { p_order: string; p_tags: string[] }; Returns: Json };

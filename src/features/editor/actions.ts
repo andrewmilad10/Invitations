@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
 import { isAllowedMedia } from "@/core/media/signature";
 import { sectionStyleSchema } from "@/core/sections/style";

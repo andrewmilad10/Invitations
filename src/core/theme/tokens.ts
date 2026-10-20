@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { cardOptionsSchema, sanitizeCardOptions, type CardOptionOverrides } from "../card/options";
 import { fontStack, FONT_KEYS, type FontKey } from "./fonts";
 

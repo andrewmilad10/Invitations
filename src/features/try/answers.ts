@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
 import { LOCALES, type Locale } from "@/core/i18n/locales";
 import type { TemplateManifest } from "@/core/template/manifest";

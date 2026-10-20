@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, LayoutGrid, LogOut, Menu, ShieldCheck, X } from "lucide-react";
+import { ChevronDown, LayoutGrid, LogOut, Menu, ShieldCheck, UserRound, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -114,6 +114,9 @@ function AccountMenu({ account }: { account: HeaderAccount }) {
         <div className="grid pt-1.5">
           <Link href="/dashboard" onClick={() => setOpen(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm hover:bg-muted">
             <LayoutGrid className="size-4 text-muted-foreground" aria-hidden /> My invitations
+          </Link>
+          <Link href="/dashboard/account" onClick={() => setOpen(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm hover:bg-muted">
+            <UserRound className="size-4 text-muted-foreground" aria-hidden /> Account
           </Link>
           {account.staff ? (
             <Link href="/admin" onClick={() => setOpen(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm hover:bg-muted">
@@ -322,7 +325,9 @@ export function SiteHeader({ account: initialAccount, className }: { account?: H
           ) : null}
           <nav aria-label="Main" className="flex flex-col">
             {[
-              ...(account ? [{ href: "/dashboard", label: "My invitations" }, ...(account.staff ? [{ href: "/admin", label: "Admin" }] : [])] : []),
+              ...(account
+                ? [{ href: "/dashboard", label: "My invitations" }, { href: "/dashboard/account", label: "Account" }, ...(account.staff ? [{ href: "/admin", label: "Admin" }] : [])]
+                : []),
               { href: "/websites", label: "Wedding websites" },
               { href: "/invitations", label: "Invitation cards" },
               ...LINKS,

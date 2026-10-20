@@ -6,7 +6,7 @@ import type { Database } from "./database.types";
 /** Routes that require a signed-in user. */
 const PROTECTED_PREFIXES = ["/dashboard", "/preview", "/admin"];
 /** Routes a signed-in user should skip. */
-const AUTH_ROUTES = ["/login", "/register"];
+const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
 
 /**
  * Refreshes the Supabase session cookie on every matched request and applies

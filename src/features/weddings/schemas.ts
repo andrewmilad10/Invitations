@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 const name = (label: string) =>
   z.string().trim().min(1, `Enter ${label}.`).max(80, "Use at most 80 characters.");

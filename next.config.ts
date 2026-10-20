@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { buildCsp } from "./src/lib/security/csp";
 
 /**
  * The live Supabase project, used only for builds on Vercel when its
@@ -44,37 +45,9 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
-/**
- * Content Security Policy: what a page may load and talk to. Scripts only
- * from this site (Next.js needs its small inline start-up scripts), data only
- * to this site and Supabase, frames only Google Maps. So even an injected
- * script could not load code from elsewhere or send data anywhere else.
- */
-const supabaseOrigin = (() => {
-  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!raw) return "";
-  const u = new URL(raw);
-  return `${u.origin} ${u.protocol === "https:" ? "wss:" : "ws:"}//${u.host}`;
-})();
 const isDev = process.env.NODE_ENV !== "production";
-function csp(frameAncestors: string) {
-  return [
-    "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-    "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co ${supabaseOrigin}`.trim(),
-    `media-src 'self' blob: https://*.supabase.co ${supabaseOrigin}`.trim(),
-    "font-src 'self' data:",
-    `connect-src 'self' https://*.supabase.co wss://*.supabase.co ${supabaseOrigin}`.trim(),
-    "frame-src 'self' https://maps.google.com https://www.google.com https://*.google.com",
-    "worker-src 'self' blob:",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    `frame-ancestors ${frameAncestors}`,
-    ...(isDev ? [] : ["upgrade-insecure-requests"]),
-  ].join("; ");
-}
+/** Public pages' policy (see src/lib/security/csp.ts); strict pages get theirs from the proxy. */
+const csp = (frameAncestors: string) => buildCsp({ frameAncestors, supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL, dev: isDev });
 
 const nextConfig: NextConfig = {
   env: publicSettings,
@@ -87,7 +60,10 @@ const nextConfig: NextConfig = {
       // Admin pages: never cached anywhere, never indexed.
       { source: "/admin/:path*", headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
       { source: "/admin", headers: [{ key: "Cache-Control", value: "private, no-store, max-age=0" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }] },
-      { source: "/((?!embed/).*)", headers: [{ key: "Content-Security-Policy", value: csp("'self'") }, { key: "X-Frame-Options", value: "SAMEORIGIN" }] },
+      { source: "/((?!embed/).*)", headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }] },
+      // Public pages. Signed-in, admin and login pages are left out here: the
+      // proxy gives each of them a stricter policy with a fresh nonce.
+      { source: "/((?!embed/|dashboard|admin|preview|login|register|forgot-password).*)", headers: [{ key: "Content-Security-Policy", value: csp("'self'") }] },
       { source: "/embed/:path*", headers: [{ key: "Content-Security-Policy", value: csp(`'self' ${shopOrigins}`) }] },
     ];
   },

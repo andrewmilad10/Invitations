@@ -88,6 +88,9 @@ export function OrderActions({ d, payTo, siteUrl }: { d: OrderDetail; payTo: Pay
 function MarkPaidDialog({ d, onClose }: { d: OrderDetail; onClose: () => void }) {
   const o = d.order;
   const [busy, start] = useTransition();
+  // The database's reason to double-check (reused reference, other amount);
+  // submitting again with it showing means "go ahead anyway".
+  const [warning, setWarning] = useState<string | null>(null);
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (busy) return;
@@ -98,7 +101,9 @@ function MarkPaidDialog({ d, onClose }: { d: OrderDetail; onClose: () => void })
         amount: Number(f.get("amount")),
         method: String(f.get("method")) as PaymentMethod,
         reference: String(f.get("reference") ?? ""),
+        confirmed: Boolean(warning),
       });
+      if (!r.ok && "confirm" in r) return setWarning(r.error);
       if (!r.ok) return void toast.error(r.error);
       toast.success(`Order #${o.number} is paid${d.wedding ? " and the invitation is live" : ""}`);
       onClose();
@@ -110,7 +115,7 @@ function MarkPaidDialog({ d, onClose }: { d: OrderDetail; onClose: () => void })
       <p className="-mt-3 text-sm text-muted-foreground">
         Check the money has arrived first. {d.wedding ? `${d.wedding.names} goes live for ${o.months} months straight away.` : null}
       </p>
-      <form className="grid gap-4" onSubmit={submit}>
+      <form className="grid gap-4" onSubmit={submit} onChange={() => setWarning(null)}>
         <div className="grid grid-cols-2 gap-3">
           <label className={field}>
             Amount received (EGP)
@@ -131,12 +136,18 @@ function MarkPaidDialog({ d, onClose }: { d: OrderDetail; onClose: () => void })
           Reference (optional)
           <input className={input} name="reference" maxLength={120} placeholder="Transaction number from the receipt" autoComplete="off" />
         </label>
+        {warning ? (
+          <p role="alert" className="rounded-lg border border-accent/50 bg-accent/10 p-3 text-sm">
+            <strong className="font-medium">Please check: </strong>
+            {warning} If you&apos;re sure, mark it as paid anyway; this note is kept in the timeline.
+          </p>
+        ) : null}
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onClose}>
             Back
           </Button>
-          <Button type="submit" disabled={busy}>
-            {busy ? "Saving…" : "Mark as paid"}
+          <Button type="submit" disabled={busy} variant={warning ? "destructive" : "default"}>
+            {busy ? "Saving…" : warning ? "Mark as paid anyway" : "Mark as paid"}
           </Button>
         </div>
       </form>

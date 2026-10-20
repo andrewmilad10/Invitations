@@ -1,0 +1,18 @@
+# Opens a pull request when a library the site uses has an update, grouped
+# weekly (security fixes come straight away). The Checks workflow tests each one.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: Africa/Cairo
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

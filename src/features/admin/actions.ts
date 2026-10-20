@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { after } from "next/server";
+import { z } from "@/lib/zod";
 import { createClient } from "@/lib/supabase/server";
+import { alert } from "./alerts";
 import { PAYMENT_METHODS, STAFF_ROLES } from "./types";
 
 /**
@@ -18,13 +20,16 @@ const DENIED: Result = { ok: false, error: "You don't have permission to do that
 const FAILED_TEXT = "That didn't go through. Please try again.";
 const FAILED: Result = { ok: false, error: FAILED_TEXT };
 
-async function run(fn: string, args: Record<string, unknown>): Promise<Result> {
+/** `notify`: a short summary sent to the alert webhook after it succeeds (sent after the response). */
+async function run(fn: string, args: Record<string, unknown>, notify?: string): Promise<Result> {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc(fn as never, args as never);
+  if (error?.code === "P0401") return { ok: false, error: "Please enter your two-step login code again (reload the page)." };
   if (error) return error.code === "42501" ? DENIED : FAILED;
   const res = data as { ok?: boolean; error?: string } | null;
   if (!res?.ok) return { ok: false, error: res?.error ?? FAILED_TEXT };
   revalidatePath("/admin", "layout");
+  if (notify) after(() => alert(notify));
   return { ok: true };
 }
 
@@ -54,14 +59,14 @@ export async function recordSale(input: z.input<typeof sale>): Promise<Result> {
 
 export async function refundSale(orderId: string, deactivate: boolean): Promise<Result> {
   if (!uuid.safeParse(orderId).success) return DENIED;
-  return run("admin_refund", { p_order: orderId, p_deactivate: Boolean(deactivate) });
+  return run("admin_refund", { p_order: orderId, p_deactivate: Boolean(deactivate) }, `A sale was refunded${deactivate ? " and its invitation turned off" : ""}.`);
 }
 
 export async function setDeactivated(weddingId: string, off: boolean, reason: string): Promise<Result> {
   if (!uuid.safeParse(weddingId).success) return DENIED;
   const r = z.string().trim().max(300).safeParse(reason ?? "");
   if (!r.success) return { ok: false, error: "Keep the reason under 300 characters." };
-  return run("admin_set_deactivated", { p_wedding: weddingId, p_off: Boolean(off), p_reason: r.data || null });
+  return run("admin_set_deactivated", { p_wedding: weddingId, p_off: Boolean(off), p_reason: r.data || null }, off ? "An invitation was turned off." : undefined);
 }
 
 export async function extendWedding(weddingId: string, days: number): Promise<Result> {
@@ -76,7 +81,7 @@ export async function setStaff(email: string, role: string): Promise<Result> {
   if (!e.success) return { ok: false, error: "Enter a valid email address." };
   const r = z.union([z.enum(STAFF_ROLES), z.literal("")]).safeParse(role);
   if (!r.success) return { ok: false, error: "Unknown role." };
-  return run("admin_set_staff", { p_email: e.data, p_role: r.data || null });
+  return run("admin_set_staff", { p_email: e.data, p_role: r.data || null }, r.data ? `Team change: someone was given ${r.data} access.` : "Team change: someone was removed from the team.");
 }
 
 // ── Orders ──────────────────────────────────────────────────────────────────
@@ -85,11 +90,33 @@ const paid = z.object({
   amount: z.coerce.number().min(0).max(1_000_000),
   method: z.enum(PAYMENT_METHODS),
   reference: z.string().trim().max(120).optional().default(""),
+  /** Staff saw the warning (reused reference, different amount) and went ahead. */
+  confirmed: z.boolean().optional().default(false),
 });
-export async function markOrderPaid(input: z.input<typeof paid>): Promise<Result> {
+/**
+ * Mark as paid. The database checks the reference hasn't paid for another
+ * order and the amount matches; if not, it answers `confirm` with the
+ * reason, and staff can go ahead knowingly (recorded in the timeline).
+ */
+export async function markOrderPaid(input: z.input<typeof paid>): Promise<Result | { ok: false; error: string; confirm: true }> {
   const p = paid.safeParse(input);
   if (!p.success) return { ok: false, error: "Please check the amount and payment method." };
-  return run("admin_mark_paid", { p_order: p.data.orderId, p_amount: p.data.amount, p_method: p.data.method, p_reference: p.data.reference || null });
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("admin_mark_paid", {
+    p_order: p.data.orderId,
+    p_amount: p.data.amount,
+    p_method: p.data.method,
+    p_reference: p.data.reference || null,
+    p_confirmed: p.data.confirmed,
+  });
+  if (error?.code === "P0401") return { ok: false, error: "Please enter your two-step login code again (reload the page)." };
+  if (error) return error.code === "42501" ? DENIED : FAILED;
+  const res = data as { ok?: boolean; error?: string; confirm?: boolean } | null;
+  if (res?.confirm) return { ok: false, error: res.error ?? "Please check this payment.", confirm: true };
+  if (!res?.ok) return { ok: false, error: res?.error ?? FAILED_TEXT };
+  revalidatePath("/admin", "layout");
+  after(() => alert(`Order paid: ${p.data.amount} EGP by ${p.data.method}${p.data.confirmed ? " (after a warning)" : ""}.`));
+  return { ok: true };
 }
 
 export async function cancelOrder(orderId: string, reason: string): Promise<Result> {

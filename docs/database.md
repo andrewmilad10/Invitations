@@ -178,6 +178,13 @@ couple changed. Created empty by trigger.
   `PAY_WALLET` and `PAY_WHATSAPP` (see `.env.example`). Tests:
   `supabase/tests/orders.test.sql`.
 
+* **Security hardening** (0019, 0020): staff need two-step login (admin
+  functions refuse sessions without `aal2`; `admin_me` reports `verified`
+  and the staff member's name); per-account limits (`private.rate_events`);
+  Mark as paid warns about reused references and different amounts
+  (`admin_mark_paid(..., p_confirmed)`); `admin_alerts` for the Overview;
+  `delete_my_account` for couples. Tests: `supabase/tests/security.test.sql`.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

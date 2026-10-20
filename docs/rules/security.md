@@ -69,3 +69,34 @@ of them is not finished.
 3. Server re-checks the user and validates input.
 4. No personal data in logs, URLs or errors.
 5. `npm run typecheck`, `npm run lint`, `npx vitest run` pass.
+
+
+## Hardening (October 2026)
+
+- **Two-step login for staff.** Every `admin_*` database function refuses a
+  session without an authenticator code (JWT `aal` = `aal2`, error `P0401`);
+  `/admin/verify` sets it up or asks for the code. Never add an admin
+  function that skips `private.require_staff`.
+- **Bot check.** Cloudflare Turnstile on sign-up, login and "forgot
+  password" (`BotCheck`); Supabase Auth verifies it. Off until both keys are
+  set (see `.env.example`).
+- **Per-account limits** live in the database (`private.hit_limit`,
+  `private.limit_action`): new invitations, guest-list writes, uploads,
+  orders, cancellations, account deletion. Over the limit → `P0429`.
+- **Payments.** Mark as paid asks for confirmation when a reference was
+  already used or the amount differs; going ahead is written to the order
+  timeline and shown in the Overview's alerts. Optional `ALERT_WEBHOOK_URL`
+  gets short summaries (never customer details).
+- **Strict script policy** on `/dashboard`, `/admin`, `/preview`, `/login`,
+  `/register`, `/forgot-password`: a fresh nonce per request
+  (`src/proxy.ts`, `src/lib/security/csp.ts`), no inline scripts without it.
+  Those pages must render per request. Import Zod from `@/lib/zod` (lint
+  enforced): it turns off Zod's `eval` probe, which the policy forbids.
+- **Couples' data.** `/dashboard/account`: download everything as JSON, or
+  delete the account (files first, then one transaction; orders are kept
+  without name or phone).
+- **GitHub.** `.github/workflows/checks.yml` runs lint, types, unit and
+  database tests, secret scanning (gitleaks, whole history) and `npm audit`
+  on every push and weekly; Dependabot opens update pull requests.
+- **Uptime.** `/api/health` answers 200 when the site and database are up,
+  503 otherwise (for an uptime monitor).

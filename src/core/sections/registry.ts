@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { dictionaries } from "../i18n/dictionaries";
 import type { Locale } from "../i18n/locales";
 

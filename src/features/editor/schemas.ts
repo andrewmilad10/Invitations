@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { isValidTimeZone } from "@/core/i18n/format";
 import { LOCALES } from "@/core/i18n/locales";
 

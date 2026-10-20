@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 /** How a couple can say they'll pay (staff confirm the money arrived). */
 export const CUSTOMER_METHODS = ["instapay", "vodafone_cash", "other"] as const;

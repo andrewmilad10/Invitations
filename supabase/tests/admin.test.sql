@@ -1,6 +1,9 @@
 -- ═══════════════════════════════════════════════════════════════════════════
 -- Admin (0014): who may see and change what, live periods and deactivation.
 -- ═══════════════════════════════════════════════════════════════════════════
+-- Staff sessions in these tests have passed two-step login (0020).
+select set_config('request.jwt.claim.aal', 'aal2', true);
+
 
 create function tests.awid(p_slug text) returns uuid
 language sql security definer set search_path = '' as $$

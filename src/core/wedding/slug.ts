@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 export const SLUG_MIN = 3;
 export const SLUG_MAX = 60;

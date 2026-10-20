@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { createClient } from "@/lib/supabase/server";
 import { orderBrief, placeOrderSchema, publishState, type OrderBrief, type PayTo, type PublishState } from "./types";
 
