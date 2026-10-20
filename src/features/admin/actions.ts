@@ -78,3 +78,38 @@ export async function setStaff(email: string, role: string): Promise<Result> {
   if (!r.success) return { ok: false, error: "Unknown role." };
   return run("admin_set_staff", { p_email: e.data, p_role: r.data || null });
 }
+
+// ── Orders ──────────────────────────────────────────────────────────────────
+const paid = z.object({
+  orderId: uuid,
+  amount: z.coerce.number().min(0).max(1_000_000),
+  method: z.enum(PAYMENT_METHODS),
+  reference: z.string().trim().max(120).optional().default(""),
+});
+export async function markOrderPaid(input: z.input<typeof paid>): Promise<Result> {
+  const p = paid.safeParse(input);
+  if (!p.success) return { ok: false, error: "Please check the amount and payment method." };
+  return run("admin_mark_paid", { p_order: p.data.orderId, p_amount: p.data.amount, p_method: p.data.method, p_reference: p.data.reference || null });
+}
+
+export async function cancelOrder(orderId: string, reason: string): Promise<Result> {
+  if (!uuid.safeParse(orderId).success) return DENIED;
+  return run("admin_cancel_order", { p_order: orderId, p_reason: z.string().trim().max(300).catch("").parse(reason) || null });
+}
+
+export async function addOrderComment(orderId: string, text: string): Promise<Result> {
+  const t = z.string().trim().min(1).max(1000).safeParse(text);
+  if (!uuid.safeParse(orderId).success || !t.success) return { ok: false, error: "Write a comment of up to 1,000 characters." };
+  return run("admin_order_note", { p_order: orderId, p_text: t.data });
+}
+
+export async function setOrderTags(orderId: string, tags: string[]): Promise<Result> {
+  const t = z.array(z.string().trim().min(1).max(30)).max(10).safeParse(tags);
+  if (!uuid.safeParse(orderId).success || !t.success) return { ok: false, error: "Up to 10 tags of 30 characters each." };
+  return run("admin_set_order_tags", { p_order: orderId, p_tags: t.data });
+}
+
+export async function archiveOrder(orderId: string, archived: boolean): Promise<Result> {
+  if (!uuid.safeParse(orderId).success) return DENIED;
+  return run("admin_archive_order", { p_order: orderId, p_archived: Boolean(archived) });
+}

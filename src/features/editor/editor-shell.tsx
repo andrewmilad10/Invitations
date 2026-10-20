@@ -14,7 +14,7 @@ import { StatusBadge } from "@/features/weddings/components/status-badge";
 import { cn } from "@/lib/utils";
 import { setStatus } from "./bundle-updates";
 import { useEditor, type SaveStatus } from "./editor-context";
-import { PublishDialog } from "./publish-dialog";
+import { PublishDialog, type PayInfo } from "./publish-dialog";
 import { DetailsPanel } from "./panels/details-panel";
 import { EventPanel } from "./panels/event-panel";
 import { MusicPanel } from "./panels/media";
@@ -51,13 +51,14 @@ function parseInitial(panel?: string): Selection {
 
 const sameSelection = (a: Selection, b: Selection) => a.kind === b.kind && (a.kind !== "section" || (b.kind === "section" && a.type === b.type));
 
-export function EditorShell({ initialPanel }: { initialPanel?: string }) {
+export function EditorShell({ initialPanel, initialPay }: { initialPanel?: string; initialPay: PayInfo | null }) {
   const { bundle, previewUrl } = useEditor();
   const [selection, setSelection] = useState<Selection>(() => parseInitial(initialPanel));
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
-  const [publishOpen, setPublishOpen] = useState(false);
+  // ?panel=publish (the dashboard's Publish button) opens the publish window.
+  const [publishOpen, setPublishOpen] = useState(initialPanel === "publish");
   // Phones: show the list until something is chosen.
-  const [mobileDrilled, setMobileDrilled] = useState(Boolean(initialPanel));
+  const [mobileDrilled, setMobileDrilled] = useState(Boolean(initialPanel) && initialPanel !== "publish");
 
   const select = (s: Selection) => {
     setSelection(s);
@@ -72,6 +73,7 @@ export function EditorShell({ initialPanel }: { initialPanel?: string }) {
         open={publishOpen}
         onClose={() => setPublishOpen(false)}
         onEditLink={() => select({ kind: "settings" })}
+        initialPay={initialPay}
       />
 
       <div className="flex border-b bg-card lg:hidden" role="tablist" aria-label="Editor view">

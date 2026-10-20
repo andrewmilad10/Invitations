@@ -24,7 +24,7 @@ set local role authenticated;
 select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a4', true);
 insert into public.weddings (owner_id, slug, partner_one_name, partner_two_name)
 values ('a0000000-0000-4000-8000-0000000000a4', 'lina-and-sami-x7k2qp', 'Lina', 'Sami');
-update public.weddings set status = 'published' where slug = 'lina-and-sami-x7k2qp';
+select tests.throws($$update public.weddings set status = 'published' where slug = 'lina-and-sami-x7k2qp'$$, 'P0402', 'a couple cannot publish before paying');
 select tests.throws($$update public.weddings set active_until = now() + interval '10 years' where slug = 'lina-and-sami-x7k2qp'$$, '42501', 'a couple cannot extend their own live period');
 select tests.throws($$update public.weddings set deactivated_at = null where slug = 'lina-and-sami-x7k2qp'$$, '42501', 'a couple cannot undo a deactivation');
 select tests.ok(public.admin_me() is null, 'a couple is not staff');
@@ -38,7 +38,7 @@ select tests.throws($$insert into public.orders (wedding_id, amount, method) val
 set local role anon;
 select set_config('request.jwt.claim.sub', '', true);
 select tests.throws($$select public.admin_me()$$, '42501', 'guests cannot call admin functions');
-select tests.ok(public.get_public_invitation('lina-and-sami-x7k2qp') is not null, 'a published invitation with no period yet is live');
+select tests.ok(public.get_public_invitation('lina-and-sami-x7k2qp') is null, 'an unpaid invitation is not shown');
 
 -- ── Marketing: numbers, no money, no emails, no changes ────────────────────
 set local role authenticated;

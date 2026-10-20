@@ -59,6 +59,7 @@ select tests.eq(public.submit_reply('eve-and-ian', null, 'Someone', true, 2, nul
 -- ── Publish ─────────────────────────────────────────────────────────────────
 set local role authenticated;
 select set_config('request.jwt.claim.sub', 'e0000000-0000-4000-8000-000000000005', true);
+select tests.pay('eve-and-ian');
 update public.weddings set status = 'published' where slug = 'eve-and-ian';
 
 set local role anon;

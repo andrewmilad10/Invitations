@@ -34,26 +34,41 @@ export function isUuid(value: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 }
 
-export type WeddingCard = WeddingSummary & { themeTokens: Record<string, unknown>; daysLeft: number | null };
+export type WeddingCard = WeddingSummary & {
+  themeTokens: Record<string, unknown>;
+  daysLeft: number | null;
+  /** Paid for and not turned off: the couple can publish it themselves. */
+  paid: boolean;
+  /** The couple's order waiting for payment, if any. */
+  openOrder: { number: number; amount: number; currency: string } | null;
+};
 
-/** Dashboard cards: summaries plus each wedding's theme overrides (for its thumbnail). */
+/**
+ * Dashboard cards: summaries, theme overrides (for the thumbnails) and open
+ * orders. RLS limits each query to what this user may see, so the three run
+ * at the same time (one round trip) instead of one after another.
+ */
 export async function listMyWeddingCards(): Promise<WeddingCard[]> {
-  const weddings = await listMyWeddings();
-  if (weddings.length === 0) return [];
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("wedding_themes")
-    .select("wedding_id, tokens")
-    .in(
-      "wedding_id",
-      weddings.map((w) => w.id),
-    );
-  if (error) throw new Error(`Could not load themes: ${error.message}`);
-  const tokens = new Map((data ?? []).map((t) => [t.wedding_id, (t.tokens ?? {}) as Record<string, unknown>]));
+  const [weddings, themes, orders] = await Promise.all([
+    listMyWeddings(),
+    supabase.from("wedding_themes").select("wedding_id, tokens"),
+    supabase.from("orders").select("wedding_id, number, amount, currency").eq("status", "pending"),
+  ]);
+  if (weddings.length === 0) return [];
+  if (themes.error) throw new Error(`Could not load themes: ${themes.error.message}`);
+  const tokens = new Map((themes.data ?? []).map((t) => [t.wedding_id, (t.tokens ?? {}) as Record<string, unknown>]));
+  // Orders are optional on the dashboard: if they fail to load, cards still show.
+  const open = new Map((orders.data ?? []).map((o) => [o.wedding_id, { number: Number(o.number), amount: Number(o.amount), currency: o.currency }]));
   const now = Date.now();
-  return weddings.map((w) => ({
-    ...w,
-    themeTokens: tokens.get(w.id) ?? {},
-    daysLeft: w.active_until ? Math.ceil((new Date(w.active_until).getTime() - now) / 86_400_000) : null,
-  }));
+  return weddings.map((w) => {
+    const daysLeft = w.active_until ? Math.ceil((new Date(w.active_until).getTime() - now) / 86_400_000) : null;
+    return {
+      ...w,
+      themeTokens: tokens.get(w.id) ?? {},
+      daysLeft,
+      paid: !w.deactivated_at && daysLeft !== null && daysLeft > 0,
+      openOrder: open.get(w.id) ?? null,
+    };
+  });
 }

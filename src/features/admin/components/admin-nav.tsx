@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, LayoutDashboard, ReceiptText, Sparkles, Users } from "lucide-react";
+import { Activity, Inbox, LayoutDashboard, ReceiptText, Sparkles, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import type { StaffRole } from "../types";
 
 const ITEMS = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard, roles: ["owner", "admin", "marketing"] },
+  { href: "/admin/orders", label: "Orders", icon: Inbox, roles: ["owner", "admin"] },
   { href: "/admin/invitations", label: "Invitations", icon: Sparkles, roles: ["owner", "admin", "marketing"] },
   { href: "/admin/sales", label: "Sales", icon: ReceiptText, roles: ["owner", "admin"] },
   { href: "/admin/team", label: "Team", icon: Users, roles: ["owner", "admin"] },

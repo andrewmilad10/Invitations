@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const me = await requireStaff();
   return (
     <div className="min-h-dvh bg-background">
-      <header className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur print:hidden">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
           <div className="flex items-center gap-4">
             <Brand />
@@ -40,7 +40,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
       </header>
       <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[13rem_1fr] lg:py-10">
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-24 lg:self-start print:hidden">
           <AdminNav role={me.role} />
         </aside>
         <main className="min-w-0">{children}</main>

@@ -1,26 +1,39 @@
 "use client";
 
 import { Check, Copy, ExternalLink, Mail, MessageCircle, X } from "lucide-react";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { loadPublishState } from "@/features/orders/actions";
+import type { PayTo, PublishState } from "@/features/orders/types";
 import { setWeddingPublished } from "@/features/weddings/actions";
 import { cn } from "@/lib/utils";
 import { updateSettings } from "./actions";
 import { setSettings, setStatus } from "./bundle-updates";
 import { useEditor } from "./editor-context";
 import { publishChecklist } from "./publish-checklist";
+import { OrderStep, WaitingForPayment } from "./publish-order";
 
 /**
- * Publish flow: readiness checklist, link and visibility, then a "you're
- * live" state with sharing. Pending edits are saved first so guests see
- * exactly what the couple sees.
+ * Publish flow: readiness checklist, link and visibility, then either the
+ * order step (an invitation goes live once its payment is confirmed) or,
+ * when it's already paid for, a "you're live" state with sharing. Pending
+ * edits are saved first so guests see exactly what the couple sees.
  */
-export function PublishDialog({ open, onClose, onEditLink }: { open: boolean; onClose: () => void; onEditLink: () => void }) {
+export type PayInfo = { state: PublishState; payTo: PayTo };
+
+export function PublishDialog({ open, onClose, onEditLink, initialPay }: { open: boolean; onClose: () => void; onEditLink: () => void; initialPay: PayInfo | null }) {
   const { weddingId, bundle, update, save, flush, siteUrl } = useEditor();
   const dialog = useRef<HTMLDialogElement>(null);
   const [pending, startTransition] = useTransition();
   const [justPublished, setJustPublished] = useState(false);
+  // Payment state arrives with the editor (server-loaded), so the window is
+  // ready at once; it's refreshed only after something changes.
+  const [pay, setPay] = useState<PayInfo | null>(initialPay);
+  const refreshPay = useCallback(async () => {
+    const r = await loadPublishState(weddingId);
+    if (r.ok) setPay({ state: r.state, payTo: r.payTo });
+  }, [weddingId]);
 
   useEffect(() => {
     const el = dialog.current;
@@ -34,6 +47,8 @@ export function PublishDialog({ open, onClose, onEditLink }: { open: boolean; on
   const checklist = publishChecklist(bundle);
   const blocked = checklist.some((c) => c.required && !c.done);
   const live = bundle.wedding.status === "published";
+  const openOrder = pay?.state.order ?? null;
+  const mustOrder = Boolean(pay && !pay.state.canPublish && !live);
   const s = bundle.settings;
 
   function setVisibility(visibility: "public" | "unlisted") {
@@ -47,6 +62,7 @@ export function PublishDialog({ open, onClose, onEditLink }: { open: boolean; on
       const result = await setWeddingPublished(weddingId, true);
       if (!result.ok) {
         toast.error(result.error);
+        void refreshPay();
         return;
       }
       update((b) => setStatus(b, "published"));
@@ -98,10 +114,16 @@ export function PublishDialog({ open, onClose, onEditLink }: { open: boolean; on
               </Button>
             </div>
           </>
+        ) : openOrder && !live && pay ? (
+          <WaitingForPayment order={openOrder} payTo={pay.payTo} couple={couple} onCancelled={() => void refreshPay()} />
         ) : (
           <>
             <h2 id="publish-title" className="font-serif text-4xl font-light">Ready to share?</h2>
-            <p className="mt-3 text-sm text-muted-foreground">Publishing makes your invitation available at its link. You can keep editing and unpublish at any time.</p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              {mustOrder
+                ? "Check your link, then place your order. Your invitation goes live as soon as we confirm the payment."
+                : "Publishing makes your invitation available at its link. You can keep editing and unpublish at any time."}
+            </p>
 
             <ul className="mt-6 grid gap-2.5">
               {checklist.map((item) => (
@@ -150,14 +172,27 @@ export function PublishDialog({ open, onClose, onEditLink }: { open: boolean; on
               ))}
             </fieldset>
 
-            <div className="mt-8 flex justify-end gap-2">
-              <Button variant="ghost" onClick={close}>
-                Not yet
-              </Button>
-              <Button onClick={publish} disabled={blocked || pending}>
-                {pending ? "Publishing…" : "Publish invitation"}
-              </Button>
-            </div>
+            {mustOrder && pay ? (
+              <OrderStep
+                weddingId={weddingId}
+                state={pay.state}
+                disabled={blocked}
+                onPlaced={(order, paid) => {
+                  if (paid) return void refreshPay();
+                  setPay((p) => (p ? { ...p, state: { ...p.state, order } } : p));
+                  toast.success(order ? `Order #${order.number} placed` : "Order placed");
+                }}
+              />
+            ) : (
+              <div className="mt-8 flex justify-end gap-2">
+                <Button variant="ghost" onClick={close}>
+                  Not yet
+                </Button>
+                <Button onClick={publish} disabled={blocked || pending}>
+                  {pending ? "Publishing…" : "Publish invitation"}
+                </Button>
+              </div>
+            )}
           </>
         )}
       </div>

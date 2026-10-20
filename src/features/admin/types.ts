@@ -43,6 +43,8 @@ export const overview = z.object({
     revenue: numOrNull,
     revenuePeriod: numOrNull,
     refunds: numOrNull,
+    pendingOrders: num.default(0),
+    pendingAmount: numOrNull.default(null),
     guests: num,
     replies: num,
     days: num,
@@ -119,3 +121,111 @@ export function daysLeft(iso: string | null, now = Date.now()): number | null {
 
 export const canSeeMoney = (role: StaffRole) => role === "owner" || role === "admin";
 export const canManageTeam = (role: StaffRole) => role === "owner";
+
+// ── Orders (0018) ───────────────────────────────────────────────────────────
+export const ORDER_TABS = ["all", "pending", "notLive", "paid", "refunded", "cancelled", "archived"] as const;
+export type OrderTab = (typeof ORDER_TABS)[number];
+export const ORDER_TAB_LABEL: Record<OrderTab, string> = {
+  all: "All",
+  pending: "Payment pending",
+  notLive: "Not live yet",
+  paid: "Paid",
+  refunded: "Refunded",
+  cancelled: "Cancelled",
+  archived: "Archived",
+};
+export const ORDER_STATUS = ["pending", "paid", "refunded", "cancelled"] as const;
+export type OrderStatus = (typeof ORDER_STATUS)[number];
+export const LIVE_STATES = ["live", "notLive", "ended", "off"] as const;
+export type LiveState = (typeof LIVE_STATES)[number];
+
+export const orderRow = z.object({
+  id: z.string(),
+  number: num,
+  confirmation: z.string(),
+  status: z.enum(ORDER_STATUS),
+  amount: num,
+  currency: z.string(),
+  method: z.string(),
+  kind: z.enum(["new", "renewal"]),
+  source: z.enum(["customer", "staff", "paymob"]),
+  createdAt: z.string(),
+  paidAt: z.string().nullable(),
+  tags: z.array(z.string()),
+  archived: z.boolean(),
+  customerName: z.string().nullable(),
+  customerEmail: z.string().nullable(),
+  customerPhone: z.string().nullable(),
+  weddingId: z.string().nullable(),
+  slug: z.string().nullable(),
+  templateId: z.string().nullable(),
+  names: z.string().nullable(),
+  live: z.enum(LIVE_STATES).nullable(),
+});
+export type AdminOrder = z.infer<typeof orderRow>;
+export const orderPage = z.object({
+  total: num,
+  counts: z.object(Object.fromEntries(ORDER_TABS.map((t) => [t, num])) as Record<OrderTab, typeof num>),
+  rows: z.array(orderRow),
+});
+
+export const orderEvent = z.object({
+  at: z.string(),
+  kind: z.enum(["placed", "confirmation", "paid", "live", "cancelled", "refunded", "archived", "unarchived", "comment"]),
+  message: z.string(),
+  actor: z.string().nullable(),
+});
+export type OrderEvent = z.infer<typeof orderEvent>;
+
+export const orderDetail = z.object({
+  order: z.object({
+    id: z.string(),
+    number: num,
+    confirmation: z.string(),
+    status: z.enum(ORDER_STATUS),
+    amount: num,
+    currency: z.string(),
+    method: z.string(),
+    months: num,
+    kind: z.enum(["new", "renewal"]),
+    createdAt: z.string(),
+    paidAt: z.string().nullable(),
+    reference: z.string().nullable(),
+    note: z.string().nullable(),
+    source: z.enum(["customer", "staff", "paymob"]),
+    tags: z.array(z.string()),
+    refundedAt: z.string().nullable(),
+    cancelledAt: z.string().nullable(),
+    cancelReason: z.string().nullable(),
+    archived: z.boolean(),
+    recordedBy: z.string().nullable(),
+  }),
+  customer: z.object({
+    id: z.string().nullable(),
+    name: z.string().nullable(),
+    email: z.string().nullable(),
+    phone: z.string().nullable(),
+    orders: num,
+    nth: num,
+  }),
+  wedding: z
+    .object({
+      id: z.string(),
+      slug: z.string(),
+      names: z.string(),
+      templateId: z.string(),
+      status: z.string(),
+      weddingDate: z.string().nullable(),
+      activeUntil: z.string().nullable(),
+      deactivatedAt: z.string().nullable(),
+    })
+    .nullable(),
+  events: z.array(orderEvent),
+});
+export type OrderDetail = z.infer<typeof orderDetail>;
+
+/** "1st", "2nd", "3rd", "11th"… */
+export function ordinal(n: number) {
+  const s = n % 100 >= 11 && n % 100 <= 13 ? "th" : ({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th";
+  return `${n}${s}`;
+}

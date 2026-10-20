@@ -2,7 +2,8 @@
 // Times the admin database functions against a large made-up data set.
 //   KEEP_TEST_DB=1 DATABASE_URL=… npm run test:db   (builds vellum_test)
 //   DATABASE_URL=… node scripts/bench-admin.mjs [--seed]
-// --seed adds 20k accounts, 50k invitations, 30k sales and 600k replies first.
+// --seed adds 20k accounts, 50k invitations, 30k sales, ~6k unpaid orders and
+// 600k replies first.
 import pg from "pg";
 
 const url = new URL(process.env.DATABASE_URL ?? "postgres://postgres@127.0.0.1:5433/postgres");
@@ -31,6 +32,10 @@ if (process.argv.includes("--seed")) {
       select w.id, w.owner_id, 1000, 'instapay', now() - (random() * interval '400 days'),
              (case when random() < 0.03 then 'refunded' else 'paid' end)::public.order_status
         from public.weddings w where w.slug like 'bench-%' and random() < 0.6;
+    insert into public.orders (wedding_id, buyer_id, amount, method, status, paid_at, customer_name, customer_phone, source, created_at)
+      select w.id, w.owner_id, 1000, 'instapay', 'pending', null, 'Customer ' || w.slug, '0100' || lpad((random() * 9999999)::int::text, 7, '0'), 'customer', now() - (random() * interval '30 days')
+        from public.weddings w
+       where w.slug like 'bench-%' and not exists (select 1 from public.orders o where o.wedding_id = w.id) and random() < 0.3;
     insert into public.replies (wedding_id, name, attending, party_size)
       select w.id, 'Guest ' || g, true, 1
         from public.weddings w, generate_series(1, 12) g where w.slug like 'bench-%';
@@ -47,6 +52,12 @@ const CASES = [
   ["invitations, unpaid filter", "select public.admin_list_weddings('unpaid', null, 25, 0)"],
   ["invitations, search", "select public.admin_list_weddings('all', 'name123', 25, 0)"],
   ["invitations, page 100", "select public.admin_list_weddings('all', null, 25, 2500)"],
+  ["orders, all, page 1", "select public.admin_list_orders('all', null, 50, 0)"],
+  ["orders, payment pending", "select public.admin_list_orders('pending', null, 50, 0)"],
+  ["orders, not live", "select public.admin_list_orders('notLive', null, 50, 0)"],
+  ["orders, search by number", "select public.admin_list_orders('all', '#5000', 50, 0)"],
+  ["orders, search by name", "select public.admin_list_orders('all', 'customer bench-77', 50, 0)"],
+  ["order page", "select public.admin_get_order((select id from public.orders order by created_at desc limit 1))"],
   ["sales, 500 rows", "select public.admin_list_sales(null, 500, 0)"],
   ["sales, search", "select public.admin_list_sales('user12', 500, 0)"],
 ];

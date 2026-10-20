@@ -4,12 +4,15 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import {
   activityRow,
+  orderDetail,
+  orderPage,
   overview,
   salePage,
   staffMe,
   staffRow,
   weddingPage,
   type StaffMe,
+  type OrderTab,
   type StaffRole,
   type WeddingFilter,
 } from "./types";
@@ -65,3 +68,9 @@ export const loadSales = (search: string, page: number, size = SALES_PAGE) =>
   call("admin_list_sales", { p_search: search || null, p_limit: size, p_offset: page * size }, salePage);
 export const loadStaff = () => call("admin_list_staff", {}, z.array(staffRow));
 export const loadActivity = (limit = 200) => call("admin_activity", { p_limit: limit }, z.array(activityRow));
+
+export const ORDERS_PAGE = 50;
+export const loadOrders = (tab: OrderTab, search: string, page: number) =>
+  call("admin_list_orders", { p_tab: tab, p_search: search || null, p_limit: ORDERS_PAGE, p_offset: page * ORDERS_PAGE }, orderPage);
+/** One order with its customer, invitation and timeline; null if it doesn't exist. */
+export const loadOrder = (id: string) => call("admin_get_order", { p_order: id }, orderDetail.nullable());

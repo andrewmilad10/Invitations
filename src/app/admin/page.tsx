@@ -66,6 +66,15 @@ export default async function AdminOverview(props: PageProps<"/admin">) {
       <section aria-label="This period" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {money ? <Stat label={`Revenue, last ${days} days`} value={fmtMoney(t.revenuePeriod)} note={`${fmtMoney(t.revenue)} all time`} href="/admin/sales" /> : null}
         <Stat label={`Invitations sold, last ${days} days`} value={fmtCount(t.salesPeriod)} note={`${fmtCount(t.sales)} all time`} href={money ? "/admin/sales" : undefined} />
+        {t.pendingOrders || money ? (
+          <Stat
+            label="Waiting for payment"
+            value={fmtCount(t.pendingOrders)}
+            note={money && t.pendingAmount ? `${fmtMoney(t.pendingAmount)} to confirm` : "Orders placed, not paid yet"}
+            href={money ? "/admin/orders?tab=pending" : undefined}
+            tone={t.pendingOrders ? "warn" : undefined}
+          />
+        ) : null}
         <Stat label="Live now" value={fmtCount(t.live)} note={`${fmtCount(t.published)} published in total`} href="/admin/invitations?filter=live" />
         <Stat label="Ending in the next 14 days" value={fmtCount(t.expiringSoon)} note="Good moment to offer an extension" href="/admin/invitations?filter=expiring" tone={t.expiringSoon ? "warn" : undefined} />
         <Stat label={`New accounts, last ${days} days`} value={fmtCount(t.accountsNew)} note={`${fmtCount(t.accounts)} in total`} />

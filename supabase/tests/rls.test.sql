@@ -174,6 +174,8 @@ select tests.ok(public.get_public_invitation('alice-and-sam') is null, 'draft we
 -- ── Publish ─────────────────────────────────────────────────────────────────
 set local role authenticated;
 select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-000000000001', true);
+select tests.throws($$update public.weddings set status = 'published' where slug = 'alice-and-sam'$$, 'P0402', 'cannot publish before paying');
+select tests.pay('alice-and-sam');
 update public.weddings set status = 'published' where slug = 'alice-and-sam';
 select tests.ok((select published_at is not null from public.weddings where slug = 'alice-and-sam'), 'publishing sets published_at');
 

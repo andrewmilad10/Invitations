@@ -63,7 +63,10 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
   return { ok: false, error: "We couldn't find a free web address. Please try again." };
 }
 
-/** Publish or unpublish. RLS ensures only owners/editors can do this. */
+/**
+ * Publish or unpublish. RLS ensures only owners/editors can do this, and the
+ * database only lets an invitation go live once it is paid for.
+ */
 export async function setWeddingPublished(weddingId: string, published: boolean): Promise<ActionResult> {
   if (!isUuid(weddingId)) return { ok: false, error: "Wedding not found." };
   const user = await getCurrentUser();
@@ -77,6 +80,10 @@ export async function setWeddingPublished(weddingId: string, published: boolean)
     .select("slug")
     .maybeSingle();
 
+  if (error?.code === "P0402") {
+    // Database rule: an invitation goes live only after payment.
+    return { ok: false, error: "Payment is needed first. Open Publish in the editor to place your order." };
+  }
   if (error) {
     console.error("setWeddingPublished failed", error);
     return { ok: false, error: "We couldn't update the wedding. Please try again." };

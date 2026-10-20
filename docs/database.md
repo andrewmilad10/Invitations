@@ -159,6 +159,25 @@ couple changed. Created empty by trigger.
   overview for a year 2.7 s → 0.17 s, sales 0.29 s → 0.04 s, invitation
   pages and search about 10× faster.
 
+* **Orders** (0017, 0018): pressing Publish places an order (#1001 onwards,
+  with a confirmation code) as **Payment pending**; staff press **Mark as
+  paid** when the money arrives, which makes the invitation live for 3
+  months. An invitation only goes live after payment: a trigger stops a
+  couple publishing unless the invitation has a paid order and time left
+  (publishing again within that time is fine). Orders can be cancelled
+  (pending), refunded (paid) and archived, carry staff tags, and have a
+  timeline (`order_events`: placed, paid, live, comments…) that only staff
+  read. Couples read a few columns of their own orders and use
+  `request_publish`, `my_publish_state` and `cancel_my_order`; the price
+  (1,000 EGP) is set in the database (`private.order_price`). Staff use
+  `admin_list_orders` (tabs with counts, search by number, code, name,
+  phone, email or couple), `admin_get_order`, `admin_mark_paid`,
+  `admin_cancel_order`, `admin_order_note`, `admin_set_order_tags`,
+  `admin_archive_order`. Recording a sale settles the couple's open order
+  if there is one. Where couples send money comes from `PAY_INSTAPAY`,
+  `PAY_WALLET` and `PAY_WHATSAPP` (see `.env.example`). Tests:
+  `supabase/tests/orders.test.sql`.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

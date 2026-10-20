@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { formatDateOnly } from "@/core/i18n/format";
 import { sanitizeOverrides } from "@/core/theme/tokens";
 import { Stationery } from "@/features/marketing/stationery";
+import { fmtPrice } from "@/features/orders/types";
 import { resolveTemplateManifest } from "@/templates/registry";
 import type { WeddingCard as WeddingCardData } from "../queries";
 import { PublishToggle } from "./publish-toggle";
@@ -52,6 +53,11 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
         ) : (
           <p className="mt-2 text-xs text-muted-foreground">Private draft — only you can see it</p>
         )}
+        {w.openOrder && !published ? (
+          <p className="mt-1 text-xs font-medium text-accent">
+            Waiting for payment · Order #{w.openOrder.number} · {fmtPrice(w.openOrder.amount, w.openOrder.currency)}
+          </p>
+        ) : null}
         {w.deactivated_at ? (
           <p className="mt-1 text-xs font-medium text-destructive">Turned off. Guests can&apos;t open it; please contact us.</p>
         ) : w.active_until && w.daysLeft !== null ? (
@@ -74,7 +80,14 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
               <Users /> Guests
             </Link>
           </Button>
-          <PublishToggle weddingId={w.id} published={published} publicUrl={publicUrl} />
+          {published || w.paid ? (
+            <PublishToggle weddingId={w.id} published={published} publicUrl={publicUrl} />
+          ) : (
+            // Not paid for yet: publishing starts with an order in the editor.
+            <Button asChild size="sm" variant={w.openOrder ? "outline" : "default"}>
+              <Link href={`${editHref}?panel=publish`}>{w.openOrder ? "Payment details" : "Publish"}</Link>
+            </Button>
+          )}
           <ShareMenu url={publicUrl} coupleName={coupleName} published={published} />
           <Button asChild size="icon" variant="ghost" className="size-8">
             <Link href={`${editHref}?panel=settings`} aria-label="Settings" title="Settings">

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { extendWedding, recordSale, setDeactivated } from "../actions";
+import { field, input, Modal } from "./modal";
 import { fmtDay, fmtMoney } from "../format";
 import { daysLeft, METHOD_LABEL, PAYMENT_METHODS, type AdminWedding, type StaffRole } from "../types";
 
@@ -126,29 +127,6 @@ function RowMenu({ w, onSale, onOff }: { w: AdminWedding; onSale: () => void; on
   );
 }
 
-function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
-  const ref = useRef<HTMLDialogElement>(null);
-  return (
-    <dialog
-      ref={(el) => {
-        ref.current = el;
-        if (el && !el.open) el.showModal();
-      }}
-      onClose={onClose}
-      onClick={(e) => e.target === ref.current && ref.current?.close()}
-      aria-label={title}
-      className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-2xl border bg-card p-0 text-foreground backdrop:bg-black/40"
-    >
-      <div className="grid gap-5 p-6">
-        <h2 className="font-serif text-3xl">{title}</h2>
-        {children}
-      </div>
-    </dialog>
-  );
-}
-
-const field = "grid gap-1.5 text-sm";
-const input = "h-11 rounded-lg border bg-background px-3 text-base outline-none focus:border-primary";
 
 function SaleDialog({ w, onClose }: { w: AdminWedding; onClose: () => void }) {
   const [busy, start] = useTransition();
