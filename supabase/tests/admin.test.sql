@@ -125,3 +125,10 @@ select tests.eq((public.admin_list_weddings('all', 'COUPLE@test', 50, 0) ->> 'to
 select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a3', true);
 select tests.eq((public.admin_list_weddings('all', 'couple@test', 50, 0) ->> 'total')::int, 0, 'marketing still cannot search by customer email');
 select tests.throws($$select public.admin_list_sales(null, 50, 0)$$, '42501', 'marketing still cannot see sales');
+
+-- 0019: the header shows staff by name
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a1', true);
+select tests.ok(public.admin_me() ? 'name', 'admin_me includes the name');
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a4', true);
+select tests.ok(public.admin_me() is null, 'still nothing for non-staff');

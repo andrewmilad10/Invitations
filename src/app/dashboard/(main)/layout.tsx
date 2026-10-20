@@ -1,46 +1,20 @@
-import Link from "next/link";
-import { Brand } from "@/components/brand";
-import { Button } from "@/components/ui/button";
-import { signOut } from "@/features/auth/actions";
-import { requireUser } from "@/features/auth/session";
 import { getStaff } from "@/features/admin/queries";
+import { requireUser } from "@/features/auth/session";
+import { SiteHeader } from "@/features/marketing/site-header";
 
-/** Chrome for the dashboard list and quick-start wizard (the editor is full-screen). */
+/**
+ * Signed-in pages share the public site's header, so the site feels the same
+ * before and after logging in (the editor is full-screen and has its own).
+ * The account is read here on the server, so the name shows at once.
+ */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await requireUser("/dashboard");
-  const name = (user.user_metadata?.full_name as string | undefined) ?? user.email;
-  const staff = await getStaff();
+  const [user, staff] = await Promise.all([requireUser("/dashboard"), getStaff()]);
+  const fullName = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name.trim() : "";
+  const account = { name: fullName || user.email?.split("@")[0] || "Account", email: user.email ?? null, staff: Boolean(staff) };
 
   return (
     <div className="min-h-dvh">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <div className="flex items-center gap-8">
-            <Brand />
-            <nav aria-label="Account" className="hidden gap-6 text-sm sm:flex">
-              <Link href="/dashboard" className="text-foreground">
-                My invitations
-              </Link>
-              <Link href="/websites" className="text-muted-foreground hover:text-foreground">
-                Designs
-              </Link>
-              {staff ? (
-                <Link href="/admin" className="text-muted-foreground hover:text-foreground">
-                  Admin
-                </Link>
-              ) : null}
-            </nav>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden max-w-40 truncate text-sm text-muted-foreground md:inline">{name}</span>
-            <form action={signOut}>
-              <Button variant="ghost" size="sm" type="submit">
-                Log out
-              </Button>
-            </form>
-          </div>
-        </div>
-      </header>
+      <SiteHeader account={account} />
       {children}
     </div>
   );

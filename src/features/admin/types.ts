@@ -19,7 +19,7 @@ export const METHOD_LABEL: Record<PaymentMethod, string> = {
   other: "Other",
 };
 
-export const staffMe = z.object({ role: z.enum(STAFF_ROLES), email: z.string().nullable() });
+export const staffMe = z.object({ role: z.enum(STAFF_ROLES), email: z.string().nullable(), name: z.string().nullable().optional() });
 export type StaffMe = z.infer<typeof staffMe>;
 
 const num = z.coerce.number();
