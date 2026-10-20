@@ -44,6 +44,9 @@ export default async function AdminOverview(props: PageProps<"/admin">) {
     { label: "Published", value: t.published },
     { label: "Paid", value: t.paidWeddings },
   ];
+  // Bars are sized against the widest step, so none can overrun the card
+  // (an account can start several invitations, so a later step may exceed accounts).
+  const funnelMax = Math.max(...funnel.map((f) => f.value), 1);
 
   return (
     <div className="grid gap-8">
@@ -153,7 +156,7 @@ export default async function AdminOverview(props: PageProps<"/admin">) {
                   </span>
                 </div>
                 <div className="h-2 rounded-full bg-muted">
-                  <div className="h-2 rounded-full bg-primary" style={{ width: funnel[0].value ? `${Math.max(2, (f.value / funnel[0].value) * 100)}%` : "0%" }} />
+                  <div className="h-2 rounded-full bg-primary" style={{ width: f.value ? `${Math.min(100, Math.max(2, (f.value / funnelMax) * 100))}%` : "0%" }} />
                 </div>
               </li>
             ))}
