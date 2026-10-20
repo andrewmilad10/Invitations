@@ -1,11 +1,12 @@
 "use client";
 
-import { CalendarPlus, ExternalLink, MoreHorizontal, Power, ReceiptText } from "lucide-react";
-import { useRef, useState, useTransition, type FormEvent } from "react";
+import { CalendarPlus, ExternalLink, Power, ReceiptText } from "lucide-react";
+import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { extendWedding, recordSale, setDeactivated } from "../actions";
+import { ActionMenu, MenuItem } from "./action-menu";
 import { field, input, Modal } from "./modal";
 import { fmtDay, fmtMoney } from "../format";
 import { daysLeft, METHOD_LABEL, PAYMENT_METHODS, type AdminWedding, type StaffRole } from "../types";
@@ -123,7 +124,6 @@ export function WeddingsTable({ rows, role, siteUrl, designNames }: Props) {
 
 function RowMenu({ w, onSale, onOff }: { w: AdminWedding; onSale: () => void; onOff: () => void }) {
   const [busy, start] = useTransition();
-  const [open, setOpen] = useState(false);
   const extend = (days: number) =>
     start(async () => {
       const r = await extendWedding(w.id, days);
@@ -137,33 +137,20 @@ function RowMenu({ w, onSale, onOff }: { w: AdminWedding; onSale: () => void; on
       toast.success("Turned back on");
     });
   return (
-    <div className="relative inline-block text-left" onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setOpen(false)}>
-      <Button variant="ghost" size="sm" aria-label={`Actions for ${w.names}`} aria-expanded={open} disabled={busy} onClick={() => setOpen((o) => !o)}>
-        <MoreHorizontal />
-      </Button>
-      {open ? (
-        <div role="menu" className="absolute end-0 z-20 mt-1 grid w-56 gap-0.5 rounded-xl border bg-card p-1.5 text-sm shadow-lg">
-          <button role="menuitem" type="button" className="flex items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-muted" onClick={() => (setOpen(false), onSale())}>
-            <ReceiptText className="size-4" aria-hidden /> Record a sale
-          </button>
-          <button role="menuitem" type="button" className="flex items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-muted" onClick={() => (setOpen(false), extend(30))}>
-            <CalendarPlus className="size-4" aria-hidden /> Add 30 days
-          </button>
-          <button role="menuitem" type="button" className="flex items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-muted" onClick={() => (setOpen(false), extend(91))}>
-            <CalendarPlus className="size-4" aria-hidden /> Add 3 months
-          </button>
+    <ActionMenu label={`Actions for ${w.names}`} disabled={busy}>
+      {(close) => (
+        <>
+          <MenuItem icon={ReceiptText} onClick={() => (close(), onSale())}>Record a sale</MenuItem>
+          <MenuItem icon={CalendarPlus} onClick={() => (close(), extend(30))}>Add 30 days</MenuItem>
+          <MenuItem icon={CalendarPlus} onClick={() => (close(), extend(91))}>Add 3 months</MenuItem>
           {w.deactivatedAt ? (
-            <button role="menuitem" type="button" className="flex items-center gap-2 rounded-lg px-3 py-2 text-left hover:bg-muted" onClick={() => (setOpen(false), turnOn())}>
-              <Power className="size-4" aria-hidden /> Turn back on
-            </button>
+            <MenuItem icon={Power} onClick={() => (close(), turnOn())}>Turn back on</MenuItem>
           ) : (
-            <button role="menuitem" type="button" className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-destructive hover:bg-destructive/10" onClick={() => (setOpen(false), onOff())}>
-              <Power className="size-4" aria-hidden /> Turn off…
-            </button>
+            <MenuItem icon={Power} danger onClick={() => (close(), onOff())}>Turn off…</MenuItem>
           )}
-        </div>
-      ) : null}
-    </div>
+        </>
+      )}
+    </ActionMenu>
   );
 }
 
