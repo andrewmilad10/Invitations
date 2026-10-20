@@ -185,6 +185,13 @@ couple changed. Created empty by trigger.
   (`admin_mark_paid(..., p_confirmed)`); `admin_alerts` for the Overview;
   `delete_my_account` for couples. Tests: `supabase/tests/security.test.sql`.
 
+* **Nightly jobs** (0021): pg_cron runs `private.run_daily_jobs()` at 03:15
+  Cairo: orders unpaid for 7 days are cancelled (with a timeline entry),
+  invitations ending within 14 days get a row in `renewal_reminders` (a
+  queue staff work through in Admin), and each run is logged as `job.daily`.
+  Test databases without pg_cron skip the schedule; `jobs.test.sql` calls
+  the job directly. `private.rate_events` has a primary key.
+
 ## Decisions (and deviations from the initial brief)
 
 1. **`wedding_members` instead of owner-only checks.** The brief requires "own

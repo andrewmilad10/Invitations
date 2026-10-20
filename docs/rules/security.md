@@ -100,3 +100,9 @@ of them is not finished.
   on every push and weekly; Dependabot opens update pull requests.
 - **Uptime.** `/api/health` answers 200 when the site and database are up,
   503 otherwise (for an uptime monitor).
+- **End to end.** `.github/workflows/e2e.yml` starts a real local Supabase,
+  builds the app and runs `e2e/journey.spec.ts`: register, create, publish
+  (order pending, guests see nothing), the API refusing direct calls (no
+  session; a couple's session against staff functions, orders, staff tables
+  and protected columns), staff two-step setup, mark paid, guest sees it.
+  New features that touch money or access get a step here.
