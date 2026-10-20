@@ -25,9 +25,9 @@ export default async function AdminSales(props: PageProps<"/admin/sales">) {
           <h1 className="font-serif text-4xl font-light sm:text-5xl">Sales</h1>
           <p className="mt-1 text-muted-foreground">Every invitation sold: who bought it, how they paid and who recorded it.</p>
         </div>
-        <form action="/admin/sales" role="search">
+        <form action="/admin/sales" role="search" className="w-full sm:w-auto">
           <label className="sr-only" htmlFor="q">Search sales</label>
-          <input id="q" name="q" defaultValue={q} maxLength={80} placeholder="Names, email or reference" className="h-10 w-64 rounded-full border bg-card px-4 text-sm outline-none focus:border-primary" />
+          <input id="q" name="q" type="search" defaultValue={q} maxLength={80} placeholder="Names, email or reference" className="h-11 w-full rounded-full border bg-card px-4 text-base outline-none focus:border-primary sm:h-10 sm:w-64 sm:text-sm" />
         </form>
       </div>
       <div className="grid gap-3 sm:grid-cols-3">

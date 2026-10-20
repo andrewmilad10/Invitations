@@ -9,6 +9,16 @@ import { refundSale } from "../actions";
 import { fmtDayTime, fmtMoney } from "../format";
 import { METHOD_LABEL, type AdminSale, type PaymentMethod } from "../types";
 
+/** One label/value pair in a mobile card. */
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="truncate">{value}</dd>
+    </div>
+  );
+}
+
 export function SalesTable({ rows, designNames, exportHref }: { rows: AdminSale[]; designNames: Record<string, string>; exportHref: string }) {
   const [busy, start] = useTransition();
   const refund = (s: AdminSale) => {
@@ -33,8 +43,42 @@ export function SalesTable({ rows, designNames, exportHref }: { rows: AdminSale[
         ) : null}
       </div>
       {rows.length ? (
-        <div className="overflow-x-auto rounded-2xl border bg-card">
-          <table className="w-full min-w-[52rem] text-sm">
+        <>
+          {/* Phones: a card per sale. */}
+          <ul className="grid gap-3 lg:hidden">
+            {rows.map((s) => (
+              <li key={s.id} className={cn("rounded-2xl border bg-card p-4", s.status === "refunded" && "text-muted-foreground")}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-medium">{s.names ?? "Deleted invitation"}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {s.templateId ? (designNames[s.templateId] ?? s.templateId) : ""}
+                      {s.months ? ` · ${s.months} months` : ""}
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="font-serif text-xl tabular-nums">{s.status === "refunded" ? <s>{fmtMoney(s.amount)}</s> : fmtMoney(s.amount)}</div>
+                    {s.status === "refunded" ? <div className="text-xs">Refunded</div> : null}
+                  </div>
+                </div>
+                <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 border-t pt-3 text-sm">
+                  <Fact label="Date" value={fmtDayTime(s.paidAt)} />
+                  <Fact label="Paid with" value={(METHOD_LABEL[s.method as PaymentMethod] ?? s.method) + (s.reference ? ` · ${s.reference}` : "")} />
+                  <Fact label="Customer" value={s.buyerEmail ?? "—"} />
+                  <Fact label="Recorded by" value={s.recordedBy ?? "Automatic"} />
+                </dl>
+                {s.status === "paid" ? (
+                  <Button variant="outline" size="sm" className="mt-3 w-full" disabled={busy} onClick={() => refund(s)}>
+                    Refund
+                  </Button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop: the full table. */}
+          <div className="hidden overflow-x-auto rounded-2xl border bg-card lg:block">
+            <table className="w-full min-w-[52rem] text-sm">
             <thead className="text-left text-muted-foreground">
               <tr className="border-b">
                 <th className="px-4 py-3 font-medium">Date</th>
@@ -75,7 +119,8 @@ export function SalesTable({ rows, designNames, exportHref }: { rows: AdminSale[
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </>
       ) : (
         <p className="rounded-2xl border border-dashed px-6 py-14 text-center text-muted-foreground">
           No sales yet. Record one from <b className="font-medium text-foreground">Invitations</b>, using an invitation&apos;s ⋯ menu.
