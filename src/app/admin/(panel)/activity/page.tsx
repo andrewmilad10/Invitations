@@ -11,6 +11,11 @@ const WHAT: Record<string, string> = {
   "wedding.reactivate": "turned an invitation back on",
   "wedding.extend": "changed how long an invitation stays live",
   "staff.set": "changed the team",
+  "order.paid": "marked an order as paid",
+  "order.cancel": "cancelled an order",
+  "order.tags": "changed an order's tags",
+  "reminder.sent": "sent a renewal reminder",
+  "job.daily": "ran the nightly jobs",
 };
 
 function detail(action: string, d: Record<string, unknown>) {
@@ -18,6 +23,9 @@ function detail(action: string, d: Record<string, unknown>) {
   if (action === "sale.refund") return fmtMoney(Number(d.amount));
   if (action === "wedding.extend") return `${Number(d.days) > 0 ? "+" : ""}${String(d.days)} days`;
   if (action === "wedding.deactivate") return d.reason ? `Reason: ${String(d.reason)}` : "";
+  if (action === "job.daily") return `${Number(d.unpaidOrdersCancelled ?? 0)} unpaid orders cancelled, ${Number(d.renewalRemindersQueued ?? 0)} reminders queued`;
+  if (action === "order.paid") return `${fmtMoney(Number(d.amount))}${d.warning ? ` · after a warning: ${String(d.warning)}` : ""}`;
+  if (action === "order.cancel") return d.reason ? `Reason: ${String(d.reason)}` : "";
   if (action === "staff.set") return `${String(d.email ?? "")} → ${d.role ? String(d.role) : "removed"}`;
   return "";
 }
@@ -35,7 +43,7 @@ export default async function AdminActivity() {
           {rows.map((r, i) => (
             <li key={`${r.at}-${i}`} className="flex flex-wrap items-baseline justify-between gap-2 rounded-xl border bg-card px-4 py-3 text-sm">
               <span>
-                <b className="font-medium">{r.actor ?? "Someone removed"}</b> {WHAT[r.action] ?? r.action}
+                <b className="font-medium">{r.actor ?? (r.action.startsWith("job.") ? "Vellum" : "Someone removed")}</b> {WHAT[r.action] ?? r.action}
                 {detail(r.action, r.details) ? <span className="text-muted-foreground"> · {detail(r.action, r.details)}</span> : null}
               </span>
               <time className="text-muted-foreground" dateTime={r.at}>{fmtDayTime(r.at)}</time>

@@ -47,7 +47,8 @@ const securityHeaders = [
 
 const isDev = process.env.NODE_ENV !== "production";
 /** Public pages' policy (see src/lib/security/csp.ts); strict pages get theirs from the proxy. */
-const csp = (frameAncestors: string) => buildCsp({ frameAncestors, supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL, dev: isDev });
+const csp = (frameAncestors: string) =>
+  buildCsp({ frameAncestors, supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL, dev: isDev, siteUrl: process.env.NEXT_PUBLIC_SITE_URL });
 
 const nextConfig: NextConfig = {
   env: publicSettings,

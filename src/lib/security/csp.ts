@@ -14,7 +14,10 @@
  */
 export const TURNSTILE_ORIGIN = "https://challenges.cloudflare.com";
 
-export function buildCsp({ frameAncestors, nonce, supabaseUrl, dev }: { frameAncestors: string; nonce?: string; supabaseUrl?: string; dev: boolean }) {
+export function buildCsp({ frameAncestors, nonce, supabaseUrl, dev, siteUrl }: { frameAncestors: string; nonce?: string; supabaseUrl?: string; dev: boolean; siteUrl?: string }) {
+  // Production is HTTPS; a site served over plain http (only local test runs)
+  // must not upgrade its calls to a local http Supabase.
+  const upgrade = !dev && !siteUrl?.startsWith("http://");
   let supabase = "";
   if (supabaseUrl) {
     const u = new URL(supabaseUrl);
@@ -37,7 +40,7 @@ export function buildCsp({ frameAncestors, nonce, supabaseUrl, dev }: { frameAnc
     "base-uri 'self'",
     "form-action 'self'",
     `frame-ancestors ${frameAncestors}`,
-    ...(dev ? [] : ["upgrade-insecure-requests"]),
+    ...(upgrade ? ["upgrade-insecure-requests"] : []),
   ].join("; ");
 }
 

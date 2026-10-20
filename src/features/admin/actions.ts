@@ -84,6 +84,11 @@ export async function setStaff(email: string, role: string): Promise<Result> {
   return run("admin_set_staff", { p_email: e.data, p_role: r.data || null }, r.data ? `Team change: someone was given ${r.data} access.` : "Team change: someone was removed from the team.");
 }
 
+export async function markReminderSent(id: number): Promise<Result> {
+  if (!Number.isSafeInteger(id) || id <= 0) return DENIED;
+  return run("admin_mark_reminder_sent", { p_id: id });
+}
+
 // ── Orders ──────────────────────────────────────────────────────────────────
 const paid = z.object({
   orderId: uuid,

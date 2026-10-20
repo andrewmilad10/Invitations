@@ -3,7 +3,9 @@ import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { DayBars } from "@/features/admin/components/day-bars";
 import { fmtCount, fmtDayTime, fmtMoney } from "@/features/admin/format";
-import { loadAlerts, loadOverview, requireStaff } from "@/features/admin/queries";
+import { publicEnv } from "@/config/env";
+import { Reminders } from "@/features/admin/components/reminders";
+import { loadAlerts, loadOverview, loadReminders, requireStaff } from "@/features/admin/queries";
 import { canSeeMoney } from "@/features/admin/types";
 import { cn } from "@/lib/utils";
 import { resolveTemplateManifest } from "@/templates/registry";
@@ -32,7 +34,7 @@ function Stat({ label, value, note, href, tone }: { label: string; value: string
 export default async function AdminOverview(props: PageProps<"/admin">) {
   const { days: raw } = await props.searchParams;
   const days = PERIODS.find((p) => String(p) === raw) ?? 30;
-  const [me, o, alerts] = await Promise.all([requireStaff(), loadOverview(days), loadAlerts(7)]);
+  const [me, o, alerts, reminders] = await Promise.all([requireStaff(), loadOverview(days), loadAlerts(7), loadReminders()]);
   const t = o.totals;
   const money = canSeeMoney(me.role);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "—");
@@ -90,6 +92,16 @@ export default async function AdminOverview(props: PageProps<"/admin">) {
         <DayBars title="New accounts per day" data={o.daily.map((d) => ({ day: d.day, value: d.accounts }))} format={fmtCount} />
         <DayBars title="Invitations started per day" data={o.daily.map((d) => ({ day: d.day, value: d.weddings }))} format={fmtCount} />
       </section>
+
+      {money ? (
+        <section aria-labelledby="reminders-title" className="rounded-2xl border bg-card p-5">
+          <h2 id="reminders-title" className="font-serif text-2xl">
+            Renewal reminders{reminders.length ? ` (${reminders.length})` : ""}
+          </h2>
+          <p className="text-sm text-muted-foreground">Added every night for invitations ending within 14 days. Message the couple, then mark it sent.</p>
+          <Reminders rows={reminders} siteUrl={publicEnv.siteUrl} />
+        </section>
+      ) : null}
 
       {money ? (
         <section aria-labelledby="alerts-title" className="rounded-2xl border bg-card p-5">

@@ -138,6 +138,19 @@ export const alertRow = z.object({
 });
 export type AlertRow = z.infer<typeof alertRow>;
 
+export const reminderRow = z.object({
+  id: num,
+  weddingId: z.string(),
+  slug: z.string(),
+  names: z.string(),
+  endsAt: z.string(),
+  queuedAt: z.string(),
+  customerName: z.string().nullable(),
+  customerPhone: z.string().nullable(),
+  customerEmail: z.string().nullable(),
+});
+export type ReminderRow = z.infer<typeof reminderRow>;
+
 // ── Orders (0018) ───────────────────────────────────────────────────────────
 export const ORDER_TABS = ["all", "pending", "notLive", "paid", "refunded", "cancelled", "archived"] as const;
 export type OrderTab = (typeof ORDER_TABS)[number];

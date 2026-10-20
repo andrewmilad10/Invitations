@@ -12,7 +12,13 @@ export async function proxy(request: NextRequest) {
   // random nonce per request. Next.js reads it from the request header and
   // puts it on its own scripts; nothing else inline can run.
   const nonce = btoa(crypto.randomUUID());
-  const policy = buildCsp({ frameAncestors: "'self'", nonce, supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL, dev: process.env.NODE_ENV !== "production" });
+  const policy = buildCsp({
+    frameAncestors: "'self'",
+    nonce,
+    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    siteUrl: process.env.NEXT_PUBLIC_SITE_URL,
+    dev: process.env.NODE_ENV !== "production",
+  });
   request.headers.set("x-nonce", nonce);
   request.headers.set("Content-Security-Policy", policy);
   const response = await updateSession(request);

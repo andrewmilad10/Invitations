@@ -238,6 +238,8 @@ export type Database = {
       admin_set_staff: { Args: { p_email: string; p_role: string | null }; Returns: Json };
       admin_activity: { Args: { p_limit: number }; Returns: Json };
       admin_alerts: { Args: { p_days: number }; Returns: Json };
+      admin_list_reminders: { Args: Record<string, never>; Returns: Json };
+      admin_mark_reminder_sent: { Args: { p_id: number }; Returns: Json };
       delete_my_account: { Args: Record<string, never>; Returns: Json };
       request_publish: { Args: { p_wedding: string; p_phone: string; p_method: string }; Returns: Json };
       my_publish_state: { Args: { p_wedding: string }; Returns: Json };

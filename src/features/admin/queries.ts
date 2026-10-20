@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import {
   activityRow,
   alertRow,
+  reminderRow,
   orderDetail,
   orderPage,
   overview,
@@ -83,6 +84,15 @@ export async function loadAlerts(days = 7) {
   const { data, error } = await supabase.rpc("admin_alerts", { p_days: days });
   if (error) return [];
   const parsed = z.array(alertRow).safeParse(data);
+  return parsed.success ? parsed.data : [];
+}
+
+/** Renewal reminders queued by the nightly job (owner and admin; empty for others). */
+export async function loadReminders() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("admin_list_reminders");
+  if (error) return [];
+  const parsed = z.array(reminderRow).safeParse(data);
   return parsed.success ? parsed.data : [];
 }
 
