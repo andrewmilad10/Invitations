@@ -46,6 +46,7 @@ if (process.argv.includes("--seed")) {
 
 const CASES = [
   ["overview 30 days", "select public.admin_overview(30)"],
+  ["today header", "select public.admin_today()"],
   ["overview 1 year", "select public.admin_overview(365)"],
   ["invitations, all, page 1", "select public.admin_list_weddings('all', null, 25, 0)"],
   ["invitations, live filter", "select public.admin_list_weddings('live', null, 25, 0)"],
@@ -63,6 +64,7 @@ const CASES = [
 ];
 await db.query("set role authenticated");
 await db.query(`select set_config('request.jwt.claim.sub', '${OWNER}', false)`);
+await db.query(`select set_config('request.jwt.claim.aal', 'aal2', false)`);
 for (const [label, sql] of CASES) {
   const times = [];
   for (let i = 0; i < 3; i++) {
