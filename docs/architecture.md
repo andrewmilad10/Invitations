@@ -208,3 +208,96 @@ Server Actions; the public page reads straight from the database.
   session check on pages that don't use it.
 - **Loading and error states.** `loading.tsx` for per-request pages, branded
   `not-found.tsx`, `error.tsx`, `global-error.tsx` and `dashboard/error.tsx`.
+
+## 9. Admin, orders & operations (Oct 2026)
+
+Added after Phase 1; same layering (`app → features/admin → core/lib`, data in Postgres functions).
+
+- **Orders & the pay-wall.** Publishing creates an `orders` row (`pending`);
+  a database trigger (`guard_publish`) stops a couple making an invitation
+  live until it has a `paid` order within its live period. Staff confirm
+  payment (`admin_mark_paid` → `settle_order`), which sets
+  `weddings.active_until` and publishes. `get_public_invitation` only returns
+  an invitation that is published, not deactivated and not past its period,
+  so the pay-wall and expiry are enforced in one place for every reader.
+- **Staff model.** `platform_staff (user_id, role)` with roles
+  `owner | admin | marketing`. Every `admin_*` function calls
+  `private.require_staff(roles[])` first, which also demands two-step login
+  (JWT `aal = aal2`). Marketing never receives money or customer emails — the
+  functions omit those fields, so it is enforced server-side, not hidden in
+  the UI.
+- **The private-schema pattern (the security spine).** Every
+  `SECURITY DEFINER` function lives in schema `private` (not exposed by the
+  API); `public` holds a thin `SECURITY INVOKER` pass-through of the same
+  name. Policies and callers use the public name; the real body can't be
+  called directly. Rule for any new privileged function: body in `private`,
+  pass-through in `public`, `revoke` from `public, anon, authenticated` then
+  `grant execute` to `authenticated` only. Keep `set search_path = ''` and a
+  pinned search_path on every `SECURITY DEFINER` function.
+- **Rate limits & quotas.** `private.hit_limit(action, max, window)` records
+  per-user events in `private.rate_events`; triggers and the `limit_action`
+  allow-list apply fixed limits (orders, uploads, guest writes, editor saves,
+  account deletion). Total caps (invitations per account, guests/photos/events
+  per invitation) are `AFTER INSERT` statement triggers that raise `P0413`
+  with a human message; the app surfaces `P0413`/`P0429` via `limitError()`.
+- **Background jobs.** `private.run_daily_jobs()` runs nightly via pg_cron
+  (03:15 Cairo): cancel unpaid orders after 7 days, queue renewal reminders
+  for invitations ending within 14 days, prune old rate-limit rows. Each run
+  is written to `admin_audit`.
+- **Admin UI.** `src/features/admin` (queries, Zod-validated server actions,
+  components); pages under `app/admin/(panel)`. Desktop = sidebar + tables;
+  phones = an app-style bottom tab bar (`admin-bottom-nav`) and card layouts.
+  Row menus use `ActionMenu` (a portal popover) so they are never clipped by a
+  table's scroll box.
+
+## 10. Extending it & coding standards
+
+**Dependency rule (unchanged):** `app → features → templates, core, lib`;
+`templates → core`; `core → nothing` (no React, no Supabase — so it can run in
+an Edge Function or a PDF worker). Keep domain logic in `core/`, data access in
+`features/*/queries.ts`, mutations in `features/*/actions.ts`, routes thin.
+
+**Add a template:** create `src/templates/<name>/`, implement the `Renderer`
+against `InvitationModel` (style only via `var(--inv-*)` tokens — never literal
+colors), and register it in `src/templates/registry.ts` (the one list). No
+database change. `templates.test.tsx` checks every template renders and always
+offers a reply.
+
+**Add a section type:** define its Zod schema + defaults + editor fields in
+`src/core/sections/registry.ts`. Sections are sparse overrides, so it appears
+on every existing invitation with sensible defaults and **no backfill
+migration**.
+
+**Add an admin feature:** write the `private` SECURITY DEFINER function (role
+check first) + public pass-through in a new append-only migration; add a Zod
+schema + loader in `features/admin/queries.ts` and an action in `actions.ts`;
+build the page under `app/admin/(panel)`. Add a case to `supabase/tests/`.
+
+**Migrations are append-only and numbered.** Never edit an applied migration;
+add a new one. DDL with `DROP`/`DELETE` needs manual approval, so prefer
+`ALTER`/`CREATE OR REPLACE`; ship anything destructive as a file the operator
+runs. Regenerate `database.types.ts` shapes when the schema changes.
+
+**Algorithms already applied — follow the same shapes for new work:**
+- **List screens: find-then-hydrate.** Filter to the matching ids (indexed),
+  cut the page, *then* join details for just that page — never hydrate the
+  whole table and paginate in memory. See `admin_list_orders/weddings`.
+- **One pass, not N queries.** Aggregates use `count(*) filter (where …)` and
+  a single grouped pass over a date calendar for time series, instead of a
+  query per bucket (the overview went 2.7 s → 0.17 s this way).
+- **Search is indexed and literal.** Trigram GIN indexes for name/phone/
+  reference; `like_pattern()` escapes `%` `_` so user input is matched
+  literally, never as a wildcard and never concatenated into SQL.
+- **Parallel, deduped loads.** Pages fetch independent data with
+  `Promise.all`; per-request reads wrap in React `cache()`.
+- **Validate twice, trust the database.** Zod on the server action for a
+  friendly message; the database function/constraint is the real boundary.
+- **Measure before optimising.** `scripts/bench-admin.mjs --seed` times the
+  admin reads on a large synthetic dataset; `get_advisors` flags missing
+  indexes and RLS gaps. Add an index only when a query needs it.
+
+**Tests are the safety net for updates:** `npm test` (unit, ~1,600),
+`npm run test:db` (RLS + functions as each role), `npm run test:e2e` (the whole
+browser journey). CI runs all three plus secret and dependency scans on every
+push, so a change that breaks access control or the money flow fails before it
+ships.
