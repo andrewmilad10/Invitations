@@ -203,7 +203,8 @@ test.describe.serial("Vellum, end to end", () => {
     await page.getByLabel("6-digit code").fill(totp(secret));
     await page.getByRole("button", { name: "Turn on and continue" }).click();
     await expect(page).toHaveURL(/\/admin$/);
-    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+    // The overview opens with the activity header (a greeting) and the "Full report" section.
+    await expect(page.getByRole("heading", { name: /Good (morning|afternoon|evening)/ })).toBeVisible();
     await expect(page.getByText("Waiting for payment")).toBeVisible();
 
     // The order, in Payment pending.
