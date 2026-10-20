@@ -118,7 +118,7 @@ test.describe.serial("Vellum, end to end", () => {
     expect(csp).toEqual([]);
   });
 
-  test("publishing places an order; guests can't see it before payment", async ({ page, request }) => {
+  test("publishing places an order; guests can't see it before payment", async ({ page, browser }) => {
     const csp = await watchCsp(page);
     await logIn(page, couple);
     await page.goto(`${editorUrl}?panel=publish`);
@@ -129,8 +129,14 @@ test.describe.serial("Vellum, end to end", () => {
     orderNumber = (await page.getByText(/^Order #\d+ is placed/).textContent())!.match(/#(\d+)/)![1];
     expect(Number(orderNumber)).toBeGreaterThanOrEqual(1001);
 
-    const guest = await request.get(`/w/${slug}`);
-    expect(guest.status()).toBe(404);
+    // A guest (no session) gets the "not available" page and none of the details.
+    // (The status is 200 because the page streams after its loading screen.)
+    const guestCtx = await browser.newContext();
+    const guest = await guestCtx.newPage();
+    await guest.goto(`/w/${slug}`);
+    await expect(guest.getByRole("heading", { name: "This invitation isn't available" })).toBeVisible();
+    await expect(guest.locator("body")).not.toContainText("Karim");
+    await guestCtx.close();
 
     await page.goto("/dashboard");
     await expect(page.getByText(`Waiting for payment · Order #${orderNumber}`)).toBeVisible();
@@ -227,9 +233,9 @@ test.describe.serial("Vellum, end to end", () => {
   test("guests see the invitation once it's paid, and the couple sees how long", async ({ page, browser }) => {
     const guestCtx = await browser.newContext();
     const guest = await guestCtx.newPage();
-    const res = await guest.goto(`/w/${slug}`);
-    expect(res?.status()).toBe(200);
+    await guest.goto(`/w/${slug}`);
     await expect(guest).toHaveTitle(/Laila & Karim/);
+    await expect(guest.getByRole("heading", { name: "This invitation isn't available" })).toHaveCount(0);
     await guestCtx.close();
 
     await logIn(page, couple);
