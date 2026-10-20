@@ -128,6 +128,23 @@ export function daysLeft(iso: string | null, now = Date.now()): number | null {
 export const canSeeMoney = (role: StaffRole) => role === "owner" || role === "admin";
 export const canManageTeam = (role: StaffRole) => role === "owner";
 
+export const today = z.object({
+  role: z.enum(STAFF_ROLES),
+  nowHour: num,
+  live: num,
+  salesToday: num,
+  revenueToday: numOrNull,
+  ordersToday: num,
+  accountsToday: num,
+  weddingsToday: num,
+  repliesToday: num,
+  pendingOrders: num,
+  pendingAmount: numOrNull,
+  expiringSoon: num,
+  hours: z.array(z.object({ hour: num, sales: num, revenue: numOrNull, orders: num })),
+});
+export type Today = z.infer<typeof today>;
+
 export const alertRow = z.object({
   at: z.string(),
   actor: z.string().nullable(),

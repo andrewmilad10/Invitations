@@ -4,8 +4,9 @@ import Link from "next/link";
 import { DayBars } from "@/features/admin/components/day-bars";
 import { fmtCount, fmtDayTime, fmtMoney } from "@/features/admin/format";
 import { publicEnv } from "@/config/env";
+import { ActivityHeader } from "@/features/admin/components/activity-header";
 import { Reminders } from "@/features/admin/components/reminders";
-import { loadAlerts, loadOverview, loadReminders, requireStaff } from "@/features/admin/queries";
+import { loadAlerts, loadOverview, loadReminders, loadToday, requireStaff } from "@/features/admin/queries";
 import { canSeeMoney } from "@/features/admin/types";
 import { cn } from "@/lib/utils";
 import { resolveTemplateManifest } from "@/templates/registry";
@@ -34,7 +35,7 @@ function Stat({ label, value, note, href, tone }: { label: string; value: string
 export default async function AdminOverview(props: PageProps<"/admin">) {
   const { days: raw } = await props.searchParams;
   const days = PERIODS.find((p) => String(p) === raw) ?? 30;
-  const [me, o, alerts, reminders] = await Promise.all([requireStaff(), loadOverview(days), loadAlerts(7), loadReminders()]);
+  const [me, o, today, alerts, reminders] = await Promise.all([requireStaff(), loadOverview(days), loadToday(), loadAlerts(7), loadReminders()]);
   const t = o.totals;
   const money = canSeeMoney(me.role);
   const pct = (a: number, b: number) => (b ? `${Math.round((a / b) * 100)}%` : "—");
@@ -50,10 +51,12 @@ export default async function AdminOverview(props: PageProps<"/admin">) {
 
   return (
     <div className="grid gap-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <ActivityHeader today={today} name={me.name ?? me.email} role={me.role} />
+
+      <div id="report" className="flex scroll-mt-24 flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-serif text-4xl font-light sm:text-5xl">Overview</h1>
-          <p className="mt-1 text-muted-foreground">How the business is doing, updated live.</p>
+          <h2 className="font-serif text-4xl font-light sm:text-5xl">Full report</h2>
+          <p className="mt-1 text-muted-foreground">How the business is doing over time.</p>
         </div>
         <div role="group" aria-label="Period" className="flex rounded-full border bg-card p-1">
           {PERIODS.map((p) => (

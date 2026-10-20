@@ -135,3 +135,15 @@ select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a1
 select tests.ok(public.admin_me() ? 'name', 'admin_me includes the name');
 select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a4', true);
 select tests.ok(public.admin_me() is null, 'still nothing for non-staff');
+
+-- 0024: admin_today
+set local role authenticated;
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a1', true);
+select tests.ok(public.admin_today() ? 'hours', 'today has an hourly breakdown');
+select tests.eq(jsonb_array_length(public.admin_today() -> 'hours'), 24, '24 hourly buckets');
+select tests.ok((public.admin_today() ->> 'nowHour')::int between 0 and 23, 'the current hour is sane');
+select tests.ok((public.admin_today() ->> 'live') is not null, 'owner sees the live count');
+select set_config('request.jwt.claim.sub', 'a0000000-0000-4000-8000-0000000000a3', true);
+select tests.ok(public.admin_today() -> 'hours' -> 0 ->> 'revenue' is null, 'marketing sees no revenue in the hourly data');
+select tests.ok(public.admin_today() ->> 'revenueToday' is null, 'marketing sees no revenue total');
+select tests.ok((public.admin_today() ->> 'ordersToday') is not null, 'marketing still sees order counts');

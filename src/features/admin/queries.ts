@@ -10,6 +10,7 @@ import {
   orderPage,
   overview,
   salePage,
+  today,
   staffMe,
   staffRow,
   weddingPage,
@@ -67,6 +68,7 @@ export const SALES_PAGE = 100;
  * wouldn't allow, and the page waits for one database round trip, not two.
  */
 export const loadOverview = (days: number) => call("admin_overview", { p_days: days }, overview);
+export const loadToday = () => call("admin_today", {}, today);
 export const loadWeddings = (filter: WeddingFilter, search: string, page: number, size = 25) =>
   call("admin_list_weddings", { p_filter: filter, p_search: search || null, p_limit: size, p_offset: page * size }, weddingPage);
 export const loadSales = (search: string, page: number, size = SALES_PAGE) =>
