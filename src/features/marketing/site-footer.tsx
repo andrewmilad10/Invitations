@@ -5,12 +5,13 @@ const COLS: [string, [string, string][]][] = [
   ["Designs", [["/websites", "Wedding websites"], ["/invitations", "Invitation cards"], ["/websites?sort=new", "New designs"]]],
   ["For couples", [["/guests", "Guests & replies"], ["/#pricing", "Price"], ["/dashboard", "My invitations"]]],
   ["Help", [["/#how-it-works", "How it works"], ["/#faq", "Questions"], ["/login", "Log in"]]],
+  ["Legal", [["/privacy", "Privacy"], ["/terms", "Terms"], ["/cookies", "Cookies"]]],
 ];
 
 export function SiteFooter() {
   return (
     <footer className="mt-24 border-t border-border bg-background">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-5 py-14 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div className="col-span-2 md:col-span-1">
           <Link href="/" className="font-serif text-3xl">
             {siteConfig.name}

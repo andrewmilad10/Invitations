@@ -101,6 +101,17 @@ export function RegisterForm({ draft = false }: { draft?: boolean }) {
       <Button type="submit" size="lg" disabled={pending}>
         {pending ? "Creating account…" : draft ? "Create invitation" : "Create account"}
       </Button>
+      <p className="-mt-2 text-center text-xs text-muted-foreground">
+        By creating an account, you agree to our{" "}
+        <Link href="/terms" className="underline underline-offset-4 hover:text-foreground">
+          Terms
+        </Link>{" "}
+        and{" "}
+        <Link href="/privacy" className="underline underline-offset-4 hover:text-foreground">
+          Privacy Policy
+        </Link>
+        .
+      </p>
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link href={draft ? "/login?draft=1" : "/login"} className="font-medium text-foreground underline underline-offset-4">

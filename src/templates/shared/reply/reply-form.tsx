@@ -32,6 +32,8 @@ const T = {
     demo: "This is a preview, so nothing was saved. Once the invitation is published, replies go straight to your guest list.",
     again: "Change my reply",
     yours: "Your reply",
+    privacy: "Your reply is shared only with the couple who invited you.",
+    privacyLink: "Privacy",
   },
   ar: {
     dear: "عزيزنا",
@@ -56,6 +58,8 @@ const T = {
     demo: "هذه معاينة، لذلك لم يُحفظ شيء. بعد نشر الدعوة تصل الردود مباشرة إلى قائمة ضيوفكم.",
     again: "تغيير ردّي",
     yours: "ردّكم",
+    privacy: "تتم مشاركة ردّكم مع العروسين فقط.",
+    privacyLink: "الخصوصية",
   },
 };
 
@@ -226,6 +230,12 @@ export function ReplyForm({ model, content, onDone }: { model: InvitationModel; 
         {state === "sending" ? t.sending : t.send}
       </button>
       {guest ? <p className={s.small}>{t.change}</p> : null}
+      <p className={s.small}>
+        {t.privacy}{" "}
+        <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline" }}>
+          {t.privacyLink}
+        </a>
+      </p>
     </form>
   );
 }
