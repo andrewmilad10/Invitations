@@ -8,8 +8,10 @@ import { fmtPrice } from "@/features/orders/types";
 import { resolveTemplateManifest } from "@/templates/registry";
 import type { WeddingCard as WeddingCardData } from "../queries";
 import { PublishToggle } from "./publish-toggle";
+import { RemoveButton } from "./remove-button";
 import { ShareMenu } from "./share-menu";
 import { StatusBadge } from "./status-badge";
+import { WeddingCover } from "./wedding-cover";
 
 /** One wedding on the dashboard, drawn as its own invitation. */
 export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData; siteUrl: string }) {
@@ -19,19 +21,25 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
   const coupleName = `${w.partner_one_name} & ${w.partner_two_name}`;
   const editHref = `/dashboard/weddings/${w.id}`;
   const overrides = sanitizeOverrides(w.themeTokens);
+  // Website designs show their real first screen (the cover); card designs show the stationery.
+  const isWebsite = (template.features.hero ?? "photo") !== "card";
 
   return (
     <li className="grid grid-cols-[6.5rem_1fr] gap-5 border bg-card p-5 sm:grid-cols-[8.5rem_1fr] sm:gap-7 sm:p-6">
       <Link href={editHref} aria-label={`Edit ${coupleName}`} className="self-start">
-        <Stationery
-          template={template}
-          overrides={overrides}
-          options={overrides.card}
-          partnerOne={w.partner_one_name}
-          partnerTwo={w.partner_two_name}
-          dateLabel={w.wedding_date ? formatDateOnly(w.wedding_date, "en").long : null}
-          className="shadow-[0_14px_30px_-18px_rgb(34_29_26/0.55)] transition-transform duration-500 hover:-translate-y-0.5"
-        />
+        {isWebsite ? (
+          <WeddingCover template={template} partnerOne={w.partner_one_name} partnerTwo={w.partner_two_name} dateIso={w.wedding_date} />
+        ) : (
+          <Stationery
+            template={template}
+            overrides={overrides}
+            options={overrides.card}
+            partnerOne={w.partner_one_name}
+            partnerTwo={w.partner_two_name}
+            dateLabel={w.wedding_date ? formatDateOnly(w.wedding_date, "en").long : null}
+            className="shadow-[0_14px_30px_-18px_rgb(34_29_26/0.55)] transition-transform duration-500 hover:-translate-y-0.5"
+          />
+        )}
       </Link>
       <div className="flex min-w-0 flex-col">
         <div className="flex items-start justify-between gap-3">
@@ -94,6 +102,7 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
               <Settings />
             </Link>
           </Button>
+          <RemoveButton weddingId={w.id} coupleName={coupleName} />
         </div>
       </div>
     </li>

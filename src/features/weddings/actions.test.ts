@@ -10,6 +10,7 @@ vi.mock("@/features/auth/session", () => ({ getCurrentUser: () => getCurrentUser
 type InsertResult = { data: { id: string } | null; error: { code: string; message: string } | null };
 const insertResults: InsertResult[] = [];
 const inserted: Record<string, unknown>[] = [];
+let weddingCount = 0;
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: async () => ({
@@ -19,6 +20,8 @@ vi.mock("@/lib/supabase/server", () => ({
         const result = insertResults.shift() ?? { data: { id: "new-id" }, error: null };
         return { select: () => ({ single: async () => result }) };
       },
+      // count query (invitation cap) and the settings lookup used while seeding
+      select: () => ({ eq: () => ({ count: weddingCount, error: null, single: async () => ({ data: null, error: null }) }) }),
     }),
   }),
 }));
@@ -31,6 +34,7 @@ beforeEach(() => {
   getCurrentUser.mockResolvedValue({ id: "user-1" });
   insertResults.length = 0;
   inserted.length = 0;
+  weddingCount = 0;
 });
 
 describe("createWedding", () => {
@@ -106,6 +110,14 @@ describe("createWedding", () => {
     getCurrentUser.mockResolvedValue(null);
     const result = await createWedding(valid);
     expect(result.ok).toBe(false);
+    expect(inserted).toHaveLength(0);
+  });
+
+  it("caps the number of invitations per account", async () => {
+    weddingCount = 2;
+    const result = await createWedding(valid);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toMatch(/up to 2 invitations/i);
     expect(inserted).toHaveLength(0);
   });
 });

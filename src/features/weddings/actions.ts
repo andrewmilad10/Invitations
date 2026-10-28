@@ -15,6 +15,8 @@ import { createWeddingSchema, type ActionResult, type CreateWeddingInput } from 
 
 const UNIQUE_VIOLATION = "23505";
 const MAX_SLUG_ATTEMPTS = 5;
+/** How many invitations one account may keep at a time (keeps stored media/content in check). */
+const MAX_WEDDINGS = 2;
 
 /**
  * Creates a wedding owned by the current user. The owner membership, settings
@@ -35,6 +37,13 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
   }
 
   const supabase = await createClient();
+
+  // Cap the number of invitations per account to keep stored content/media in check.
+  const { count } = await supabase.from("weddings").select("id", { count: "exact", head: true }).eq("owner_id", user.id);
+  if ((count ?? 0) >= MAX_WEDDINGS) {
+    return { ok: false, error: `You can keep up to ${MAX_WEDDINGS} invitations at a time. Please remove one before creating another.` };
+  }
+
   const base = suggestSlug(partnerOne, partnerTwo);
 
   // The unique index is the source of truth; retry with a random suffix on
@@ -161,5 +170,27 @@ export async function setWeddingPublished(weddingId: string, published: boolean)
   revalidatePath("/dashboard");
   revalidatePath(`/dashboard/weddings/${weddingId}`);
   revalidatePath(`/w/${data.slug}`);
+  return { ok: true };
+}
+
+/**
+ * Permanently removes an invitation the current user owns, and everything under
+ * it (sections, events, guests, replies, media rows…) via ON DELETE CASCADE.
+ * RLS ("weddings: owner deletes") ensures only the owner can. Irreversible.
+ */
+export async function deleteWedding(weddingId: string): Promise<ActionResult> {
+  if (!isUuid(weddingId)) return { ok: false, error: "Invitation not found." };
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "Your session has expired. Please log in again." };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("weddings").delete().eq("id", weddingId).select("id").maybeSingle();
+  if (error) {
+    console.error("deleteWedding failed", error);
+    return { ok: false, error: "We couldn't remove this invitation. Please try again." };
+  }
+  if (!data) return { ok: false, error: "You don't have permission to remove this invitation." };
+
+  revalidatePath("/dashboard");
   return { ok: true };
 }
