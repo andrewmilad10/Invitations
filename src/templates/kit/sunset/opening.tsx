@@ -17,11 +17,11 @@ const FILM = "/templates/gouna-sunset/opening";
 
 export function SunsetOpening({ model }: { model: InvitationModel }) {
   return (
-    <KitIntro model={model} className={s.intro} timing={[7200, 1300]}>
+    <KitIntro model={model} className={s.intro} timing={[7600, 900]} auto={700}>
       {({ phase, open, skip }) => (
         <>
           <Film phase={phase} />
-          <p className={s.openHint}>{model.locale === "ar" ? "اضغطوا للفتح" : "Tap to open"}</p>
+          {phase === "closed" ? <p className={s.openHint}>{model.locale === "ar" ? "اضغطوا للفتح" : "Tap to open"}</p> : null}
           <button type="button" className={s.openBtn} onClick={open} aria-label={model.strings.openInvitation} />
           {phase === "closed" ? null : skip}
         </>
