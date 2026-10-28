@@ -77,6 +77,15 @@ export function KitIntro({
     return () => window.removeEventListener("invitation:replay-opening", replay);
   }, []);
 
+  // A full-page preview (the "Preview" link, not the editor's iframe) plays the
+  // opening on load, so it opens every time — like a guest would see it.
+  useEffect(() => {
+    if (model.mode !== "preview") return;
+    if (typeof window === "undefined" || window.self !== window.top) return;
+    const id = window.setTimeout(() => setPhase((p) => (p === "done" ? "closed" : p)), 50);
+    return () => clearTimeout(id);
+  }, [model.mode]);
+
   useEffect(() => {
     if (phase !== "closed" || auto === undefined) return;
     const id = window.setTimeout(open, auto);
