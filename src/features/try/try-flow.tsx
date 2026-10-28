@@ -18,7 +18,7 @@ import type { CardOptionOverrides } from "@/core/card/options";
 import { resolveTheme } from "@/core/theme/tokens";
 import type { WeddingBundle } from "@/core/wedding/bundle";
 import { productHref, productOf } from "@/features/marketing/products";
-import { Stationery } from "@/features/marketing/stationery";
+import { FONT_PAIRINGS, FONTS } from "@/core/theme/fonts";
 import { PHOTO_LIBRARY, type LibraryPhotoId } from "@/features/media/library";
 import { LivePreviewFrame } from "@/features/preview/live-preview-frame";
 import { cn } from "@/lib/utils";
@@ -89,11 +89,6 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
   function update(patch: Partial<TryAnswers> | ((a: TryAnswers) => TryAnswers)) {
     const next = typeof patch === "function" ? patch(answers) : { ...answers, ...patch };
     draftStore.set(next);
-  }
-
-  function chooseTemplate(id: string) {
-    update(withTemplate(answers, id));
-    router.replace(`/create/${id}`, { scroll: false });
   }
 
   const canSave = Boolean(answers.partnerOne.trim() && answers.partnerTwo.trim());
@@ -176,7 +171,7 @@ export function TryFlow({ templateId, templates, prefill }: { templateId: string
                 }}
               />
             ) : panel === "design" ? (
-              <StyleStep answers={answers} update={update} templates={templates} onTemplate={chooseTemplate} bare />
+              <StyleStep answers={answers} update={update} bare />
             ) : (
               <LocationStep answers={answers} update={update} bare />
             )}
@@ -332,20 +327,23 @@ function LocationStep({ answers, update, bare }: StepProps) {
   );
 }
 
-function StyleStep({ answers, update, templates, onTemplate, bare }: StepProps & { templates: TemplateOption[]; onTemplate: (id: string) => void }) {
-  const current = templates.find((t) => t.id === answers.templateId) ?? templates[0];
-  const [showAll, setShowAll] = useState(false);
-  // The chosen design and its variants first, then the rest in featured order.
-  const first = [current, ...templates.filter((t) => t !== current && current.family && t.family === current.family)];
-  const ordered = [...first, ...templates.filter((t) => !first.includes(t))];
-  const visible = showAll ? ordered : ordered.slice(0, 9);
+function StyleStep({ answers, update, bare }: StepProps) {
+  const template = resolveTemplateManifest(answers.templateId);
+  const defaults = template.themeDefaults.fonts;
+  const firstName = answers.partnerOne.trim() || "Emma";
+  const secondName = answers.partnerTwo.trim() || "James";
+  // The design's own fonts first, then the curated pairings.
+  const fontChoices = [{ id: "__original", label: "Original", heading: defaults.heading, body: defaults.body, accent: defaults.accent }, ...FONT_PAIRINGS];
+  const activeFontId = !answers.fonts
+    ? "__original"
+    : FONT_PAIRINGS.find((p) => p.heading === answers.fonts!.heading && p.body === answers.fonts!.body && p.accent === answers.fonts!.accent)?.id ?? "__custom";
   return (
     <>
-      <StepHeader bare={bare} title="Choose your style">Switch freely — your details stay exactly as they are.</StepHeader>
+      <StepHeader bare={bare} title="Choose your style">Colours and fonts — your details and layout stay the same.</StepHeader>
       <h2 className="mb-3 text-sm font-medium">Colours</h2>
       <div role="radiogroup" aria-label="Palette" className="grid gap-2">
-        {current.palettes.map((p, i) => {
-          const c = resolveTheme(current.themeDefaults, { colors: p.colors }).colors;
+        {template.palettes.map((p, i) => {
+          const c = resolveTheme(template.themeDefaults, { colors: p.colors }).colors;
           const active = answers.palette ? answers.palette === p.id : i === 0;
           return (
             <button
@@ -370,31 +368,34 @@ function StyleStep({ answers, update, templates, onTemplate, bare }: StepProps &
         })}
       </div>
 
-      <h2 className="mb-3 mt-10 text-sm font-medium">Design</h2>
-      <div role="radiogroup" aria-label="Template" className="grid grid-cols-3 gap-3">
-        {visible.map((t) => {
-          const active = t.id === current.id;
+      <h2 className="mb-3 mt-10 text-sm font-medium">Fonts</h2>
+      <div role="radiogroup" aria-label="Fonts" className="grid gap-2">
+        {fontChoices.map((p) => {
+          const active = p.id === activeFontId;
           return (
             <button
-              key={t.id}
+              key={p.id}
               type="button"
               role="radio"
               aria-checked={active}
-              onClick={() => onTemplate(t.id)}
-              className={cn("group rounded-md border p-2 text-start transition-colors", active ? "border-primary ring-1 ring-primary" : "border-border hover:border-foreground/40")}
+              onClick={() => update({ fonts: p.id === "__original" ? undefined : { heading: p.heading, body: p.body, accent: p.accent } })}
+              className={cn("flex items-center justify-between gap-3 rounded-md border px-4 py-3 text-start transition-colors", active ? "border-primary" : "border-border hover:border-foreground/40")}
             >
-              <Stationery template={t} partnerOne={answers.partnerOne || "Emma"} partnerTwo={answers.partnerTwo || "James"} className="text-[0.55rem]" />
-              <span className="mt-2 block truncate text-xs font-medium">{t.name}</span>
+              <span className="min-w-0">
+                <span className="block truncate text-2xl leading-tight" style={{ fontFamily: `var(${FONTS[p.heading].cssVar})` }}>
+                  {firstName}
+                  <span style={{ fontFamily: `var(${FONTS[p.accent].cssVar})` }}> &amp; </span>
+                  {secondName}
+                </span>
+                <span className="mt-1 block text-xs text-muted-foreground" style={{ fontFamily: `var(${FONTS[p.body].cssVar})` }}>
+                  {p.label}
+                </span>
+              </span>
+              {active ? <Check className="size-4 shrink-0" /> : null}
             </button>
           );
         })}
       </div>
-
-      {!showAll && templates.length > visible.length ? (
-        <button type="button" onClick={() => setShowAll(true)} className="mt-4 w-full rounded-md border py-2.5 text-sm text-muted-foreground hover:border-foreground/40 hover:text-foreground">
-          Show all {templates.length} designs
-        </button>
-      ) : null}
     </>
   );
 }

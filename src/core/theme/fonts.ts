@@ -82,6 +82,39 @@ export function isFontKey(value: unknown): value is FontKey {
   return typeof value === "string" && (FONT_KEYS as readonly string[]).includes(value);
 }
 
+export interface FontPairing {
+  id: string;
+  /** A short, friendly name for the feel of the pairing. */
+  label: string;
+  heading: FontKey;
+  body: FontKey;
+  accent: FontKey;
+}
+
+/**
+ * Curated font sets for the invitation: a heading face for the names and
+ * titles, a clean body face for text, and a script for the ampersand and
+ * signature. Every pairing is drawn from the registry above and reads well on
+ * a wedding invitation. Offered in the editor as ready-made choices so people
+ * change the type without needing to understand each role.
+ */
+export const FONT_PAIRINGS: FontPairing[] = [
+  { id: "classic", label: "Classic", heading: "cormorant", body: "jost", accent: "pinyon" },
+  { id: "grand", label: "Grand", heading: "playfair", body: "inter", accent: "greatvibes" },
+  { id: "vintage", label: "Vintage", heading: "garamond", body: "manrope", accent: "allura" },
+  { id: "dramatic", label: "Dramatic", heading: "bodoni", body: "jost", accent: "pinyon" },
+  { id: "modern", label: "Modern", heading: "fraunces", body: "manrope", accent: "caveat" },
+  { id: "roman", label: "Roman", heading: "cinzel", body: "jost", accent: "pinyon" },
+  { id: "fashion", label: "Fashion", heading: "italiana", body: "inter", accent: "allura" },
+  { id: "soft", label: "Soft", heading: "marcellus", body: "manrope", accent: "greatvibes" },
+  { id: "bold", label: "Bold", heading: "dmserif", body: "jost", accent: "pinyon" },
+  { id: "delicate", label: "Delicate", heading: "instrument", body: "jost", accent: "allura" },
+  { id: "traditional", label: "Traditional", heading: "baskerville", body: "inter", accent: "pinyon" },
+  { id: "editorial", label: "Editorial", heading: "didone", body: "jost", accent: "pinyon" },
+  { id: "timeless", label: "Timeless", heading: "oldstandard", body: "manrope", accent: "greatvibes" },
+  { id: "handwritten", label: "Handwritten", heading: "fraunces", body: "jost", accent: "homemade" },
+];
+
 /**
  * CSS font-family stack for a font key. For Arabic, an Arabic face is placed
  * right after the chosen font so Latin glyphs keep the chosen design and

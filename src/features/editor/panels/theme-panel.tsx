@@ -8,11 +8,10 @@ import { canRotate, designCardDefaults } from "@/core/template/manifest";
 import { FONT_KEYS, FONTS, type FontKey } from "@/core/theme/fonts";
 import { productOf } from "@/features/marketing/products";
 import { resolveTheme, sanitizeOverrides, type ColorToken, type ThemeOverrides } from "@/core/theme/tokens";
-import { TemplatePicker, toTemplateOption } from "@/features/weddings/components/template-picker";
 import { cn } from "@/lib/utils";
-import { resolveTemplateManifest, selectableTemplates } from "@/templates/registry";
-import { updateTemplate, updateTheme } from "../actions";
-import { setTemplate, setTheme } from "../bundle-updates";
+import { resolveTemplateManifest } from "@/templates/registry";
+import { updateTheme } from "../actions";
+import { setTheme } from "../bundle-updates";
 import { useEditor } from "../editor-context";
 import { PanelHeader } from "./panel-header";
 import { Control, Segmented } from "./section-style";
@@ -40,24 +39,11 @@ export function ThemePanel() {
     save("theme", () => updateTheme(weddingId, next));
   }
 
-  function chooseTemplate(id: string) {
-    update((b) => setTemplate(b, id));
-    save("template", () => updateTemplate(weddingId, id), 0);
-  }
-
-  const templates = selectableTemplates().map(toTemplateOption);
   const activePalette = template.palettes.find((p) => JSON.stringify(p.colors) === JSON.stringify(overrides.colors ?? {}));
 
   return (
     <div className="grid gap-10">
-      <PanelHeader title="Template & style" description="Change the look at any time — your content always stays the same." />
-
-      <section className="grid gap-4">
-        <h3 className="text-sm font-medium">Template</h3>
-        <fieldset disabled={!canEdit}>
-          <TemplatePicker templates={templates} value={template.id} onChange={chooseTemplate} compact initialCount={9} />
-        </fieldset>
-      </section>
+      <PanelHeader title="Style" description="Change colours, fonts and finish at any time — your content always stays the same." />
 
       <section className="grid gap-4">
         <h3 className="text-sm font-medium">Color palette</h3>
