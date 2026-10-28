@@ -9,6 +9,7 @@ const OPENS = new Set<string>([
   "blush-lace",
   "burgundy-envelope",
   "garden-gate",
+  "gouna-sunset",
   "henna-tent",
   "ivory-veil",
   "lemon-terrace",

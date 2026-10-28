@@ -6,6 +6,6 @@
  */
 export const SCREENS = new Set([
   "swan-lake",
-  "ivory-veil", "blush-lace", "wisteria-lake", "gouna-lagoon", "ribbon-pearls", "peony-blush", "wild-posy", "burgundy-envelope", "pressed-garden", "paper-fan", "garden-gate", "lemon-terrace", "linen-meadow", "opening-night", "olive-courtyard", "henna-tent", "sketchbook",
+  "ivory-veil", "blush-lace", "wisteria-lake", "gouna-lagoon", "gouna-sunset", "ribbon-pearls", "peony-blush", "wild-posy", "burgundy-envelope", "pressed-garden", "paper-fan", "garden-gate", "lemon-terrace", "linen-meadow", "opening-night", "olive-courtyard", "henna-tent", "sketchbook",
 ]);
 export const screenSrc = (id: string, kind: "hero" | "opening") => `/marketing/screens/${id}-${kind}.webp`;
