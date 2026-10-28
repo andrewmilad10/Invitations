@@ -8,6 +8,7 @@ import { limitError } from "@/lib/supabase/limit-error";
 import { createClient } from "@/lib/supabase/server";
 import { isSelectableTemplateId } from "@/templates/registry";
 import { sampleBundle } from "@/templates/fixtures/sample-wedding";
+import { zonedTimeToIso } from "@/core/i18n/format";
 import type { Json } from "@/lib/supabase/database.types";
 import { isUuid } from "./queries";
 import { createWeddingSchema, type ActionResult, type CreateWeddingInput } from "./schemas";
@@ -55,7 +56,7 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
       .single();
 
     if (!error) {
-      await seedStarterContent(supabase, data.id, templateId, partnerOne, partnerTwo);
+      await seedStarterContent(supabase, data.id, templateId, partnerOne, partnerTwo, weddingDate);
       revalidatePath("/dashboard");
       return { ok: true, data: { id: data.id } };
     }
@@ -86,12 +87,18 @@ async function seedStarterContent(
   templateId: string,
   partnerOne: string,
   partnerTwo: string,
+  weddingDate: string | null,
 ): Promise<void> {
   try {
     const sample = sampleBundle(templateId);
     const p1 = partnerOne.trim() || "Emma";
     const p2 = partnerTwo.trim() || "James";
     const personalise = (text: string) => text.replaceAll("Emma", p1).replaceAll("James", p2);
+
+    // The new wedding's timezone (its settings row is created by a trigger with the wedding).
+    const { data: settings } = await supabase.from("wedding_settings").select("timezone").eq("wedding_id", weddingId).single();
+    const tz = settings?.timezone ?? "Africa/Cairo";
+    const START_TIME: Record<string, string> = { ceremony: "15:00", reception: "18:00" };
 
     const sections = sample.sections.map((s) => {
       const base = s.content as Record<string, unknown>;
@@ -102,7 +109,7 @@ async function seedStarterContent(
       wedding_id: weddingId,
       kind: e.kind,
       title: e.title,
-      starts_at: null,
+      starts_at: weddingDate ? zonedTimeToIso(weddingDate, START_TIME[e.kind] ?? "15:00", tz) : null,
       ends_at: null,
       venue_name: e.venue_name,
       address: e.address,

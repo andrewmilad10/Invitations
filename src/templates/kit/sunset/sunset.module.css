@@ -12,7 +12,7 @@
   --night: #11213f;        /* the bottom of the night painting */
   --col: min(100%, 560px);
   position: relative;
-  background: url("/templates/gouna-sunset/paper.webp") 0 0 / 560px auto repeat, var(--inv-bg);
+  background: url("/templates/gouna-sunset/paper.webp") 0 0 / 480px auto repeat, var(--inv-bg);
   color: var(--inv-fg);
   font: 400 .98rem/1.7 var(--inv-font-body);
   font-variant-numeric: lining-nums;
@@ -37,10 +37,10 @@
 .hint { position: absolute; left: 0; right: 0; bottom: 4%; text-align: center; font-size: .7rem; letter-spacing: .22em; text-transform: uppercase; color: var(--inv-muted); opacity: .8; }
 
 /* ── botanical divider between sections ── */
-.divider { display: block; width: min(78%, 360px); height: auto; margin: 2.8rem auto .2rem; opacity: .92; }
+.divider { display: block; width: min(70%, 320px); height: auto; margin: 1.6rem auto .6rem; opacity: .9; }
 
 /* ── a section ── */
-.sec { position: relative; width: var(--col); margin: 0 auto; padding: 3.2rem 0 0; scroll-margin-top: 1rem; }
+.sec { position: relative; width: var(--col); margin: 0 auto; padding: 2.2rem 0 0; scroll-margin-top: 1rem; }
 .inner { position: relative; z-index: 1; display: grid; justify-items: center; gap: .65rem; padding: 0 1.6rem; text-align: center; }
 .h2 { margin: 0 0 .3rem; font: 400 2.2rem/1.12 var(--inv-font-heading); letter-spacing: .01em; text-wrap: balance; }
 .kicker { font-size: .72rem; letter-spacing: .26em; text-transform: uppercase; color: var(--inv-accent); }
@@ -50,9 +50,12 @@
 .quote { max-width: 24rem; margin-top: .3rem !important; font: italic 400 1.2rem/1.5 var(--inv-font-heading); color: var(--inv-muted); }
 .small { font-size: .84rem; color: var(--inv-muted); }
 
-/* a wide painted scene that melts down into the paper */
-.banner { width: 100%; margin: 0 0 1.2rem; }
-.bannerImg { display: block; width: 100%; height: auto; mask-image: linear-gradient(180deg, #000 72%, transparent); }
+/* a wide painted scene that melts into the paper on every edge, so it reads as part of the page */
+.banner { width: 100%; margin: 0 0 .4rem; }
+.bannerImg { display: block; width: 100%; height: auto; mask-image: linear-gradient(180deg, transparent, #000 12%, #000 74%, transparent); }
+@media (min-width: 561px) {
+  .bannerImg { mask-image: linear-gradient(180deg, transparent, #000 12%, #000 74%, transparent), linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-composite: intersect; }
+}
 
 /* signature sprig under the story */
 .sprig { width: 92px; height: auto; margin: .4rem 0 .1rem; }
@@ -81,6 +84,8 @@
 .framedLine { font-size: .86rem; color: color-mix(in oklab, var(--cream) 85%, transparent); }
 .celLink { display: inline-flex; min-height: 44px; align-items: center; color: var(--cream); font-size: .76rem; letter-spacing: .16em; text-transform: uppercase; text-decoration: underline; text-decoration-color: color-mix(in oklab, var(--cream) 50%, transparent); text-underline-offset: 6px; text-decoration-thickness: 1.5px; }
 .celEvent + .celEvent { margin-top: 1.4rem; }
+/* on wide screens the panel reads as one clean card instead of a hard-edged block */
+@media (min-width: 561px) { .cel { border-radius: 18px; box-shadow: 0 22px 54px rgb(20 55 45 / .16); } }
 
 /* ── Where / venue on paper ── */
 .places { list-style: none; margin: .4rem 0 0; padding: 0; display: grid; gap: 1rem; width: 100%; max-width: 24rem; }
@@ -129,6 +134,9 @@
 
 /* ── opening (the envelope film) ── */
 .intro { background: var(--inv-bg); }
+/* the opening (envelope) is the loading cover itself — it sits above the first-paint
+   overlay, so guests see the envelope rather than a spinner while things load */
+.root .intro { z-index: 101; }
 /* poster-backed so the envelope covers the screen instantly, before the video paints — the page never shows underneath */
 .film { position: absolute; inset: 0; display: grid; place-items: center; background: var(--inv-bg) url("/templates/gouna-sunset/opening-poster.webp") center / cover no-repeat; }
 .filmVid { width: 100%; height: 100%; object-fit: cover; }
