@@ -53,9 +53,11 @@ describe("createWedding", () => {
     insertResults.push({ data: null, error: { code: "23505", message: "duplicate" } });
     const result = await createWedding(valid);
     expect(result.ok).toBe(true);
-    expect(inserted).toHaveLength(2);
-    expect(inserted[1].slug).toMatch(/^andrew-and-mariam-[a-z0-9]{6}$/);
-    expect(inserted[1].slug).not.toBe(inserted[0].slug);
+    // Only the wedding-row inserts (the starter sections/events are also inserted on success).
+    const weddingRows = inserted.filter((r): r is Record<string, unknown> => !Array.isArray(r) && typeof r === "object" && r !== null && "owner_id" in r);
+    expect(weddingRows).toHaveLength(2);
+    expect(weddingRows[1].slug).toMatch(/^andrew-and-mariam-[a-z0-9]{6}$/);
+    expect(weddingRows[1].slug).not.toBe(weddingRows[0].slug);
   });
 
   it("gives up after repeated collisions", async () => {
