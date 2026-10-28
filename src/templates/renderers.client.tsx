@@ -47,6 +47,7 @@ const Pond = dynamic(() => import("./kit/pond/Renderer"));
 const Posy = dynamic(() => import("./kit/posy/Renderer"));
 const Ribbon = dynamic(() => import("./kit/ribbon/Renderer"));
 const Lagoon = dynamic(() => import("./kit/lagoon/Renderer"));
+const Sunset = dynamic(() => import("./kit/sunset/Renderer"));
 const Wisteria = dynamic(() => import("./kit/wisteria/Renderer"));
 const Lace = dynamic(() => import("./kit/lace/Renderer"));
 const Veil = dynamic(() => import("./kit/veil/Renderer"));
@@ -109,6 +110,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   posy: Posy,
   ribbon: Ribbon,
   lagoon: Lagoon,
+  sunset: Sunset,
   wisteria: Wisteria,
   lace: Lace,
   veil: Veil,

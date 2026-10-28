@@ -24,6 +24,7 @@ export const DESIGN_INFO: Record<string, DesignInfo> = {
   "blush-lace": { ar: "دانتيل وردي", mood: "floral", tone: "blush", isNew: true },
   "wisteria-lake": { ar: "بحيرة الوستارية", mood: "floral", tone: "blush", isNew: true },
   "gouna-lagoon": { ar: "بحيرة الجونة", mood: "nights", tone: "blue" },
+  "gouna-sunset": { ar: "غروب الجونة", mood: "floral", tone: "blush", isNew: true },
   "ribbon-pearls": { ar: "شريطة ولؤلؤ", mood: "floral", tone: "blush" },
   "peony-blush": { ar: "زهور الفاوانيا", mood: "floral", tone: "blush" },
   "lemon-terrace": { ar: "شرفة الليمون", mood: "floral", tone: "blue" },

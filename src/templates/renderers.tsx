@@ -37,6 +37,7 @@ import PondRenderer from "./kit/pond/Renderer";
 import PosyRenderer from "./kit/posy/Renderer";
 import RibbonRenderer from "./kit/ribbon/Renderer";
 import LagoonRenderer from "./kit/lagoon/Renderer";
+import SunsetRenderer from "./kit/sunset/Renderer";
 import WisteriaRenderer from "./kit/wisteria/Renderer";
 import LaceRenderer from "./kit/lace/Renderer";
 import VeilRenderer from "./kit/veil/Renderer";
@@ -101,6 +102,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   posy: PosyRenderer,
   ribbon: RibbonRenderer,
   lagoon: LagoonRenderer,
+  sunset: SunsetRenderer,
   wisteria: WisteriaRenderer,
   lace: LaceRenderer,
   veil: VeilRenderer,

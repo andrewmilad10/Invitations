@@ -91,6 +91,7 @@ const P = {
   blushLace: { id: "lace-blush", label: "Cream, blush lace & dusty rose", family: "neutral", colors: c("#f7f1ea", "#fbf8f4", "#4f4340", "#6f5e59", "#96655d", "#fbf8f4", "#e6d9d1") },
   wisteriaLake: { id: "wisteria-blush", label: "Cream, blush rose & wisteria", family: "neutral", colors: c("#f7f2ea", "#fffdf9", "#4a3b38", "#6b5753", "#8e4f4e", "#fffdf9", "#e6d8cf") },
   gounaLagoon: { id: "lagoon-sand", label: "Sand, turquoise & coral", family: "neutral", colors: c("#f9f6eb", "#fffdf8", "#4a3a2c", "#6b5948", "#b9543d", "#fffdf8", "#e4d9c6") },
+  gounaSunset: { id: "sunset-coral", label: "Cream, coral & teal", family: "neutral", colors: c("#f7f0e3", "#fffdf8", "#4a3a2c", "#7a6752", "#c0664a", "#fffdf8", "#e7dac4") },
   ribbonPearls: { id: "ivory-copper", label: "Ivory, pearl & copper", family: "neutral", colors: c("#f6f2e7", "#fbf8f1", "#3a302a", "#665a52", "#87543c", "#fbf7f0", "#e3d7c8") },
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
@@ -545,6 +546,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     fonts: { heading: "cormorant", body: "jost", accent: "cormorant" },
     card: { layout: "classic" },
   }),
+  kitTemplate("sunset", {
+    id: "gouna-sunset",
+    name: "El Gouna Sunset",
+    tagline: "A cream envelope unties and opens onto a Red Sea sunset, from the ceremony to lanterns on the water.",
+    description:
+      "Opens on a cream envelope tied with ivory silk: guests tap and the strap slips off, the envelope opens and the card inside grows to fill the screen, settling onto the first page — a painted sunset lagoon with bougainvillaea and a felucca, your names written in the cream. Below, warm paper with a bougainvillaea-and-felucca divider between sections: your story under a soft sky with a pressed sprig, the day as a painted programme marked with glasses, a cocktail, dinner and lanterns, the celebration on a deep-teal panel inside a gold frame with two doves, a countdown, arched photos, questions and the reply. It ends at night among lanterns floating on the water.",
+    categories: ["egyptian", "romantic", "elegant", "floral"],
+    palettes: [P.gounaSunset],
+    fonts: { heading: "cormorant", body: "jost", accent: "pinyon" },
+    card: { layout: "classic" },
+  }, { opening: true }),
   kitTemplate("ribbon", {
     id: "ribbon-pearls",
     name: "Ribbon & Pearls",

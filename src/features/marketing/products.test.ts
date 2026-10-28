@@ -10,7 +10,7 @@ describe("product collections", () => {
     expect(cards.length + sites.length).toBe(all.length);
     expect(cards.some((t) => sites.includes(t))).toBe(false);
     expect(cards.length).toBeGreaterThan(30);
-    expect(sites.map((t) => t.id).sort()).toEqual(["blush-lace", "burgundy-envelope", "garden-gate", "gouna-lagoon", "henna-tent", "ivory-veil", "lemon-terrace", "linen-meadow", "olive-courtyard", "opening-night", "paper-fan", "peony-blush", "pressed-garden", "ribbon-pearls", "sketchbook", "swan-lake", "wild-posy", "wisteria-lake"]);
+    expect(sites.map((t) => t.id).sort()).toEqual(["blush-lace", "burgundy-envelope", "garden-gate", "gouna-lagoon", "gouna-sunset", "henna-tent", "ivory-veil", "lemon-terrace", "linen-meadow", "olive-courtyard", "opening-night", "paper-fan", "peony-blush", "pressed-garden", "ribbon-pearls", "sketchbook", "swan-lake", "wild-posy", "wisteria-lake"]);
   });
 
   it("links each design to its own collection's page", () => {
