@@ -53,6 +53,8 @@ const csp = (frameAncestors: string) =>
 const nextConfig: NextConfig = {
   env: publicSettings,
   poweredByHeader: false,
+  // No on-screen dev indicator (the Next.js badge); it only ever showed in dev anyway.
+  devIndicators: false,
   // Never publish source maps: the browser only gets minified bundles.
   productionBrowserSourceMaps: false,
   async headers() {
