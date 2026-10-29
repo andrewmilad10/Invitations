@@ -39,13 +39,13 @@ export function PlayCard({ design, page, badge, tags }: { design: PreviewDesign;
         >
           <PlayScreen id={design.id} playing={on} speed={110} className="size-full rounded-[1.1rem]" />
         </Link>
-        <div className={cn("absolute inset-x-3 bottom-3 z-10 grid grid-cols-2 gap-1.5 transition-[opacity,translate] duration-300 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100", on ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0")}>
-          <button type="button" onClick={() => preview(design)} className="h-9 rounded-full bg-card text-[0.8rem] font-medium shadow-sm">
-            Preview
-          </button>
-          <Link href={design.href} className="grid h-9 place-items-center rounded-full bg-primary text-[0.8rem] font-medium text-primary-foreground shadow-sm">
+        <div className={cn("absolute inset-x-3 bottom-3 z-10 grid grid-cols-1 gap-1.5 transition-[opacity,translate] duration-300 sm:grid-cols-2 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100", on ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0")}>
+          <Link href={design.href} className="grid h-9 place-items-center whitespace-nowrap rounded-full bg-primary text-[0.8rem] font-medium text-primary-foreground shadow-sm sm:order-2">
             Use this design
           </Link>
+          <button type="button" onClick={() => preview(design)} className="h-9 whitespace-nowrap rounded-full bg-card text-[0.8rem] font-medium shadow-sm sm:order-1">
+            Preview
+          </button>
         </div>
       </div>
       <div className="grid gap-0.5 px-1">
