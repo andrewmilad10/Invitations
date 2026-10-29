@@ -41,18 +41,7 @@ export function PlayCard({ design, page, badge, tags }: { design: PreviewDesign;
         </Link>
       </div>
       <div className="grid gap-0.5 px-1">
-        <h3 className="font-serif text-2xl leading-tight">
-          <Link href={page} className="hover:underline hover:underline-offset-4">
-            {design.name}
-          </Link>
-        </h3>
-        {design.ar ? (
-          <p lang="ar" dir="rtl" className="text-start font-[family-name:var(--font-amiri)] text-muted-foreground">
-            {design.ar}
-          </p>
-        ) : null}
-        <p className="text-xs text-muted-foreground">{tags.join(" · ")}</p>
-        <div className="mt-3 grid gap-2">
+        <div className="mb-3 grid gap-2">
           <Link
             href={design.href}
             className="flex h-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
@@ -67,6 +56,17 @@ export function PlayCard({ design, page, badge, tags }: { design: PreviewDesign;
             Preview
           </button>
         </div>
+        <h3 className="font-serif text-2xl leading-tight">
+          <Link href={page} className="hover:underline hover:underline-offset-4">
+            {design.name}
+          </Link>
+        </h3>
+        {design.ar ? (
+          <p lang="ar" dir="rtl" className="text-start font-[family-name:var(--font-amiri)] text-muted-foreground">
+            {design.ar}
+          </p>
+        ) : null}
+        <p className="text-xs text-muted-foreground">{tags.join(" · ")}</p>
       </div>
     </article>
   );
