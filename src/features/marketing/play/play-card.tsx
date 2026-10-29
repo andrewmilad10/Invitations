@@ -39,23 +39,26 @@ export function PlayCard({ design, page, badge, tags }: { design: PreviewDesign;
         >
           <PlayScreen id={design.id} playing={on} speed={110} className="size-full rounded-[1.1rem]" />
         </Link>
+        <div className="absolute inset-0 z-10 flex items-end">
+          <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(20,15,10,0.62),rgba(20,15,10,0)_46%)]" />
+          <div className="relative flex w-full items-center gap-1.5 p-2.5">
+            <button
+              type="button"
+              onClick={() => preview(design)}
+              className="h-9 shrink-0 rounded-full bg-white/90 px-3.5 text-[0.75rem] font-medium text-foreground shadow-sm backdrop-blur transition-colors hover:bg-white"
+            >
+              Preview
+            </button>
+            <Link
+              href={design.href}
+              className="flex h-9 min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-full bg-primary px-3 text-[0.75rem] font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90"
+            >
+              Use
+            </Link>
+          </div>
+        </div>
       </div>
       <div className="grid gap-0.5 px-1">
-        <div className="mb-3 grid gap-2">
-          <Link
-            href={design.href}
-            className="flex h-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Use this design
-          </Link>
-          <button
-            type="button"
-            onClick={() => preview(design)}
-            className="flex h-10 items-center justify-center rounded-full border border-border text-sm font-medium text-foreground transition-colors hover:border-foreground/40 hover:bg-card"
-          >
-            Preview
-          </button>
-        </div>
         <h3 className="font-serif text-2xl leading-tight">
           <Link href={page} className="hover:underline hover:underline-offset-4">
             {design.name}
