@@ -149,7 +149,7 @@ export function DesignGallery({ templates, initialFilters, product = "cards" }: 
       )}
 
       {/* Filter bar */}
-      <div className="sticky top-16 z-20 -mx-5 mt-8 bg-background/95 px-5 py-3 backdrop-blur sm:top-20 sm:mx-0 sm:px-0">
+      <div className="z-20 -mx-5 mt-8 bg-background px-5 py-3 sm:sticky sm:top-20 sm:mx-0 sm:bg-background/95 sm:px-0 sm:backdrop-blur">
         <div className="flex flex-wrap items-center gap-2">
           <FilterMenu label="Sort" value={SORTS[filters.sort]} active={filters.sort !== "featured"}>
             {(close) =>

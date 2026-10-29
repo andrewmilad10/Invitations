@@ -39,7 +39,7 @@ export function WebsitesGallery({ designs }: { designs: GalleryDesign[] }) {
   const chip = (on: boolean) => cn("h-9 rounded-full border px-4 text-sm transition-colors", on ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card hover:border-muted-foreground");
   return (
     <PreviewProvider>
-      <div className="sticky top-[4.6rem] z-20 -mx-5 mt-10 border-b border-border bg-background/95 px-5 backdrop-blur sm:-mx-8 sm:top-[5rem] sm:px-8">
+      <div className="z-20 -mx-5 mt-10 border-b border-border bg-background px-5 sm:sticky sm:top-[5rem] sm:-mx-8 sm:bg-background/95 sm:px-8 sm:backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-4 gap-y-2 py-3">
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Style">
             <button type="button" aria-pressed={mood === "all"} className={chip(mood === "all")} onClick={() => setPicked((p) => ({ ...p, mood: "all" }))}>
