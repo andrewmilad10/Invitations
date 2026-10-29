@@ -121,7 +121,10 @@ interface SectionFacts {
  *  1. Only types the template supports are considered.
  *  2. A stored row decides enabled/order; otherwise the template default does
  *     (sparse overrides — see docs/database.md).
- *  3. Sections with nothing to show (e.g. a gallery with no photos) are skipped.
+ *  3. A section with nothing to show (e.g. a gallery with no photos) is skipped,
+ *     so an invitation never shows an empty section. New invitations are seeded
+ *     with the full sample (see seedStarterContent), so every section has
+ *     content from the start and matches the editor's section list.
  */
 function resolveSections(
   bundle: WeddingBundle,

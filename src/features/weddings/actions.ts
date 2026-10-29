@@ -80,15 +80,16 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
 }
 
 /**
- * Fills a brand-new wedding with starter content — the same sample the shop
- * preview shows (story, the day's programme, questions, the reply, and a
- * ceremony + reception) — so "Use this design" opens a full, editable
- * invitation instead of a near-empty one. The sample story is personalised
- * with the couple's names; venues, times and photos are left as editable
- * placeholders (the couple sets their own in the editor, so event times stay
- * blank and the gallery stays off until they add photos). Best-effort: any
- * failure here is logged and never fails the creation — everything can still
- * be added in the editor.
+ * Fills a brand-new wedding with starter content — the SAME full design the
+ * shop preview shows (story, the day's programme, questions, the reply, a
+ * ceremony + reception, and the hero + gallery photos) — so "Use this design"
+ * opens the complete, editable invitation, identical to the preview, instead
+ * of a near-empty one. The couple then edit each part and swap the placeholder
+ * photos for their own. The sample story is personalised with the couple's
+ * names; event times follow their date when they gave one. The photos are
+ * curated library references (not uploaded files), so they cost no storage.
+ * Best-effort: any failure here is logged and never fails the creation —
+ * everything can still be added in the editor.
  */
 async function seedStarterContent(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -129,12 +130,28 @@ async function seedStarterContent(
       sort_order: e.sort_order,
     }));
 
-    const [sectionsRes, eventsRes] = await Promise.all([
+    // Hero + gallery photos (curated library references, so no stored files),
+    // so the new invitation shows the same photos as the preview until the
+    // couple swap in their own.
+    const media = sample.media.map((m) => ({
+      wedding_id: weddingId,
+      kind: m.kind,
+      purpose: m.purpose,
+      storage_path: m.storage_path,
+      alt_text: m.alt_text,
+      width: m.width,
+      height: m.height,
+      sort_order: m.sort_order,
+    }));
+
+    const [sectionsRes, eventsRes, mediaRes] = await Promise.all([
       supabase.from("wedding_sections").insert(sections),
       supabase.from("events").insert(events),
+      supabase.from("media").insert(media),
     ]);
     if (sectionsRes.error) console.error("seedStarterContent sections failed", sectionsRes.error);
     if (eventsRes.error) console.error("seedStarterContent events failed", eventsRes.error);
+    if (mediaRes.error) console.error("seedStarterContent media failed", mediaRes.error);
   } catch (e) {
     console.error("seedStarterContent threw", e);
   }
