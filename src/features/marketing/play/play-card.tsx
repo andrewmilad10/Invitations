@@ -1,6 +1,5 @@
 "use client";
 
-import { Eye } from "lucide-react";
 import { IntentLink as Link } from "@/components/intent-link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -40,14 +39,6 @@ export function PlayCard({ design, page, badge, tags }: { design: PreviewDesign;
         >
           <PlayScreen id={design.id} playing={on} speed={110} className="size-full rounded-[1.1rem]" />
         </Link>
-        <div className={cn("absolute inset-x-3 bottom-3 z-10 flex gap-1.5 transition-[opacity,translate] duration-300 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100", on ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0")}>
-          <button type="button" onClick={() => preview(design)} aria-label={`Preview ${design.name}`} className="grid size-9 shrink-0 place-items-center rounded-full bg-card shadow-sm">
-            <Eye className="size-4" />
-          </button>
-          <Link href={design.href} className="flex h-9 min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-full bg-primary px-3 text-[0.8rem] font-medium text-primary-foreground shadow-sm">
-            Use this design
-          </Link>
-        </div>
       </div>
       <div className="grid gap-0.5 px-1">
         <h3 className="font-serif text-2xl leading-tight">
@@ -61,6 +52,21 @@ export function PlayCard({ design, page, badge, tags }: { design: PreviewDesign;
           </p>
         ) : null}
         <p className="text-xs text-muted-foreground">{tags.join(" · ")}</p>
+        <div className="mt-3 grid gap-2">
+          <Link
+            href={design.href}
+            className="flex h-10 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Use this design
+          </Link>
+          <button
+            type="button"
+            onClick={() => preview(design)}
+            className="flex h-10 items-center justify-center rounded-full border border-border text-sm font-medium text-foreground transition-colors hover:border-foreground/40 hover:bg-card"
+          >
+            Preview
+          </button>
+        </div>
       </div>
     </article>
   );
