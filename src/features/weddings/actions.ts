@@ -1,7 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { z } from "@/lib/zod";
+import { invitationTag } from "@/features/invitations/public";
 import { suggestSlug, withRandomSuffix } from "@/core/wedding/slug";
 import { getCurrentUser } from "@/features/auth/session";
 import { limitError } from "@/lib/supabase/limit-error";
@@ -187,6 +188,8 @@ export async function setWeddingPublished(weddingId: string, published: boolean)
   revalidatePath("/dashboard");
   revalidatePath(`/dashboard/weddings/${weddingId}`);
   revalidatePath(`/w/${data.slug}`);
+  // Refresh the public design cache so the (un)publish shows for guests at once.
+  updateTag(invitationTag(data.slug));
   return { ok: true };
 }
 

@@ -97,8 +97,10 @@ export function PlayScreen({
       v.onwaiting = () => alive && setBusy(true);
       v.onplaying = () => alive && setBusy(false);
       v.querySelectorAll("source").forEach((s) => (s.onerror = () => v.networkState === v.NETWORK_NO_SOURCE && scroll()));
-      // only show the spinner when the opening is actually slow to arrive
-      slow = window.setTimeout(() => alive && v.readyState < 3 && setBusy(true), 300);
+      // The design's own first frame (the poster) is already on screen while the
+      // opening loads, so only raise a spinner when it is genuinely slow to
+      // arrive — avoids a spinner flashing on every card as it comes forward.
+      slow = window.setTimeout(() => alive && v.readyState < 3 && setBusy(true), 1100);
       // never wait on a video that can't play
       t = window.setTimeout(scroll, 15000);
       const p = v.play();

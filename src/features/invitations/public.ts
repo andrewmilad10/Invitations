@@ -1,5 +1,6 @@
 import "server-only";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { isSupabaseConfigured } from "@/config/env";
 import { buildInvitationModel } from "@/core/invitation/build-model";
 import type { GuestGreeting, InvitationModel, PublicWish, RenderMode } from "@/core/invitation/model";
@@ -11,25 +12,45 @@ import { resolveTemplateManifest } from "@/templates/registry";
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
+/** The cache tag for one invitation's design, so a publish can refresh it at once. */
+export const invitationTag = (slug: string) => `invitation:${slug.toLowerCase()}`;
+
+/**
+ * The published design (sections, events, media, theme) for a slug, cached
+ * across requests so a page that many guests open at once doesn't re-query the
+ * database on every visit. It holds the DESIGN only — never a guest's personal
+ * greeting or the live replies, which are read fresh per request. The cache is
+ * refreshed the moment the couple (re)publishes (revalidateTag(invitationTag)),
+ * and in any case never serves content older than `revalidate` seconds, so an
+ * edit to a live invitation reaches guests within that window.
+ */
+const loadPublishedDesign = (slug: string) =>
+  unstable_cache(
+    async (): Promise<WeddingBundle | null> => {
+      const { data, error } = await createAnonClient().rpc("get_public_invitation", { p_slug: slug });
+      if (error) throw new Error(`Could not load invitation: ${error.message}`);
+      if (!data) return null;
+      const bundle = parseWeddingBundle(data);
+      if (!bundle) {
+        console.error("get_public_invitation returned an invalid bundle for", slug);
+        return null;
+      }
+      return bundle;
+    },
+    ["public-invitation", slug],
+    { tags: [invitationTag(slug)], revalidate: 30 },
+  )();
+
 /**
  * Published wedding by slug, via the public RPC (anon role, no session).
- * Returns null for unknown, unpublished or malformed slugs. Cached per
- * request so generateMetadata, the page and the OG image share one query.
+ * Returns null for unknown, unpublished or malformed slugs. Wrapped in React
+ * cache() as well, so generateMetadata, the page and the OG image share one
+ * read within a single request.
  */
 export const getPublicBundle = cache(async (rawSlug: string): Promise<WeddingBundle | null> => {
   const slug = decodeURIComponent(rawSlug).toLowerCase();
   if (!SLUG_PATTERN.test(slug) || slug.length > 60 || !isSupabaseConfigured()) return null;
-
-  const { data, error } = await createAnonClient().rpc("get_public_invitation", { p_slug: slug });
-  if (error) throw new Error(`Could not load invitation: ${error.message}`);
-  if (!data) return null;
-
-  const bundle = parseWeddingBundle(data);
-  if (!bundle) {
-    console.error("get_public_invitation returned an invalid bundle for", slug);
-    return null;
-  }
-  return bundle;
+  return loadPublishedDesign(slug);
 });
 
 /**
