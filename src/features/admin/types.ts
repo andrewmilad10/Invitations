@@ -116,6 +116,27 @@ export const activityRow = z.object({
 });
 export type ActivityRow = z.infer<typeof activityRow>;
 
+/**
+ * Draft lifecycle, kept apart from the staff activity feed (it's what couples
+ * and the nightly cleanup did, not staff). Counts over all time, plus the most
+ * recent events — each one survives the draft's own deletion.
+ */
+export const DRAFT_EVENTS = ["draft.created", "draft.published", "draft.deleted_user", "draft.expired"] as const;
+export type DraftEvent = (typeof DRAFT_EVENTS)[number];
+export const draftStats = z
+  .record(z.string(), num)
+  .transform((raw) => Object.fromEntries(DRAFT_EVENTS.map((e) => [e, raw[e] ?? 0])) as Record<DraftEvent, number>);
+export type DraftStats = z.infer<typeof draftStats>;
+
+export const draftLogRow = z.object({
+  at: z.string(),
+  action: z.enum(DRAFT_EVENTS),
+  names: z.string().nullable(),
+  slug: z.string().nullable(),
+  actor: z.string().nullable(),
+});
+export type DraftLogRow = z.infer<typeof draftLogRow>;
+
 export const WEDDING_FILTERS = ["all", "live", "expiring", "expired", "deactivated", "paid", "unpaid", "draft"] as const;
 export type WeddingFilter = (typeof WEDDING_FILTERS)[number];
 

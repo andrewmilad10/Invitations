@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import {
   activityRow,
   alertRow,
+  draftStats,
+  draftLogRow,
   reminderRow,
   orderDetail,
   orderPage,
@@ -75,6 +77,9 @@ export const loadSales = (search: string, page: number, size = SALES_PAGE) =>
   call("admin_list_sales", { p_search: search || null, p_limit: size, p_offset: page * size }, salePage);
 export const loadStaff = () => call("admin_list_staff", {}, z.array(staffRow));
 export const loadActivity = (limit = 200) => call("admin_activity", { p_limit: limit }, z.array(activityRow));
+/** Draft lifecycle counts (all time) and the recent events — both survive a draft's deletion. */
+export const loadDraftStats = () => call("draft_stats", {}, draftStats);
+export const loadDraftLog = (limit = 50) => call("draft_log", { p_limit: limit }, z.array(draftLogRow));
 
 /**
  * Security alerts (owner and admin only). Asked for in parallel with the

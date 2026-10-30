@@ -58,6 +58,8 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
           <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="mt-2 truncate text-xs text-accent hover:underline">
             {publicUrl.replace(/^https?:\/\//, "")}
           </a>
+        ) : w.draftExpiry ? (
+          <DraftNote expiry={w.draftExpiry} />
         ) : (
           <p className="mt-2 text-xs text-muted-foreground">Private draft — only you can see it</p>
         )}
@@ -106,6 +108,33 @@ export function WeddingCard({ wedding: w, siteUrl }: { wedding: WeddingCardData;
         </div>
       </div>
     </li>
+  );
+}
+
+const ddmmyyyy = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Cairo" });
+
+/**
+ * A private draft that will be removed if it is never published. Explains when
+ * it was started and the date it goes, so the couple know why — and are nudged
+ * as the day nears. Publishing (or paying) cancels the removal.
+ */
+function DraftNote({ expiry }: { expiry: { createdAt: string; removeOn: string; daysLeft: number } }) {
+  const soon = expiry.daysLeft <= 3;
+  return (
+    <>
+      <p className="mt-2 text-xs text-muted-foreground">Private draft — only you can see it</p>
+      <p className={soon ? "mt-1 text-xs font-medium text-accent" : "mt-1 text-xs text-muted-foreground"}>
+        {expiry.daysLeft > 0 ? (
+          <>
+            Started {ddmmyyyy(expiry.createdAt)} · we&apos;ll remove it on {ddmmyyyy(expiry.removeOn)} ({expiry.daysLeft} day
+            {expiry.daysLeft === 1 ? "" : "s"} left) unless you publish it.
+          </>
+        ) : (
+          <>Started {ddmmyyyy(expiry.createdAt)} · due to be removed today unless you publish it.</>
+        )}
+      </p>
+    </>
   );
 }
 

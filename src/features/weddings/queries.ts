@@ -4,11 +4,18 @@ import type { Tables } from "@/lib/supabase/database.types";
 
 export type WeddingSummary = Pick<
   Tables<"weddings">,
-  "id" | "slug" | "partner_one_name" | "partner_two_name" | "wedding_date" | "template_id" | "status" | "published_at" | "updated_at" | "active_until" | "deactivated_at"
+  "id" | "slug" | "partner_one_name" | "partner_two_name" | "wedding_date" | "template_id" | "status" | "published_at" | "updated_at" | "active_until" | "deactivated_at" | "created_at"
 >;
 
 const SUMMARY_COLUMNS =
-  "id, slug, partner_one_name, partner_two_name, wedding_date, template_id, status, published_at, updated_at, active_until, deactivated_at";
+  "id, slug, partner_one_name, partner_two_name, wedding_date, template_id, status, published_at, updated_at, active_until, deactivated_at, created_at";
+
+/**
+ * How long an untouched draft is kept before the nightly cleanup removes it.
+ * Mirrors `private.job_delete_expired_drafts()` in the draft-retention
+ * migration — keep the two in step.
+ */
+export const DRAFT_RETENTION_DAYS = 14;
 
 /** Weddings the current user can access (RLS limits this to their memberships). */
 export async function listMyWeddings(): Promise<WeddingSummary[]> {
@@ -41,6 +48,12 @@ export type WeddingCard = WeddingSummary & {
   paid: boolean;
   /** The couple's order waiting for payment, if any. */
   openOrder: { number: number; amount: number; currency: string } | null;
+  /**
+   * For an abandoned-able draft (never published, never paid), when it was
+   * started, the date it will be removed, and how many days remain. Null for
+   * anything that is published or has a live period, which is never removed.
+   */
+  draftExpiry: { createdAt: string; removeOn: string; daysLeft: number } | null;
 };
 
 /**
@@ -63,12 +76,25 @@ export async function listMyWeddingCards(): Promise<WeddingCard[]> {
   const now = Date.now();
   return weddings.map((w) => {
     const daysLeft = w.active_until ? Math.ceil((new Date(w.active_until).getTime() - now) / 86_400_000) : null;
+    // A draft is only ever removed while it has never been published and has no
+    // live period — matches the nightly job's WHERE clause.
+    let draftExpiry: WeddingCard["draftExpiry"] = null;
+    if (w.status === "draft" && !w.published_at && !w.active_until && w.created_at) {
+      const created = new Date(w.created_at).getTime();
+      const removeAt = created + DRAFT_RETENTION_DAYS * 86_400_000;
+      draftExpiry = {
+        createdAt: w.created_at,
+        removeOn: new Date(removeAt).toISOString(),
+        daysLeft: Math.max(0, Math.ceil((removeAt - now) / 86_400_000)),
+      };
+    }
     return {
       ...w,
       themeTokens: tokens.get(w.id) ?? {},
       daysLeft,
       paid: !w.deactivated_at && daysLeft !== null && daysLeft > 0,
       openOrder: open.get(w.id) ?? null,
+      draftExpiry,
     };
   });
 }

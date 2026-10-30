@@ -253,6 +253,8 @@ export type Database = {
       admin_order_note: { Args: { p_order: string; p_text: string }; Returns: Json };
       admin_set_order_tags: { Args: { p_order: string; p_tags: string[] }; Returns: Json };
       admin_archive_order: { Args: { p_order: string; p_archived: boolean }; Returns: Json };
+      draft_stats: { Args: Record<string, never>; Returns: Json };
+      draft_log: { Args: { p_limit: number }; Returns: Json };
     };
     Enums: {
       wedding_status: WeddingStatus;
