@@ -16,8 +16,14 @@ import { createWeddingSchema, type ActionResult, type CreateWeddingInput } from 
 
 const UNIQUE_VIOLATION = "23505";
 const MAX_SLUG_ATTEMPTS = 5;
-/** How many invitations one account may keep at a time (keeps stored media/content in check). */
-const MAX_WEDDINGS = 2;
+/**
+ * How many invitations one account may have *in progress* (an unpublished,
+ * unpaid draft) at once. Published or paid invitations don't count toward this,
+ * so a couple with a live site can still start a fresh draft. Keeping the
+ * in-progress number at one bounds uploaded draft media per account and pairs
+ * with the 14-day cleanup of abandoned drafts.
+ */
+const MAX_DRAFTS = 1;
 
 /**
  * Creates a wedding owned by the current user. The owner membership, settings
@@ -39,10 +45,19 @@ export async function createWedding(input: CreateWeddingInput): Promise<ActionRe
 
   const supabase = await createClient();
 
-  // Cap the number of invitations per account to keep stored content/media in check.
-  const { count } = await supabase.from("weddings").select("id", { count: "exact", head: true }).eq("owner_id", user.id);
-  if ((count ?? 0) >= MAX_WEDDINGS) {
-    return { ok: false, error: `You can keep up to ${MAX_WEDDINGS} invitations at a time. Please remove one before creating another.` };
+  // Cap invitations still *in progress* — unpublished, unpaid drafts. Published
+  // or paid ones (published_at / active_until set) don't count, so a couple
+  // with a live site can start a new draft without removing it.
+  const { count } = await supabase
+    .from("weddings")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_id", user.id)
+    .eq("status", "draft")
+    .is("published_at", null)
+    .is("active_until", null);
+  if ((count ?? 0) >= MAX_DRAFTS) {
+    const limit = MAX_DRAFTS === 1 ? "one invitation" : `${MAX_DRAFTS} invitations`;
+    return { ok: false, error: `You can have ${limit} in progress at a time. Publish or remove it before starting another.` };
   }
 
   const base = suggestSlug(partnerOne, partnerTwo);

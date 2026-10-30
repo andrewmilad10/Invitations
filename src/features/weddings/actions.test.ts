@@ -20,8 +20,14 @@ vi.mock("@/lib/supabase/server", () => ({
         const result = insertResults.shift() ?? { data: { id: "new-id" }, error: null };
         return { select: () => ({ single: async () => result }) };
       },
-      // count query (invitation cap) and the settings lookup used while seeding
-      select: () => ({ eq: () => ({ count: weddingCount, error: null, single: async () => ({ data: null, error: null }) }) }),
+      // count query (draft cap, chained .eq().eq().is().is()) and the settings
+      // lookup used while seeding — a chainable builder that resolves to a count.
+      select: () => {
+        const q: Record<string, unknown> = { count: weddingCount, error: null, single: async () => ({ data: null, error: null }) };
+        q.eq = () => q;
+        q.is = () => q;
+        return q;
+      },
     }),
   }),
 }));
@@ -113,11 +119,11 @@ describe("createWedding", () => {
     expect(inserted).toHaveLength(0);
   });
 
-  it("caps the number of invitations per account", async () => {
-    weddingCount = 2;
+  it("caps drafts in progress per account", async () => {
+    weddingCount = 1;
     const result = await createWedding(valid);
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.error).toMatch(/up to 2 invitations/i);
+    if (!result.ok) expect(result.error).toMatch(/one invitation in progress/i);
     expect(inserted).toHaveLength(0);
   });
 });
