@@ -1,5 +1,6 @@
 "use server";
 
+import { updateTag } from "next/cache";
 import { z } from "@/lib/zod";
 import { zonedTimeToIso } from "@/core/i18n/format";
 import { isAllowedMedia } from "@/core/media/signature";
@@ -8,6 +9,7 @@ import { isSectionType, SECTION_DEFINITIONS, validateSectionContent, type Sectio
 import { themeOverridesSchema } from "@/core/theme/tokens";
 import { slugSchema } from "@/core/wedding/slug";
 import { getCurrentUser } from "@/features/auth/session";
+import { invitationTag } from "@/features/invitations/public";
 import { isStoragePath, MEDIA_BUCKET } from "@/features/media/urls";
 import type { ActionResult } from "@/features/weddings/schemas";
 import { isUuid } from "@/features/weddings/queries";
@@ -35,6 +37,21 @@ async function context(weddingId: string) {
   return { supabase: await createClient(), user };
 }
 
+type Ctx = NonNullable<Awaited<ReturnType<typeof context>>>;
+
+/**
+ * Clear this invitation's cached public design after a successful edit, so the
+ * change reaches guests at once instead of waiting out the cache window (see
+ * src/features/invitations/public.ts). Called only on success — after input is
+ * validated and the write has gone through — so it never runs on rejected
+ * input. The slug is looked up only when the caller doesn't already have it; a
+ * draft has no public cache, so a missing slug is simply a no-op.
+ */
+async function refreshPublic(ctx: Ctx, weddingId: string, knownSlug?: string) {
+  const slug = knownSlug ?? (await ctx.supabase.from("weddings").select("slug").eq("id", weddingId).maybeSingle()).data?.slug;
+  if (slug) updateTag(invitationTag(slug));
+}
+
 function invalid(error: z.ZodError): Failure {
   return { ok: false, error: "Please check the highlighted fields.", fieldErrors: z.flattenError(error).fieldErrors as Record<string, string[]> };
 }
@@ -59,6 +76,7 @@ export async function updateDetails(weddingId: string, input: z.input<typeof det
     .maybeSingle();
   if (error) return limitError(error) ?? FAILED("your details");
   if (!data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -69,6 +87,7 @@ export async function updateTemplate(weddingId: string, templateId: string): Pro
   const { data, error } = await ctx.supabase.from("weddings").update({ template_id: templateId }).eq("id", weddingId).select("slug").maybeSingle();
   if (error) return limitError(error) ?? FAILED("the template");
   if (!data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -82,6 +101,8 @@ export async function updateSlug(weddingId: string, rawSlug: string): Promise<Ac
   if (error?.code === "23505") return { ok: false, error: "That address is already taken.", fieldErrors: { slug: ["That address is already taken."] } };
   if (error) return limitError(error) ?? FAILED("the address");
   if (!data) return NO_ACCESS;
+  // The address changed; refresh the design cache under the new address.
+  await refreshPublic(ctx, weddingId, data.slug);
   return { ok: true, data: { slug: data.slug } };
 }
 
@@ -105,6 +126,7 @@ export async function updateSettings(weddingId: string, input: z.input<typeof se
     .maybeSingle();
   if (error) return limitError(error) ?? FAILED("your settings");
   if (!data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -121,6 +143,7 @@ export async function updateTheme(weddingId: string, overrides: unknown): Promis
     .maybeSingle();
   if (error) return limitError(error) ?? FAILED("the theme");
   if (!data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -161,6 +184,7 @@ export async function saveSection(
   if (error?.code === "42501") return NO_ACCESS;
   if (error) return limitError(error) ?? FAILED("this section");
   if (!data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -172,6 +196,7 @@ export async function saveSectionOrder(weddingId: string, order: string[] | null
   if (order === null) {
     const { error } = await ctx.supabase.from("wedding_sections").update({ sort_order: null }).eq("wedding_id", weddingId);
     if (error) return limitError(error) ?? FAILED("the order");
+    await refreshPublic(ctx, weddingId);
     return { ok: true };
   }
 
@@ -183,6 +208,7 @@ export async function saveSectionOrder(weddingId: string, order: string[] | null
   if (error?.code === "42501") return NO_ACCESS;
   if (error) return limitError(error) ?? FAILED("the order");
   if (!data?.length) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -222,6 +248,7 @@ export async function saveEvent(weddingId: string, input: EventInput): Promise<A
     // Clearing every field removes the event (and hides its section).
     const { error } = await ctx.supabase.from("events").delete().eq("id", existing.id);
     if (error) return limitError(error) ?? FAILED("the event");
+    await refreshPublic(ctx, weddingId);
     return { ok: true, data: { id: null } };
   }
   if (!existing && isEmpty) return { ok: true, data: { id: null } };
@@ -237,6 +264,7 @@ export async function saveEvent(weddingId: string, input: EventInput): Promise<A
   if (result.error?.code === "42501") return NO_ACCESS;
   if (result.error) return FAILED("the event");
   if (!result.data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true, data: { id: result.data.id } };
 }
 
@@ -327,6 +355,7 @@ export async function registerMedia(
     const files = replaced.map((r) => r.storage_path).filter(isStoragePath);
     if (files.length) await ctx.supabase.storage.from(MEDIA_BUCKET).remove(files);
   }
+  await refreshPublic(ctx, weddingId);
   return { ok: true, data: { id: data.id } };
 }
 
@@ -345,6 +374,7 @@ export async function deleteMedia(weddingId: string, mediaId: string): Promise<A
   // Row first, then file: a failed file removal leaves an orphan (cleaned up
   // later), never a row pointing at a missing file.
   if (isStoragePath(data.storage_path)) await ctx.supabase.storage.from(MEDIA_BUCKET).remove([data.storage_path]);
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -356,6 +386,7 @@ export async function updateMediaAlt(weddingId: string, mediaId: string, altText
   const { data, error } = await ctx.supabase.from("media").update({ alt_text: alt.data }).eq("id", mediaId).eq("wedding_id", weddingId).select("id").maybeSingle();
   if (error) return limitError(error) ?? FAILED("the description");
   if (!data) return NO_ACCESS;
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 
@@ -368,6 +399,7 @@ export async function reorderGallery(weddingId: string, mediaIds: string[]): Pro
     ),
   );
   if (results.some((r) => r.error)) return FAILED("the order");
+  await refreshPublic(ctx, weddingId);
   return { ok: true };
 }
 

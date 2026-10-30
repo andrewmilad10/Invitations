@@ -20,9 +20,10 @@ export const invitationTag = (slug: string) => `invitation:${slug.toLowerCase()}
  * across requests so a page that many guests open at once doesn't re-query the
  * database on every visit. It holds the DESIGN only — never a guest's personal
  * greeting or the live replies, which are read fresh per request. The cache is
- * refreshed the moment the couple (re)publishes (revalidateTag(invitationTag)),
- * and in any case never serves content older than `revalidate` seconds, so an
- * edit to a live invitation reaches guests within that window.
+ * refreshed the moment the couple edits or (re)publishes the invitation
+ * (updateTag(invitationTag) from the editor and publish actions), so changes
+ * reach guests at once; the `revalidate` window is only a fallback for anything
+ * that slips past those.
  */
 const loadPublishedDesign = (slug: string) =>
   unstable_cache(
