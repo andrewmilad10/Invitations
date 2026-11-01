@@ -45,6 +45,12 @@ of them is not finished.
   only (`safeQrUrl`). No `javascript:` or data URLs.
 - Never render user text as HTML (`dangerouslySetInnerHTML` is not used for
   user content).
+- No SQL is ever built from strings. The app talks to the database only
+  through the PostgREST query builder and `.rpc()`, which bind every value as
+  a parameter, and database functions use static SQL with named parameters.
+  If a function ever genuinely needs dynamic SQL, quote identifiers and
+  literals (`format` with `%I`/`%L`, or `quote_ident`/`quote_literal`) and
+  pass values with `EXECUTE … USING` — never concatenate user input.
 - Uploaded images: check type and size, then redraw them in the browser into a
   new WebP/JPEG (`cleanImage`: drops GPS and camera data and anything hidden in
   the file, max 2560px). The server reads every uploaded file's first bytes
