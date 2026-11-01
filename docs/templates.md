@@ -87,6 +87,49 @@ only exceptions are neutral overlays (e.g. `rgb(0 0 0 / .4)` for image scrims).
 No migration, no dashboard change: the wizard and theme panel read the
 registry.
 
+## Shipping a template to production — checklist
+
+Adding templates is **additive and safe**: a new template is a new manifest,
+it never touches existing weddings, and `resolveTemplateManifest` falls back to
+the default for any unknown id, so nothing breaks for current couples. There is
+**no database migration** — `weddings.template_id` is just text. Work through
+this list; the test suite (`npm run check`) is the safety net for steps 1–3.
+
+1. **Register it.** Add the manifest to the `ALL` array in
+   `src/templates/registry.ts`. If it uses a brand-new layout, add its renderer
+   to `src/templates/renderers.tsx` (and `renderers.client.tsx` for a kit/client
+   renderer). A *design* that reuses an existing layout needs no renderer — add
+   it via `design({ … })` in `collection/designs.ts` instead (see "Adding a
+   design").
+2. **Order it (optional).** Add the id to `FEATURED` in `registry.ts` for its
+   place in the gallery; anything unlisted follows in registry order. Set
+   `isNew: true` on the manifest for the "New" badge — and remove it once it's
+   no longer in the latest batch (per `docs/rules/design.md`).
+3. **Let the tests check it.** `npm run check` runs `registry.test.ts`, which
+   enforces: a unique, storable id; the required sections (`hero`, `footer`) and
+   only known section types; valid gallery metadata (categories, ornament,
+   shape, palette families); **WCAG contrast in every palette** (text ≥ 4.5:1 on
+   background and card, button text ≥ 3:1); and a complete, valid theme. A
+   missing or malformed template fails here, not in production.
+4. **Preview it.** Visit `/templates/<id>/preview` (sample data) and the
+   `/websites` gallery. The gallery works immediately — if a template has no
+   pre-rendered marketing asset it falls back to a **live render**
+   (`FirstScreen` / `MiniSite`), so nothing is ever blank.
+5. **Marketing previews (polish, optional).** For the lighter, pre-rendered
+   gallery look, add the id to the `SCREENS` set in
+   `src/features/marketing/home/screens.ts` with
+   `public/marketing/screens/<id>-hero.webp` (and `-opening.webp`); for an
+   opening video, add it to the `OPENS` set in
+   `src/features/marketing/play/play-data.ts` with
+   `public/marketing/play/<id>-{open.mp4,open.webm,first.webp,page.webp}`.
+   Generate all of these with `scripts/record-plays.py`. **Re-record when the
+   design changes** — a stale asset is how a preview silently shows the old look.
+   Kit templates also want a thumbnail in `LAYOUT_HEROES`
+   (`features/marketing/gallery/website-thumb.tsx`).
+6. **Ship it.** Commit and `git push origin platform`; Vercel deploys with no
+   downtime. No migration is involved for a template, so nothing to apply to
+   Supabase first (unlike a schema change — see `docs/deployment.md`).
+
 ## Adding a section type
 
 1. In `src/core/sections/registry.ts`: add the type to `SECTION_TYPES`, its
