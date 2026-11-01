@@ -1,9 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { after } from "next/server";
 import { z } from "@/lib/zod";
 import { createClient } from "@/lib/supabase/server";
+import { PUBLIC_INVITATIONS_TAG } from "@/features/invitations/public";
 import { alert } from "./alerts";
 import { PAYMENT_METHODS, STAFF_ROLES } from "./types";
 
@@ -16,6 +17,17 @@ import { PAYMENT_METHODS, STAFF_ROLES } from "./types";
  */
 type Result = { ok: true } | { ok: false; error: string };
 const uuid = z.string().uuid();
+
+/**
+ * Clear the public guest cache after a change that alters what guests see
+ * (publishing via payment, turning off, extending, refunding). The admin paths
+ * work by order/wedding id, not slug, so we refresh the whole public cache by
+ * its shared tag — cheap because these actions are infrequent, and it means a
+ * guest never sees a stale "not found" (or a turned-off invite) after the change.
+ */
+function refreshPublic(): void {
+  updateTag(PUBLIC_INVITATIONS_TAG);
+}
 const DENIED: Result = { ok: false, error: "You don't have permission to do that." };
 const FAILED_TEXT = "That didn't go through. Please try again.";
 const FAILED: Result = { ok: false, error: FAILED_TEXT };
@@ -46,7 +58,7 @@ export async function recordSale(input: z.input<typeof sale>): Promise<Result> {
   const p = sale.safeParse(input);
   if (!p.success) return { ok: false, error: "Please check the amount and payment method." };
   const v = p.data;
-  return run("admin_record_sale", {
+  const r = await run("admin_record_sale", {
     p_wedding: v.weddingId,
     p_amount: v.amount,
     p_method: v.method,
@@ -55,25 +67,33 @@ export async function recordSale(input: z.input<typeof sale>): Promise<Result> {
     p_months: v.months,
     p_publish: v.publish,
   });
+  if (r.ok) refreshPublic();
+  return r;
 }
 
 export async function refundSale(orderId: string, deactivate: boolean): Promise<Result> {
   if (!uuid.safeParse(orderId).success) return DENIED;
-  return run("admin_refund", { p_order: orderId, p_deactivate: Boolean(deactivate) }, `A sale was refunded${deactivate ? " and its invitation turned off" : ""}.`);
+  const r = await run("admin_refund", { p_order: orderId, p_deactivate: Boolean(deactivate) }, `A sale was refunded${deactivate ? " and its invitation turned off" : ""}.`);
+  if (r.ok) refreshPublic();
+  return r;
 }
 
 export async function setDeactivated(weddingId: string, off: boolean, reason: string): Promise<Result> {
   if (!uuid.safeParse(weddingId).success) return DENIED;
   const r = z.string().trim().max(300).safeParse(reason ?? "");
   if (!r.success) return { ok: false, error: "Keep the reason under 300 characters." };
-  return run("admin_set_deactivated", { p_wedding: weddingId, p_off: Boolean(off), p_reason: r.data || null }, off ? "An invitation was turned off." : undefined);
+  const res = await run("admin_set_deactivated", { p_wedding: weddingId, p_off: Boolean(off), p_reason: r.data || null }, off ? "An invitation was turned off." : undefined);
+  if (res.ok) refreshPublic();
+  return res;
 }
 
 export async function extendWedding(weddingId: string, days: number): Promise<Result> {
   if (!uuid.safeParse(weddingId).success) return DENIED;
   const d = z.number().int().min(-365).max(3650).refine((n) => n !== 0).safeParse(days);
   if (!d.success) return { ok: false, error: "Choose between -365 and 3650 days." };
-  return run("admin_extend", { p_wedding: weddingId, p_days: d.data });
+  const r = await run("admin_extend", { p_wedding: weddingId, p_days: d.data });
+  if (r.ok) refreshPublic();
+  return r;
 }
 
 export async function setStaff(email: string, role: string): Promise<Result> {
@@ -120,6 +140,9 @@ export async function markOrderPaid(input: z.input<typeof paid>): Promise<Result
   if (res?.confirm) return { ok: false, error: res.error ?? "Please check this payment.", confirm: true };
   if (!res?.ok) return { ok: false, error: res?.error ?? FAILED_TEXT };
   revalidatePath("/admin", "layout");
+  // Paying an order publishes the invitation — refresh the public cache so the
+  // guest page doesn't keep serving the pre-payment "not found".
+  refreshPublic();
   after(() => alert(`Order paid: ${p.data.amount} EGP by ${p.data.method}${p.data.confirmed ? " (after a warning)" : ""}.`));
   return { ok: true };
 }

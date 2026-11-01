@@ -16,6 +16,15 @@ const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 export const invitationTag = (slug: string) => `invitation:${slug.toLowerCase()}`;
 
 /**
+ * A tag on every published design. An admin change that affects what guests see
+ * — paying an order (which publishes), turning an invitation off, extending or
+ * refunding — happens through order/wedding ids, not slugs, so it clears this
+ * one tag to refresh the whole public cache at once rather than hunting a slug.
+ * Admin actions of this kind are rare, so the occasional full refresh is cheap.
+ */
+export const PUBLIC_INVITATIONS_TAG = "public-invitations";
+
+/**
  * The published design (sections, events, media, theme) for a slug, cached
  * across requests so a page that many guests open at once doesn't re-query the
  * database on every visit. It holds the DESIGN only — never a guest's personal
@@ -39,7 +48,7 @@ const loadPublishedDesign = (slug: string) =>
       return bundle;
     },
     ["public-invitation", slug],
-    { tags: [invitationTag(slug)], revalidate: 30 },
+    { tags: [invitationTag(slug), PUBLIC_INVITATIONS_TAG], revalidate: 30 },
   )();
 
 /**
