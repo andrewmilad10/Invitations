@@ -25,6 +25,7 @@ const Jardin = dynamic(() => import("./kit/jardin/Renderer"));
 const Glossy = dynamic(() => import("./kit/glossy/Renderer"));
 const Ephemera = dynamic(() => import("./kit/ephemera/Renderer"));
 const Arch = dynamic(() => import("./kit/arch/Renderer"));
+const Aurelia = dynamic(() => import("./kit/aurelia/Renderer"));
 const Film = dynamic(() => import("./kit/film/Renderer"));
 const Glasshouse = dynamic(() => import("./kit/glasshouse/Renderer"));
 const House = dynamic(() => import("./kit/house/Renderer"));
@@ -88,6 +89,7 @@ export const CLIENT_RENDERERS: Record<string, TemplateRenderer> = {
   glossy: Glossy,
   ephemera: Ephemera,
   arch: Arch,
+  aurelia: Aurelia,
   film: Film,
   glasshouse: Glasshouse,
   house: House,

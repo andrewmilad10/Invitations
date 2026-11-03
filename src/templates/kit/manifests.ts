@@ -96,6 +96,8 @@ const P = {
   swanPond: { id: "olive-burgundy", label: "Olive & burgundy", family: "green", colors: c("#ecebe7", "#f5f1e8", "#2f2a26", "#5e1626", "#5f6a3e", "#f0ede3", "#cfc8b8") },
   // Burgundy Envelope
   burgundyCream: { id: "wine-cream", label: "Wine & cream", family: "red", colors: c("#fcf4e5", "#f3e5d1", "#643d2e", "#b78a39", "#811a2b", "#fcf4e5", "#dac3a0") },
+  // Aurelia: cream paper and antique gold, Lake Como
+  aurelia: { id: "cream-gold", label: "Cream & antique gold", family: "neutral", colors: c("#efe7d6", "#faf6ec", "#3a362c", "#6f6858", "#846f2d", "#fdfaf2", "#ddd1b6") },
 } satisfies Record<string, Palette>;
 
 export const KIT_MANIFESTS: TemplateManifest[] = [
@@ -566,6 +568,17 @@ export const KIT_MANIFESTS: TemplateManifest[] = [
     categories: ["romantic", "elegant", "modern", "luxury"],
     palettes: [P.ribbonPearls],
     fonts: { heading: "cormorant", body: "jost", accent: "cormorant" },
+    card: { layout: "classic" },
+  }),
+  kitTemplate("aurelia", {
+    id: "aurelia-suite",
+    name: "Aurelia Suite",
+    tagline: "A lakeside Italian suite in cream and antique gold.",
+    description:
+      "One long cream page edged in gold. Your names in script over an arched photo, an olive-branch divider, a hand-circled calendar and countdown, chamfered cards for the ceremony and reception with a map link, a gold timeline for the day, a photo collage and a quiet close under your initials.",
+    categories: ["romantic", "elegant", "luxury", "classic"],
+    palettes: [P.aurelia],
+    fonts: { heading: "cormorant", body: "cormorant", accent: "pinyon" },
     card: { layout: "classic" },
   }),
   {
