@@ -190,14 +190,18 @@ function Venue({ model, content }: SectionProps<"venue">) {
   return (
     <Sec id="venue" className={cn(s.sec, s.center)}>
       <h2 className={s.script} {...fx("rise")}>{content.heading || kitCopy(model).venue}</h2>
-      {content.note ? <p className={s.lead} {...fx("fade", 120)}>{content.note}</p> : null}
+      <Olive {...fx("fade", 120)} />
+      {content.note ? <p className={s.lead} {...fx("fade", 160)}>{content.note}</p> : null}
       <div className={s.maps}>
         {mapped.map((e) => (
           <figure key={e.id} className={s.mapFig} {...fx("rise")}>
             <div className={s.mapFrame}><KitMap model={model} event={e} className={s.map} /></div>
-            <figcaption>
+            <figcaption className={s.mapCap}>
               <b>{e.venueName ?? e.title}</b>
               {e.address ? <span>{e.address}</span> : null}
+              <Directions model={model} event={e} className={s.eventLink}>
+                {model.strings.directions} {"↗"}
+              </Directions>
             </figcaption>
           </figure>
         ))}
