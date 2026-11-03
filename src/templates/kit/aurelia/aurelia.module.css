@@ -1,0 +1,169 @@
+/* Aurelia — a lakeside Italian suite. Colours only from --inv-*; neutral rgb() for shadows. */
+
+.root {
+  --k-dur: 1.1s;
+  --k-ease: cubic-bezier(.2, .7, .2, 1);
+  --k-dist: 20px;
+  --k-step: 150ms;
+  --pad: clamp(1.25rem, 6vw, 3rem);
+  --gold: var(--inv-accent);
+  --soft: var(--inv-muted);
+  --edge: color-mix(in oklab, var(--inv-accent) 34%, transparent);
+  --ch: polygon(12px 0, calc(100% - 12px) 0, 100% 12px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px), 0 12px);
+  position: relative;
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+  font: 400 1.04rem/1.6 var(--inv-font-body);
+}
+.root [data-grade] { filter: saturate(1.03) contrast(1.01); }
+
+/* ── Shared type ── */
+.center { text-align: center; }
+.sec { position: relative; max-width: 40rem; margin-inline: auto; padding: clamp(3.2rem, 9vw, 5.5rem) var(--pad); }
+.sec + .sec::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 3.4rem; height: 1px; background: var(--gold); opacity: .45;
+}
+.script { margin: 0; font: 400 clamp(2.3rem, 8vw, 3.4rem)/1.05 var(--inv-font-accent); color: var(--gold); text-wrap: balance; }
+.eyebrow { margin: 0 0 .9rem; font: 600 .72rem/1.5 var(--inv-font-body); letter-spacing: .22em; text-transform: uppercase; color: var(--soft); }
+.lead { max-width: 32rem; margin: 1.1rem auto 0; color: var(--inv-fg); }
+.leadWrap { max-width: 34rem; margin-inline: auto; }
+.prose > p + p { margin-top: .9rem; }
+.sign { margin: 1.3rem 0 0; font: 400 clamp(1.7rem, 5vw, 2.1rem) var(--inv-font-accent); color: var(--gold); line-height: 1.1; }
+.small { margin: .35rem 0 0; font-size: .92rem; color: var(--soft); }
+.formalDate { margin: 1rem 0 0; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
+
+/* ── Olive divider ── */
+.olive { display: block; width: clamp(7rem, 20vw, 8rem); height: auto; margin: 1rem auto; }
+.oliveStem { fill: none; stroke: var(--gold); stroke-width: 1.3; stroke-linecap: round; opacity: .9; }
+.oliveLeaf { fill: var(--gold); opacity: .9; }
+.oliveSeed { fill: var(--gold); }
+
+/* ── Hero ── */
+.hero { position: relative; text-align: center; padding: clamp(2rem, 7vw, 3.5rem) var(--pad) clamp(2.5rem, 8vw, 4rem); }
+.arch {
+  position: relative; width: min(92%, 30rem); margin: 0 auto; aspect-ratio: 1 / 1.4;
+  border: 1.3px solid var(--gold); border-radius: 50% 50% 12px 12px / 46% 46% 7px 7px;
+  overflow: hidden; background: var(--inv-surface);
+}
+.archPhoto { position: absolute; inset: 0; }
+.archPhoto :global(img) { object-position: center 36%; }
+.archScrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, color-mix(in oklab, var(--inv-surface) 78%, transparent) 0%, color-mix(in oklab, var(--inv-surface) 36%, transparent) 24%, transparent 48%); }
+.archText { position: absolute; top: 0; left: 0; right: 0; z-index: 2; padding: 12% 8% 0; }
+.archText .eyebrow { margin-bottom: .6rem; text-shadow: 0 1px 2px rgb(255 255 255 / .6); }
+.coverNames {
+  display: grid; margin: 0; font: 400 clamp(2.1rem, 8.5vw, 3rem)/1.04 var(--inv-font-accent); color: var(--gold);
+  text-shadow: 0 1px 3px rgb(255 255 255 / .65);
+}
+.coverNames i { font-size: .62em; margin: .05em 0; }
+.meta { margin: 1.4rem 0 0; font-size: .74rem; letter-spacing: .15em; text-transform: uppercase; }
+.tagline { margin: .8rem auto 0; max-width: 26rem; font-style: italic; color: var(--soft); }
+.arrow { display: inline-block; margin-top: 1rem; color: var(--gold); font-size: 1.1rem; animation: bob 2.4s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); opacity: .75; } 50% { transform: translateY(5px); opacity: 1; } }
+
+/* ── Calendar ── */
+.cal { max-width: 19rem; margin: 1.6rem auto 0; }
+.calMonth { margin: 0 0 .9rem; font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; }
+.calGrid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: .55rem; justify-items: center; }
+.calGrid span { display: flex; align-items: center; justify-content: center; width: 2rem; height: 1.8rem; font-size: .98rem; }
+.calHead { font-size: .72rem; font-weight: 600; color: var(--soft); }
+.calDay { position: relative; }
+.calDay::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 2.1rem; height: 1.9rem;
+  transform: translate(-50%, -52%) rotate(-8deg); border: 1.6px solid var(--gold); border-radius: 50% 50% 48% 52%;
+}
+
+/* ── Countdown ── */
+.clock { display: flex; align-items: flex-start; justify-content: center; gap: .5rem; margin: 1.5rem auto 0; }
+.tile { min-width: 3.6rem; padding: .7rem .4rem .55rem; background: var(--inv-surface); border: 1px solid var(--gold); border-radius: 8px; text-align: center; }
+.tileNum { font-size: 1.7rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.tileLab { margin-top: .35rem; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+.calBtn { margin-top: 1.5rem; }
+
+/* ── Quote ── */
+.quote { max-width: 30rem; margin: 1.6rem auto 0; font-style: italic; color: var(--soft); }
+.quote cite { display: block; margin-top: .6rem; font-style: normal; font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+
+/* ── Event cards (chamfered double frame) ── */
+.events { display: grid; gap: 1.4rem; max-width: 22rem; margin: 1.6rem auto 0; }
+.event {
+  position: relative; padding: 1.5rem 1.3rem 1.3rem; text-align: center;
+  background: color-mix(in oklab, var(--gold) 72%, transparent); clip-path: var(--ch);
+  filter: drop-shadow(0 10px 20px rgb(40 30 15 / .22));
+}
+.event::before { content: ""; position: absolute; inset: 1.5px; background: var(--inv-surface); clip-path: var(--ch); z-index: 0; }
+.event > * { position: relative; z-index: 2; }
+.frame { position: absolute; inset: 5px; background: color-mix(in oklab, var(--gold) 72%, transparent); clip-path: var(--ch); z-index: 1; }
+.frame::before { content: ""; position: absolute; inset: 1.5px; background: var(--inv-surface); clip-path: var(--ch); }
+.eventMark { display: block; width: 2.6rem; height: auto; margin: 0 auto .8rem; fill: none; stroke: var(--gold); stroke-width: 1.3; opacity: .9; }
+.eventTitle { margin: 0 0 .6rem; font-size: .82rem; letter-spacing: .22em; text-transform: uppercase; }
+.eventWhen { margin: 0; font-size: 1.05rem; }
+.eventWhen i { font-style: italic; }
+.eventNote { margin: .7rem 0 0; font-style: italic; color: var(--soft); }
+.eventLink { display: inline-block; margin-top: .9rem; font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--edge); padding-bottom: 2px; }
+.eventLink:hover { border-bottom-color: var(--gold); }
+
+/* ── Venue maps ── */
+.maps { display: grid; gap: 1.4rem; margin: 1.6rem auto 0; }
+.mapFrame { border: 1px solid var(--gold); border-radius: 10px; overflow: hidden; aspect-ratio: 3 / 2; }
+.map { width: 100%; height: 100%; }
+.mapFig figcaption { margin-top: .6rem; }
+.mapFig b { font-weight: 600; }
+.mapFig span { display: block; font-size: .9rem; color: var(--soft); }
+
+/* ── Schedule timeline ── */
+.timeline { list-style: none; max-width: 24rem; margin: 1.8rem auto 0; padding: 0; text-align: start; }
+.tlRow { position: relative; display: grid; grid-template-columns: 4.6rem 1.6rem 1fr; align-items: center; }
+.tlRow + .tlRow { margin-top: 1.5rem; }
+.tlRow::before {
+  content: ""; position: absolute; left: calc(4.6rem + .8rem); top: -.9rem; bottom: -.9rem; width: 1.5px;
+  background: var(--gold); opacity: .5; transform: translateX(-50%);
+}
+.tlRow:first-child::before { top: 50%; }
+.tlRow:last-child::before { bottom: 50%; }
+.tlTime { text-align: end; padding-inline-end: .9rem; color: var(--gold); white-space: nowrap; }
+.tlNode { justify-self: center; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 3px var(--inv-bg); position: relative; z-index: 1; }
+.tlText { padding-inline-start: .9rem; }
+.tlTitle { margin: 0; }
+
+/* ── Gallery collage ── */
+.collage { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 32rem; margin: 1.6rem auto 0; }
+.shot { aspect-ratio: 1 / 1; border-radius: 4px; }
+.shotLead { grid-column: 1 / -1; aspect-ratio: 3 / 2; }
+.collage[data-count="1"] .shotLead { aspect-ratio: 4 / 3; }
+
+/* ── Buttons ── */
+.button { display: inline-block; margin-top: 1.4rem; cursor: pointer; font: 600 .74rem/1 var(--inv-font-body); letter-spacing: .14em; text-transform: uppercase; border-radius: 999px; padding: .95rem 2rem; text-decoration: none; }
+.solid { background: var(--gold); color: var(--inv-accent-fg); border: 0; box-shadow: 0 12px 24px -14px rgb(40 30 15 / .5); }
+.solid:hover { filter: brightness(1.05); }
+
+/* ── FAQ ── */
+.faqList { max-width: 34rem; margin: 1.6rem auto 0; text-align: start; }
+.qa { border-top: 1px solid var(--edge); padding: .9rem 0; }
+.qa:last-child { border-bottom: 1px solid var(--edge); }
+.qa summary { cursor: pointer; font-size: 1.05rem; list-style: none; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary::after { content: "+"; float: inline-end; color: var(--gold); }
+.qa[open] summary::after { content: "\2013"; }
+.qa p { margin: .6rem 0 0; color: var(--soft); }
+
+/* ── Footer ── */
+.footer { text-align: center; padding: clamp(3rem, 8vw, 4.5rem) var(--pad) clamp(3.5rem, 9vw, 5rem); background: linear-gradient(180deg, var(--inv-bg), color-mix(in oklab, var(--inv-surface) 70%, var(--inv-bg))); }
+.footOlive { margin-bottom: 1rem; }
+.footLead { margin: 0 0 .5rem; font-size: .72rem; letter-spacing: .24em; text-transform: uppercase; color: var(--soft); }
+.footNames { margin: 0; font: 400 clamp(2.4rem, 8vw, 3.2rem) var(--inv-font-accent); color: var(--gold); line-height: 1.02; }
+.footMeta { margin: 1rem 0 0; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; }
+.footMono { margin: 1.3rem 0 0; font-size: .72rem; letter-spacing: .34em; text-transform: uppercase; color: var(--gold); }
+
+/* ── Desktop ── */
+@media (min-width: 820px) {
+  .sec { max-width: 46rem; }
+  .events { grid-template-columns: 1fr 1fr; max-width: 40rem; }
+  .maps { grid-template-columns: 1fr 1fr; }
+  .collage { grid-template-columns: 1fr 1fr 1fr; }
+  .shotLead { grid-column: 1 / 2; grid-row: span 2; aspect-ratio: 3 / 4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow { animation: none; }
+}

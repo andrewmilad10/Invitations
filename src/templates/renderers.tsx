@@ -6,6 +6,7 @@ import EditorialRenderer from "./editorial/Renderer";
 import EssentialsRenderer from "./essentials/Renderer";
 import GalerieRenderer from "./galerie/Renderer";
 import ArchRenderer from "./kit/arch/Renderer";
+import AureliaRenderer from "./kit/aurelia/Renderer";
 import BlackTieRenderer from "./kit/blacktie/Renderer";
 import BurgundyRenderer from "./kit/burgundy/Renderer";
 import EphemeraRenderer from "./kit/ephemera/Renderer";
@@ -80,6 +81,7 @@ export const TEMPLATE_RENDERERS: Record<string, TemplateRenderer> = {
   glossy: GlossyRenderer,
   ephemera: EphemeraRenderer,
   arch: ArchRenderer,
+  aurelia: AureliaRenderer,
   film: FilmRenderer,
   glasshouse: GlasshouseRenderer,
   house: HouseRenderer,
