@@ -28,6 +28,7 @@ export const DESIGN_INFO: Record<string, DesignInfo> = {
   "ribbon-pearls": { ar: "شريطة ولؤلؤ", mood: "floral", tone: "blush" },
   "peony-blush": { ar: "زهور الفاوانيا", mood: "floral", tone: "blush" },
   "lemon-terrace": { ar: "شرفة الليمون", mood: "floral", tone: "blue" },
+  "aurelia-suite": { ar: "أوريليا", mood: "classic", tone: "ivory", isNew: true },
   "linen-meadow": { ar: "مرج الكتان", mood: "floral", tone: "ivory" },
   "henna-tent": { ar: "خيمة الحنة", mood: "nights", tone: "dark" },
   sketchbook: { ar: "كراسة الرسم", mood: "floral", tone: "green" },
