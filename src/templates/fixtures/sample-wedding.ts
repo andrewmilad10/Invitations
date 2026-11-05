@@ -38,6 +38,49 @@ const photo = (id: LibraryPhotoId, purpose: "hero" | "gallery", sort: number, wi
   sort_order: sort,
 });
 
+/**
+ * A demo photo that ships with the repo (public/…), used when a template is
+ * designed around its own imagery rather than the shared library. publicMediaUrl
+ * returns `/`-rooted paths unchanged, so these resolve on the server and client
+ * and need no network — the preview recorder sees them too.
+ */
+const localPhoto = (
+  path: string,
+  purpose: "hero" | "gallery",
+  sort: number,
+  width: number,
+  height: number,
+  alt: string,
+) => ({ id: `demo-local-${sort}`, kind: "image" as const, purpose, storage_path: path, alt_text: alt, width, height, sort_order: sort });
+
+/**
+ * Per-template demo media. A template built around a specific look (its own
+ * cover and gallery, drawn or shot for it) overrides the shared library so the
+ * preview and the first "use this template" screen show that exact design.
+ */
+function sampleMedia(templateId: string) {
+  if (templateId === "aurelia-suite") {
+    const p = "/templates/aurelia/";
+    return [
+      localPhoto(`${p}hero.jpg`, "hero", 0, 944, 1680, "A couple at golden hour above an Italian lake"),
+      localPhoto(`${p}g-lead.jpg`, "gallery", 1, 944, 756, "A couple walking above the lake"),
+      localPhoto(`${p}g1.jpg`, "gallery", 2, 584, 536, "A couple embracing at golden hour"),
+      localPhoto(`${p}g3.jpg`, "gallery", 3, 568, 612, "Coupe glasses on a wooden boat"),
+      localPhoto(`${p}g-arch.jpg`, "gallery", 4, 540, 544, "A couple beneath a garden arch"),
+      localPhoto(`${p}g2.jpg`, "gallery", 5, 568, 628, "A ring resting on ivory silk"),
+    ];
+  }
+  return [
+    photo("couple", "hero", 0, 2400, 1600),
+    photo("outdoors", "gallery", 1, 1600, 2400),
+    photo("rings", "gallery", 2, 2400, 1600),
+    photo("bouquet", "gallery", 3, 2400, 1600),
+    photo("celebration", "gallery", 4, 1600, 2400),
+    photo("reception", "gallery", 5, 2400, 1600),
+    photo("venue", "gallery", 6, 2400, 1600),
+  ];
+}
+
 /** London is UTC+1 in mid-October (BST), so 15:00 local = 14:00Z. */
 function londonIso(date: string, time: string) {
   const [h, m] = time.split(":").map(Number);
@@ -136,15 +179,7 @@ export function sampleBundle(templateId: string, now: Date = new Date()): Weddin
         sort_order: 1,
       },
     ],
-    media: [
-      photo("couple", "hero", 0, 2400, 1600),
-      photo("outdoors", "gallery", 1, 1600, 2400),
-      photo("rings", "gallery", 2, 2400, 1600),
-      photo("bouquet", "gallery", 3, 2400, 1600),
-      photo("celebration", "gallery", 4, 1600, 2400),
-      photo("reception", "gallery", 5, 2400, 1600),
-      photo("venue", "gallery", 6, 2400, 1600),
-    ],
+    media: sampleMedia(templateId),
   };
 }
 
